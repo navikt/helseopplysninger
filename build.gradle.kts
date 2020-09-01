@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 group = "no.nav.helseopplysninger"
 version = "1.0"
@@ -13,6 +14,7 @@ val spek_version = "2.0.9"
 plugins {
     kotlin("jvm") version "1.3.61"
     id("com.diffplug.gradle.spotless") version "3.18.0"
+    id("com.github.johnrengelman.shadow") version "5.0.0"
 }
 
 repositories {
@@ -47,7 +49,7 @@ tasks {
         println(project.version)
     }
 
-    withType<Jar> {
+    withType<ShadowJar> {
         manifest.attributes["Main-Class"] = "no.nav.helseopplysninger.BootstrapApplicationKt"
     }
 

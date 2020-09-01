@@ -6,7 +6,7 @@ on:
       - '!master'
 
 env:
-  IMAGE: docker.pkg.github.com/${{ github.repository }}/${{ github.repository.name }}:${{ github.sha }}
+  IMAGE: docker.pkg.github.com/${{ github.repository }}/${{ github.event.repository.name }}:${{ github.sha }}
 
 jobs:
   build-push-deploy:
@@ -47,3 +47,9 @@ jobs:
           docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY} -p ${GITHUB_TOKEN}
           docker push ${IMAGE}
           echo ${IMAGE}
+      - name: Deploy to Dev
+        uses: nais/deploy/actions/deploy@master
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: dev-fss
+          RESOURCE: naiserator-dev.yaml
