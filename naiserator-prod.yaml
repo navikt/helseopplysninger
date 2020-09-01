@@ -37,4 +37,4 @@ spec:
   ingresses:
     - "https://helseopplysninger.nais.adeo.no"
   vault:
-    enabled: true
+    enabled: false
