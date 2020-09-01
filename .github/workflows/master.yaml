@@ -5,7 +5,7 @@ on:
       - master
 
 env:
-  IMAGE: docker.pkg.github.com/${{ github.repository }}/${{ github.repository.name }}:${{ github.sha }}
+  IMAGE: docker.pkg.github.com/${{ github.repository }}/${{ github.event.repository.name }}:${{ github.sha }}
 
 jobs:
   build-push-deploy:

@@ -11,4 +11,4 @@ Backend for forwarding and storing of health-related data
 * (Kafka)
 
 ### Building the application
-Run `./gradlew building`
+Run `./gradlew build`
