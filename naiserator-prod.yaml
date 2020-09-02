@@ -2,7 +2,7 @@ apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
   name: helseopplysninger
-  namespace: default
+  namespace: helseopplysninger
   labels:
     team: helseopplysninger
 spec:
