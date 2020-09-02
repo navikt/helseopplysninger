@@ -5,19 +5,24 @@ import io.ktor.routing.routing
 import io.ktor.server.engine.*
 import io.ktor.server.netty.Netty
 import kotlinx.coroutines.*
-import org.slf4j.LoggerFactory
+import io.ktor.config.HoconApplicationConfig
+import com.typesafe.config.ConfigFactory
 import java.util.concurrent.TimeUnit
 import no.nav.helseopplysninger.api.registerNaisApi
+import no.nav.helseopplysninger.db.DatabaseConfig
+import no.nav.helseopplysninger.db.DatabaseInterface
+import no.nav.helseopplysninger.db.Database
 
 
 data class ApplicationState(var running: Boolean = true, var initialized: Boolean = false)
 
 val state: ApplicationState = ApplicationState(running = false, initialized = false)
-val env: Environment = Environment()
+val env: Environment = getEnvironment()
+lateinit var database: DatabaseInterface
 
 fun main() {
     val server = embeddedServer(Netty, applicationEngineEnvironment {
-        log = LoggerFactory.getLogger("ktor.application")
+        config = HoconApplicationConfig(ConfigFactory.load())
 
         connector {
             port = env.applicationPort
@@ -35,8 +40,22 @@ fun main() {
     server.start(wait = false)
 }
 
+// TODO: Check when proxySql container is ready to avoid initial application crash
+
 fun Application.init() {
-    state.running = true
+    isRemote {
+        database = Database(DatabaseConfig(
+                jdbcUrl = env.jdbcUrl(),
+                username = env.dbUsername,
+                password = env.dbPassword,
+                databaseName = env.dbName))
+        state.running = true
+    }
+
+    isLocal {
+        // TODO: Setup postgres instance when running locally (docker-compose?)
+        state.running = true
+    }
 }
 
 fun Application.serverModule() {
@@ -58,4 +77,12 @@ fun CoroutineScope.createListener(applicationState: ApplicationState, action: su
             }
         }
 
+val Application.envKind get() = environment.config.property("ktor.environment").getString()
 
+fun Application.isLocal(block: () -> Unit) {
+    if (envKind == "local") block()
+}
+
+fun Application.isRemote(block: () -> Unit) {
+    if (envKind == "remote") block()
+}

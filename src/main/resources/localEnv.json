@@ -1,0 +1,10 @@
+{
+  "applicationPort": "8081",
+  "applicationThreads": "1",
+  "dbUrl": "helseopplysninger_db_url",
+  "dbName": "helseopplysninger_local",
+  "dbHost": "localhost",
+  "dbPort": "5432",
+  "dbUsername": "username",
+  "dbPassword": "password"
+}

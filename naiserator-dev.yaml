@@ -36,3 +36,11 @@ spec:
     path: /prometheus
   ingresses:
     - "https://helseopplysninger.dev.adeo.no"
+  gcp:
+    sqlInstances:
+      - type: POSTGRES_11
+        databases:
+          - name: helseopplysningerdb
+  env:
+    - name: KTOR_ENV
+      value: remote
