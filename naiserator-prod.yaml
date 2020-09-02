@@ -36,5 +36,3 @@ spec:
     path: /prometheus
   ingresses:
     - "https://helseopplysninger.nais.adeo.no"
-  vault:
-    enabled: false
