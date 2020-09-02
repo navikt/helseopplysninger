@@ -6,7 +6,6 @@ Backend for forwarding and storing of health-related data
 * Ktor
 * Gradle
 * Spek
-* (Vault)
 * (Postgres)
 * (Kafka)
 

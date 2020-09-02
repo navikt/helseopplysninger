@@ -9,6 +9,7 @@ val kluent_version = "1.39"
 val ktor_version = "1.3.2"
 val prometheus_version = "0.8.1"
 val spek_version = "2.0.9"
+val slf4jVersion = "1.7.30"
 
 
 plugins {
@@ -34,6 +35,8 @@ dependencies {
     implementation("io.prometheus:simpleclient_hotspot:$prometheus_version")
     implementation("io.prometheus:simpleclient_common:$prometheus_version")
     implementation("io.ktor:ktor-server-netty:$ktor_version")
+    implementation("org.slf4j:slf4j-api:$slf4jVersion")
+    implementation("org.slf4j:slf4j-simple:$slf4jVersion")
 
     testImplementation("org.amshove.kluent:kluent:$kluent_version")
     testImplementation("org.spekframework.spek2:spek-dsl-jvm:$spek_version")
