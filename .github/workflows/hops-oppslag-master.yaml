@@ -1,12 +1,13 @@
-name: feature
+name: hops-oppslag-master
 on:
   push:
     branches:
-      - '*'
-      - '!master'
+      - master
+    paths:
+      - apps/hops-oppslag/**
 
 env:
-  IMAGE: docker.pkg.github.com/${{ github.repository }}/${{ github.event.repository.name }}:${{ github.sha }}
+  IMAGE: docker.pkg.github.com/${{ github.repository }}/hops-oppslag:${{ github.sha }}
 
 jobs:
   build-push-deploy:
@@ -32,24 +33,31 @@ jobs:
           ORG_GRADLE_PROJECT_githubUser: x-access-token
           ORG_GRADLE_PROJECT_githubPassword: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          ./gradlew test
+          ./gradlew :hops-oppslag:test
       - name: Build jar
         env:
           ORG_GRADLE_PROJECT_githubUser: x-access-token
           ORG_GRADLE_PROJECT_githubPassword: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          ./gradlew shadowJar -x test
+          ./gradlew :hops-oppslag:shadowJar -x test
       - name: Build and publish Docker image
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          docker build --tag ${IMAGE} .
+          docker build --tag ${IMAGE} -f ./apps/hops-oppslag/Dockerfile .
           docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY} -p ${GITHUB_TOKEN}
           docker push ${IMAGE}
-          echo ${IMAGE}
       - name: Deploy to Dev
         uses: nais/deploy/actions/deploy@master
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-gcp
-          RESOURCE: naiserator-dev.yaml
+          RESOURCE: apps/hops-oppslag/.nais/naiserator.yaml
+          VARS: apps/hops-oppslag/.nais/dev.json
+      - name: Deploy to Prod
+        uses: nais/deploy/actions/deploy@master
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: prod-gcp
+          RESOURCE: apps/hops-oppslag/.nais/naiserator.yaml
+          VARS: apps/hops-oppslag/.nais/prod.json

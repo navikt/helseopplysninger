@@ -1,7 +1,7 @@
 apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
-  name: helseopplysninger
+  name: hops-api
   namespace: helseopplysninger
   labels:
     team: helseopplysninger
@@ -35,4 +35,6 @@ spec:
     enabled: true
     path: /prometheus
   ingresses:
-    - "https://helseopplysninger.dev.adeo.no"
+{{#each ingresses as |url|}}
+    - {{url}}
+{{/each}}
