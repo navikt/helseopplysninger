@@ -9,6 +9,12 @@ spec:
   image: {{ image }}
   port: 8080
   team: helseopplysninger
+  gcp:
+    sqlInstances:
+      - type: POSTGRES_12
+        databases:
+          - name: helseopplysninger-db
+            envVarPrefix: DB
   liveness:
     path: /fhir/metadata
     initialDelay: 10
@@ -32,6 +38,6 @@ spec:
     max: 1
     cpuThresholdPercentage: 90
   ingresses:
-  {{#each ingresses as |url|}}
-     - {{url}}
-  {{/each}}
+{{#each ingresses as |url|}}
+    - {{url}}
+{{/each}}
