@@ -1,0 +1,55 @@
+services:
+  hapi_service:
+    container_name: hapi_container
+    image: hapiproject/hapi:latest
+    restart: unless-stopped
+    depends_on:
+     - postgres_service
+    ports:
+     - "8080:8080"
+    networks:
+      - hops_network
+    volumes:
+      - ./config:/etc/hopsconfig:ro
+    environment:
+      SPRING_CONFIG_LOCATION: 'file:///etc/hopsconfig/application.yaml'
+   
+  pgadmin_service:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4:4.16
+    restart: unless-stopped
+    depends_on:
+      - postgres_service 
+    ports:
+      - "5050:80"
+    networks:
+      - hops_network
+    volumes:
+      - pgadmin_volume:/root/.pgadmin
+      - ./config:/etc/hopsconfig:ro
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_SERVER_JSON_FILE: /etc/hopsconfig/servers.json
+ 
+  postgres_service:
+    container_name: postgres_container
+    image: postgres:12.1
+    restart: unless-stopped
+    networks:
+      - hops_network
+    volumes:
+       - postgres_volume:/data/postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Welcome01
+      POSTGRES_DB: postgres
+      PGDATA: /data/postgres
+
+networks:
+  hops_network:
+    driver: bridge
+ 
+volumes:
+    postgres_volume:
+    pgadmin_volume:
