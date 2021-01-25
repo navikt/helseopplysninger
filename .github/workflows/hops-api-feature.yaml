@@ -16,16 +16,13 @@ jobs:
  main:
    runs-on: ubuntu-latest
    steps:
-    -
-      uses: actions/checkout@v2
-    -
-      name: Build and publish Docker image
+    - uses: actions/checkout@v2
+    - name: Build and publish Docker image
       run: |
-        docker build --tag ${IMAGE} -f ./apps/hops-api/Dockerfile .
+        docker build --tag ${IMAGE} ./apps/hops-api
         docker login docker.pkg.github.com -u ${github.repository} -p ${github.token}
         docker push ${IMAGE}
-    -
-      name: Deploy to Dev
+    - name: Deploy to Dev
       uses: nais/deploy/actions/deploy@master
       env:
         APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
