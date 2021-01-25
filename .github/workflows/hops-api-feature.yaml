@@ -8,7 +8,9 @@ on:
     paths:
       - apps/hops-api/**
       - .github/workflows/hops-api-feature.yaml
- 
+env:
+  CACHE_PATH: /tmp/.buildx-cache
+
 jobs:
  main:
    runs-on: ubuntu-latest
@@ -23,7 +25,7 @@ jobs:
       name: Cache Docker layers
       uses: actions/cache@v2
       with:
-        path: /tmp/.buildx-cache
+        path: ${CACHE_PATH}
         key: ${{ runner.os }}-buildx-${{ github.sha }}
         restore-keys: |
           ${{ runner.os }}-buildx-
@@ -40,6 +42,6 @@ jobs:
       with:
         push: true
         context: ./apps/hops-api
-        tags: ${{ github.repository }}/hops-api:${{ github.sha }}
-        cache-from: type=local,src=/tmp/.buildx-cache
-        cache-to: type=local,dest=/tmp/.buildx-cache
+        tags: docker.pkg.github.com/${{ github.repository }}/hops-api:${{ github.sha }}
+        cache-from: type=local,src=${CACHE_PATH}
+        cache-to: type=local,dest=${CACHE_PATH}
