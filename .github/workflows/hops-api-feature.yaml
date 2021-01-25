@@ -1,15 +1,15 @@
-name: hops-api-feature
- 
+name: hops-api
+
 on:
  push:
     branches:
       - '*'
     paths:
-      - apps/hops-api/**
-      - .github/workflows/hops-api-feature.yaml
+      - apps/${{ github.repository }}/**
+      - .github/workflows/${{ github.workflow }}-feature.yaml
 
 env:
-  IMAGE: docker.pkg.github.com/${{ github.repository }}/hops-api:${{ github.sha }}
+  IMAGE: docker.pkg.github.com/${{ github.repository }}/${{ github.workflow }}:${{ github.sha }}
 
 jobs:
  main:
@@ -21,21 +21,21 @@ jobs:
         username: ${{ github.repository }}
         password: ${{ secrets.GITHUB_TOKEN }}
         registry: docker.pkg.github.com
-        context: ./apps/hops-api
-        image_name: ${{ github.repository }}/hops-api
+        context: ./apps/${{ github.workflow }}
+        image_name: ${{ github.repository }}/${{ github.workflow }}
         image_tag: ${{ github.sha }}
     - name: Deploy to Dev
       uses: nais/deploy/actions/deploy@master
       env:
         APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
         CLUSTER: dev-gcp
-        RESOURCE: apps/hops-api/.nais/naiserator.yaml
-        VARS: apps/hops-api/.nais/dev.json
+        RESOURCE: apps/${{ github.workflow }}/.nais/naiserator.yaml
+        VARS: apps/${{ github.workflow }}/.nais/dev.json
     - name: Deploy to Prod
       if: github.ref == 'refs/heads/master'
       uses: nais/deploy/actions/deploy@master
       env:
         APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
         CLUSTER: prod-gcp
-        RESOURCE: apps/hops-api/.nais/naiserator.yaml
-        VARS: apps/hops-api/.nais/prod.json
+        RESOURCE: apps/${{ github.workflow }}/.nais/naiserator.yaml
+        VARS: apps/${{ github.workflow }}/.nais/prod.json
