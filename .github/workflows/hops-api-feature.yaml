@@ -9,19 +9,14 @@ on:
       - apps/hops-api/**
       - .github/workflows/hops-api-feature.yaml
 
-env:
-  IMAGE: docker.pkg.github.com/${{ github.repository }}/hops-api:${{ github.sha }}
-
 jobs:
  main:
    runs-on: ubuntu-latest
    steps:
     - uses: actions/checkout@v2
-    - name: Build and publish Docker image
-      run: |
-        docker build --tag ${IMAGE} ./apps/hops-api
-        docker login docker.pkg.github.com -u ${{ github.repository }} -p ${{ github.token }}
-        docker push ${IMAGE}
+    - uses: ./.github/actions/build-and-publish
+      with:
+        app: hops-api
     - name: Deploy to Dev
       uses: nais/deploy/actions/deploy@master
       env:
