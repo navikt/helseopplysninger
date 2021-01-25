@@ -16,7 +16,7 @@ jobs:
    runs-on: ubuntu-latest
    steps:
     - uses: actions/checkout@v2
-    - uses: ./.github/actions/build-and-publish
+    - name: Build and publish Docker image
       run: |
         docker build --tag ${IMAGE} ./apps/hops-api
         docker login docker.pkg.github.com -u ${{ github.repository }} -p ${{ secrets.GITHUB_TOKEN }}
