@@ -17,7 +17,7 @@ jobs:
     - uses: ./.github/actions/build-and-publish
       with:
         app: hops-api
-    - name: Deploy to Dev2
+    - name: Deploy to Dev
       uses: nais/deploy/actions/deploy@master
       env:
         APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}

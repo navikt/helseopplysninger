@@ -6,8 +6,8 @@ runs:
   using: "composite"
   steps:
       run: |
-        docker build --tag ${IMAGE} ./apps/${{ inputs.app }}
+        IMAGE="docker.pkg.github.com/${{ github.repository }}/${{ inputs.app }}:${{ github.sha }}"
+        echo $IMAGE
+        docker build --tag $IMAGE ./apps/${{ inputs.app }}
         docker login docker.pkg.github.com -u ${{ github.repository }} -p ${{ secrets.GITHUB_TOKEN }}
-        docker push ${IMAGE}
-      env:
-        IMAGE: docker.pkg.github.com/${{ github.repository }}/${{ inputs.app }}:${{ github.sha }}
+        docker push $IMAGE
