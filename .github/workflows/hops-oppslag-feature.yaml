@@ -2,7 +2,7 @@ name: hops-oppslag-feature
 on:
   push:
     branches:
-      - '*'
+      #- '*'
       - '!master'
     paths:
       - apps/hops-oppslag/**

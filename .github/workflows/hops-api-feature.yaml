@@ -2,7 +2,7 @@ name: hops-api-feature
 on:
   push:
     branches:
-      - '*'
+      #- '*'
       - '!master'
     paths:
       - apps/hops-api/**
