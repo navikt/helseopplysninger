@@ -8,9 +8,10 @@ on:
       - apps/hops-api/**
       - .github/workflows/hops-api.yaml
 
-env:
-  # Used by nais/deploy/actions/deploy.
+env: # Used by nais/deploy/actions/deploy.
   IMAGE: docker.pkg.github.com/${{ github.repository }}/${{ github.workflow }}:${{ github.sha }}
+  APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+  RESOURCE: apps/${{ github.workflow }}/.nais/naiserator.yaml
 
 jobs:
  main:
@@ -28,15 +29,11 @@ jobs:
     - name: Deploy to Dev
       uses: nais/deploy/actions/deploy@master
       env:
-        APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
         CLUSTER: dev-gcp
-        RESOURCE: apps/${{ github.workflow }}/.nais/naiserator.yaml
         VARS: apps/${{ github.workflow }}/.nais/dev.json
     - name: Deploy to Prod
       if: github.ref == 'refs/heads/master'
       uses: nais/deploy/actions/deploy@master
       env:
-        APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
         CLUSTER: prod-gcp
-        RESOURCE: apps/${{ github.workflow }}/.nais/naiserator.yaml
         VARS: apps/${{ github.workflow }}/.nais/prod.json
