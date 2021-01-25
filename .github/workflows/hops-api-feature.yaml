@@ -5,8 +5,8 @@ on:
     branches:
       - '*'
     paths:
-      - apps/${{ github.repository }}/**
-      - .github/workflows/${{ github.workflow }}-feature.yaml
+      - apps/hops-api/**
+      - .github/workflows/hops-api-feature.yaml
 
 env:
   IMAGE: docker.pkg.github.com/${{ github.repository }}/${{ github.workflow }}:${{ github.sha }}
