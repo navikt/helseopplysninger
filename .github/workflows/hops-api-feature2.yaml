@@ -3,7 +3,7 @@ name: hops-api-feature_poc
 on:
  push:
     branches:
-      #- '*'
+      - '*'
       - '!master'
     paths:
       - apps/hops-api/**
