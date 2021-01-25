@@ -33,8 +33,8 @@ jobs:
       name: Login to GitHub Container Registry
       uses: docker/login-action@v1
       with:
-        registry: docker.pkg.github.com
-        username: ${{ github.repository }}
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
         password: ${{ github.token }}
     -
       name: Build and push
@@ -42,6 +42,6 @@ jobs:
       with:
         push: true
         context: ./apps/hops-api
-        tags: docker.pkg.github.com/${{ github.repository }}/hops-api:${{ github.sha }}
+        tags: ghcr.io/${{ github.repository }}/hops-api:${{ github.sha }}
         cache-from: type=local,src=${CACHE_PATH}
         cache-to: type=local,dest=${CACHE_PATH}
