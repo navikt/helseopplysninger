@@ -29,10 +29,10 @@ jobs:
         RESOURCE: apps/hops-api/.nais/naiserator.yaml
         VARS: apps/hops-api/.nais/dev.json
     - name: Deploy to Prod
-        if: github.ref == 'refs/heads/master'
-        uses: nais/deploy/actions/deploy@master
-        env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          CLUSTER: prod-gcp
-          RESOURCE: apps/hops-api/.nais/naiserator.yaml
-          VARS: apps/hops-api/.nais/prod.json
+      if: github.ref == 'refs/heads/master'
+      uses: nais/deploy/actions/deploy@master
+      env:
+        APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+        CLUSTER: prod-gcp
+        RESOURCE: apps/hops-api/.nais/naiserator.yaml
+        VARS: apps/hops-api/.nais/prod.json
