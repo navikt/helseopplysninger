@@ -1,15 +1,12 @@
-name: hops-api
+name: hops-hapi-fhir-server
 
 on:
  push:
     branches:
       - '*'
     paths:
-      - apps/hops-api/**
-      - .github/workflows/hops-api-feature.yaml
-
-env:
-  IMAGE: docker.pkg.github.com/${{ github.repository }}/${{ github.workflow }}:${{ github.sha }}
+      - apps/hops-hapi-fhir-server/**
+      - .github/workflows/hops-hapi-fhir-server.yaml
 
 jobs:
  main:
