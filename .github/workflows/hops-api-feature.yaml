@@ -20,7 +20,7 @@ jobs:
     - name: Build and publish Docker image
       run: |
         docker build --tag ${IMAGE} ./apps/hops-api
-        docker login docker.pkg.github.com -u ${github.repository} -p ${github.token}
+        docker login docker.pkg.github.com -u ${{ github.repository }} -p ${{ github.token }}
         docker push ${IMAGE}
     - name: Deploy to Dev
       uses: nais/deploy/actions/deploy@master
