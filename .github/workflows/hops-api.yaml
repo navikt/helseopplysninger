@@ -9,6 +9,7 @@ on:
       - .github/workflows/hops-api.yaml
 
 env:
+  # Used by nais/deploy/actions/deploy.
   IMAGE: docker.pkg.github.com/${{ github.repository }}/${{ github.workflow }}:${{ github.sha }}
 
 jobs:

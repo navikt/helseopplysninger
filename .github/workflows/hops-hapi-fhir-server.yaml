@@ -8,6 +8,10 @@ on:
       - apps/hops-hapi-fhir-server/**
       - .github/workflows/hops-hapi-fhir-server.yaml
 
+env:
+  # Used by nais/deploy/actions/deploy.
+  IMAGE: docker.pkg.github.com/${{ github.repository }}/${{ github.workflow }}:${{ github.sha }}
+
 jobs:
  main:
    runs-on: ubuntu-latest
