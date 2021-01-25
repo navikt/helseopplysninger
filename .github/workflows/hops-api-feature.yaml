@@ -9,8 +9,8 @@ on:
       - .github/workflows/hops-api-feature.yaml
 
 env:
+  IMAGE: docker.pkg.github.com/${{ github.repository }}/hops-api:${{ github.sha }}
   APP_NAME: hops-api
-  IMAGE: docker.pkg.github.com/${{ github.repository }}/${APP_NAME}:${{ github.sha }}
 
 jobs:
  main:
