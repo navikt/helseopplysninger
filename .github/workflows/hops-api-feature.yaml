@@ -17,10 +17,20 @@ jobs:
    steps:
     - uses: actions/checkout@v2
     - name: Build and publish Docker image
+      if: github.ref == 'refs/heads/master'
       run: |
         docker build --tag ${IMAGE} ./apps/hops-api
         docker login docker.pkg.github.com -u ${{ github.repository }} -p ${{ secrets.GITHUB_TOKEN }}
         docker push ${IMAGE}
+
+    - uses: whoan/docker-build-with-cache-action@v5
+      with:
+        username: ${{ github.repository }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+        registry: docker.pkg.github.com
+        context: ./apps/hops-api
+        image_name: ${{ github.repository }}/hops-api
+        image_tag: ${{ github.sha }}
     - name: Deploy to Dev
       uses: nais/deploy/actions/deploy@master
       env:
