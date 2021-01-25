@@ -8,9 +8,6 @@ on:
       - apps/hops-api/**
       - .github/workflows/hops-api-feature.yaml
 
-env:
-  IMAGE: docker.pkg.github.com/${{ github.repository }}/${{ github.workflow }}:${{ github.sha }}
-
 jobs:
  main:
    runs-on: ubuntu-latest
