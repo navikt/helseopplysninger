@@ -10,7 +10,6 @@ on:
 
 env:
   IMAGE: docker.pkg.github.com/${{ github.repository }}/hops-api:${{ github.sha }}
-  APP_NAME: hops-api
 
 jobs:
  main:
@@ -19,7 +18,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: Build and publish Docker image
       run: |
-        docker build --tag ${IMAGE} ./apps/${APP_NAME}
+        docker build --tag ${IMAGE} ./apps/hops-api
         docker login docker.pkg.github.com -u ${{ github.repository }} -p ${{ secrets.GITHUB_TOKEN }}
         docker push ${IMAGE}
     - name: Deploy to Dev
@@ -27,13 +26,13 @@ jobs:
       env:
         APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
         CLUSTER: dev-gcp
-        RESOURCE: apps/${APP_NAME}/.nais/naiserator.yaml
-        VARS: apps/${APP_NAME}/.nais/dev.json
+        RESOURCE: apps/hops-api/.nais/naiserator.yaml
+        VARS: apps/hops-api/.nais/dev.json
     - name: Deploy to Prod
       if: github.ref == 'refs/heads/master'
       uses: nais/deploy/actions/deploy@master
       env:
         APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
         CLUSTER: prod-gcp
-        RESOURCE: apps/${APP_NAME}/.nais/naiserator.yaml
-        VARS: apps/${APP_NAME}/.nais/prod.json
+        RESOURCE: apps/hops-api/.nais/naiserator.yaml
+        VARS: apps/hops-api/.nais/prod.json
