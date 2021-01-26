@@ -70,3 +70,4 @@ networks:
 volumes:
     postgres_volume:
     pgadmin_volume:
+        
