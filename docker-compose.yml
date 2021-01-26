@@ -17,9 +17,9 @@ services:
     networks:
       - hops_network
 
-  hapi_service:
-    container_name: hapi_container
-    image: hapiproject/hapi:latest
+  hops-hapi_service:
+    container_name: hops-hapi_container
+    build: ./apps/hops-hapi-fhir-server
     restart: unless-stopped
     ports:
      - "8080:8080"
@@ -68,6 +68,5 @@ networks:
   pgadmin-postgres_network:
  
 volumes:
-    postgres_volume:
-    pgadmin_volume:
-        
+  postgres_volume:
+  pgadmin_volume:
