@@ -24,17 +24,17 @@ jobs:
           username: ${{ github.repository }}
           password: ${{ secrets.GITHUB_TOKEN }}
           registry: docker.pkg.github.com
-          context: ./apps/${{ appNames }}
-          image_name: ${{ github.repository }}/${{ appNames }}
+          context: ./apps/${{ matrix.appNames }}
+          image_name: ${{ github.repository }}/${{ matrix.appNames }}
           image_tag: ${{ github.sha }}
       - name: Deploy to Dev
         uses: nais/deploy/actions/deploy@master
         env:
           CLUSTER: dev-gcp
-          VARS: apps/${{ appNames }}/.nais/dev.json
+          VARS: apps/${{ matrix.appNames }}/.nais/dev.json
       - name: Deploy to Prod
         if: github.ref == 'refs/heads/master'
         uses: nais/deploy/actions/deploy@master
         env:
           CLUSTER: prod-gcp
-          VARS: apps/${{ appNames }}/.nais/prod.json
+          VARS: apps/${{ matrix.appNames }}/.nais/prod.json
