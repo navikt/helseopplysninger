@@ -1,7 +1,9 @@
 name: hops-oppslag
 
 on:
- push:
+  branches:
+    - 'master'
+  push:
     paths:
       - apps/hops-oppslag/**
       - .github/workflows/hops-oppslag.yaml
@@ -30,7 +32,6 @@ jobs:
         CLUSTER: dev-gcp
         VARS: apps/${{ github.workflow }}/.nais/dev.json
     - name: Deploy to Prod
-      if: github.ref == 'refs/heads/master'
       uses: nais/deploy/actions/deploy@master
       env:
         CLUSTER: prod-gcp
