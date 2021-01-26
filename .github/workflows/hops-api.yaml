@@ -1,4 +1,4 @@
-name: hops-api
+name: hops-build-and-deploy-workflow
 
 on:
  push:
@@ -12,26 +12,29 @@ env: # Used by nais/deploy/actions/deploy.
   RESOURCE: apps/${{ github.workflow }}/.nais/naiserator.yaml
 
 jobs:
- main:
-   runs-on: ubuntu-latest
-   steps:
-    - uses: actions/checkout@v2
-    - uses: whoan/docker-build-with-cache-action@v5
-      with:
-        username: ${{ github.repository }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-        registry: docker.pkg.github.com
-        context: ./apps/${{ github.workflow }}
-        image_name: ${{ github.repository }}/${{ github.workflow }}
-        image_tag: ${{ github.sha }}
-    - name: Deploy to Dev
-      uses: nais/deploy/actions/deploy@master
-      env:
-        CLUSTER: dev-gcp
-        VARS: apps/${{ github.workflow }}/.nais/dev.json
-    - name: Deploy to Prod
-      if: github.ref == 'refs/heads/master'
-      uses: nais/deploy/actions/deploy@master
-      env:
-        CLUSTER: prod-gcp
-        VARS: apps/${{ github.workflow }}/.nais/prod.json
+  main:
+    strategy:
+      matrix:
+        appNames: [hops-api,hops-oppslag,hops-hapi-server]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: whoan/docker-build-with-cache-action@v5
+        with:
+          username: ${{ github.repository }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: docker.pkg.github.com
+          context: ./apps/${{ appNames }}
+          image_name: ${{ github.repository }}/${{ appNames }}
+          image_tag: ${{ github.sha }}
+      - name: Deploy to Dev
+        uses: nais/deploy/actions/deploy@master
+        env:
+          CLUSTER: dev-gcp
+          VARS: apps/${{ appNames }}/.nais/dev.json
+      - name: Deploy to Prod
+        if: github.ref == 'refs/heads/master'
+        uses: nais/deploy/actions/deploy@master
+        env:
+          CLUSTER: prod-gcp
+          VARS: apps/${{ appNames }}/.nais/prod.json
