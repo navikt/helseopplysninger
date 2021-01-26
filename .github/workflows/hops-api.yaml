@@ -6,11 +6,6 @@ on:
       - apps/hops-api/**
       - .github/workflows/hops-api.yaml
 
-env: # Used by nais/deploy/actions/deploy.
-  IMAGE: docker.pkg.github.com/${{ github.repository }}/${{ github.workflow }}:${{ github.sha }}
-  APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-  RESOURCE: apps/${{ github.workflow }}/.nais/naiserator.yaml
-
 jobs:
   main:
     runs-on: ubuntu-latest
@@ -32,9 +27,15 @@ jobs:
         env:
           CLUSTER: dev-gcp
           VARS: apps/${{ matrix.appNames }}/.nais/dev.json
+          IMAGE: docker.pkg.github.com/${{ github.repository }}/${{ matrix.appNames }}:${{ github.sha }}
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          RESOURCE: apps/${{ matrix.appNames }}/.nais/naiserator.yaml
       - name: Deploy to Prod
         if: github.ref == 'refs/heads/master'
         uses: nais/deploy/actions/deploy@master
         env:
           CLUSTER: prod-gcp
           VARS: apps/${{ matrix.appNames }}/.nais/prod.json
+          IMAGE: docker.pkg.github.com/${{ github.repository }}/${{ matrix.appNames }}:${{ github.sha }}
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          RESOURCE: apps/${{ matrix.appNames }}/.nais/naiserator.yaml
