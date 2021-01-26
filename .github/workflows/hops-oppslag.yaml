@@ -1,9 +1,9 @@
 name: hops-oppslag
 
 on:
-  branches:
-    - 'master'
   push:
+    branches:
+      - 'master'
     paths:
       - apps/hops-oppslag/**
       - .github/workflows/hops-oppslag.yaml

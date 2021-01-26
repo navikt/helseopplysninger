@@ -1,9 +1,9 @@
 name: hops-api
 
 on:
-  branches:
-    - 'master'
   push:
+    branches:
+      - 'master'
     paths:
       - apps/hops-api/**
       - .github/workflows/hops-api.yaml
