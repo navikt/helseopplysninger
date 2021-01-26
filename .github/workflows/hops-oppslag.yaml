@@ -2,8 +2,6 @@ name: hops-oppslag
 
 on:
  push:
-    branches:
-      - '*'
     paths:
       - apps/hops-oppslag/**
       - .github/workflows/hops-oppslag.yaml
