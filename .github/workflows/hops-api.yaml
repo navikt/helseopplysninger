@@ -13,10 +13,10 @@ env: # Used by nais/deploy/actions/deploy.
 
 jobs:
   main:
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        appNames: [hops-api,hops-oppslag,hops-hapi-server]
-    runs-on: ubuntu-latest
+        appNames: [hops-api, hops-oppslag, hops-hapi-server]    
     steps:
       - uses: actions/checkout@v2
       - uses: whoan/docker-build-with-cache-action@v5
