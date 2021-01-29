@@ -14,9 +14,7 @@ import ca.uhn.fhir.jpa.packages.IPackageInstallerSvc;
 import ca.uhn.fhir.jpa.packages.PackageInstallationSpec;
 import ca.uhn.fhir.jpa.partition.PartitionManagementProvider;
 import ca.uhn.fhir.jpa.provider.*;
-import ca.uhn.fhir.jpa.provider.dstu3.JpaConformanceProviderDstu3;
 import ca.uhn.fhir.jpa.provider.r4.JpaConformanceProviderR4;
-import ca.uhn.fhir.jpa.provider.r5.JpaConformanceProviderR5;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.searchparam.registry.ISearchParamRegistry;
 import ca.uhn.fhir.jpa.subscription.util.SubscriptionDebugLogInterceptor;
@@ -100,6 +98,8 @@ public class BaseJpaRestfulServer extends RestfulServer {
 
   }
 
+  private static final long serialVersionUID = 1L;
+
   @SuppressWarnings("unchecked")
   @Override
   protected void initialize() throws ServletException {
@@ -121,6 +121,7 @@ public class BaseJpaRestfulServer extends RestfulServer {
     registerProviders(resourceProviders.createProviders());
     registerProvider(jpaSystemProvider);
 
+    FhirVersionEnum fhirVersion = fhirSystemDao.getContext().getVersion().getVersion();
     /*
      * The conformance provider exports the supported resources, search parameters, etc for
      * this server. The JPA version adds resourceProviders counts to the exported statement, so it
@@ -130,9 +131,10 @@ public class BaseJpaRestfulServer extends RestfulServer {
      * provide further customization of your server's CapabilityStatement
      */
 
-    JpaConformanceProviderR4 confProvider = new JpaConformanceProviderR4(this, fhirSystemDao, daoConfig, searchParamRegistry);
+
+    JpaConformanceProviderR4 confProvider = new JpaConformanceProviderR4(this, fhirSystemDao,
+    daoConfig, searchParamRegistry);
     confProvider.setImplementationDescription("HAPI FHIR R4 Server");
-    setServerConformanceProvider(confProvider);
 
     /*
      * ETag Support
@@ -289,7 +291,9 @@ public class BaseJpaRestfulServer extends RestfulServer {
 
     // GraphQL
     if (appProperties.getGraphql_enabled()) {
-      registerProvider(graphQLProvider.get());
+      if (fhirVersion.isEqualOrNewerThan(FhirVersionEnum.DSTU3)) {
+        registerProvider(graphQLProvider.get());
+      }
     }
 
     if (appProperties.getAllowed_bundle_types() != null) {
