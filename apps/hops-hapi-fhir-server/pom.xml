@@ -20,7 +20,7 @@
     <artifactId>hops-hapi-fhir-server</artifactId>
 
     <properties>
-        <java.version>8</java.version>
+        <java.version>11</java.version>
         <spring_boot_version>2.3.4.RELEASE</spring_boot_version>
     </properties>
 
@@ -28,27 +28,9 @@
         <maven>3.6.3</maven>
     </prerequisites>
 
-    <packaging>jar</packaging>
-
     <name>NAV Helseopplysninger - HAPI FHIR JPA Server</name>
 
-    <repositories>
-        <repository>
-            <id>oss-snapshots</id>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-        </repository>
-    </repositories>
-
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>42.2.9</version>
-        </dependency>
 
         <!-- This dependency includes the core HAPI-FHIR classes -->
         <dependency>
@@ -81,18 +63,11 @@
             <artifactId>logback-classic</artifactId>
         </dependency>
 
-        <!-- Needed for JEE/Servlet support -->
+        <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- Used for CORS support -->
-        <!-- Spring Web is used to deploy the server to a web container. -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.2.9</version>
         </dependency>
 
         <!-- This example uses H2 embedded database. If you are using another database such as Mysql or Oracle, you may omit the following dependencies and replace them with an appropriate database client
@@ -103,18 +78,12 @@
         </dependency>
 
         <dependency>
-            <groupId>org.awaitility</groupId>
-            <artifactId>awaitility</artifactId>
-            <version>4.0.0-rc1</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
             <version>${spring_boot_version}</version>
         </dependency>
 
+        <!-- Added for basic-auth -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
@@ -148,16 +117,6 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-
-            <!-- Tell Maven which Java source version you want to use -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
-                <configuration>
-                    <release>8</release>
-                </configuration>
             </plugin>
         </plugins>
     </build>
