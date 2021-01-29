@@ -1,11 +1,12 @@
 FROM maven:3.6.3-jdk-11-slim as build
-WORKDIR /tmp/hapi-fhir-server
+WORKDIR /tmp/maven
 
+# Resolve dependencies in a intermediate docker layer that can be cached.
 COPY pom.xml .
 RUN mvn -ntp dependency:go-offline
 
-COPY src/ /tmp/hapi-fhir-server/src/
+COPY src .
 RUN mvn package
 
 FROM navikt/java:11
-COPY --from=build /tmp/hapi-fhir-server/target/*.jar app.jar
+COPY --from=build /tmp/maven/target/*.jar app.jar
