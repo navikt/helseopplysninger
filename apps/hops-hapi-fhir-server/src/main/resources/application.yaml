@@ -23,8 +23,8 @@ spring:
 #      hibernate.search.lucene_version: lucene_current
   security:
     user:
-      name: hello
-      password: world
+      name: dev
+      password: dev
 
   batch:
     job:

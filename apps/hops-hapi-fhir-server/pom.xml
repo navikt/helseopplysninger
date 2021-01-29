@@ -17,7 +17,7 @@
         <version>5.2.0</version>
     </parent>
 
-    <artifactId>hapi-fhir-jpaserver-starter</artifactId>
+    <artifactId>hops-hapi-fhir-server</artifactId>
 
     <properties>
         <java.version>8</java.version>
@@ -30,7 +30,7 @@
 
     <packaging>jar</packaging>
 
-    <name>HAPI FHIR JPA Server - Starter Project</name>
+    <name>NAV Helseopplysninger - HAPI FHIR JPA Server</name>
 
     <repositories>
         <repository>
@@ -121,12 +121,18 @@
             <version>${spring_boot_version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <version>${spring_boot_version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
 
-        <!-- Tells Maven to name the generated WAR file as ROOT.war -->
-        <finalName>ROOT</finalName>
+        <!-- Tells Maven to name the generated WAR file as app.war -->
+        <finalName>app</finalName>
 
         <plugins>
             <plugin>
@@ -155,30 +161,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <profiles>
-        <!-- Package the war for your preference. Use the boot profile if you prefer a single jar/war
-        that can be started with and embedded application server. Default is jetty as it is assumed
-        that the main users of this project already have an app server.
-        Different profiles are needed as packing it for spring boot, makes the resulting war undeployable
-        due to a class shading issue between tomcat and jetty.
-        (the error is 'java.util.ServiceConfigurationError: org.apache.juli.logging.Log: org.eclipse.jetty.apache.jsp.JuliLog not a subtype')
-
-         -->
-
-        <!-- example of how to start the server using spring boot-->
-        <!-- mvn clean package spring-boot:repackage -Pboot && java -jar target/hapi-fhir-jpaserver.war -->
-
-        <!-- Use the boot profile for development and debugging options when using your IDE -->
-        <profile>
-            <id>boot</id>
-            <dependencies>
-                <dependency>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-web</artifactId>
-                    <version>${spring_boot_version}</version>
-                </dependency>
-            </dependencies>
-        </profile>
-    </profiles>
 </project>
