@@ -21,6 +21,11 @@ spring:
 #      hibernate.search.default.indexbase: target/lucenefiles
 #      hibernate.search.lucene_version: lucene_current
 
+  security:
+    user:
+      name: dev
+      password: dev
+
   batch:
     job:
       enabled: false
