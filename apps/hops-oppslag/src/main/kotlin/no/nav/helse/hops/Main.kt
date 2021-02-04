@@ -1,3 +1,6 @@
+package no.nav.helse.hops
+
+import no.nav.helse.hops.fkr.getPractitioner
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.response.*
@@ -16,5 +19,6 @@ fun Application.oppslag() {
         get("/isAlive") {
             call.respondText("oppslag")
         }
+        getPractitioner()
     }
 }
