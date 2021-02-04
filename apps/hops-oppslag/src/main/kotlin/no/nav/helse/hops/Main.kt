@@ -1,6 +1,6 @@
 package no.nav.helse.hops
 
-import no.nav.helse.hops.fkr.getPractitioner
+import no.nav.helse.hops.fkr.*
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.response.*
