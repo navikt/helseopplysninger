@@ -6,6 +6,7 @@ import io.ktor.features.*
 import io.ktor.response.*
 import io.ktor.routing.*
 
+@Suppress("unused") // Referenced in application.conf
 fun Application.oppslag() {
     install(DefaultHeaders)
     install(CallLogging)
