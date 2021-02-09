@@ -22,7 +22,7 @@ data class Oauth2ProviderConfig(
 )
 
 /**
- * Client basic authentication provider.
+ * Oauth2 client-credentials-flow authentication provider.
  */
 private class Oauth2Provider(
     private val config: Oauth2ProviderConfig

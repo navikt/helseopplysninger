@@ -4,13 +4,11 @@ import ca.uhn.fhir.context.FhirContext
 import io.ktor.client.*
 import io.ktor.client.features.*
 import io.ktor.client.features.auth.*
-import io.ktor.client.features.json.*
 import io.ktor.client.request.*
 import io.ktor.config.*
 import io.ktor.http.*
 import no.nav.helse.hops.common.Oauth2ProviderConfig
 import no.nav.helse.hops.common.oauth2
-import no.nav.helse.hops.fkr.*
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 

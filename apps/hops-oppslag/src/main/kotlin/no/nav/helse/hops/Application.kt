@@ -4,11 +4,11 @@ import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.response.*
 import io.ktor.routing.*
+import no.nav.helse.hops.fkr.FkrFacade
 import no.nav.helse.hops.fkr.FkrKoinModule
-import no.nav.helse.hops.fkr.getHello
-import no.nav.helse.hops.fkr.getPractitioner
 import org.koin.dsl.module
 import org.koin.ktor.ext.Koin
+import org.koin.ktor.ext.inject
 
 @Suppress("unused") // Referenced in application.conf
 fun Application.module() {
@@ -17,7 +17,7 @@ fun Application.module() {
     install(CallLogging)
     install(Koin) {
         modules(
-            module { single { environment.config }},
+            module { single { environment.config }}, // makes the configuration available to DI.
             FkrKoinModule.instance)
     }
     install(Routing) {
@@ -30,7 +30,13 @@ fun Application.module() {
         get("/isAlive") {
             call.respondText("oppslag")
         }
-        getPractitioner()
-        getHello()
+
+        val fkr: FkrFacade by inject()
+        get("/behandler/{hprNr}") {
+            call.parameters["hprNr"]?.toIntOrNull()?.let {
+                val name = fkr.practitionerName(it)
+                call.respondText(name)
+            }
+        }
     }
 }

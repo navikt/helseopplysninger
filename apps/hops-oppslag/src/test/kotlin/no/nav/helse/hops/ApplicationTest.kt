@@ -12,28 +12,11 @@ import kotlin.test.assertEquals
 
 class ApplicationTest {
     @Test
-    fun `1 + 2 = 3`() {
-        assertEquals(3, 3, "1 + 2 should equal 3")
-        assertEquals("application/json", ContentType.Application.Json.toString())
-    }
-
-    @Test
-    fun testHelloEndpoint() {
+    fun `Search for practitioners by HPR-NR`() {
         withTestApplication(Application::module) {
+            application.modules(testKoinModule)
             withTestConfig()
-            with(handleRequest(HttpMethod.Get, "/Hello")) {
-                assertEquals(HttpStatusCode.OK, response.status())
-                assertEquals("Hello!", response.content)
-            }
-        }
-    }
-
-    @Test
-    fun testPractitionerEndpoint() {
-        withTestApplication(Application::module) {
-            application.modules(testModule)
-            withTestConfig()
-            with(handleRequest(HttpMethod.Get, "/Practitioner")) {
+            with(handleRequest(HttpMethod.Get, "/behandler/1234")) {
                 assertEquals(HttpStatusCode.OK, response.status())
                 assertEquals("Våge", response.content)
             }
@@ -43,7 +26,7 @@ class ApplicationTest {
 
 private fun TestApplicationEngine.withTestConfig(): MapApplicationConfig {
     return (environment.config as MapApplicationConfig).apply {
-        put("${FkrKoinModule.CONFIG_NAMESPACE}.host", FkrMock.HOST)
+        put("${FkrKoinModule.CONFIG_NAMESPACE}.host", FkrClientMock.HOST)
         put("${FkrKoinModule.CONFIG_NAMESPACE}.tokenUrl", "http://token-test.no")
         put("${FkrKoinModule.CONFIG_NAMESPACE}.clientId", "test-client-id")
         put("${FkrKoinModule.CONFIG_NAMESPACE}.clientSecret", "test-secret")
@@ -51,6 +34,6 @@ private fun TestApplicationEngine.withTestConfig(): MapApplicationConfig {
     }
 }
 
-private val testModule = module(override = true) {
-    single(FkrKoinModule.CLIENT) { FkrMock.client }
+private val testKoinModule = module(override = true) {
+    single(FkrKoinModule.CLIENT) { FkrClientMock.client }
 }

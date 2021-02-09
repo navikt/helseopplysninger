@@ -6,7 +6,7 @@ import io.ktor.client.features.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 
-object FkrMock {
+object FkrClientMock {
     const val HOST = "fkr-test.no"
 
     val client = HttpClient(MockEngine) {
