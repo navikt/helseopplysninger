@@ -1,7 +1,8 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val ktor_version = "1.5.+"
-var nav_security_version = "1.3.+"
+val ktor_version = "1.5.1"
+val logback_version = "1.2.3"
+val koin_version = "2.2.2"
 
 plugins {
     application
@@ -16,6 +17,7 @@ application {
 
 repositories {
     mavenCentral()
+    jcenter()
     maven ("https://github-package-registry-mirror.gc.nav.no/cached/maven-release")
 }
 
@@ -28,13 +30,14 @@ tasks.withType<KotlinCompile>().all {
 }
 
 dependencies {
-    implementation(kotlin("stdlib-jdk8"))
-    implementation("no.nav.security:token-validation-ktor:$nav_security_version")
-    implementation("no.nav.security:token-client-core:$nav_security_version")
     implementation("io.ktor:ktor-server-netty:$ktor_version")
     implementation("io.ktor:ktor-client-cio:$ktor_version")
     implementation("io.ktor:ktor-client-auth:$ktor_version")
     implementation("io.ktor:ktor-client-jackson:$ktor_version")
-    implementation("ch.qos.logback:logback-classic:1.2.3")
-    testCompile(group = "junit", name = "junit", version = "4.12")
+    implementation("ch.qos.logback:logback-classic:$logback_version")
+    implementation("org.koin:koin-ktor:$koin_version")
+    implementation("org.koin:koin-logger-slf4j:$koin_version")
+    testImplementation("io.ktor:ktor-server-test-host:$ktor_version")
+    testImplementation("io.ktor:ktor-client-mock:$ktor_version")
+    testImplementation("org.koin:koin-test:$koin_version")
 }
