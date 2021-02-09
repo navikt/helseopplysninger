@@ -11,7 +11,7 @@ fun Route.getPractitioner() {
     val fkr: FkrFacade by inject()
 
     get("/Practitioner") {
-        val practitioner = fkr.practitioner(123)
+        val practitioner = fkr.practitionerName(9111492)
         call.respondText(practitioner)
     }
 }

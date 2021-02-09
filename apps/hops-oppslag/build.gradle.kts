@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 val ktor_version = "1.5.1"
 val logback_version = "1.2.3"
 val koin_version = "2.2.2"
+val hapi_version = "5.2.1"
 
 plugins {
     application
@@ -37,6 +38,7 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:$logback_version")
     implementation("org.koin:koin-ktor:$koin_version")
     implementation("org.koin:koin-logger-slf4j:$koin_version")
+    implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:$hapi_version")
     testImplementation("io.ktor:ktor-server-test-host:$ktor_version")
     testImplementation("io.ktor:ktor-client-mock:$ktor_version")
     testImplementation("org.koin:koin-test:$koin_version")
