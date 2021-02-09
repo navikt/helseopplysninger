@@ -1,9 +1,7 @@
 package no.nav.helse.hops.fkr
 
 import io.ktor.client.*
-import io.ktor.client.features.auth.*
 import io.ktor.client.request.*
-import no.nav.helse.hops.common.*
 
 interface FkrFacade {
     suspend fun practitioner(hprNr: Int): String
@@ -11,17 +9,10 @@ interface FkrFacade {
 
 class FkrFacadeImpl(
     private val baseUrl: String,
-    private val oauth2Config: Oauth2ProviderConfig
+    private val client: HttpClient
     ) : FkrFacade {
     override suspend fun practitioner(hprNr: Int): String {
-        HttpClient {
-            install(Auth)
-            {
-                oauth2(oauth2Config)
-            }
-        }.use { client ->
-            val response = client.get<String>("${baseUrl}/Hello")
-            return response
-        }
+        val response = client.get<String>("${baseUrl}/Hello")
+        return response
     }
 }
