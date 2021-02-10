@@ -36,8 +36,6 @@ spec:
     path: /prometheus
   maskinporten:
     enabled: true
-    scopes:
-      - name: "nav:helse/v1/helseopplysninger"
   ingresses:
 {{#each ingresses as |url|}}
     - {{url}}
