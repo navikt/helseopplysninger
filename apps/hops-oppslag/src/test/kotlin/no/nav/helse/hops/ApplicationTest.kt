@@ -4,21 +4,20 @@ import io.ktor.application.*
 import io.ktor.config.*
 import io.ktor.http.*
 import io.ktor.server.testing.*
-import no.nav.helse.hops.fkr.FkrKoinModule
 import no.nav.security.mock.oauth2.MockOAuth2Server
-import org.junit.Test
+import okhttp3.mockwebserver.MockWebServer
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
-import org.koin.dsl.module
-import org.koin.ktor.ext.modules
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 class ApplicationTest {
     @Test
-    fun `Search for practitioners by HPR-NR`() {
+    fun `existing behandler with valid JWT should give 200`() {
         withHopsTestApplication {
-            application.modules(testKoinModule)
-            with(handleRequest(HttpMethod.Get, "/behandler/1234")) {
+            with(handleRequest(HttpMethod.Get, "/behandler/9111492") {
+                addHeader("Authorization", "Bearer ${oauthServer.issueToken().serialize()}")
+            }) {
                 assertEquals(HttpStatusCode.OK, response.status())
                 assertEquals("Våge", response.content)
             }
@@ -26,10 +25,51 @@ class ApplicationTest {
     }
 
     @Test
-    fun hello_withMissingJWTShouldGive_401_Unauthorized() {
+    fun `behandler with missing JWT should give 401-Unauthorized`() {
         withHopsTestApplication {
-            with(handleRequest(HttpMethod.Get, "/protected")) {
+            with(handleRequest(HttpMethod.Get, "/behandler/9111492")) {
                 assertEquals(HttpStatusCode.Unauthorized, response.status())
+            }
+        }
+    }
+
+    @Test
+    fun `behandler with invalid JWT should give 401-Unauthorized`() {
+        withTestApplication({
+            doConfig(
+                acceptedAudience = "some-audience",
+                acceptedIssuer = "some-issuer"
+            )
+            module()
+        }) {
+            with(handleRequest(HttpMethod.Get, "/behandler/9111492") {
+                addHeader("Authorization", "Bearer ${oauthServer.issueToken(audience = "not-accepted").serialize()}")
+            }) {
+                assertEquals(HttpStatusCode.Unauthorized, response.status())
+            }
+
+            with(handleRequest(HttpMethod.Get, "/behandler/9111492") {
+                addHeader("Authorization", "Bearer ${oauthServer.issueToken(issuerId = "not-accepted").serialize()}")
+            }) {
+                assertEquals(HttpStatusCode.Unauthorized, response.status())
+            }
+        }
+    }
+
+    @Test
+    fun `isReady with missing JWT should give_200`() {
+        withHopsTestApplication {
+            with(handleRequest(HttpMethod.Get, "/isReady")) {
+                assertEquals(HttpStatusCode.OK, response.status())
+            }
+        }
+    }
+
+    @Test
+    fun `isAlive with missing JWT should give_200`() {
+        withHopsTestApplication {
+            with(handleRequest(HttpMethod.Get, "/isAlive")) {
+                assertEquals(HttpStatusCode.OK, response.status())
             }
         }
     }
@@ -48,37 +88,35 @@ class ApplicationTest {
         acceptedAudience: String = "default"
     ) {
         (environment.config as MapApplicationConfig).apply {
-            put("${FkrKoinModule.CONFIG_NAMESPACE}.host", FkrClientMock.HOST)
-            put("${FkrKoinModule.CONFIG_NAMESPACE}.tokenUrl", "http://token-test.no")
-            put("${FkrKoinModule.CONFIG_NAMESPACE}.clientId", "test-client-id")
-            put("${FkrKoinModule.CONFIG_NAMESPACE}.clientSecret", "test-secret")
-            put("${FkrKoinModule.CONFIG_NAMESPACE}.scope", "test-scope")
+            put("no.nav.helse.hops.fkr.baseUrl", fkrServer.url("/").toString())
+            put("no.nav.helse.hops.fkr.tokenUrl", "${oauthServer.tokenEndpointUrl(acceptedIssuer)}")
+            put("no.nav.helse.hops.fkr.clientId", "test-client-id")
+            put("no.nav.helse.hops.fkr.clientSecret", "test-secret")
+            put("no.nav.helse.hops.fkr.scope", "test-scope")
             put("no.nav.security.jwt.issuers.size", "1")
             put("no.nav.security.jwt.issuers.0.issuer_name", acceptedIssuer)
-            put("no.nav.security.jwt.issuers.0.discoveryurl", "${server.wellKnownUrl(acceptedIssuer)}")
+            put("no.nav.security.jwt.issuers.0.discoveryurl", "${oauthServer.wellKnownUrl(acceptedIssuer)}")
             put("no.nav.security.jwt.issuers.0.accepted_audience", acceptedAudience)
-            put("no.nav.security.jwt.issuers.0.cookie_name", "selvbetjening-idtoken")
         }
     }
 
-    private val testKoinModule = module(override = true) {
-        single(FkrKoinModule.CLIENT) { FkrClientMock.client }
-    }
-
-    companion object {
-        val server = MockOAuth2Server()
+    private companion object {
+        private const val idTokenCookieName = "selvbetjening-idtoken"
+        val oauthServer = MockOAuth2Server()
+        val fkrServer = MockWebServer().apply { dispatcher = FkrMockDispatcher() }
 
         @BeforeAll
         @JvmStatic
         fun before() {
-            server.start()
-
+            oauthServer.start()
+            fkrServer.start()
         }
 
         @AfterAll
         @JvmStatic
         fun after() {
-            server.shutdown()
+            oauthServer.shutdown()
+            fkrServer.shutdown()
         }
     }
 }

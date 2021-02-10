@@ -6,6 +6,7 @@ val koin_version = "2.2.2"
 val hapi_version = "5.2.1"
 val token_validation_version = "1.3.3"
 val mock_oauth_version = "0.3.1"
+val junit_version = "5.7.1"
 
 plugins {
     java
@@ -33,6 +34,10 @@ tasks.withType<KotlinCompile>().all {
     kotlinOptions.jvmTarget = "11"
 }
 
+tasks.test {
+    useJUnitPlatform()
+}
+
 dependencies {
     implementation("io.ktor:ktor-auth:$ktor_version")
     implementation("io.ktor:ktor-auth-jwt:$ktor_version")
@@ -45,9 +50,9 @@ dependencies {
     implementation("org.koin:koin-logger-slf4j:$koin_version")
     implementation("ch.qos.logback:logback-classic:$logback_version")
     implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:$hapi_version")
-    testImplementation("io.ktor:ktor-server-test-host:$ktor_version")
+    testImplementation("io.ktor:ktor-server-test-host:$ktor_version") { exclude(group = "junit", module = "junit") }
     testImplementation("io.ktor:ktor-client-mock:$ktor_version")
-    testImplementation("org.koin:koin-test:$koin_version")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.4.2")
+    testImplementation("org.koin:koin-test:$koin_version") { exclude(group = "junit", module = "junit") }
+    testImplementation("org.junit.jupiter:junit-jupiter:$junit_version")
     testImplementation("no.nav.security:mock-oauth2-server:$mock_oauth_version")
 }

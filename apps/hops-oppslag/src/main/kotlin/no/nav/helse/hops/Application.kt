@@ -5,7 +5,6 @@ import io.ktor.auth.*
 import io.ktor.features.*
 import io.ktor.response.*
 import io.ktor.routing.*
-import no.nav.helse.hops.security.azureJwt
 import no.nav.helse.hops.fkr.FkrFacade
 import no.nav.helse.hops.fkr.FkrKoinModule
 import no.nav.security.token.support.ktor.tokenValidationSupport
@@ -27,27 +26,20 @@ fun Application.module() {
         tokenValidationSupport(config = environment.config)
     }
     routing {
-        get("/") {
-            call.respondText("oppslag")
-        }
         get("/isReady") {
-            call.respondText("oppslag")
+            call.respondText("ready")
         }
         get("/isAlive") {
-            call.respondText("oppslag")
+            call.respondText("alive")
         }
 
         authenticate {
-            get("/protected") {
-                call.respondText("oppslag")
-            }
-        }
-
-        val fkr: FkrFacade by inject()
-        get("/behandler/{hprNr}") {
-            call.parameters["hprNr"]?.toIntOrNull()?.let {
-                val name = fkr.practitionerName(it)
-                call.respondText(name)
+            val fkr: FkrFacade by inject()
+            get("/behandler/{hprNr}") {
+                call.parameters["hprNr"]?.toIntOrNull()?.let {
+                    val name = fkr.practitionerName(it)
+                    call.respondText(name)
+                }
             }
         }
     }

@@ -13,23 +13,22 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 object FkrKoinModule {
-    const val CONFIG_NAMESPACE = "no.nav.helse.hops.fkr"
     val CLIENT = named("kontaktregister")
 
     val instance = module {
-        single(CLIENT) { createFkrHttpClient(get<ApplicationConfig>().config(CONFIG_NAMESPACE)) }
+        single(CLIENT) { createFkrHttpClient(get<ApplicationConfig>().config("no.nav.helse.hops.fkr")) }
         single { FhirContext.forR4() }
         single<FkrFacade> { FkrFacadeImpl(get(CLIENT), get()) }
     }
 
     private fun createFkrHttpClient(appConfig: ApplicationConfig): HttpClient {
         fun getString(path: String): String = appConfig.property(path).getString()
-
         val oauth2Config = Oauth2ClientProviderConfig(
             getString("tokenUrl"),
             getString("clientId"),
             getString("clientSecret"),
-            getString("scope"))
+            getString("scope"),
+            true)
 
         return HttpClient {
             install(Auth)
@@ -37,7 +36,9 @@ object FkrKoinModule {
                 oauth2(oauth2Config)
             }
             defaultRequest {
-                host = getString("host")
+                val baseUrl = Url(getString("baseUrl"))
+                host = baseUrl.host
+                port = baseUrl.port
                 header(HttpHeaders.Accept, ContentType.Application.Json.toString())
             }
         }
