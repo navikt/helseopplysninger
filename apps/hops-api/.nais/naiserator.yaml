@@ -34,8 +34,6 @@ spec:
   prometheus:
     enabled: true
     path: /prometheus
-  maskinporten:
-    enabled: true
   ingresses:
 {{#each ingresses as |url|}}
     - {{url}}
