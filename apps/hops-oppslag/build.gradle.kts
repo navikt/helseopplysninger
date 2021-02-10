@@ -50,6 +50,7 @@ dependencies {
     implementation("org.koin:koin-logger-slf4j:$koin_version")
     implementation("ch.qos.logback:logback-classic:$logback_version")
     implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:$hapi_version")
+    implementation("ca.uhn.hapi.fhir:hapi-fhir-client:$hapi_version")
     testImplementation("io.ktor:ktor-server-test-host:$ktor_version") { exclude(group = "junit", module = "junit") }
     testImplementation("io.ktor:ktor-client-mock:$ktor_version")
     testImplementation("org.koin:koin-test:$koin_version") { exclude(group = "junit", module = "junit") }
