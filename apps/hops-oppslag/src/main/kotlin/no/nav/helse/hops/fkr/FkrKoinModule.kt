@@ -7,8 +7,8 @@ import io.ktor.client.features.auth.*
 import io.ktor.client.request.*
 import io.ktor.config.*
 import io.ktor.http.*
-import no.nav.helse.hops.common.Oauth2ProviderConfig
-import no.nav.helse.hops.common.oauth2
+import no.nav.helse.hops.security.Oauth2ClientProviderConfig
+import no.nav.helse.hops.security.oauth2
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
@@ -25,7 +25,7 @@ object FkrKoinModule {
     private fun createFkrHttpClient(appConfig: ApplicationConfig): HttpClient {
         fun getString(path: String): String = appConfig.property(path).getString()
 
-        val oauth2Config = Oauth2ProviderConfig(
+        val oauth2Config = Oauth2ClientProviderConfig(
             getString("tokenUrl"),
             getString("clientId"),
             getString("clientSecret"),

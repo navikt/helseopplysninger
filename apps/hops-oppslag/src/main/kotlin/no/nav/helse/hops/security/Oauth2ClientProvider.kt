@@ -1,4 +1,4 @@
-package no.nav.helse.hops.common
+package no.nav.helse.hops.security
 
 import io.ktor.client.*
 import io.ktor.client.features.auth.*
@@ -9,11 +9,11 @@ import io.ktor.http.*
 import io.ktor.http.auth.*
 
 /**
- * Add [Oauth2Provider] to client [Auth] providers.
+ * Add [Oauth2ClientProvider] to client [Auth] providers.
  */
-fun Auth.oauth2(config: Oauth2ProviderConfig) = providers.add(Oauth2Provider(config))
+fun Auth.oauth2(configClient: Oauth2ClientProviderConfig) = providers.add(Oauth2ClientProvider(configClient))
 
-data class Oauth2ProviderConfig(
+data class Oauth2ClientProviderConfig(
     val tokenUrl: String,
     val clientId: String,
     val clientSecret: String,
@@ -24,10 +24,10 @@ data class Oauth2ProviderConfig(
 /**
  * Oauth2 client-credentials-flow authentication provider.
  */
-private class Oauth2Provider(
-    private val config: Oauth2ProviderConfig
+private class Oauth2ClientProvider(
+    private val configClient: Oauth2ClientProviderConfig
 ) : AuthProvider {
-    override val sendWithoutRequest: Boolean = config.sendWithoutRequest
+    override val sendWithoutRequest: Boolean = configClient.sendWithoutRequest
     override fun isApplicable(auth: HttpAuthHeader): Boolean = true
 
     override suspend fun addRequestHeaders(request: HttpRequestBuilder) {
@@ -37,9 +37,9 @@ private class Oauth2Provider(
     private suspend fun constructOauth2TokenValue(): String {
         val parameters = Parameters.build {
             append("grant_type", "client_credentials")
-            append("scope", config.scope)
-            append("client_id", config.clientId)
-            append("client_secret",config.clientSecret)
+            append("scope", configClient.scope)
+            append("client_id", configClient.clientId)
+            append("client_secret",configClient.clientSecret)
         }
 
         /*
@@ -50,7 +50,7 @@ private class Oauth2Provider(
             install(JsonFeature)
         }.use { client ->
             val response = client.submitForm<Oauth2Response>(
-                config.tokenUrl,
+                configClient.tokenUrl,
                 parameters)
 
             return "Bearer ${response.access_token}"
