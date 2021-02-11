@@ -31,7 +31,7 @@ class OauthRequestInterceptor(private val _config: Oauth2ClientProviderConfig): 
             append("grant_type", "client_credentials")
             append("scope", _config.scope)
             append("client_id", _config.clientId)
-            append("client_secret",_config.clientSecret)
+            append("client_secret", _config.clientSecret)
         }
 
         HttpClient { install(JsonFeature) }.use { client -> return client.submitForm(_config.tokenUrl, parameters) }
