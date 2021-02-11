@@ -40,14 +40,15 @@ tasks.test {
 
 dependencies {
     implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:$hapi_version")
-    implementation("ch.qos.logback:logback-classic:$logback_version")
     implementation("io.ktor:ktor-client-jackson:$ktor_version")
     implementation("no.nav.security:token-validation-ktor:$token_validation_version")
     implementation("org.koin:koin-ktor:$koin_version")
     testImplementation("io.ktor:ktor-server-test-host:$ktor_version") { exclude(group = "junit", module = "junit") }
     testImplementation("no.nav.security:mock-oauth2-server:$mock_oauth_version")
-    testImplementation("org.koin:koin-test:$koin_version") { exclude(group = "junit", module = "junit") }
     testImplementation("org.junit.jupiter:junit-jupiter:$junit_version")
-    runtimeOnly("io.ktor:ktor-client-cio:$ktor_version")
+    testImplementation("org.koin:koin-test:$koin_version") { exclude(group = "junit", module = "junit") }
     runtimeOnly("ca.uhn.hapi.fhir:hapi-fhir-client:$hapi_version")
+    runtimeOnly("ch.qos.logback:logback-classic:$logback_version")
+    runtimeOnly("io.ktor:ktor-client-cio:$ktor_version")
+    runtimeOnly("io.ktor:ktor-server-netty:$ktor_version")
 }
