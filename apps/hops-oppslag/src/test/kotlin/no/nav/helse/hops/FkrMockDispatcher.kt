@@ -6,7 +6,7 @@ import okhttp3.mockwebserver.*
 class FkrMockDispatcher: Dispatcher() {
     override fun dispatch(request: RecordedRequest): MockResponse {
 
-        if (!request.headers.any { x -> x.first == HttpHeaders.Authorization && x.second.startsWith("Bearer") })
+        if (!request.headers.any { x -> x.first == HttpHeaders.Authorization && x.second.startsWith("Bearer ey") })
             return MockResponse().setResponseCode(HttpStatusCode.Unauthorized.value)
 
         if (request.method == HttpMethod.Get.value) {

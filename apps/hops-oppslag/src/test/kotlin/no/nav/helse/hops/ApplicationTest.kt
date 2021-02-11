@@ -9,6 +9,8 @@ import okhttp3.mockwebserver.MockWebServer
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import kotlin.test.assertEquals
 
 class ApplicationTest {
@@ -56,19 +58,11 @@ class ApplicationTest {
         }
     }
 
-    @Test
-    fun `isReady with missing JWT should give_200`() {
+    @ParameterizedTest
+    @ValueSource(strings = ["/isReady", "isAlive"])
+    fun `endpoint with missing JWT should give_200`(uri: String) {
         withHopsTestApplication {
-            with(handleRequest(HttpMethod.Get, "/isReady")) {
-                assertEquals(HttpStatusCode.OK, response.status())
-            }
-        }
-    }
-
-    @Test
-    fun `isAlive with missing JWT should give_200`() {
-        withHopsTestApplication {
-            with(handleRequest(HttpMethod.Get, "/isAlive")) {
+            with(handleRequest(HttpMethod.Get, uri)) {
                 assertEquals(HttpStatusCode.OK, response.status())
             }
         }
