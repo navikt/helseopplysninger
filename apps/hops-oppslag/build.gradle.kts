@@ -7,6 +7,7 @@ val hapi_version = "5.2.1"
 val token_validation_version = "1.3.3"
 val mock_oauth_version = "0.3.1"
 val junit_version = "5.7.1"
+val logstash_version = "6.6"
 
 plugins {
     java
@@ -52,4 +53,5 @@ dependencies {
     runtimeOnly("ch.qos.logback:logback-classic:$logback_version")
     runtimeOnly("io.ktor:ktor-client-cio:$ktor_version")
     runtimeOnly("io.ktor:ktor-server-netty:$ktor_version")
+    runtimeOnly("net.logstash.logback:logstash-logback-encoder:$logstash_version")
 }
