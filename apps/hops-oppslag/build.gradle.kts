@@ -12,6 +12,7 @@ plugins {
     java
     application
     kotlin("jvm") version "1.4.21"
+    id("org.jlleitschuh.gradle.ktlint") version "10.0.0"
     id("com.github.johnrengelman.shadow") version "5.0.0"
 }
 
@@ -23,7 +24,7 @@ application {
 repositories {
     mavenCentral()
     jcenter()
-    maven ("https://github-package-registry-mirror.gc.nav.no/cached/maven-release")
+    maven("https://github-package-registry-mirror.gc.nav.no/cached/maven-release")
 }
 
 java {

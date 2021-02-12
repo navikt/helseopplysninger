@@ -1,9 +1,12 @@
 package no.nav.helse.hops
 
-import io.ktor.application.*
-import io.ktor.config.*
-import io.ktor.http.*
-import io.ktor.server.testing.*
+import io.ktor.application.Application
+import io.ktor.config.MapApplicationConfig
+import io.ktor.http.HttpMethod
+import io.ktor.http.HttpStatusCode
+import io.ktor.server.testing.TestApplicationEngine
+import io.ktor.server.testing.handleRequest
+import io.ktor.server.testing.withTestApplication
 import no.nav.security.mock.oauth2.MockOAuth2Server
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.jupiter.api.AfterAll
@@ -17,9 +20,11 @@ class ApplicationTest {
     @Test
     fun `existing behandler with valid JWT should give 200`() {
         withHopsTestApplication {
-            with(handleRequest(HttpMethod.Get, "/behandler/9111492") {
-                addHeader("Authorization", "Bearer ${oauthServer.issueToken().serialize()}")
-            }) {
+            with(
+                handleRequest(HttpMethod.Get, "/behandler/9111492") {
+                    addHeader("Authorization", "Bearer ${oauthServer.issueToken().serialize()}")
+                }
+            ) {
                 assertEquals(HttpStatusCode.OK, response.status())
                 assertEquals("Våge", response.content)
             }
@@ -44,15 +49,19 @@ class ApplicationTest {
             )
             module()
         }) {
-            with(handleRequest(HttpMethod.Get, "/behandler/9111492") {
-                addHeader("Authorization", "Bearer ${oauthServer.issueToken(audience = "not-accepted").serialize()}")
-            }) {
+            with(
+                handleRequest(HttpMethod.Get, "/behandler/9111492") {
+                    addHeader("Authorization", "Bearer ${oauthServer.issueToken(audience = "not-accepted").serialize()}")
+                }
+            ) {
                 assertEquals(HttpStatusCode.Unauthorized, response.status())
             }
 
-            with(handleRequest(HttpMethod.Get, "/behandler/9111492") {
-                addHeader("Authorization", "Bearer ${oauthServer.issueToken(issuerId = "not-accepted").serialize()}")
-            }) {
+            with(
+                handleRequest(HttpMethod.Get, "/behandler/9111492") {
+                    addHeader("Authorization", "Bearer ${oauthServer.issueToken(issuerId = "not-accepted").serialize()}")
+                }
+            ) {
                 assertEquals(HttpStatusCode.Unauthorized, response.status())
             }
         }

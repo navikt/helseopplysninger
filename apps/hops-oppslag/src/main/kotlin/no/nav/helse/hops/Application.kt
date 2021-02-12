@@ -1,10 +1,15 @@
 package no.nav.helse.hops
 
-import io.ktor.application.*
-import io.ktor.auth.*
-import io.ktor.features.*
-import io.ktor.response.*
-import io.ktor.routing.*
+import io.ktor.application.Application
+import io.ktor.application.call
+import io.ktor.application.install
+import io.ktor.auth.Authentication
+import io.ktor.auth.authenticate
+import io.ktor.features.CallLogging
+import io.ktor.features.DefaultHeaders
+import io.ktor.response.respondText
+import io.ktor.routing.get
+import io.ktor.routing.routing
 import no.nav.helse.hops.fkr.FkrFacade
 import no.nav.helse.hops.fkr.FkrKoinModule
 import no.nav.security.token.support.ktor.tokenValidationSupport
@@ -19,8 +24,9 @@ fun Application.module() {
     install(CallLogging)
     install(Koin) {
         modules(
-            module { single { environment.config }}, // makes the configuration available to DI.
-            FkrKoinModule.instance)
+            module { single { environment.config } }, // makes the configuration available to DI.
+            FkrKoinModule.instance
+        )
     }
     install(Authentication) {
         tokenValidationSupport(config = environment.config)

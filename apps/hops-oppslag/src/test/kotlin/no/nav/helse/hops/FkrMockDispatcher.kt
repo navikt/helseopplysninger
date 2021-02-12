@@ -1,9 +1,14 @@
 package no.nav.helse.hops
 
-import io.ktor.http.*
-import okhttp3.mockwebserver.*
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpMethod
+import io.ktor.http.HttpStatusCode
+import io.ktor.http.Url
+import okhttp3.mockwebserver.Dispatcher
+import okhttp3.mockwebserver.MockResponse
+import okhttp3.mockwebserver.RecordedRequest
 
-class FkrMockDispatcher: Dispatcher() {
+class FkrMockDispatcher : Dispatcher() {
     override fun dispatch(request: RecordedRequest): MockResponse {
 
         if (!request.headers.any { x -> x.first == HttpHeaders.Authorization && x.second.startsWith("Bearer ey") })

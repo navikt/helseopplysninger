@@ -3,10 +3,11 @@ package no.nav.helse.hops.security
 import ca.uhn.fhir.rest.client.api.IClientInterceptor
 import ca.uhn.fhir.rest.client.api.IHttpRequest
 import ca.uhn.fhir.rest.client.api.IHttpResponse
-import io.ktor.client.*
-import io.ktor.client.features.json.*
-import io.ktor.client.request.forms.*
-import io.ktor.http.*
+import io.ktor.client.HttpClient
+import io.ktor.client.features.json.JsonFeature
+import io.ktor.client.request.forms.submitForm
+import io.ktor.http.HttpHeaders
+import io.ktor.http.Parameters
 import kotlinx.coroutines.runBlocking
 
 data class Oauth2ClientProviderConfig(
@@ -16,7 +17,7 @@ data class Oauth2ClientProviderConfig(
     val scope: String
 )
 
-class OauthRequestInterceptor(private val _config: Oauth2ClientProviderConfig): IClientInterceptor {
+class OauthRequestInterceptor(private val _config: Oauth2ClientProviderConfig) : IClientInterceptor {
     override fun interceptRequest(theRequest: IHttpRequest?) {
 
         // TODO: Should cache the token

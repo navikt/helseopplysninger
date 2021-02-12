@@ -3,7 +3,7 @@ package no.nav.helse.hops.fkr
 import ca.uhn.fhir.context.FhirContext
 import ca.uhn.fhir.rest.client.api.IGenericClient
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum
-import io.ktor.config.*
+import io.ktor.config.ApplicationConfig
 import no.nav.helse.hops.security.Oauth2ClientProviderConfig
 import no.nav.helse.hops.security.OauthRequestInterceptor
 import org.koin.dsl.module
@@ -23,7 +23,8 @@ object FkrKoinModule {
             getString("tokenUrl"),
             getString("clientId"),
             getString("clientSecret"),
-            getString("scope"))
+            getString("scope")
+        )
 
         val interceptor = OauthRequestInterceptor(oauth2Config)
 
@@ -32,4 +33,3 @@ object FkrKoinModule {
         return factory.newGenericClient(getString("baseUrl")).apply { registerInterceptor(interceptor) }
     }
 }
-
