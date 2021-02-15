@@ -1,20 +1,22 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val ktor_version = "1.5.1"
-val logback_version = "1.2.3"
-val koin_version = "2.2.2"
-val hapi_version = "5.2.1"
-val token_validation_version = "1.3.3"
-val mock_oauth_version = "0.3.1"
-val junit_version = "5.7.1"
-val logstash_version = "6.6"
+object Version {
+    const val ktor = "1.5.1"
+    const val koin = "2.2.2"
+    const val hapi = "5.2.1"
+    const val token_validation = "1.3.3"
+    const val junit = "5.7.1"
+    const val mock_oauth = "0.3.1"
+    const val logback = "1.2.3"
+    const val logstash = "6.6"
+}
 
 plugins {
     java
     application
     kotlin("jvm") version "1.4.21"
+    id("com.github.johnrengelman.shadow") version "6.1.0"
     id("org.jlleitschuh.gradle.ktlint") version "10.0.0"
-    id("com.github.johnrengelman.shadow") version "5.0.0"
 }
 
 application {
@@ -28,30 +30,28 @@ repositories {
     maven("https://github-package-registry-mirror.gc.nav.no/cached/maven-release")
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_11
-}
-
-tasks.withType<KotlinCompile>().all {
-    kotlinOptions.jvmTarget = "11"
-}
-
-tasks.test {
-    useJUnitPlatform()
+tasks {
+    withType<KotlinCompile> {
+        kotlinOptions.jvmTarget = "11"
+        dependsOn("ktlintFormat")
+    }
+    test {
+        useJUnitPlatform()
+    }
 }
 
 dependencies {
-    implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:$hapi_version")
-    implementation("io.ktor:ktor-client-jackson:$ktor_version")
-    implementation("no.nav.security:token-validation-ktor:$token_validation_version")
-    implementation("org.koin:koin-ktor:$koin_version")
-    testImplementation("io.ktor:ktor-server-test-host:$ktor_version") { exclude(group = "junit", module = "junit") }
-    testImplementation("no.nav.security:mock-oauth2-server:$mock_oauth_version")
-    testImplementation("org.junit.jupiter:junit-jupiter:$junit_version")
-    testImplementation("org.koin:koin-test:$koin_version") { exclude(group = "junit", module = "junit") }
-    runtimeOnly("ca.uhn.hapi.fhir:hapi-fhir-client:$hapi_version")
-    runtimeOnly("ch.qos.logback:logback-classic:$logback_version")
-    runtimeOnly("io.ktor:ktor-client-cio:$ktor_version")
-    runtimeOnly("io.ktor:ktor-server-netty:$ktor_version")
-    runtimeOnly("net.logstash.logback:logstash-logback-encoder:$logstash_version")
+    implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:${Version.hapi}")
+    implementation("io.ktor:ktor-client-jackson:${Version.ktor}")
+    implementation("io.ktor:ktor-server-netty:${Version.ktor}")
+    implementation("no.nav.security:token-validation-ktor:${Version.token_validation}")
+    implementation("org.koin:koin-ktor:${Version.koin}")
+    testImplementation("io.ktor:ktor-server-test-host:${Version.ktor}") { exclude(group = "junit", module = "junit") }
+    testImplementation("no.nav.security:mock-oauth2-server:${Version.mock_oauth}")
+    testImplementation("org.junit.jupiter:junit-jupiter:${Version.junit}")
+    testImplementation("org.koin:koin-test:${Version.koin}") { exclude(group = "junit", module = "junit") }
+    runtimeOnly("ca.uhn.hapi.fhir:hapi-fhir-client:${Version.hapi}")
+    runtimeOnly("ch.qos.logback:logback-classic:${Version.logback}")
+    runtimeOnly("io.ktor:ktor-client-cio:${Version.ktor}")
+    runtimeOnly("net.logstash.logback:logstash-logback-encoder:${Version.logstash}")
 }

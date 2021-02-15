@@ -38,3 +38,11 @@ spec:
 {{#each ingresses as |url|}}
     - {{url}}
 {{/each}}
+  env:
+    {{#each env}}
+       - name: {{@key}}
+         value: "{{this}}"
+    {{/each}}
+   envFrom:
+     # FKR_CLIENT_ID & FKR_CLIENT_SECRET
+     - secret: oppslag
