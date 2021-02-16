@@ -35,14 +35,14 @@ spec:
     enabled: true
     path: /prometheus
   ingresses:
-{{#each ingresses as |url|}}
+  {{#each ingresses as |url|}}
     - {{url}}
-{{/each}}
+  {{/each}}
   env:
-    {{#each env}}
-       - name: {{@key}}
-         value: "{{this}}"
-    {{/each}}
-   envFrom:
-     # FKR_CLIENT_ID & FKR_CLIENT_SECRET
-     - secret: oppslag
+  {{#each env}}
+    - name: {{@key}}
+      value: "{{this}}"
+  {{/each}}
+  envFrom:
+    # FKR_CLIENT_ID & FKR_CLIENT_SECRET
+    - secret: oppslag
