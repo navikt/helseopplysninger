@@ -2,6 +2,7 @@ package ca.uhn.fhir.jpa.starter;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
+import ca.uhn.fhir.cql.common.provider.CqlProviderLoader;
 import ca.uhn.fhir.interceptor.api.IInterceptorBroadcaster;
 import ca.uhn.fhir.interceptor.api.IInterceptorService;
 import ca.uhn.fhir.jpa.api.config.DaoConfig;
@@ -11,10 +12,13 @@ import ca.uhn.fhir.jpa.binstore.BinaryStorageInterceptor;
 import ca.uhn.fhir.jpa.bulk.provider.BulkDataExportProvider;
 import ca.uhn.fhir.jpa.interceptor.CascadingDeleteInterceptor;
 import ca.uhn.fhir.jpa.packages.IPackageInstallerSvc;
+import ca.uhn.fhir.jpa.packages.PackageInstallOutcomeJson;
 import ca.uhn.fhir.jpa.packages.PackageInstallationSpec;
 import ca.uhn.fhir.jpa.partition.PartitionManagementProvider;
 import ca.uhn.fhir.jpa.provider.*;
+import ca.uhn.fhir.jpa.provider.dstu3.JpaConformanceProviderDstu3;
 import ca.uhn.fhir.jpa.provider.r4.JpaConformanceProviderR4;
+import ca.uhn.fhir.jpa.provider.r5.JpaConformanceProviderR5;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
 import ca.uhn.fhir.jpa.searchparam.registry.ISearchParamRegistry;
 import ca.uhn.fhir.jpa.subscription.util.SubscriptionDebugLogInterceptor;
@@ -94,8 +98,13 @@ public class BaseJpaRestfulServer extends RestfulServer {
   @Autowired
   ApplicationContext myApplicationContext;
 
-  public BaseJpaRestfulServer() {
+  @Autowired(required = false)
+  IRepositoryValidationInterceptorFactory factory;
 
+  // These are set only if the features are enabled
+  private CqlProviderLoader cqlProviderLoader;
+
+  public BaseJpaRestfulServer() {
   }
 
   private static final long serialVersionUID = 1L;
@@ -118,10 +127,10 @@ public class BaseJpaRestfulServer extends RestfulServer {
     }
 
     setFhirContext(fhirSystemDao.getContext());
+
     registerProviders(resourceProviders.createProviders());
     registerProvider(jpaSystemProvider);
 
-    FhirVersionEnum fhirVersion = fhirSystemDao.getContext().getVersion().getVersion();
     /*
      * The conformance provider exports the supported resources, search parameters, etc for
      * this server. The JPA version adds resourceProviders counts to the exported statement, so it
@@ -131,10 +140,36 @@ public class BaseJpaRestfulServer extends RestfulServer {
      * provide further customization of your server's CapabilityStatement
      */
 
+    FhirVersionEnum fhirVersion = fhirSystemDao.getContext().getVersion().getVersion();
+    if (fhirVersion == FhirVersionEnum.DSTU2) {
 
-    JpaConformanceProviderR4 confProvider = new JpaConformanceProviderR4(this, fhirSystemDao,
-    daoConfig, searchParamRegistry);
-    confProvider.setImplementationDescription("HAPI FHIR R4 Server");
+      JpaConformanceProviderDstu2 confProvider = new JpaConformanceProviderDstu2(this, fhirSystemDao,
+        daoConfig);
+      confProvider.setImplementationDescription("HAPI FHIR DSTU2 Server");
+      setServerConformanceProvider(confProvider);
+    } else {
+      if (fhirVersion == FhirVersionEnum.DSTU3) {
+
+        JpaConformanceProviderDstu3 confProvider = new JpaConformanceProviderDstu3(this, fhirSystemDao,
+          daoConfig, searchParamRegistry);
+        confProvider.setImplementationDescription("HAPI FHIR DSTU3 Server");
+        setServerConformanceProvider(confProvider);
+      } else if (fhirVersion == FhirVersionEnum.R4) {
+
+        JpaConformanceProviderR4 confProvider = new JpaConformanceProviderR4(this, fhirSystemDao,
+          daoConfig, searchParamRegistry);
+        confProvider.setImplementationDescription("HAPI FHIR R4 Server");
+        setServerConformanceProvider(confProvider);
+      } else if (fhirVersion == FhirVersionEnum.R5) {
+
+        JpaConformanceProviderR5 confProvider = new JpaConformanceProviderR5(this, fhirSystemDao,
+          daoConfig, searchParamRegistry);
+        confProvider.setImplementationDescription("HAPI FHIR R5 Server");
+        setServerConformanceProvider(confProvider);
+      } else {
+        throw new IllegalStateException();
+      }
+    }
 
     /*
      * ETag Support
@@ -322,20 +357,24 @@ public class BaseJpaRestfulServer extends RestfulServer {
     if (appProperties.getImplementationGuides() != null) {
       Map<String, AppProperties.ImplementationGuide> guides = appProperties.getImplementationGuides();
       for (Map.Entry<String, AppProperties.ImplementationGuide> guide : guides.entrySet()) {
-        packageInstallerSvc.install(new PackageInstallationSpec()
-          .setPackageUrl(guide.getValue().getUrl())
-          .setName(guide.getValue().getName())
-          .setVersion(guide.getValue().getVersion())
-          .setInstallMode(PackageInstallationSpec.InstallModeEnum.STORE_AND_INSTALL));
+			packageInstallerSvc.install(new PackageInstallationSpec()
+				.setPackageUrl(guide.getValue().getUrl())
+				.setName(guide.getValue().getName())
+				.setVersion(guide.getValue().getVersion())
+				.setInstallMode(PackageInstallationSpec.InstallModeEnum.STORE_AND_INSTALL));
+
       }
     }
+
+    if(factory != null) {
+		 interceptorService.registerInterceptor(factory.buildUsingStoredStructureDefinitions());
+	 }
+
 
     if (appProperties.getLastn_enabled()) {
       daoConfig.setLastNEnabled(true);
     }
 
-
+    daoConfig.getModelConfig().setNormalizedQuantitySearchLevel(appProperties.getNormalized_quantity_search_level());
   }
-
-
 }

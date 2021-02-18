@@ -9,9 +9,9 @@ public class OnR4Condition implements Condition {
   @Override
   public boolean matches(ConditionContext conditionContext, AnnotatedTypeMetadata metadata) {
     FhirVersionEnum version = FhirVersionEnum.forVersionString(conditionContext.
-      getEnvironment()
-      .getProperty("hapi.fhir.fhir_version")
-      .toUpperCase());
+            getEnvironment()
+            .getProperty("hapi.fhir.fhir_version")
+            .toUpperCase());
 
     return version == FhirVersionEnum.R4;
 

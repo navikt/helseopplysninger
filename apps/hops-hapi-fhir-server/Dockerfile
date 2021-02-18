@@ -1,12 +1,7 @@
-FROM maven:3.6.3-jdk-11-slim as build
-WORKDIR /tmp/maven
-
-# Resolve dependencies in a intermediate docker layer that can be cached.
-COPY pom.xml .
-RUN mvn -ntp dependency:go-offline
-
-COPY src .
-RUN mvn package
+FROM gradle:6.8.0-jdk11 AS build
+COPY --chown=gradle:gradle . /home/gradle/src
+WORKDIR /home/gradle/src
+RUN gradle shadowJar --no-daemon
 
 FROM navikt/java:11
-COPY --from=build /tmp/maven/target/*.jar app.jar
+COPY --from=build /home/gradle/src/build/libs/*.jar app.jar
