@@ -1,6 +1,6 @@
-FROM gradle:6.8.0-jdk11 AS build
-COPY --chown=gradle:gradle . /home/gradle/src
+FROM gradle:6.8.2-jdk11 AS build
 WORKDIR /home/gradle/src
+COPY --chown=gradle:gradle . .
 RUN gradle bootJar --no-daemon
 
 FROM navikt/java:11
