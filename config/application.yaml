@@ -1,14 +1,13 @@
 spring:
   datasource:
-    url: 'jdbc:h2:file:./target/database/h2'
-    #url: jdbc:h2:mem:test_mem
-    username: sa
-    password: null
-    driverClassName: org.h2.Driver
+    url: 'jdbc:postgresql://postgres_service:5432/postgres'
+    username: postgres
+    password: Welcome01
+    driverClassName: org.postgresql.Driver
     max-active: 15
-#  jpa:
-#    properties:
-#      hibernate.dialect: org.hibernate.dialect.h2dialect
+  jpa:
+    properties:
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
 #      hibernate.search.model_mapping: ca.uhn.fhir.jpa.search.lucenesearchmappingfactory
 #      hibernate.format_sql: false
 #      hibernate.show_sql: false
