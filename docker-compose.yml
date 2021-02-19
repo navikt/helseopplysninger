@@ -30,7 +30,8 @@ services:
       DB_USERNAME: postgres
       DB_PASSWORD: Welcome01
       AZURE_APP_WELL_KNOWN_URL: http://mock-oauth2_service:8080/default/.well-known/openid-configuration
-      AZURE_APP_CLIENT_ID: client-id-oppslag
+      FKR_BASE_URL: http://hops-hapi_service:8080/fhir
+      HELSE_ID_TOKEN_URL: http://mock-oauth2_service:8080/default/token
 
   hops-hapi_service:
     container_name: hops-hapi_container
@@ -50,7 +51,6 @@ services:
       DB_USERNAME: postgres
       DB_PASSWORD: Welcome01
       AZURE_APP_WELL_KNOWN_URL: http://mock-oauth2_service:8080/default/.well-known/openid-configuration
-      AZURE_APP_CLIENT_ID: client-id-hapi
 
   pgadmin_service:
     container_name: pgadmin_container
