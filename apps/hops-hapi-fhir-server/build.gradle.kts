@@ -13,7 +13,6 @@ plugins {
 
 repositories {
     mavenCentral()
-    jcenter()
     maven("https://github-package-registry-mirror.gc.nav.no/cached/maven-release")
 }
 
@@ -29,7 +28,7 @@ dependencies {
     runtimeOnly("org.springframework.boot:spring-boot-starter-security:${Version.spring_boot_version}")
     runtimeOnly("org.springframework.boot:spring-boot-starter-web:${Version.spring_boot_version}")
     runtimeOnly("org.postgresql:postgresql:${Version.postgresql}")
-    //runtimeOnly("com.h2database:h2:1.4.200") // can be used for local testing
+    runtimeOnly("com.h2database:h2:1.4.200") // used for local testing
 }
 
 java {
