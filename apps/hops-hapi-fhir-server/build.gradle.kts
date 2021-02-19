@@ -34,11 +34,11 @@ dependencies {
     implementation("ca.uhn.hapi.fhir:hapi-fhir-jpaserver-cql:${Version.hapi}")
     implementation("ca.uhn.hapi.fhir:hapi-fhir-jpaserver-mdm:${Version.hapi}")
     implementation("org.springframework.boot:spring-boot-autoconfigure:${Version.spring_boot_version}")
+    runtimeOnly("org.springframework.boot:spring-boot-starter-data-jpa:${Version.spring_boot_version}")
+    runtimeOnly("org.springframework.boot:spring-boot-starter-security:${Version.spring_boot_version}")
     runtimeOnly("org.springframework.boot:spring-boot-starter-web:${Version.spring_boot_version}")
-    //runtimeOnly("org.apache.commons:commons-dbcp2:2.7.0")
     runtimeOnly("org.postgresql:postgresql:${Version.postgresql}")
     runtimeOnly("com.h2database:h2:${Version.h2}")
-    runtimeOnly("org.springframework.boot:spring-boot-starter-security:${Version.spring_boot_version}")
 }
 
 java {
@@ -47,10 +47,6 @@ java {
 
 tasks.withType<ShadowJar> {
     isZip64 = true
-    transform(com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer::class.java) {
-        setPath("META-INF/cxf")
-        include("bus-extensions.txt")
-    }
     transform(PropertiesFileTransformer::class.java) {
         paths = listOf("META-INF/spring.factories")
         mergeStrategy = "append"
