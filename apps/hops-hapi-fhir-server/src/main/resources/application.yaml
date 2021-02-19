@@ -8,11 +8,6 @@ spring:
     properties:
       hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
 
-  security:
-    user:
-      name: ${HAPI_USERNAME:dev}
-      password: ${HAPI_PASSWORD:dev}
-
   batch:
     job:
       enabled: false
@@ -20,3 +15,11 @@ spring:
 hapi:
   fhir:
     fhir_version: R4
+
+# See https://github.com/navikt/token-support#required-properties-yaml-or-properties
+# and https://doc.nais.io/security/auth/azure-ad/#runtime-variables-credentials
+no.nav.security.jwt:
+  issuer:
+    azure:
+      discoveryurl: ${AZURE_APP_WELL_KNOWN_URL}
+      accepted_audience: ${AZURE_APP_CLIENT_ID}

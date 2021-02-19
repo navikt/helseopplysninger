@@ -1,7 +1,8 @@
 object Version {
     const val hapi = "5.3.0"
-    const val spring_boot_version = "2.4.2"
+    const val spring_boot = "2.4.2"
     const val postgresql = "42.2.18"
+    const val nav_token_validation = "1.3.3"
 }
 
 plugins {
@@ -16,16 +17,11 @@ repositories {
 }
 
 dependencies {
-    implementation("ca.uhn.hapi.fhir:hapi-fhir-jpaserver-base:${Version.hapi}") {
-        exclude(group = "org.springframework", module = "spring-jcl")
-        exclude(group = "commons-logging", module = "commons-logging")
-    }
     implementation("ca.uhn.hapi.fhir:hapi-fhir-jpaserver-cql:${Version.hapi}")
     implementation("ca.uhn.hapi.fhir:hapi-fhir-jpaserver-mdm:${Version.hapi}")
-    implementation("org.springframework.boot:spring-boot-autoconfigure:${Version.spring_boot_version}")
-    runtimeOnly("org.springframework.boot:spring-boot-starter-data-jpa:${Version.spring_boot_version}")
-    runtimeOnly("org.springframework.boot:spring-boot-starter-security:${Version.spring_boot_version}")
-    runtimeOnly("org.springframework.boot:spring-boot-starter-web:${Version.spring_boot_version}")
+    implementation("no.nav.security:token-validation-spring:${Version.nav_token_validation}")
+    runtimeOnly("org.springframework.boot:spring-boot-starter-data-jpa:${Version.spring_boot}")
+    runtimeOnly("org.springframework.boot:spring-boot-starter-web:${Version.spring_boot}")
     runtimeOnly("org.postgresql:postgresql:${Version.postgresql}")
     runtimeOnly("com.h2database:h2:1.4.200") // used for local testing
 }

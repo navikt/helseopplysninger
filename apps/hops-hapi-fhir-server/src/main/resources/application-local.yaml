@@ -7,3 +7,10 @@ spring:
   jpa:
     properties:
       hibernate.dialect:
+
+# Start fake oauth2 authorization server with: docker-compose up mock-oauth2_service
+no.nav.security.jwt:
+  issuer:
+    azure:
+      discoveryurl: 'http://localhost:8081/default/.well-known/openid-configuration'
+      accepted_audience: test-client
