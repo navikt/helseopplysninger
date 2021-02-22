@@ -19,11 +19,14 @@ repositories {
 dependencies {
     implementation("ca.uhn.hapi.fhir:hapi-fhir-jpaserver-cql:${Version.hapi}")
     implementation("ca.uhn.hapi.fhir:hapi-fhir-jpaserver-mdm:${Version.hapi}")
-    implementation("no.nav.security:token-validation-spring:${Version.nav_token_validation}")
+    implementation("org.springframework.boot:spring-boot-autoconfigure:${Version.spring_boot}")
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server:${Version.spring_boot}")
+    runtimeOnly("org.springframework.boot:spring-boot-starter-actuator:${Version.spring_boot}")
     runtimeOnly("org.springframework.boot:spring-boot-starter-data-jpa:${Version.spring_boot}")
     runtimeOnly("org.springframework.boot:spring-boot-starter-web:${Version.spring_boot}")
     runtimeOnly("org.postgresql:postgresql:${Version.postgresql}")
     runtimeOnly("com.h2database:h2:1.4.200") // used for local testing
+    developmentOnly("org.springframework.boot:spring-boot-devtools:${Version.spring_boot}")
 }
 
 java {

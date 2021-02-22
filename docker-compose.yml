@@ -2,6 +2,7 @@ services:
   mock-oauth2_service:
     container_name: mock-oauth2_container
     image: docker.pkg.github.com/navikt/mock-oauth2-server/mock-oauth2-server:0.3.1
+    restart: unless-stopped
     ports:
       - "8081:8080"
     networks:

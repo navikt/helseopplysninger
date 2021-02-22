@@ -1,3 +1,13 @@
+AAD_ISSUER_URI: https://login.microsoftonline.com/${AZURE_APP_TENANT_ID}
+ACCEPTED_AUDIENCE: ${AZURE_APP_CLIENT_ID}, api://${AZURE_APP_CLIENT_ID}
+
+management:
+  health:
+    livenessState.enabled: true
+    readinessState.enabled: true
+  endpoint:
+    health.probes.enabled: true
+
 spring:
   datasource:
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_DATABASE:helseopplysninger-db}
@@ -12,15 +22,15 @@ spring:
     job:
       enabled: false
 
+  # See https://doc.nais.io/security/auth/azure-ad/#runtime-variables-credentials
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${AAD_ISSUER_URI}/v2.0
+          #The client_id of this application
+          accepted-audience: ${ACCEPTED_AUDIENCE}
+
 hapi:
   fhir:
     fhir_version: R4
-
-# See https://github.com/navikt/token-support#required-properties-yaml-or-properties
-# and https://doc.nais.io/security/auth/azure-ad/#runtime-variables-credentials
-# Start fake oauth2 authorization server with: docker-compose up mock-oauth2_service
-no.nav.security.jwt:
-  issuer:
-    azure:
-      discoveryurl: ${AZURE_APP_WELL_KNOWN_URL:http://localhost:8081/default/.well-known/openid-configuration}
-      accepted_audience: ${AZURE_APP_CLIENT_ID:hapi-test-client-id}
