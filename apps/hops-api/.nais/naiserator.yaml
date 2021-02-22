@@ -9,6 +9,10 @@ spec:
   image: {{ image }}
   port: 8080
   team: helseopplysninger
+  maskinporten:
+    enabled: true
+    scopes:
+      - name: "nav:helse/v1/helseopplysninger"
   liveness:
     path: /isAlive
     initialDelay: 10
@@ -38,3 +42,5 @@ spec:
 {{#each ingresses as |url|}}
     - {{url}}
 {{/each}}
+  envFrom:
+    - secret: api

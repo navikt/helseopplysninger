@@ -2,7 +2,7 @@ services:
   # Must add 127.0.0.1 mock-oauth2-service to hosts file in order for issuer to be correct when testing from host.
   mock-oauth2-service:
     container_name: mock-oauth2_container
-    image: docker.pkg.github.com/navikt/mock-oauth2-server/mock-oauth2-server:0.3.1
+    image: docker.pkg.github.com/navikt/mock-oauth2-server/mock-oauth2-server:0.3.2
     restart: unless-stopped
     ports:
       - "8081:8081"
@@ -10,6 +10,9 @@ services:
       - hops_network
     environment:
       SERVER_PORT: 8081
+      JSON_CONFIG_PATH: /etc/oauth-mock-config.json
+    volumes:
+      - ./apps/hops-api/src/test/resources/oauth-mock-config.json:/etc/oauth-mock-config.json
 
   hops-api-service:
     container_name: hops-api_container
@@ -45,7 +48,7 @@ services:
       - mock-oauth2-service
       - postgres-service
     ports:
-     - "8084:8080"
+      - "8084:8080"
     networks:
       - hops_network
       - hapi-postgres_network
@@ -76,7 +79,7 @@ services:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: admin
       PGADMIN_SERVER_JSON_FILE: /etc/hopsconfig/servers.json
- 
+
   postgres-service:
     container_name: postgres_container
     image: postgres:12.1
@@ -85,7 +88,7 @@ services:
       - hapi-postgres_network
       - pgadmin-postgres_network
     volumes:
-       - postgres_volume:/data/postgres
+      - postgres_volume:/data/postgres
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: Welcome01
@@ -96,7 +99,7 @@ networks:
   hops_network:
   hapi-postgres_network:
   pgadmin-postgres_network:
- 
+
 volumes:
   postgres_volume:
   pgadmin_volume:
