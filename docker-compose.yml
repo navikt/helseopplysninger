@@ -1,10 +1,19 @@
 services:
+  mock-oauth2_service:
+    container_name: mock-oauth2_container
+    image: docker.pkg.github.com/navikt/mock-oauth2-server/mock-oauth2-server:0.3.1
+    restart: unless-stopped
+    ports:
+      - "8081:8080"
+    networks:
+      - hops_network
+
   hops-api_service:
     container_name: hops-api_container
     build: ./apps/hops-api
     restart: unless-stopped
     ports:
-     - "8081:8080"
+      - "8082:8080"
     networks:
       - hops_network
 
@@ -13,28 +22,44 @@ services:
     build: ./apps/hops-oppslag
     restart: unless-stopped
     ports:
-     - "8082:8080"
+      - "8083:8080"
     networks:
       - hops_network
+    environment:
+      DB_HOST: postgres_service
+      DB_DATABASE: postgres
+      DB_USERNAME: postgres
+      DB_PASSWORD: Welcome01
+      AZURE_APP_WELL_KNOWN_URL: http://mock-oauth2_service:8080/default/.well-known/openid-configuration
+      FKR_BASE_URL: http://hops-hapi_service:8080/fhir
+      HELSE_ID_TOKEN_URL: http://mock-oauth2_service:8080/default/token
 
   hops-hapi_service:
     container_name: hops-hapi_container
     build: ./apps/hops-hapi-fhir-server
     restart: unless-stopped
+    depends_on:
+      - mock-oauth2_service
+      - postgres_service
     ports:
-     - "8080:8080"
+     - "8084:8080"
     networks:
       - hops_network
       - hapi-postgres_network
-    volumes:
-      - ./config:/etc/hopsconfig:ro
     environment:
-      SPRING_CONFIG_LOCATION: 'file:///etc/hopsconfig/application.yaml'
-   
+      DB_HOST: postgres_service
+      DB_PORT: 5432
+      DB_DATABASE: postgres
+      DB_USERNAME: postgres
+      DB_PASSWORD: Welcome01
+      AZURE_APP_WELL_KNOWN_URL: http://mock-oauth2_service:8080/default/.well-known/openid-configuration
+
   pgadmin_service:
     container_name: pgadmin_container
     image: dpage/pgadmin4:4.16
     restart: unless-stopped
+    depends_on:
+      - postgres_service
     ports:
       - "5050:80"
     networks:
