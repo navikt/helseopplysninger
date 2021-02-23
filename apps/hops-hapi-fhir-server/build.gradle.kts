@@ -2,7 +2,6 @@ object Version {
     const val hapi = "5.3.0"
     const val spring_boot = "2.4.2"
     const val postgresql = "42.2.18"
-    const val nav_token_validation = "1.3.3"
 }
 
 plugins {

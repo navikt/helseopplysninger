@@ -39,6 +39,7 @@ services:
     build: ./apps/hops-hapi-fhir-server
     restart: unless-stopped
     depends_on:
+      - mock-oauth2_service
       - postgres_service
     ports:
      - "8084:8080"
