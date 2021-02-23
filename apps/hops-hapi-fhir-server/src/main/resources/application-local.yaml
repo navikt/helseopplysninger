@@ -11,5 +11,6 @@ spring:
     oauth2:
       resourceserver:
         jwt:
+          # Må starte oauth-mock for å kjøre lokalt: docker-compose up mock-oauth2-service
           issuer-uri: http://localhost:8081/default
           accepted-audience: hello
