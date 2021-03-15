@@ -48,15 +48,6 @@ jobs:
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,dest=/tmp/.buildx-cache
 
-    - uses: whoan/docker-build-with-cache-action@v5
-      with:
-        username: ${{ github.repository }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-        registry: docker.pkg.github.com
-        context: ./apps/${{ github.workflow }}
-        image_name: ${{ github.repository }}/${{ github.workflow }}
-        image_tag: ${{ github.sha }}
-
     - name: Deploy to Dev
       uses: nais/deploy/actions/deploy@master
       env:
