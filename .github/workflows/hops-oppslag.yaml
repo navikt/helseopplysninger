@@ -3,7 +3,7 @@ name: hops-oppslag
 on:
   push:
     branches:
-      - 'ghcr.io'
+      - 'master'
     paths:
       - apps/hops-oppslag/**
       - .github/workflows/hops-oppslag.yaml

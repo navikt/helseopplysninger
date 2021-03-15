@@ -3,36 +3,68 @@ name: hops-hapi-fhir-server
 on:
   push:
     branches:
-      - 'master'
+      - 'ghcr.io'
     paths:
       - apps/hops-hapi-fhir-server/**
       - .github/workflows/hops-hapi-fhir-server.yaml
 
 env: # Used by nais/deploy/actions/deploy.
-  IMAGE: docker.pkg.github.com/${{ github.repository }}/${{ github.workflow }}:${{ github.sha }}
+  IMAGE: ghcr.io/${{ github.repository }}/${{ github.workflow }}:${{ github.sha }}
   APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
   RESOURCE: apps/${{ github.workflow }}/.nais/naiserator.yaml
+  BUILDX_CACHE_PATH: /tmp/.buildx-cache
 
 jobs:
- main:
-   runs-on: ubuntu-latest
-   steps:
-    - uses: actions/checkout@v2
-    - uses: whoan/docker-build-with-cache-action@v5
-      with:
-        username: ${{ github.repository }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-        registry: docker.pkg.github.com
-        context: ./apps/${{ github.workflow }}
-        image_name: ${{ github.repository }}/${{ github.workflow }}
-        image_tag: ${{ github.sha }}
-    - name: Deploy to Dev
-      uses: nais/deploy/actions/deploy@master
-      env:
-        CLUSTER: dev-gcp
-        VARS: apps/${{ github.workflow }}/.nais/dev.json
-    - name: Deploy to Prod
-      uses: nais/deploy/actions/deploy@master
-      env:
-        CLUSTER: prod-gcp
-        VARS: apps/${{ github.workflow }}/.nais/prod.json
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Set up Docker layers cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.BUILDX_CACHE_PATH }}
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Login to ghcr.io
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ secrets.GHCR_PUSH_USERNAME }}
+          password: ${{ secrets.GHCR_PUSH_TOKEN }}
+
+      - name: Build and push Docker image
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: ./apps/${{ github.workflow }}
+          push: true
+          tags: ${{ env.IMAGE }}
+          cache-from: type=local,src=${{ env.BUILDX_CACHE_PATH }}
+          cache-to: type=local,dest=${{ env.BUILDX_CACHE_PATH }}-new
+
+        # Temp fix
+        # https://github.com/docker/build-push-action/issues/252
+        # https://github.com/moby/buildkit/issues/1896
+      - name: Move cache
+        run: |
+          rm -rf ${{ env.BUILDX_CACHE_PATH }}
+          mv ${{ env.BUILDX_CACHE_PATH }}-new ${{ env.BUILDX_CACHE_PATH }}
+
+      - name: Deploy to Dev
+        uses: nais/deploy/actions/deploy@master
+        env:
+          CLUSTER: dev-gcp
+          VARS: apps/${{ github.workflow }}/.nais/dev.json
+
+      - name: Deploy to Prod
+        uses: nais/deploy/actions/deploy@master
+        env:
+          CLUSTER: prod-gcp
+          VARS: apps/${{ github.workflow }}/.nais/prod.json
