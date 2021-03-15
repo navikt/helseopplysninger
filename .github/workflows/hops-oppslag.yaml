@@ -44,7 +44,7 @@ jobs:
         context: ./apps/${{ github.workflow }}
         builder: ${{ steps.buildx.outputs.name }}
         push: true
-        tags: ${{ github.sha }}
+        tags: ${{ env.IMAGE }}
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,dest=/tmp/.buildx-cache
 
