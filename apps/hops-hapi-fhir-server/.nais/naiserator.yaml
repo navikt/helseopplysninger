@@ -25,6 +25,9 @@ spec:
     initialDelay: 20
     periodSeconds: 2
     failureThreshold: 900
+  prometheus:
+    enabled: true
+    path: /actuator/prometheus
   resources:
     limits:
       cpu: 1000m

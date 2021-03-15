@@ -4,6 +4,7 @@ object Version {
     const val postgresql = "42.2.19"
     const val logstash = "6.6"
     const val h2 = "1.4.200"
+    const val micrometer_prometheus = "1.6.4"
 }
 
 plugins {
@@ -27,6 +28,7 @@ dependencies {
     runtimeOnly("org.springframework.boot:spring-boot-starter-web:${Version.spring_boot}")
     runtimeOnly("org.postgresql:postgresql:${Version.postgresql}")
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:${Version.logstash}")
+    runtimeOnly("io.micrometer:micrometer-registry-prometheus:${Version.micrometer_prometheus}")
     developmentOnly("com.h2database:h2:${Version.h2}")
     developmentOnly("org.springframework.boot:spring-boot-devtools:${Version.spring_boot}")
 }

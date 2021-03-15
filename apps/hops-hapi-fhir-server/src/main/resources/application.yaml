@@ -4,6 +4,10 @@ management:
     readinessState.enabled: true
   endpoint:
     health.probes.enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
 
 spring:
   datasource:
