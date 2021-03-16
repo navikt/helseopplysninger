@@ -12,9 +12,9 @@ management:
 spring:
   datasource:
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_DATABASE:helseopplysninger-db}
-    username: ${DB_USERNAME:helseopplysninger-db}
-    password: ${DB_PASSWORD:}
-    driverClassName: ${DB_DRIVER:org.postgresql.Driver}
+    username: ${DB_USERNAME:hops-hapi-fhir-server}
+    password: ${DB_PASSWORD}
+    driverClassName: org.postgresql.Driver
   jpa:
     properties:
       hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
