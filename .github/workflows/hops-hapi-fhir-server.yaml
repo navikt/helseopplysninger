@@ -3,7 +3,7 @@ name: hops-hapi-fhir-server
 on:
   push:
     branches:
-      - 'ghcr.io'
+      - 'master'
     paths:
       - apps/hops-hapi-fhir-server/**
       - .github/workflows/hops-hapi-fhir-server.yaml
