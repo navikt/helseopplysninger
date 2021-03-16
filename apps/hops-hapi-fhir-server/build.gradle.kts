@@ -1,13 +1,15 @@
 object Version {
     const val hapi = "5.3.0"
-    const val spring_boot = "2.4.2"
-    const val postgresql = "42.2.18"
+    const val spring_boot = "2.4.3"
+    const val postgresql = "42.2.19"
     const val logstash = "6.6"
+    const val h2 = "1.4.200"
+    const val micrometer_prometheus = "1.6.4"
 }
 
 plugins {
     application
-    id("org.springframework.boot") version "2.4.2"
+    id("org.springframework.boot") version "2.4.3"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
 }
 
@@ -25,8 +27,9 @@ dependencies {
     runtimeOnly("org.springframework.boot:spring-boot-starter-data-jpa:${Version.spring_boot}")
     runtimeOnly("org.springframework.boot:spring-boot-starter-web:${Version.spring_boot}")
     runtimeOnly("org.postgresql:postgresql:${Version.postgresql}")
-    runtimeOnly("com.h2database:h2:1.4.200") // used for local testing
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:${Version.logstash}")
+    runtimeOnly("io.micrometer:micrometer-registry-prometheus:${Version.micrometer_prometheus}")
+    developmentOnly("com.h2database:h2:${Version.h2}")
     developmentOnly("org.springframework.boot:spring-boot-devtools:${Version.spring_boot}")
 }
 
