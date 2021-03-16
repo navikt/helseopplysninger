@@ -1,4 +1,3 @@
-.nais
-build
-Dockerfile
-target
+*
+!src
+!build.gradle.kts
