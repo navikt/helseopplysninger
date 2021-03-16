@@ -15,10 +15,10 @@ spec:
             envVarPrefix: DB
   liveness:
     path: /actuator/health/liveness
-    initialDelay: 180
+    initialDelay: 360
   readiness:
     path: /actuator/health/readiness
-    initialDelay: 180
+    initialDelay: 360
   prometheus:
     enabled: true
     path: /actuator/prometheus
