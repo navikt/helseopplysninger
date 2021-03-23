@@ -1,0 +1,10 @@
+{
+    "json.schemas": [
+        {
+            "fileMatch": [
+                "/ig/*.json"
+            ],
+            "url": "https://www.hl7.org/fhir/fhir.schema.json"
+        }
+    ]
+}

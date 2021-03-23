@@ -1,0 +1,56 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  name: hops-oppslag
+  namespace: helseopplysninger
+  labels:
+    team: helseopplysninger
+spec:
+  image: {{ image }}
+  port: 8080
+  team: helseopplysninger
+  liveness:
+    path: /isAlive
+    initialDelay: 10
+    timeout: 5
+    periodSeconds: 5
+    failureThreshold: 30
+  readiness:
+    path: /isReady
+    initialDelay: 10
+    periodSeconds: 5
+    timeout: 5
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 1024Mi
+    requests:
+      cpu: 500m
+      memory: 512Mi
+  replicas:
+    min: 1
+    max: 2
+    cpuThresholdPercentage: 90
+  prometheus:
+    enabled: true
+    path: /prometheus
+  azure:
+    application:
+      enabled: true
+  accessPolicy:
+    outbound:
+      external:
+        - host: {{fkr_host}}
+        - host: {{helseid_host}}
+  ingresses:
+  {{#each ingresses as |url|}}
+    - {{url}}
+  {{/each}}
+  env:
+  {{#each env}}
+    - name: {{@key}}
+      value: "{{this}}"
+  {{/each}}
+  envFrom:
+    # FKR_CLIENT_ID & FKR_CLIENT_SECRET
+    - secret: oppslag

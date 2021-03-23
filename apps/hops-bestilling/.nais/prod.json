@@ -1,0 +1,9 @@
+{
+  "ingresses":  ["https://hops-oppslag.nais.adeo.no"],
+  "fkr_host": "hint-ext.helsedirektoratet.no",
+  "helseid_host": "helseid-sts.nhn.no",
+  "env": {
+    "FKR_BASE_URL": "https://hint-ext.helsedirektoratet.no/kontaktregister/ekstern",
+    "HELSE_ID_TOKEN_URL": "https://helseid-sts.nhn.no/connect/token"
+  }
+}
