@@ -20,7 +20,7 @@ plugins {
 }
 
 application {
-    mainClass.set("no.nav.helse.hops.ApplicationKt")
+    mainClass.set("no.nav.helse.hops.MainKt")
 }
 
 repositories {
@@ -42,6 +42,8 @@ tasks {
 dependencies {
     implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:${Version.hapi}")
     implementation("org.apache.kafka:kafka-clients:${Version.kafka}")
+    implementation("org.koin:koin-core:${Version.koin}")
+    implementation("org.koin:koin-logger-slf4j:${Version.koin}")
     testImplementation("org.junit.jupiter:junit-jupiter:${Version.junit}")
     testImplementation("org.koin:koin-test:${Version.koin}") { exclude(group = "junit", module = "junit") }
     runtimeOnly("ca.uhn.hapi.fhir:hapi-fhir-client:${Version.hapi}")

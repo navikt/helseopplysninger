@@ -1,4 +1,4 @@
-package no.nav.helse.hops
+package no.nav.helse.hops.koinBootstrapping
 
 import ca.uhn.fhir.context.FhirContext
 import ca.uhn.fhir.context.FhirVersionEnum
