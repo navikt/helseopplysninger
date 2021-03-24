@@ -10,6 +10,7 @@ object Version {
     const val logback = "1.2.3"
     const val logstash = "6.6"
     const val kafka = "2.7.0"
+    const val hoplite = "1.4.0"
 }
 
 plugins {
@@ -41,8 +42,8 @@ tasks {
 
 dependencies {
     implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:${Version.hapi}")
+    implementation("com.sksamuel.hoplite:hoplite-core:${Version.hoplite}")
     implementation("org.apache.kafka:kafka-clients:${Version.kafka}")
-    implementation("org.koin:koin-core:${Version.koin}")
     implementation("org.koin:koin-logger-slf4j:${Version.koin}")
     testImplementation("org.junit.jupiter:junit-jupiter:${Version.junit}")
     testImplementation("org.koin:koin-test:${Version.koin}") { exclude(group = "junit", module = "junit") }

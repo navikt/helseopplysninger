@@ -1,14 +1,14 @@
 package no.nav.helse.hops
 
 import no.nav.helse.hops.koinBootstrapping.Bootstrapper
+import no.nav.helse.hops.koinBootstrapping.Configuration
 import org.koin.dsl.koinApplication
 import org.koin.logger.SLF4JLogger
 
 fun main() {
     val app = koinApplication {
-        fileProperties("/application.properties")
         SLF4JLogger()
-        modules(Bootstrapper.koinModule)
+        modules(Bootstrapper.koinModule, Configuration.koinModule)
     }
 
     try {

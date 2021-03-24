@@ -13,35 +13,16 @@ import org.koin.core.definition.Definition
 import org.koin.core.qualifier.Qualifier
 import org.koin.dsl.module
 import org.koin.dsl.onClose
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.Closeable
 import java.util.Properties
 
 object Bootstrapper {
     val koinModule = module {
-        singleClosable<Producer<Unit, IBaseResource>> {
-            val host = getProperty("kafka.host")
-            val props = Properties().apply {
-                put("bootstrap.servers", host)
-                put("key.serializer", VoidSerializer::class.java)
-                put("value.serializer", FhirResourceSerializer::class.java)
-            }
-            KafkaProducer(props)
-        }
-
-        singleClosable<Consumer<Unit, IBaseResource>> {
-            val host = getProperty("kafka.host")
-            val groupId = getProperty("kafka.group_id")
-            val props = Properties().apply {
-                put("bootstrap.servers", host)
-                put("group.id", groupId)
-                put("key.deserializer", VoidDeserializer::class.java)
-                put("value.deserializer", FhirResourceDeserializer::class.java)
-            }
-            KafkaConsumer(props)
-        }
-
-        single { Service(get(), get(), LoggerFactory.getLogger(Service::class.java)) }
+        singleClosable { createProducer(get()) }
+        singleClosable { createConsumer(get()) }
+        single { Service(get(), get(), getLogger<Service>()) }
     }
 }
 
@@ -52,3 +33,24 @@ private inline fun <reified T : Closeable> org.koin.core.module.Module.singleClo
     override: Boolean = false,
     noinline definition: Definition<T>
 ): BeanDefinition<T> = single(qualifier, createdAtStart, override, definition).onClose { it?.close() }
+
+private inline fun <reified T : Any> getLogger(): Logger = LoggerFactory.getLogger(T::class.java)
+
+private fun createProducer(config: Configuration.Kafka): Producer<Unit, IBaseResource> {
+    val props = Properties().apply {
+        put("bootstrap.servers", config.host)
+        put("key.serializer", VoidSerializer::class.java)
+        put("value.serializer", FhirResourceSerializer::class.java)
+    }
+    return KafkaProducer(props)
+}
+
+private fun createConsumer(config: Configuration.Kafka): Consumer<Unit, IBaseResource> {
+    val props = Properties().apply {
+        put("bootstrap.servers", config.host)
+        put("group.id", config.groupId)
+        put("key.deserializer", VoidDeserializer::class.java)
+        put("value.deserializer", FhirResourceDeserializer::class.java)
+    }
+    return KafkaConsumer(props)
+}
