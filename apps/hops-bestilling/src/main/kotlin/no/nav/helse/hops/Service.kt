@@ -33,7 +33,7 @@ class Service(
             val records = consumer.poll(Duration.ofSeconds(1))
             logger.info("Consumed ${records.count()} records")
 
-            records.iterator().forEach {
+            records.forEach {
                 val resource = it.value()
                 logger.info("Message: ${resource.toJson()}")
             }
