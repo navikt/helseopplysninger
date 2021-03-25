@@ -9,7 +9,7 @@ import org.hl7.fhir.r4.model.Resource
 fun Bundle.addResource(resource: Resource) {
     val entry = Bundle.BundleEntryComponent()
     entry.resource = resource
-    this.addEntry(entry)
+    addEntry(entry)
 }
 
 fun IBaseResource.toJson(): String {

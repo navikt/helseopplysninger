@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 object Version {
     const val ktor = "1.5.1"
-    const val koin = "2.2.2"
+    const val koin = "3.0.1-beta-2"
     const val hapi = "5.2.1"
     const val token_validation = "1.3.3"
     const val junit = "5.7.1"
@@ -25,9 +25,8 @@ application {
 }
 
 repositories {
-    mavenCentral()
-    jcenter()
     maven("https://github-package-registry-mirror.gc.nav.no/cached/maven-release")
+    mavenCentral()
 }
 
 tasks {
@@ -43,10 +42,10 @@ tasks {
 dependencies {
     implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:${Version.hapi}")
     implementation("com.sksamuel.hoplite:hoplite-core:${Version.hoplite}")
+    implementation("io.insert-koin:koin-logger-slf4j:${Version.koin}")
     implementation("org.apache.kafka:kafka-clients:${Version.kafka}")
-    implementation("org.koin:koin-logger-slf4j:${Version.koin}")
+    testImplementation("io.insert-koin:koin-test:${Version.koin}") { exclude(group = "junit", module = "junit") }
     testImplementation("org.junit.jupiter:junit-jupiter:${Version.junit}")
-    testImplementation("org.koin:koin-test:${Version.koin}") { exclude(group = "junit", module = "junit") }
     runtimeOnly("ca.uhn.hapi.fhir:hapi-fhir-client:${Version.hapi}")
     runtimeOnly("ch.qos.logback:logback-classic:${Version.logback}")
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:${Version.logstash}")
