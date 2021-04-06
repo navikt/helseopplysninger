@@ -6,6 +6,7 @@ val logstash = "6.6"
 val mock_oauth = "0.3.1"
 val token_support = "1.3.4"
 val junit = "5.7.1"
+val prometeus_version = "1.6.5"
 
 plugins {
     application
@@ -42,6 +43,8 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:$logback_version")
     implementation("net.logstash.logback:logstash-logback-encoder:$logstash")
     implementation("io.ktor:ktor-auth:$ktor_version")
+    implementation("io.ktor:ktor-metrics-micrometer:$ktor_version")
+    implementation("io.micrometer:micrometer-registry-prometheus:$prometeus_version")
     implementation("no.nav.security:token-validation-ktor:${token_support}")
     testImplementation("io.ktor:ktor-server-test-host:$ktor_version")
     testImplementation("no.nav.security:mock-oauth2-server:$mock_oauth")
