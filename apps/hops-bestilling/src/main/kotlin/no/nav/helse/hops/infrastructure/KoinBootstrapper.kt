@@ -6,6 +6,7 @@ import no.nav.helse.hops.domain.FhirMessageProcessorImpl
 import org.koin.core.definition.BeanDefinition
 import org.koin.core.definition.Definition
 import org.koin.core.qualifier.Qualifier
+import org.koin.dsl.ScopeDSL
 import org.koin.dsl.module
 import org.koin.dsl.onClose
 import org.slf4j.Logger
@@ -21,8 +22,11 @@ object KoinBootstrapper {
 
         singleClosable { KafkaFactory.createFhirProducer(get()) }
         singleClosable { KafkaFactory.createFhirConsumer(get()) }
-//        singleClosable(createdAtStart = true) { BestillingProducerJob(get(), get()) }
         singleClosable(createdAtStart = true) { BestillingConsumerJob(get(), get(), get()) }
+
+        scope<HttpRequestKoinScope> {
+            scopedClosable { BestillingProducerJob(get(), get()) }
+        }
     }
 
     /** Helper function to register Closeable as singleton and tie its lifetime to the Module. **/
@@ -32,6 +36,13 @@ object KoinBootstrapper {
         override: Boolean = false,
         noinline definition: Definition<T>
     ): BeanDefinition<T> = single(qualifier, createdAtStart, override, definition).onClose { it?.close() }
+
+    /** Helper function to register Closeable as scoped and tie its lifetime to the Scope. **/
+    private inline fun <reified T : Closeable> ScopeDSL.scopedClosable(
+        qualifier: Qualifier? = null,
+        override: Boolean = false,
+        noinline definition: Definition<T>
+    ): BeanDefinition<T> = scoped(qualifier, override, definition).onClose { it?.close() }
 
     private inline fun <reified T : Any> getLogger(): Logger = LoggerFactory.getLogger(T::class.java)
 }

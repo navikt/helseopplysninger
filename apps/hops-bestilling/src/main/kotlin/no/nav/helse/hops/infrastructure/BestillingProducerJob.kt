@@ -26,12 +26,9 @@ class BestillingProducerJob(
 
     init {
         scope.launch {
-            for (i in 0..4) {
-                val msg = createFhirMessage()
-
-                val future = producer.send(ProducerRecord(config.topic, msg))
-                future.get()
-            }
+            val msg = createFhirMessage()
+            val future = producer.send(ProducerRecord(config.topic, msg))
+            future.get()
         }
     }
 

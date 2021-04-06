@@ -1,7 +1,7 @@
 apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
-  name: hops-oppslag
+  name: hops-bestilling
   namespace: helseopplysninger
   labels:
     team: helseopplysninger
@@ -31,17 +31,9 @@ spec:
     min: 1
     max: 2
     cpuThresholdPercentage: 90
-  prometheus:
-    enabled: true
-    path: /prometheus
   azure:
     application:
       enabled: true
-  accessPolicy:
-    outbound:
-      external:
-        - host: {{fkr_host}}
-        - host: {{helseid_host}}
   ingresses:
   {{#each ingresses as |url|}}
     - {{url}}
@@ -51,6 +43,3 @@ spec:
     - name: {{@key}}
       value: "{{this}}"
   {{/each}}
-  envFrom:
-    # FKR_CLIENT_ID & FKR_CLIENT_SECRET
-    - secret: oppslag

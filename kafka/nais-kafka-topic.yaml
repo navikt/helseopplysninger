@@ -1,0 +1,13 @@
+apiVersion: kafka.nais.io/v1
+kind: Topic
+metadata:
+  name: bestilling
+  namespace: helseopplysninger
+  labels:
+    team: helseopplysninger
+spec:
+  pool: nav-dev
+  acl:
+    - team: helseopplysninger
+      application: hops-bestilling
+      access: read
