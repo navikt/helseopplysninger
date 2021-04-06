@@ -1,7 +1,8 @@
 package no.nav.helse.hops.infrastructure
 
 import com.sksamuel.hoplite.ConfigLoader
-import no.nav.helse.hops.Service
+import no.nav.helse.hops.domain.FhirMessageProcessor
+import no.nav.helse.hops.domain.FhirMessageProcessorImpl
 import org.koin.core.definition.BeanDefinition
 import org.koin.core.definition.Definition
 import org.koin.core.qualifier.Qualifier
@@ -16,10 +17,12 @@ object KoinBootstrapper {
         data class ConfigRoot(val kafka: Configuration.Kafka)
         single { ConfigLoader().loadConfigOrThrow<ConfigRoot>("/application.properties") }
         single { get<ConfigRoot>().kafka }
+        single<FhirMessageProcessor> { FhirMessageProcessorImpl(getLogger<FhirMessageProcessorImpl>()) }
 
         singleClosable { KafkaFactory.createFhirProducer(get()) }
         singleClosable { KafkaFactory.createFhirConsumer(get()) }
-        single { Service(get(), get(), getLogger<Service>()) }
+//        singleClosable(createdAtStart = true) { BestillingProducerJob(get(), get()) }
+        singleClosable(createdAtStart = true) { BestillingConsumerJob(get(), get(), get()) }
     }
 
     /** Helper function to register Closeable as singleton and tie its lifetime to the Module. **/

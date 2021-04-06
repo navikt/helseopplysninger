@@ -1,6 +1,10 @@
-package no.nav.helse.hops
+package no.nav.helse.hops.infrastructure
 
-import org.apache.kafka.clients.consumer.Consumer
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import no.nav.helse.hops.addResource
 import org.apache.kafka.clients.producer.Producer
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.hl7.fhir.instance.model.api.IBaseResource
@@ -10,38 +14,29 @@ import org.hl7.fhir.r4.model.MessageHeader
 import org.hl7.fhir.r4.model.Questionnaire
 import org.hl7.fhir.r4.model.Task
 import org.hl7.fhir.r4.model.UrlType
-import org.slf4j.Logger
-import java.time.Duration
+import java.io.Closeable
+import kotlin.coroutines.CoroutineContext
 
-class Service(
+class BestillingProducerJob(
     private val producer: Producer<Unit, IBaseResource>,
-    private val consumer: Consumer<Unit, IBaseResource>,
-    private val logger: Logger
-) {
+    config: Configuration.Kafka,
+    context: CoroutineContext = Dispatchers.Default
+) : Closeable {
+    private val scope = CoroutineScope(context)
 
-    fun execute() {
-        for (i in 0..4) {
-            val msg = createFhirMessage()
+    init {
+        scope.launch {
+            for (i in 0..4) {
+                val msg = createFhirMessage()
 
-            val future = producer.send(ProducerRecord("Topic1", msg))
-            future.get()
-        }
-
-        consumer.subscribe(listOf("Topic1"))
-
-        while (true) {
-            val records = consumer.poll(Duration.ofSeconds(1))
-            logger.info("Consumed ${records.count()} records")
-
-            records.forEach {
-                val resource = it.value()
-                logger.info("Message: ${resource.toJson()}")
-            }
-
-            if (!records.isEmpty) {
-                break
+                val future = producer.send(ProducerRecord(config.topic, msg))
+                future.get()
             }
         }
+    }
+
+    override fun close() {
+        scope.cancel()
     }
 
     private fun createFhirMessage(): Bundle {
