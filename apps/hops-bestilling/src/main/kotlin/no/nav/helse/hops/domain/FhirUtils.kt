@@ -1,4 +1,4 @@
-package no.nav.helse.hops
+package no.nav.helse.hops.domain
 
 import ca.uhn.fhir.context.FhirContext
 import ca.uhn.fhir.context.FhirVersionEnum

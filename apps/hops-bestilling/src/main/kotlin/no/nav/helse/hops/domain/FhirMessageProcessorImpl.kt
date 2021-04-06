@@ -1,6 +1,5 @@
 package no.nav.helse.hops.domain
 
-import no.nav.helse.hops.toJson
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.OperationOutcome
 import org.slf4j.Logger
