@@ -1,0 +1,22 @@
+name: deploy kafka topic
+
+on:
+  push:
+    branches:
+      - 'master'
+    paths:
+      - kafka/nais-kafka-topic.yaml
+  workflow_dispatch:
+
+jobs:
+  deploy-dev:
+    name: Deploy kafka
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: dev-gcp
+          RESOURCE: kafka/nais-kafka-topic.yaml
+          PRINT_PAYLOAD: true
