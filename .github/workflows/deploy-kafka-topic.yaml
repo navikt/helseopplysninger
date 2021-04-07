@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - 'master'
-      - 'bestilling'
     paths:
       - kafka/nais-kafka-topic.yaml
   workflow_dispatch:

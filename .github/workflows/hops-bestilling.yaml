@@ -1,4 +1,4 @@
-name: hops-oppslag
+name: hops-bestilling
 
 on:
   push:
