@@ -1,0 +1,22 @@
+{
+  "interactiveLogin": true,
+  "httpServer": "NettyWrapper",
+  "tokenCallbacks": [
+    {
+      "issuerId": "maskinporten",
+      "tokenExpiry": 120,
+      "requestMappings": [
+        {
+          "requestParam": "scope",
+          "match": "nav:helse/v1/helseopplysninger",
+          "claims": {
+            "aud": [
+              "aud-localhost"
+            ],
+            "scope": "nav:helse/v1/helseopplysninger"
+          }
+        }
+      ]
+    }
+  ]
+}
