@@ -62,9 +62,3 @@ jobs:
         env:
           CLUSTER: dev-gcp
           VARS: apps/${{ github.workflow }}/.nais/dev.json
-
-      - name: Deploy to Prod
-        uses: nais/deploy/actions/deploy@master
-        env:
-          CLUSTER: prod-gcp
-          VARS: apps/${{ github.workflow }}/.nais/prod.json
