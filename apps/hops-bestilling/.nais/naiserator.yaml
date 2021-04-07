@@ -34,6 +34,8 @@ spec:
   azure:
     application:
       enabled: true
+  kafka:
+    pool: {{ kafka_pool }}
   ingresses:
   {{#each ingresses as |url|}}
     - {{url}}

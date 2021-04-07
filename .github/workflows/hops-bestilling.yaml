@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - 'master'
+      - 'bestilling'
     paths:
       - apps/hops-bestilling/**
       - .github/workflows/hops-bestilling.yaml

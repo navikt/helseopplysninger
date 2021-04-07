@@ -10,4 +10,7 @@ spec:
   acl:
     - team: helseopplysninger
       application: hops-bestilling
-      access: read
+      access: readwrite
+    - team: helseopplysninger
+      application: hops-bestiller-backend
+      access: readwrite
