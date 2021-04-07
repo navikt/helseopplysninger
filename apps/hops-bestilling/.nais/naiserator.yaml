@@ -40,8 +40,3 @@ spec:
   {{#each ingresses as |url|}}
     - {{url}}
   {{/each}}
-  env:
-  {{#each env}}
-    - name: {{@key}}
-      value: "{{this}}"
-  {{/each}}
