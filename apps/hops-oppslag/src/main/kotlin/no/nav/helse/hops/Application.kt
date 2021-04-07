@@ -7,9 +7,13 @@ import io.ktor.auth.Authentication
 import io.ktor.auth.authenticate
 import io.ktor.features.CallLogging
 import io.ktor.features.DefaultHeaders
+import io.ktor.metrics.micrometer.MicrometerMetrics
+import io.ktor.response.respond
 import io.ktor.response.respondText
 import io.ktor.routing.get
 import io.ktor.routing.routing
+import io.micrometer.prometheus.PrometheusConfig
+import io.micrometer.prometheus.PrometheusMeterRegistry
 import no.nav.helse.hops.fkr.FkrFacade
 import no.nav.helse.hops.fkr.FkrKoinModule
 import no.nav.security.token.support.ktor.tokenValidationSupport
@@ -19,7 +23,10 @@ import org.koin.ktor.ext.inject
 
 @Suppress("unused") // Referenced in application.conf
 fun Application.module() {
-
+    val appMicrometerRegistry = PrometheusMeterRegistry(PrometheusConfig.DEFAULT) // https://ktor.io/docs/micrometer-metrics.html
+    install(MicrometerMetrics) {
+        registry = appMicrometerRegistry
+    }
     install(DefaultHeaders)
     install(CallLogging)
     install(Koin) {
@@ -37,6 +44,9 @@ fun Application.module() {
         }
         get("/isAlive") {
             call.respondText("alive")
+        }
+        get("/prometheus") {
+            call.respond(appMicrometerRegistry.scrape())
         }
 
         authenticate {

@@ -39,7 +39,7 @@ You should then get at `200 OK` and a (very long) response JSON
 You need Postman or something equivalent.
 
 In Postman:
-* Make a `get` request
+* Make a `get` request to `http://localhost:8084/fhir/Patient`
 * Click the `Authorization` tab
 * In the `Type` dropdown, select `OAuth 2.0`
 * In the `Add authorization data to` dropdown, select `Request Headers`

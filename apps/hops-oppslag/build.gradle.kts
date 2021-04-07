@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 object Version {
-    const val ktor = "1.5.1"
+    const val ktor = "1.5.2"
     const val koin = "2.2.2"
     const val hapi = "5.2.1"
     const val token_validation = "1.3.3"
@@ -9,6 +9,7 @@ object Version {
     const val mock_oauth = "0.3.1"
     const val logback = "1.2.3"
     const val logstash = "6.6"
+    const val micrometer_prometheus = "1.6.5"
 }
 
 plugins {
@@ -46,6 +47,8 @@ dependencies {
     implementation("io.ktor:ktor-server-netty:${Version.ktor}")
     implementation("no.nav.security:token-validation-ktor:${Version.token_validation}")
     implementation("org.koin:koin-ktor:${Version.koin}")
+    implementation("io.micrometer:micrometer-registry-prometheus:${Version.micrometer_prometheus}")
+    implementation("io.ktor:ktor-metrics-micrometer:${Version.ktor}")
     testImplementation("io.ktor:ktor-server-test-host:${Version.ktor}") { exclude(group = "junit", module = "junit") }
     testImplementation("no.nav.security:mock-oauth2-server:${Version.mock_oauth}")
     testImplementation("org.junit.jupiter:junit-jupiter:${Version.junit}")
