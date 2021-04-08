@@ -7,6 +7,7 @@ object Configuration {
         val groupId: String,
         val topic: String,
         val clientId: String,
+        val security: Boolean,
         val truststorePath: String,
         val keystorePath: String,
         val credstorePsw: String

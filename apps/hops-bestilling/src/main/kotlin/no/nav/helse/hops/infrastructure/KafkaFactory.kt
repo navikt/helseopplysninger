@@ -37,15 +37,18 @@ object KafkaFactory {
         return Properties().also {
             it[CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG] = config.brokers
             it[CommonClientConfigs.CLIENT_ID_CONFIG] = config.clientId
-            it[CommonClientConfigs.SECURITY_PROTOCOL_CONFIG] = "SSL"
-            it[SslConfigs.SSL_TRUSTSTORE_TYPE_CONFIG] = "jks"
-            it[SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG] = config.truststorePath
-            it[SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG] = config.credstorePsw
-            it[SslConfigs.SSL_KEYSTORE_TYPE_CONFIG] = "PKCS12"
-            it[SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG] = config.keystorePath
-            it[SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG] = config.credstorePsw
-            it[SslConfigs.SSL_KEY_PASSWORD_CONFIG] = config.credstorePsw
-            it[SslConfigs.SSL_ENDPOINT_IDENTIFICATION_ALGORITHM_CONFIG] = ""
+
+            if (config.security) {
+                it[CommonClientConfigs.SECURITY_PROTOCOL_CONFIG] = "SSL"
+                it[SslConfigs.SSL_TRUSTSTORE_TYPE_CONFIG] = "JKS"
+                it[SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG] = config.truststorePath
+                it[SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG] = config.credstorePsw
+                it[SslConfigs.SSL_KEYSTORE_TYPE_CONFIG] = "PKCS12"
+                it[SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG] = config.keystorePath
+                it[SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG] = config.credstorePsw
+                it[SslConfigs.SSL_KEY_PASSWORD_CONFIG] = config.credstorePsw
+                it[SslConfigs.SSL_ENDPOINT_IDENTIFICATION_ALGORITHM_CONFIG] = ""
+            }
         }
     }
 }

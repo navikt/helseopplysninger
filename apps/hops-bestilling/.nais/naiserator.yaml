@@ -40,3 +40,6 @@ spec:
   {{#each ingresses as |url|}}
     - {{url}}
   {{/each}}
+  env:
+    - name: KAFKA_SECURITY_ENABLED
+      value: true

@@ -72,6 +72,7 @@ services:
       - 8085:8080
     networks:
       - hops_network
+      - kafka_network
     environment:
       KAFKA_BROKERS: kafka-service:9093
       KAFKA_CLIENT_ID: hops-bestilling
@@ -114,9 +115,8 @@ services:
     image: wurstmeister/zookeeper:latest
     ports:
       - 2181:2181
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - kafka_network
 
   kafka-service:
     container_name: kafka_container
@@ -125,7 +125,6 @@ services:
       - zookeeper-service
     ports:
       - 9092:9092
-      - 9093
     environment:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper-service:2181
       KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka-service:9093,OUTSIDE://localhost:9092
@@ -133,6 +132,8 @@ services:
       KAFKA_LISTENERS: INSIDE://:9093,OUTSIDE://:9092
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
       KAFKA_CREATE_TOPICS: "helseopplysninger.bestilling:1:1"
+    networks:
+      - kafka_network
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 
@@ -143,13 +144,12 @@ services:
       - 9000:9000
     environment:
       KAFKA_BROKERCONNECT: kafka-service:9093
-      JVM_OPTS: "-Xms32M -Xmx64M"
-      SERVER_SERVLET_CONTEXTPATH: "/"
     depends_on:
       - kafka-service
 
 networks:
   hops_network:
+  kafka_network:
   hapi-postgres_network:
   pgadmin-postgres_network:
 
