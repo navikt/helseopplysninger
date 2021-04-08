@@ -2,8 +2,8 @@ package no.nav.helse.hops.infrastructure
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import no.nav.helse.hops.domain.addResource
 import org.apache.kafka.clients.producer.Producer
 import org.apache.kafka.clients.producer.ProducerRecord
@@ -22,18 +22,16 @@ class BestillingProducerJob(
     config: Configuration.Kafka,
     context: CoroutineContext = Dispatchers.Default
 ) : Closeable {
-    private val scope = CoroutineScope(context)
-
-    init {
-        scope.launch {
-            val msg = createFhirMessage()
-            val future = producer.send(ProducerRecord(config.topic, msg))
-            future.get()
-        }
+    private val job = CoroutineScope(context).launch {
+        val msg = createFhirMessage()
+        val future = producer.send(ProducerRecord(config.topic, msg))
+        future.get()
     }
 
     override fun close() {
-        scope.cancel()
+        runBlocking {
+            job.join()
+        }
     }
 
     private fun createFhirMessage(): Bundle {
