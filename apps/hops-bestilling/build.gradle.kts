@@ -16,7 +16,7 @@ object Version {
 plugins {
     java
     application
-    kotlin("jvm") version "1.4.21"
+    kotlin("jvm") version "1.4.32"
     id("com.github.johnrengelman.shadow") version "6.1.0"
     id("org.jlleitschuh.gradle.ktlint") version "10.0.0"
 }
