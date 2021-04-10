@@ -1,7 +1,18 @@
 version: 2
 updates:
   - package-ecosystem: "gradle"
-    directory: "/"
+    directory: "/apps/hops-api"
     schedule:
       interval: "daily"
-    open-pull-requests-limit: 5
+  - package-ecosystem: "gradle"
+      directory: "/apps/hops-bestilling"
+      schedule:
+        interval: "daily"
+  - package-ecosystem: "gradle"
+      directory: "/apps/hops-hapi-fhir-server"
+      schedule:
+        interval: "daily"
+  - package-ecosystem: "gradle"
+      directory: "/apps/hops-oppslag"
+      schedule:
+        interval: "daily"
