@@ -1,4 +1,4 @@
-package no.nav.helse.hops
+package no.nav.helse.hops.oppslag
 
 import io.ktor.application.Application
 import io.ktor.application.call
@@ -14,8 +14,8 @@ import io.ktor.routing.get
 import io.ktor.routing.routing
 import io.micrometer.prometheus.PrometheusConfig
 import io.micrometer.prometheus.PrometheusMeterRegistry
-import no.nav.helse.hops.fkr.FkrFacade
-import no.nav.helse.hops.fkr.FkrKoinModule
+import no.nav.helse.hops.oppslag.fkr.FkrFacade
+import no.nav.helse.hops.oppslag.fkr.FkrKoinModule
 import no.nav.security.token.support.ktor.tokenValidationSupport
 import org.koin.dsl.module
 import org.koin.ktor.ext.Koin

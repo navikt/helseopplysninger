@@ -1,4 +1,4 @@
-package no.nav.helse.hops
+package no.nav.helse.hops.oppslag
 
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod

@@ -1,4 +1,4 @@
-package no.nav.helse.hops.fkr
+package no.nav.helse.hops.oppslag.fkr
 
 import ca.uhn.fhir.rest.client.api.IGenericClient
 import org.hl7.fhir.r4.model.Bundle

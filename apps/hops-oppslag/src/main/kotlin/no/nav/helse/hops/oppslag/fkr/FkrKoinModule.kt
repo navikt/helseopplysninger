@@ -1,32 +1,34 @@
-package no.nav.helse.hops.fkr
+package no.nav.helse.hops.oppslag.fkr
 
 import ca.uhn.fhir.context.FhirContext
+import ca.uhn.fhir.context.FhirVersionEnum
 import ca.uhn.fhir.rest.client.api.IGenericClient
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum
 import io.ktor.config.ApplicationConfig
-import no.nav.helse.hops.security.Oauth2ClientProviderConfig
-import no.nav.helse.hops.security.OauthRequestInterceptor
+import no.nav.helse.hops.oppslag.security.OauthRequestInterceptor
+import no.nav.helse.hops.security.oauth.OAuth2ClientFactory
 import org.koin.dsl.module
 
 object FkrKoinModule {
 
     val instance = module {
-        single { FhirContext.forR4() }
-        single { createHapiFhirClient(get<ApplicationConfig>().config("no.nav.helse.hops.fkr"), get()) }
+        single { FhirContext.forCached(FhirVersionEnum.R4) }
+        single { createHapiFhirClient(get<ApplicationConfig>().config("no.nav.helse.hops.fkr")) }
         single<FkrFacade> { FkrFacadeImpl(get()) }
     }
 
-    private fun createHapiFhirClient(appConfig: ApplicationConfig, ctx: FhirContext): IGenericClient {
+    private fun createHapiFhirClient(appConfig: ApplicationConfig): IGenericClient {
         fun getString(path: String): String = appConfig.property(path).getString()
 
-        val oauth2Config = Oauth2ClientProviderConfig(
-            getString("tokenUrl"),
+        val oauth2Client = OAuth2ClientFactory.create(
+            getString("wellKnownUrl"),
             getString("clientId"),
-            getString("clientSecret"),
-            getString("scope")
+            getString("clientSecret")
         )
 
-        val interceptor = OauthRequestInterceptor(oauth2Config)
+        val interceptor = OauthRequestInterceptor(oauth2Client, getString("scope"))
+
+        val ctx = FhirContext.forCached(FhirVersionEnum.R4)!!
 
         // So that we dont start by requesting /metadata.
         val factory = ctx.restfulClientFactory.apply { serverValidationMode = ServerValidationModeEnum.NEVER }

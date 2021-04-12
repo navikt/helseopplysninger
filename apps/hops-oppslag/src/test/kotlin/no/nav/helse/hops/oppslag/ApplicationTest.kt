@@ -1,4 +1,4 @@
-package no.nav.helse.hops
+package no.nav.helse.hops.oppslag
 
 import io.ktor.application.Application
 import io.ktor.config.MapApplicationConfig
@@ -93,6 +93,7 @@ class ApplicationTest {
         (environment.config as MapApplicationConfig).apply {
             put("no.nav.helse.hops.fkr.baseUrl", fkrServer.url("/").toString())
             put("no.nav.helse.hops.fkr.tokenUrl", "${oauthServer.tokenEndpointUrl(acceptedIssuer)}")
+            put("no.nav.helse.hops.fkr.wellKnownUrl", "${oauthServer.wellKnownUrl(acceptedIssuer)}")
             put("no.nav.helse.hops.fkr.clientId", "test-client-id")
             put("no.nav.helse.hops.fkr.clientSecret", "test-secret")
             put("no.nav.helse.hops.fkr.scope", "test-scope")

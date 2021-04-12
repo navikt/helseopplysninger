@@ -1,4 +1,4 @@
-package no.nav.helse.hops
+package no.nav.helse.hops.oppslag
 
 object PractitionerTestData {
     val bundleWithSingleEntity = """

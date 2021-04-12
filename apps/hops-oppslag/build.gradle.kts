@@ -38,8 +38,8 @@ tasks {
 }
 
 dependencies {
+    implementation(project(":hops-client-security"))
     implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:$hapi_version")
-    implementation("io.ktor:ktor-client-jackson:$ktor_version")
     implementation("io.ktor:ktor-server-netty:$ktor_version")
     implementation("no.nav.security:token-validation-ktor:$token_validation_version")
     implementation("io.insert-koin:koin-ktor:$koin_version")
