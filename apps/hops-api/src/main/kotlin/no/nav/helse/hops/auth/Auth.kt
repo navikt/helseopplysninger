@@ -3,11 +3,9 @@ package no.nav.helse.hops.auth
 import io.ktor.application.Application
 import io.ktor.application.install
 import io.ktor.auth.Authentication
-import io.ktor.util.KtorExperimentalAPI
 import no.nav.security.token.support.ktor.RequiredClaims
 import no.nav.security.token.support.ktor.tokenValidationSupport
 
-@KtorExperimentalAPI
 fun Application.configureAuthentication() {
     val config = this.environment.config
     val issuer = config
