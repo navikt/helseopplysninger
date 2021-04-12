@@ -1,11 +1,9 @@
-object Version {
-    const val hapi = "5.3.0"
-    const val spring_boot = "2.4.3"
-    const val postgresql = "42.2.19"
-    const val logstash = "6.6"
-    const val h2 = "1.4.200"
-    const val micrometer_prometheus = "1.6.4"
-}
+val hapi_version = "5.3.0"
+val spring_boot_version = "2.4.3"
+val postgresql_version = "42.2.19"
+val logstash_version = "6.6"
+val h2_version = "1.4.200"
+val micrometer_prometheus_version = "1.6.4"
 
 plugins {
     application
@@ -14,23 +12,23 @@ plugins {
 }
 
 repositories {
-    mavenCentral()
     maven("https://github-package-registry-mirror.gc.nav.no/cached/maven-release")
+    mavenCentral()
 }
 
 dependencies {
-    implementation("ca.uhn.hapi.fhir:hapi-fhir-jpaserver-cql:${Version.hapi}")
-    implementation("ca.uhn.hapi.fhir:hapi-fhir-jpaserver-mdm:${Version.hapi}")
-    implementation("org.springframework.boot:spring-boot-autoconfigure:${Version.spring_boot}")
-    implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server:${Version.spring_boot}")
-    runtimeOnly("org.springframework.boot:spring-boot-starter-actuator:${Version.spring_boot}")
-    runtimeOnly("org.springframework.boot:spring-boot-starter-data-jpa:${Version.spring_boot}")
-    runtimeOnly("org.springframework.boot:spring-boot-starter-web:${Version.spring_boot}")
-    runtimeOnly("org.postgresql:postgresql:${Version.postgresql}")
-    runtimeOnly("net.logstash.logback:logstash-logback-encoder:${Version.logstash}")
-    runtimeOnly("io.micrometer:micrometer-registry-prometheus:${Version.micrometer_prometheus}")
-    developmentOnly("com.h2database:h2:${Version.h2}")
-    developmentOnly("org.springframework.boot:spring-boot-devtools:${Version.spring_boot}")
+    implementation("ca.uhn.hapi.fhir:hapi-fhir-jpaserver-cql:${hapi_version}")
+    implementation("ca.uhn.hapi.fhir:hapi-fhir-jpaserver-mdm:${hapi_version}")
+    implementation("org.springframework.boot:spring-boot-autoconfigure:${spring_boot_version}")
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server:${spring_boot_version}")
+    runtimeOnly("org.springframework.boot:spring-boot-starter-actuator:${spring_boot_version}")
+    runtimeOnly("org.springframework.boot:spring-boot-starter-data-jpa:${spring_boot_version}")
+    runtimeOnly("org.springframework.boot:spring-boot-starter-web:${spring_boot_version}")
+    runtimeOnly("org.postgresql:postgresql:${postgresql_version}")
+    runtimeOnly("net.logstash.logback:logstash-logback-encoder:${logstash_version}")
+    runtimeOnly("io.micrometer:micrometer-registry-prometheus:${micrometer_prometheus_version}")
+    developmentOnly("com.h2database:h2:${h2_version}")
+    developmentOnly("org.springframework.boot:spring-boot-devtools:${spring_boot_version}")
 }
 
 java {

@@ -1,20 +1,17 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-object Version {
-    const val ktor = "1.5.2"
-    const val koin = "3.0.1-beta-2"
-    const val hapi = "5.2.1"
-    const val token_validation = "1.3.3"
-    const val junit = "5.7.1"
-    const val mock_oauth = "0.3.1"
-    const val logback = "1.2.3"
-    const val logstash = "6.6"
-    const val kafka = "2.7.0"
-    const val hoplite = "1.4.0"
-}
+val ktor_version = "1.5.2"
+val koin_version = "3.0.1-beta-2"
+val hapi_version = "5.2.1"
+val token_validation_version = "1.3.3"
+val junit_version = "5.7.1"
+val mock_oauth_version = "0.3.1"
+val logback_version = "1.2.3"
+val logstash_version = "6.6"
+val kafka_version = "2.7.0"
+val hoplite_version = "1.4.0"
 
 plugins {
-    java
     application
     kotlin("jvm") version "1.4.21"
     id("com.github.johnrengelman.shadow") version "6.1.0"
@@ -41,14 +38,14 @@ tasks {
 }
 
 dependencies {
-    implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:${Version.hapi}")
-    implementation("com.sksamuel.hoplite:hoplite-core:${Version.hoplite}")
-    implementation("io.insert-koin:koin-ktor:${Version.koin}")
-    implementation("io.ktor:ktor-server-netty:${Version.ktor}")
-    implementation("org.apache.kafka:kafka-clients:${Version.kafka}")
-    testImplementation("io.insert-koin:koin-test:${Version.koin}") { exclude(group = "junit", module = "junit") }
-    testImplementation("org.junit.jupiter:junit-jupiter:${Version.junit}")
-    runtimeOnly("ca.uhn.hapi.fhir:hapi-fhir-client:${Version.hapi}")
-    runtimeOnly("ch.qos.logback:logback-classic:${Version.logback}")
-    runtimeOnly("net.logstash.logback:logstash-logback-encoder:${Version.logstash}")
+    implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:$hapi_version")
+    implementation("com.sksamuel.hoplite:hoplite-core:$hoplite_version")
+    implementation("io.insert-koin:koin-ktor:$koin_version")
+    implementation("io.ktor:ktor-server-netty:$ktor_version")
+    implementation("org.apache.kafka:kafka-clients:$kafka_version")
+    testImplementation("io.insert-koin:koin-test:$koin_version") { exclude(group = "junit", module = "junit") }
+    testImplementation("org.junit.jupiter:junit-jupiter:$junit_version")
+    runtimeOnly("ca.uhn.hapi.fhir:hapi-fhir-client:$hapi_version")
+    runtimeOnly("ch.qos.logback:logback-classic:$logback_version")
+    runtimeOnly("net.logstash.logback:logstash-logback-encoder:$logstash_version")
 }
