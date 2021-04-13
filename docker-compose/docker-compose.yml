@@ -16,7 +16,10 @@ services:
 
   hops-api-service:
     container_name: hops-api_container
-    build: ../apps/hops-api
+    build:
+      context: ..
+      args:
+        project: hops-api
     restart: unless-stopped
     ports:
       - 8082:8080
@@ -25,7 +28,10 @@ services:
 
   hops-oppslag-service:
     container_name: hops-oppslag_container
-    build: ../apps/hops-oppslag
+    build:
+      context: ..
+      args:
+        project: hops-oppslag
     restart: unless-stopped
     ports:
       - 8083:8080
@@ -42,7 +48,11 @@ services:
 
   hops-hapi-service:
     container_name: hops-hapi_container
-    build: ../apps/hops-hapi-fhir-server
+    build:
+      context: ..
+      args:
+        project: hops-hapi-fhir-server
+        task: bootJar
     restart: unless-stopped
     depends_on:
       - mock-oauth2-service
@@ -64,7 +74,10 @@ services:
 
   hops-bestilling-service:
     container_name: hops-bestilling_container
-    build: ../apps/hops-bestilling
+    build:
+      context: ..
+      args:
+        project: hops-bestilling
     restart: unless-stopped
     depends_on:
       - kafka-service
