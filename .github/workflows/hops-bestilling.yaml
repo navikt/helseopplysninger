@@ -4,10 +4,10 @@ on:
   push:
     branches:
       - 'master'
+      - 'Fix_unsupported_gradle_setup_2'
     paths:
       - apps/hops-bestilling/**
       - .github/workflows/hops-bestilling.yaml
-      - Fix_unsupported_gradle_setup_2
 
 env: # Used by nais/deploy/actions/deploy.
   IMAGE: ghcr.io/${{ github.repository }}/${{ github.workflow }}:${{ github.sha }}
