@@ -10,7 +10,7 @@ val kotest_version = "4.4.3"
 
 plugins {
     `java-library`
-    kotlin("jvm") version "1.4.31"
+    kotlin("jvm")
     id("org.jlleitschuh.gradle.ktlint") version "10.0.0"
 }
 

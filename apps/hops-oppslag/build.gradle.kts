@@ -38,7 +38,7 @@ tasks {
 }
 
 dependencies {
-    implementation(project(":hops-client-security"))
+    implementation(project(":libs:hops-client-security"))
     implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:$hapi_version")
     implementation("io.ktor:ktor-server-netty:$ktor_version")
     implementation("no.nav.security:token-validation-ktor:$token_validation_version")
