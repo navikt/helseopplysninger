@@ -5,6 +5,6 @@ ARG project
 ARG task=shadowJar
 RUN gradle apps:${project}:${task} --no-daemon
 
-FROM navikt/java:11
+FROM navikt/java:16
 ARG project
 COPY --from=build /home/gradle/src/apps/${project}/build/libs/*.jar app.jar
