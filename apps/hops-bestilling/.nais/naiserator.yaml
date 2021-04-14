@@ -42,4 +42,4 @@ spec:
   {{/each}}
   env:
     - name: KAFKA_SECURITY_ENABLED
-      value: true
+      value: "true"

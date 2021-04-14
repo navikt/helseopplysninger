@@ -12,7 +12,7 @@ val micrometer_prometheus_version = "1.6.5"
 
 plugins {
     application
-    kotlin("jvm") version "1.4.21"
+    kotlin("jvm")
     id("com.github.johnrengelman.shadow") version "6.1.0"
     id("org.jlleitschuh.gradle.ktlint") version "10.0.0"
 }
