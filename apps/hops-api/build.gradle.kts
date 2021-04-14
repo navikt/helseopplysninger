@@ -1,6 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val ktor_version = "1.5.0"
+val ktor_version = "1.5.3"
 val logback_version = "1.2.3"
 val logstash = "6.6"
 val mock_oauth = "0.3.1"
