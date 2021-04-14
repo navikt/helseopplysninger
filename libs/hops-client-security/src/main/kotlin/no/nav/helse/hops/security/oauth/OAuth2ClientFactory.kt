@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod
 import io.ktor.client.HttpClient
+import io.ktor.client.engine.cio.CIO
 import io.ktor.client.features.json.JacksonSerializer
 import io.ktor.client.features.json.JsonFeature
 import no.nav.security.token.support.client.core.ClientAuthenticationProperties
@@ -21,10 +22,10 @@ object OAuth2ClientFactory {
             null,
         )
 
-        return OAuth2Client(defaultHttpClient, wellKnownUrl, clientAuth)
+        return OAuth2Client(createHttpClient(), wellKnownUrl, clientAuth)
     }
 
-    private val defaultHttpClient = HttpClient {
+    private fun createHttpClient() = HttpClient(CIO) {
         install(JsonFeature) {
             serializer = JacksonSerializer {
                 configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)

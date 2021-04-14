@@ -5,7 +5,7 @@ import ca.uhn.fhir.context.FhirVersionEnum
 import ca.uhn.fhir.rest.client.api.IGenericClient
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum
 import io.ktor.config.ApplicationConfig
-import no.nav.helse.hops.oppslag.security.OauthRequestInterceptor
+import no.nav.helse.hops.security.fhir.OauthRequestInterceptor
 import no.nav.helse.hops.security.oauth.OAuth2ClientFactory
 import org.koin.dsl.module
 

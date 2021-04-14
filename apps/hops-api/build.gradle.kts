@@ -11,7 +11,7 @@ val prometeus_version = "1.6.5"
 plugins {
     application
     kotlin("jvm")
-    id("com.github.johnrengelman.shadow") version "5.0.0"
+    id("com.github.johnrengelman.shadow")
 }
 
 application {

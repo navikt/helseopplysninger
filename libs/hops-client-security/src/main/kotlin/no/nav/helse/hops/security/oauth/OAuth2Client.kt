@@ -19,11 +19,12 @@ import no.nav.security.token.support.client.core.OAuth2GrantType
 import no.nav.security.token.support.client.core.OAuth2ParameterNames
 import no.nav.security.token.support.client.core.auth.ClientAssertion
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenResponse
+import java.io.Closeable
 import java.net.URI
 import java.nio.charset.StandardCharsets
 import java.util.Base64
 
-interface IOAuth2Client {
+interface IOAuth2Client : Closeable {
     suspend fun getToken(scope: String): String
 }
 
@@ -71,6 +72,10 @@ internal class OAuth2Client(
 
     override suspend fun getToken(scope: String) =
         clientCredentials(scope).accessToken
+
+    override fun close() {
+        httpClient.close()
+    }
 }
 
 data class GrantRequest(

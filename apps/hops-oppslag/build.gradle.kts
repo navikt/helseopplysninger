@@ -13,8 +13,8 @@ val micrometer_prometheus_version = "1.6.5"
 plugins {
     application
     kotlin("jvm")
-    id("com.github.johnrengelman.shadow") version "6.1.0"
-    id("org.jlleitschuh.gradle.ktlint") version "10.0.0"
+    id("com.github.johnrengelman.shadow")
+    id("org.jlleitschuh.gradle.ktlint")
 }
 
 application {
@@ -38,7 +38,7 @@ tasks {
 }
 
 dependencies {
-    implementation(project(":libs:hops-client-security"))
+    implementation(project(":libs:hops-fhir-common"))
     implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:$hapi_version")
     implementation("io.ktor:ktor-server-netty:$ktor_version")
     implementation("no.nav.security:token-validation-ktor:$token_validation_version")

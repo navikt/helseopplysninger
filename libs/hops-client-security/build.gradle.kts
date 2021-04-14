@@ -11,7 +11,7 @@ val kotest_version = "4.4.3"
 plugins {
     `java-library`
     kotlin("jvm")
-    id("org.jlleitschuh.gradle.ktlint") version "10.0.0"
+    id("org.jlleitschuh.gradle.ktlint")
 }
 
 repositories {
@@ -33,6 +33,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$kotlinx_version")
     implementation("no.nav.security:token-client-core:$navikt_token_support_version")
     implementation("io.ktor:ktor-client-jackson:$ktor_version")
+    implementation("io.ktor:ktor-client-cio-jvm:$ktor_version")
     testImplementation("io.ktor:ktor-server-test-host:$ktor_version") { exclude(group = "junit", module = "junit") }
     testImplementation("no.nav.security:mock-oauth2-server:$mock_oauth_version")
     testImplementation("org.junit.jupiter:junit-jupiter:$junit_version")

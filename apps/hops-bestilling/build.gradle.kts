@@ -14,8 +14,8 @@ val hoplite_version = "1.4.0"
 plugins {
     application
     kotlin("jvm")
-    id("com.github.johnrengelman.shadow") version "6.1.0"
-    id("org.jlleitschuh.gradle.ktlint") version "10.0.0"
+    id("com.github.johnrengelman.shadow")
+    id("org.jlleitschuh.gradle.ktlint")
 }
 
 application {

@@ -1,9 +1,8 @@
-package no.nav.helse.hops.oppslag.security
+package no.nav.helse.hops.security.fhir
 
 import ca.uhn.fhir.rest.client.api.IClientInterceptor
 import ca.uhn.fhir.rest.client.api.IHttpRequest
 import ca.uhn.fhir.rest.client.api.IHttpResponse
-import io.ktor.http.HttpHeaders
 import kotlinx.coroutines.runBlocking
 import no.nav.helse.hops.security.oauth.IOAuth2Client
 
@@ -16,7 +15,7 @@ class OauthRequestInterceptor(
         val token = runBlocking {
             oauth2Client.getToken(scope)
         }
-        theRequest?.addHeader(HttpHeaders.Authorization, "Bearer $token")
+        theRequest?.addHeader("Authorization", "Bearer $token")
     }
 
     override fun interceptResponse(theResponse: IHttpResponse?) {}
