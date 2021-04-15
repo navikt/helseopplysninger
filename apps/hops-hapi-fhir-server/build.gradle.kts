@@ -3,7 +3,7 @@ val springBootVersion = "2.4.3"
 val postgresqlVersion = "42.2.19"
 val logstashVersion = "6.6"
 val h2Version = "1.4.200"
-val micrometerPrometheusVersion = "1.6.4"
+val micrometerPrometheusVersion = "1.6.6"
 
 plugins {
     application
