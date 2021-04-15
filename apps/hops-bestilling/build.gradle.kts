@@ -1,33 +1,25 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-object Version {
-    const val ktor = "1.5.2"
-    const val koin = "3.0.1-beta-2"
-    const val hapi = "5.2.1"
-    const val token_validation = "1.3.3"
-    const val junit = "5.7.1"
-    const val mock_oauth = "0.3.1"
-    const val logback = "1.2.3"
-    const val logstash = "6.6"
-    const val kafka = "2.7.0"
-    const val hoplite = "1.4.0"
-}
+val ktorVersion = "1.5.2"
+val koinVersion = "3.0.1-beta-2"
+val hapiVersion = "5.2.1"
+val tokenValidationVersion = "1.3.3"
+val junitVersion = "5.7.1"
+val mockOauthVersion = "0.3.1"
+val logbackVersion = "1.2.3"
+val logstashVersion = "6.6"
+val kafkaVersion = "2.7.0"
+val hopliteVersion = "1.4.0"
 
 plugins {
-    java
     application
     kotlin("jvm")
-    id("com.github.johnrengelman.shadow") version "6.1.0"
-    id("org.jlleitschuh.gradle.ktlint") version "10.0.0"
+    id("com.github.johnrengelman.shadow")
+    id("org.jlleitschuh.gradle.ktlint")
 }
 
 application {
     mainClassName = "io.ktor.server.netty.EngineMain"
-}
-
-repositories {
-    maven("https://github-package-registry-mirror.gc.nav.no/cached/maven-release")
-    mavenCentral()
 }
 
 tasks {
@@ -41,14 +33,14 @@ tasks {
 }
 
 dependencies {
-    implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:${Version.hapi}")
-    implementation("com.sksamuel.hoplite:hoplite-core:${Version.hoplite}")
-    implementation("io.insert-koin:koin-ktor:${Version.koin}")
-    implementation("io.ktor:ktor-server-netty:${Version.ktor}")
-    implementation("org.apache.kafka:kafka-clients:${Version.kafka}")
-    testImplementation("io.insert-koin:koin-test:${Version.koin}") { exclude(group = "junit", module = "junit") }
-    testImplementation("org.junit.jupiter:junit-jupiter:${Version.junit}")
-    runtimeOnly("ca.uhn.hapi.fhir:hapi-fhir-client:${Version.hapi}")
-    runtimeOnly("ch.qos.logback:logback-classic:${Version.logback}")
-    runtimeOnly("net.logstash.logback:logstash-logback-encoder:${Version.logstash}")
+    implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:$hapiVersion")
+    implementation("com.sksamuel.hoplite:hoplite-core:$hopliteVersion")
+    implementation("io.insert-koin:koin-ktor:$koinVersion")
+    implementation("io.ktor:ktor-server-netty:$ktorVersion")
+    implementation("org.apache.kafka:kafka-clients:$kafkaVersion")
+    testImplementation("io.insert-koin:koin-test:$koinVersion") { exclude(group = "junit", module = "junit") }
+    testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
+    runtimeOnly("ca.uhn.hapi.fhir:hapi-fhir-client:$hapiVersion")
+    runtimeOnly("ch.qos.logback:logback-classic:$logbackVersion")
+    runtimeOnly("net.logstash.logback:logstash-logback-encoder:$logstashVersion")
 }
