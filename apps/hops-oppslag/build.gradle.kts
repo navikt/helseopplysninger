@@ -9,6 +9,7 @@ val mockOauthVersion = "0.3.1"
 val logbackVersion = "1.2.3"
 val logstashVersion = "6.6"
 val micrometerPrometheusVersion = "1.6.5"
+val hopliteVersion = "1.4.0"
 
 plugins {
     application
@@ -33,8 +34,9 @@ tasks {
 }
 
 dependencies {
+    api(project(":libs:hops-common-fhir"))
     implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:$hapiVersion")
-    implementation("io.ktor:ktor-client-jackson:$ktorVersion")
+    implementation("com.sksamuel.hoplite:hoplite-hocon:$hopliteVersion")
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
     implementation("no.nav.security:token-validation-ktor:$tokenValidationVersion")
     implementation("io.insert-koin:koin-ktor:$koinVersion")
@@ -43,7 +45,6 @@ dependencies {
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion") { exclude(group = "junit", module = "junit") }
     testImplementation("no.nav.security:mock-oauth2-server:$mockOauthVersion")
     testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
-    testImplementation("io.insert-koin:koin-test:$koinVersion") { exclude(group = "junit", module = "junit") }
     runtimeOnly("ca.uhn.hapi.fhir:hapi-fhir-client:$hapiVersion")
     runtimeOnly("ch.qos.logback:logback-classic:$logbackVersion")
     runtimeOnly("io.ktor:ktor-client-cio:$ktorVersion")

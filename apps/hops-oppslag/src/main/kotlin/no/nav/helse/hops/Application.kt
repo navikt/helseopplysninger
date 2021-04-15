@@ -14,10 +14,9 @@ import io.ktor.routing.get
 import io.ktor.routing.routing
 import io.micrometer.prometheus.PrometheusConfig
 import io.micrometer.prometheus.PrometheusMeterRegistry
-import no.nav.helse.hops.fkr.FkrFacade
-import no.nav.helse.hops.fkr.FkrKoinModule
+import no.nav.helse.hops.domain.FkrFacade
+import no.nav.helse.hops.infrastructure.KoinBootstrapper
 import no.nav.security.token.support.ktor.tokenValidationSupport
-import org.koin.dsl.module
 import org.koin.ktor.ext.Koin
 import org.koin.ktor.ext.inject
 
@@ -30,10 +29,7 @@ fun Application.module() {
     install(DefaultHeaders)
     install(CallLogging)
     install(Koin) {
-        modules(
-            module { single { environment.config } }, // makes the configuration available to DI.
-            FkrKoinModule.instance
-        )
+        modules(KoinBootstrapper.module)
     }
     install(Authentication) {
         tokenValidationSupport(config = environment.config)

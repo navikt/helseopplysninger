@@ -7,6 +7,7 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.server.testing.TestApplicationEngine
 import io.ktor.server.testing.handleRequest
 import io.ktor.server.testing.withTestApplication
+import no.nav.helse.hops.infrastructure.Configuration
 import no.nav.security.mock.oauth2.MockOAuth2Server
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.jupiter.api.AfterAll
@@ -14,6 +15,8 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
+import org.koin.dsl.module
+import org.koin.ktor.ext.getKoin
 import kotlin.test.assertEquals
 
 class ApplicationTest {
@@ -81,6 +84,7 @@ class ApplicationTest {
         return withTestApplication({
             doConfig()
             module()
+            overrideKoinRegisteredServices()
         }) {
             test()
         }
@@ -91,16 +95,27 @@ class ApplicationTest {
         acceptedAudience: String = "default"
     ) {
         (environment.config as MapApplicationConfig).apply {
-            put("no.nav.helse.hops.fkr.baseUrl", fkrServer.url("/").toString())
-            put("no.nav.helse.hops.fkr.tokenUrl", "${oauthServer.tokenEndpointUrl(acceptedIssuer)}")
-            put("no.nav.helse.hops.fkr.clientId", "test-client-id")
-            put("no.nav.helse.hops.fkr.clientSecret", "test-secret")
-            put("no.nav.helse.hops.fkr.scope", "test-scope")
             put("no.nav.security.jwt.issuers.size", "1")
             put("no.nav.security.jwt.issuers.0.issuer_name", acceptedIssuer)
             put("no.nav.security.jwt.issuers.0.discoveryurl", "${oauthServer.wellKnownUrl(acceptedIssuer)}")
             put("no.nav.security.jwt.issuers.0.accepted_audience", acceptedAudience)
         }
+    }
+
+    private fun Application.overrideKoinRegisteredServices() {
+        val fkrConfig = Configuration.Kontaktregister(
+            fkrServer.url("/").toString(),
+            "${oauthServer.wellKnownUrl("default")}",
+            "test-client-id",
+            "test-secret",
+            "test-scope"
+        )
+
+        val testKoinModule = module(override = true) {
+            single { fkrConfig }
+        }
+
+        getKoin().loadModules(listOf(testKoinModule))
     }
 
     private companion object {

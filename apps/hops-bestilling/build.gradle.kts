@@ -33,6 +33,8 @@ tasks {
 }
 
 dependencies {
+    api(project(":libs:hops-common-fhir"))
+    api(project(":libs:hops-common-ktor"))
     implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:$hapiVersion")
     implementation("com.sksamuel.hoplite:hoplite-core:$hopliteVersion")
     implementation("io.insert-koin:koin-ktor:$koinVersion")
