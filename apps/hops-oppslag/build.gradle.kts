@@ -1,14 +1,14 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val ktor_version = "1.5.2"
-val koin_version = "3.0.1-beta-2"
-val hapi_version = "5.2.1"
-val token_validation_version = "1.3.3"
-val junit_version = "5.7.1"
-val mock_oauth_version = "0.3.1"
-val logback_version = "1.2.3"
-val logstash_version = "6.6"
-val micrometer_prometheus_version = "1.6.5"
+val ktorVersion = "1.5.2"
+val koinVersion = "3.0.1-beta-2"
+val hapiVersion = "5.2.1"
+val tokenValidationVersion = "1.3.3"
+val junitVersion = "5.7.1"
+val mockOauthVersion = "0.3.1"
+val logbackVersion = "1.2.3"
+val logstashVersion = "6.6"
+val micrometerPrometheusVersion = "1.6.5"
 
 plugins {
     application
@@ -22,11 +22,6 @@ application {
     // mainClass.set("io.ktor.server.netty.EngineMain") funker ikke med shadowJar atm
 }
 
-repositories {
-    maven("https://github-package-registry-mirror.gc.nav.no/cached/maven-release")
-    mavenCentral()
-}
-
 tasks {
     withType<KotlinCompile> {
         kotlinOptions.jvmTarget = "11"
@@ -38,19 +33,19 @@ tasks {
 }
 
 dependencies {
-    implementation(project(":libs:hops-fhir-common"))
-    implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:$hapi_version")
-    implementation("io.ktor:ktor-server-netty:$ktor_version")
-    implementation("no.nav.security:token-validation-ktor:$token_validation_version")
-    implementation("io.insert-koin:koin-ktor:$koin_version")
-    implementation("io.micrometer:micrometer-registry-prometheus:$micrometer_prometheus_version")
-    implementation("io.ktor:ktor-metrics-micrometer:$ktor_version")
-    testImplementation("io.ktor:ktor-server-test-host:$ktor_version") { exclude(group = "junit", module = "junit") }
-    testImplementation("no.nav.security:mock-oauth2-server:$mock_oauth_version")
-    testImplementation("org.junit.jupiter:junit-jupiter:$junit_version")
-    testImplementation("io.insert-koin:koin-test:$koin_version") { exclude(group = "junit", module = "junit") }
-    runtimeOnly("ca.uhn.hapi.fhir:hapi-fhir-client:$hapi_version")
-    runtimeOnly("ch.qos.logback:logback-classic:$logback_version")
-    runtimeOnly("io.ktor:ktor-client-cio:$ktor_version")
-    runtimeOnly("net.logstash.logback:logstash-logback-encoder:$logstash_version")
+    implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:$hapiVersion")
+    implementation("io.ktor:ktor-client-jackson:$ktorVersion")
+    implementation("io.ktor:ktor-server-netty:$ktorVersion")
+    implementation("no.nav.security:token-validation-ktor:$tokenValidationVersion")
+    implementation("io.insert-koin:koin-ktor:$koinVersion")
+    implementation("io.micrometer:micrometer-registry-prometheus:$micrometerPrometheusVersion")
+    implementation("io.ktor:ktor-metrics-micrometer:$ktorVersion")
+    testImplementation("io.ktor:ktor-server-test-host:$ktorVersion") { exclude(group = "junit", module = "junit") }
+    testImplementation("no.nav.security:mock-oauth2-server:$mockOauthVersion")
+    testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
+    testImplementation("io.insert-koin:koin-test:$koinVersion") { exclude(group = "junit", module = "junit") }
+    runtimeOnly("ca.uhn.hapi.fhir:hapi-fhir-client:$hapiVersion")
+    runtimeOnly("ch.qos.logback:logback-classic:$logbackVersion")
+    runtimeOnly("io.ktor:ktor-client-cio:$ktorVersion")
+    runtimeOnly("net.logstash.logback:logstash-logback-encoder:$logstashVersion")
 }
