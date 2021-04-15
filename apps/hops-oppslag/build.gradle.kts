@@ -1,6 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val ktorVersion = "1.5.2"
+val ktorVersion = "1.5.3"
 val koinVersion = "3.0.1-beta-2"
 val hapiVersion = "5.2.1"
 val tokenValidationVersion = "1.3.3"

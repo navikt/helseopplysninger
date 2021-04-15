@@ -1,6 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val ktorVersion = "1.5.2"
+val ktorVersion = "1.5.3"
 val naviktTokenSupportVersion = "1.3.3"
 val junitVersion = "5.7.1"
 val mockOauthVersion = "0.3.1"
