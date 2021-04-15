@@ -3,7 +3,7 @@ name: hops-bestilling
 on:
   push:
     branches:
-      - 'master'
+      - 'main'
     paths:
       - apps/hops-bestilling/**
       - .github/workflows/hops-bestilling.yaml
