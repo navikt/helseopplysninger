@@ -21,7 +21,7 @@ tasks {
 
 dependencies {
     val ktorVersion = "1.5.3"
-    val hapiVersion = "5.3.0"
+    val hapiVersion = "5.3.2"
 
     api(project(":libs:hops-common-fhir"))
     implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:$hapiVersion")
