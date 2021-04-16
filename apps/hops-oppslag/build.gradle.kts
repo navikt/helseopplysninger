@@ -8,7 +8,7 @@ val junitVersion = "5.7.1"
 val mockOauthVersion = "0.3.1"
 val logbackVersion = "1.2.3"
 val logstashVersion = "6.6"
-val micrometerPrometheusVersion = "1.6.5"
+val micrometerPrometheusVersion = "1.6.6"
 val hopliteVersion = "1.4.0"
 
 plugins {
