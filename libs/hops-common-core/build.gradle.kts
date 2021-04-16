@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 val ktorVersion = "1.5.2"
 val naviktTokenSupportVersion = "1.3.3"
 val junitVersion = "5.7.1"
-val mockOauthVersion = "0.3.1"
+val mockOauthVersion = "0.3.2"
 val logbackVersion = "1.2.3"
 val kotlinxVersion = "1.4.3"
 val kotestVersion = "4.4.3"
