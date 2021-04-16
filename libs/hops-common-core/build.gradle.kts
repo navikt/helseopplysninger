@@ -34,4 +34,5 @@ dependencies {
     testImplementation("no.nav.security:mock-oauth2-server:0.3.2") { exclude(group = "junit", module = "junit") }
     testImplementation("no.nav.security:token-validation-ktor:$naviktTokenSupportVersion")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
+    testRuntimeOnly("junit:junit:4.13.2") { because("Required by mock-oauth2-server.") }
 }

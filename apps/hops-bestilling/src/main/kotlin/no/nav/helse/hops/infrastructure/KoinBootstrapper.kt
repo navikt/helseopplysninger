@@ -19,7 +19,7 @@ object KoinBootstrapper {
 
         singleClosable { KafkaFactory.createFhirProducer(get()) }
         singleClosable { KafkaFactory.createFhirConsumer(get()) }
-        singleClosable(createdAtStart = true) { BestillingConsumerJob(get(), get(), get()) }
+        singleClosable(createdAtStart = true) { BestillingConsumerJob(get(), get(), getLogger<BestillingConsumerJob>(), get()) }
 
         scope<HttpRequestKoinScope> {
             scopedClosable { BestillingProducerJob(get(), get()) }

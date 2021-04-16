@@ -15,8 +15,9 @@ class FkrMockDispatcher : Dispatcher() {
             return MockResponse().setResponseCode(HttpStatusCode.Unauthorized.value)
 
         if (request.method == HttpMethod.Get.value) {
+            val practitioner = loadResource("/fhir/valid-practitioner.json")
             val body = when (Url(request.path!!)) {
-                Url("/Practitioner?identifier=urn:oid:2.16.578.1.12.4.1.4.4|9111492") -> PractitionerTestData.bundleWithSingleEntity
+                Url("/Practitioner?identifier=urn:oid:2.16.578.1.12.4.1.4.4|9111492") -> practitioner
                 else -> ""
             }
 
@@ -25,4 +26,11 @@ class FkrMockDispatcher : Dispatcher() {
 
         return MockResponse().setResponseCode(HttpStatusCode.NotImplemented.value)
     }
+
+    private fun loadResource(resource: String): String =
+        try {
+            object {}.javaClass.getResource(resource)!!.readText(Charsets.UTF_8)
+        } catch (all: Exception) {
+            throw RuntimeException("Failed to load resource=$resource!", all)
+        }
 }

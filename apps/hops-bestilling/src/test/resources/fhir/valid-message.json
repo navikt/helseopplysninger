@@ -1,0 +1,53 @@
+{
+  "id": "6f5b2c5d-f538-450e-936d-d6891bcf363f",
+  "resourceType": "Bundle",
+  "type": "message",
+  "timestamp": "2021-04-10T09:48:46.841Z",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:dc80d242-4877-4b9a-8966-f07ae6cd7106",
+      "resource": {
+        "id": "dc80d242-4877-4b9a-8966-f07ae6cd7106",
+        "resourceType": "MessageHeader",
+        "source": {
+          "endpoint": "http://hops-bestiller-backend"
+        },
+        "eventUri": "bestilling",
+        "focus": [
+          {
+            "reference": "urn:uuid:e44b6798-1507-4d48-b9cc-c5773b77f58f"
+          },
+          {
+            "reference": "urn:uuid:bf9211c4-2816-43ae-8970-c32a8ee41f55"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:e44b6798-1507-4d48-b9cc-c5773b77f58f",
+      "resource": {
+        "id": "e44b6798-1507-4d48-b9cc-c5773b77f58f",
+        "resourceType": "Task",
+        "status": "draft",
+        "intent": "order",
+        "description": "Fyll ut dette!123abc"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:bf9211c4-2816-43ae-8970-c32a8ee41f55",
+      "resource": {
+        "id": "bf9211c4-2816-43ae-8970-c32a8ee41f55",
+        "name": "test",
+        "resourceType": "Questionnaire",
+        "status": "draft",
+        "item": [
+          {
+            "linkId": "id-for-item",
+            "type": "string",
+            "text": "Utydpende informasjon om funksjonsevne"
+          }
+        ]
+      }
+    }
+  ]
+}
