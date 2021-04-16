@@ -31,7 +31,7 @@ dependencies {
     testImplementation("io.ktor:ktor-server-netty:$ktorVersion")
     testImplementation("io.ktor:ktor-jackson:$ktorVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
-    testImplementation("no.nav.security:mock-oauth2-server:0.3.2")
+    testImplementation("no.nav.security:mock-oauth2-server:0.3.2") { exclude(group = "junit", module = "junit") }
     testImplementation("no.nav.security:token-validation-ktor:$naviktTokenSupportVersion")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
 }
