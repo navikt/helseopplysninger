@@ -10,7 +10,7 @@ java {
 
 dependencies {
     val hapiVersion = "5.3.2"
-    val springBootVersion = "2.4.4"
+    val springBootVersion = "2.4.5"
 
     implementation("ca.uhn.hapi.fhir:hapi-fhir-jpaserver-cql:$hapiVersion")
     implementation("ca.uhn.hapi.fhir:hapi-fhir-jpaserver-mdm:$hapiVersion")
