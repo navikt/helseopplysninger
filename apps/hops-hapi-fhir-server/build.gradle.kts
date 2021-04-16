@@ -7,7 +7,7 @@ val micrometerPrometheusVersion = "1.6.4"
 
 plugins {
     application
-    id("org.springframework.boot") version "2.4.3"
+    id("org.springframework.boot") version "2.4.5"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
 }
 
