@@ -1,7 +1,8 @@
 *
 !apps
+!libs
 !build.gradle.kts
 !settings.gradle.kts
-apps/*/.nais
-apps/*/build
-apps/*/out
+**.nais
+**/build
+**/out
