@@ -4,7 +4,7 @@ val ktorVersion = "1.5.0"
 val logbackVersion = "1.2.3"
 val logstashVersion = "6.6"
 val mockOauthVersion = "0.3.1"
-val tokenSupportVersion = "1.3.4"
+val tokenSupportVersion = "1.3.5"
 val junitVersion = "5.7.1"
 val prometeusVersion = "1.6.5"
 
