@@ -14,19 +14,3 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
-  - package-ecosystem: "gradle"
-    directory: "/apps/hops-api"
-    schedule:
-      interval: "daily"
-  - package-ecosystem: "gradle"
-    directory: "/apps/hops-bestilling"
-    schedule:
-      interval: "daily"
-  - package-ecosystem: "gradle"
-    directory: "/apps/hops-hapi-fhir-server"
-    schedule:
-      interval: "daily"
-  - package-ecosystem: "gradle"
-    directory: "/apps/hops-oppslag"
-    schedule:
-      interval: "daily"
