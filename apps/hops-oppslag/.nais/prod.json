@@ -4,6 +4,6 @@
   "helseid_host": "helseid-sts.nhn.no",
   "env": {
     "FKR_BASE_URL": "https://hint-ext.helsedirektoratet.no/kontaktregister/ekstern",
-    "HELSE_ID_TOKEN_URL": "https://helseid-sts.nhn.no/connect/token"
+    "HELSE_ID_DISCOVERY_URL": "https://helseid-sts.nhn.no/.well-known/openid-configuration"
   }
 }

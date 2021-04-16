@@ -44,7 +44,7 @@ services:
       DB_PASSWORD: Welcome01
       AZURE_APP_WELL_KNOWN_URL: http://mock-oauth2-service:8081/default/.well-known/openid-configuration
       FKR_BASE_URL: http://hops-hapi-service:8080/fhir
-      HELSE_ID_TOKEN_URL: http://mock-oauth2-service:8081/default/token
+      HELSE_ID_DISCOVERY_URL: http://mock-oauth2-service:8081/default/.well-known/openid-configuration
 
   hops-hapi-service:
     container_name: hops-hapi_container

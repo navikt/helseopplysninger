@@ -1,4 +1,4 @@
-package no.nav.helse.hops.infrastructure
+package no.nav.helse.hops.koin
 
 import org.koin.core.component.KoinScopeComponent
 import org.koin.core.component.newScope

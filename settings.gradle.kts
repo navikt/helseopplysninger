@@ -7,3 +7,4 @@ include("apps:hops-hapi-fhir-server")
 
 include("libs:hops-common-core")
 include("libs:hops-common-fhir")
+include("libs:hops-common-ktor")
