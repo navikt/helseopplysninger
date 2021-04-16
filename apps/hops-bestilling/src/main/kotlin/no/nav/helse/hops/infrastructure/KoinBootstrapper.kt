@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory
 object KoinBootstrapper {
     val module = module {
         data class ConfigRoot(val kafka: Configuration.Kafka)
-        single { ConfigLoader().loadConfigOrThrow<ConfigRoot>("/application.properties") }
+        single { ConfigLoader().loadConfigOrThrow<ConfigRoot>("/application.conf") }
         single { get<ConfigRoot>().kafka }
         single<FhirMessageProcessor> { FhirMessageProcessorImpl(getLogger<FhirMessageProcessorImpl>()) }
 

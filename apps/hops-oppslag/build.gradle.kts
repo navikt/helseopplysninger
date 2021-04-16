@@ -28,7 +28,6 @@ dependencies {
     implementation("com.sksamuel.hoplite:hoplite-hocon:1.4.0")
     implementation("no.nav.security:token-validation-ktor:1.3.5")
     implementation("io.insert-koin:koin-ktor:3.0.1")
-    implementation("io.ktor:ktor-server-netty:$ktorVersion")
     implementation("io.ktor:ktor-metrics-micrometer:$ktorVersion")
     implementation("io.micrometer:micrometer-registry-prometheus:1.6.6")
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion") { exclude(group = "junit", module = "junit") }
@@ -37,5 +36,6 @@ dependencies {
     runtimeOnly("ca.uhn.hapi.fhir:hapi-fhir-client:$hapiVersion")
     runtimeOnly("ch.qos.logback:logback-classic:1.2.3")
     runtimeOnly("io.ktor:ktor-client-cio:$ktorVersion")
+    runtimeOnly("io.ktor:ktor-server-netty:$ktorVersion")
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
 }
