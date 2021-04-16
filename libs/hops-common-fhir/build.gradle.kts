@@ -19,5 +19,5 @@ tasks {
 dependencies {
     api(project(":libs:hops-common-core"))
     api("ca.uhn.hapi.fhir:hapi-fhir-base:5.3.2")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.4.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.4.3-native-mt")
 }

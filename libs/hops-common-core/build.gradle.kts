@@ -21,7 +21,7 @@ dependencies {
     val naviktTokenSupportVersion = "1.3.3"
     val kotestVersion = "4.4.3"
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.4.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.4.3-native-mt")
     implementation("no.nav.security:token-client-core:$naviktTokenSupportVersion")
     implementation("io.ktor:ktor-client-jackson:$ktorVersion")
     implementation("io.ktor:ktor-client-cio-jvm:$ktorVersion")
