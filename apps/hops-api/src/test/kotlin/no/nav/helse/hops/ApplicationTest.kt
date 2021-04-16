@@ -1,11 +1,13 @@
 package no.nav.helse.hops
 
-import io.ktor.application.*
-import io.ktor.config.*
+import io.ktor.application.Application
+import io.ktor.config.MapApplicationConfig
 import io.ktor.http.HttpMethod.Companion.Get
 import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.http.HttpStatusCode.Companion.Unauthorized
-import io.ktor.server.testing.*
+import io.ktor.server.testing.TestApplicationEngine
+import io.ktor.server.testing.handleRequest
+import io.ktor.server.testing.withTestApplication
 import no.nav.security.mock.oauth2.MockOAuth2Server
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
@@ -26,17 +28,21 @@ class ApplicationTest {
     @Test
     fun `Tokens without correct scope hould be rejected and endpoint should return 401-Unauthorized`() {
         withHopsTestApplication {
-            with(handleRequest(Get, "/") {
-                val token = oauthServer.issueToken(claims = mapOf("scope" to "nav:helse/v1/testScope"))
-                addHeader("Authorization", "Bearer ${token.serialize()}")
-            }) {
+            with(
+                handleRequest(Get, "/") {
+                    val token = oauthServer.issueToken(claims = mapOf("scope" to "nav:helse/v1/testScope"))
+                    addHeader("Authorization", "Bearer ${token.serialize()}")
+                }
+            ) {
                 assertEquals(Unauthorized, response.status())
             }
 
-            with(handleRequest(Get, "/") {
-                val token = oauthServer.issueToken()
-                addHeader("Authorization", "Bearer ${token.serialize()}")
-            }) {
+            with(
+                handleRequest(Get, "/") {
+                    val token = oauthServer.issueToken()
+                    addHeader("Authorization", "Bearer ${token.serialize()}")
+                }
+            ) {
                 assertEquals(Unauthorized, response.status())
             }
         }
@@ -45,10 +51,12 @@ class ApplicationTest {
     @Test
     fun `Requests with valid token and correct scope should should return 200-Ok`() {
         withHopsTestApplication {
-            with(handleRequest(Get, "/") {
-                val token = oauthServer.issueToken(claims = mapOf("scope" to "nav:helse/v1/helseopplysninger"))
-                addHeader("Authorization", "Bearer ${token.serialize()}")
-            }) {
+            with(
+                handleRequest(Get, "/") {
+                    val token = oauthServer.issueToken(claims = mapOf("scope" to "nav:helse/v1/helseopplysninger"))
+                    addHeader("Authorization", "Bearer ${token.serialize()}")
+                }
+            ) {
                 assertEquals(OK, response.status())
             }
         }
@@ -64,8 +72,8 @@ class ApplicationTest {
     }
 
     private fun Application.doConfig(
-            acceptedIssuer: String = "default",
-            acceptedAudience: String = "default"
+        acceptedIssuer: String = "default",
+        acceptedAudience: String = "default"
     ) {
         (environment.config as MapApplicationConfig).apply {
             put("no.nav.security.jwt.issuers.size", "1")

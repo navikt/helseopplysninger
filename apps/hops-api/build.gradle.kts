@@ -1,48 +1,35 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val ktorVersion = "1.5.0"
-val logbackVersion = "1.2.3"
-val logstashVersion = "6.6"
-val mockOauthVersion = "0.3.1"
-val tokenSupportVersion = "1.3.4"
-val junitVersion = "5.7.1"
-val prometeusVersion = "1.6.5"
-
 plugins {
     application
     kotlin("jvm")
     id("com.github.johnrengelman.shadow")
+    id("org.jlleitschuh.gradle.ktlint")
 }
 
-application {
-    mainClassName = "io.ktor.server.netty.EngineMain"
-    // mainClass.set("io.ktor.server.netty.EngineMain") funker ikke med shadowJar atm
-}
-
-java {
-    sourceCompatibility = JavaVersion.VERSION_11
-}
+project.setProperty("mainClassName", "io.ktor.server.netty.EngineMain") // Required by shadowJar
 
 tasks {
     withType<KotlinCompile> {
         kotlinOptions.jvmTarget = "11"
+        dependsOn("ktlintFormat")
     }
     test {
         useJUnitPlatform()
     }
 }
 
-
 dependencies {
-    implementation(kotlin("stdlib-jdk8"))
+    val ktorVersion = "1.5.3"
+
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
-    implementation("ch.qos.logback:logback-classic:$logbackVersion")
-    implementation("net.logstash.logback:logstash-logback-encoder:$logstashVersion")
+    implementation("no.nav.security:token-validation-ktor:1.3.5")
+    implementation("io.micrometer:micrometer-registry-prometheus:1.6.6")
     implementation("io.ktor:ktor-auth:$ktorVersion")
     implementation("io.ktor:ktor-metrics-micrometer:$ktorVersion")
-    implementation("io.micrometer:micrometer-registry-prometheus:$prometeusVersion")
-    implementation("no.nav.security:token-validation-ktor:$tokenSupportVersion")
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
-    testImplementation("no.nav.security:mock-oauth2-server:$mockOauthVersion")
-    testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
+    testImplementation("no.nav.security:mock-oauth2-server:0.3.2")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.7.1")
+    runtimeOnly("ch.qos.logback:logback-classic:1.2.3")
+    runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
 }
