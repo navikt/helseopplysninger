@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 val ktorVersion = "1.5.2"
 val koinVersion = "3.0.1-beta-2"
 val hapiVersion = "5.2.1"
-val tokenValidationVersion = "1.3.3"
+val tokenValidationVersion = "1.3.5"
 val junitVersion = "5.7.1"
 val mockOauthVersion = "0.3.1"
 val logbackVersion = "1.2.3"
