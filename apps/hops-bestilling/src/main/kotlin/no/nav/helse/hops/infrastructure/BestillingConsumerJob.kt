@@ -8,7 +8,6 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import no.nav.helse.hops.domain.FhirMessageProcessor
 import org.apache.kafka.clients.consumer.Consumer
-import org.apache.kafka.clients.consumer.ConsumerRecords
 import org.hl7.fhir.instance.model.api.IBaseResource
 import org.hl7.fhir.r4.model.Bundle
 import org.slf4j.Logger
@@ -37,9 +36,10 @@ class BestillingConsumerJob(
                         val bundle = it.value() as Bundle
                         messageProcessor.process(bundle)
                     }
-                }
-                catch (ex: DataFormatException) {
+                } catch (ex: DataFormatException) {
                     logger.error("Unable to parse received message on topic={}, error={}", config.topic, ex.message)
+                } catch (ex: Exception) {
+                    logger.error("Unexpected exception while handling Kafka message topic={}, error={}", config.topic, ex.message)
                 }
             }
         }

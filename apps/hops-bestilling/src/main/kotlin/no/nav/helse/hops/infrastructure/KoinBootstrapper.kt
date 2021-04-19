@@ -3,6 +3,8 @@ package no.nav.helse.hops.infrastructure
 import com.sksamuel.hoplite.ConfigLoader
 import no.nav.helse.hops.domain.FhirMessageProcessor
 import no.nav.helse.hops.domain.FhirMessageProcessorImpl
+import no.nav.helse.hops.domain.FhirResourceValidator
+import no.nav.helse.hops.domain.MessageBus
 import no.nav.helse.hops.koin.HttpRequestKoinScope
 import no.nav.helse.hops.koin.scopedClosable
 import no.nav.helse.hops.koin.singleClosable
@@ -15,7 +17,10 @@ object KoinBootstrapper {
         data class ConfigRoot(val kafka: Configuration.Kafka)
         single { ConfigLoader().loadConfigOrThrow<ConfigRoot>("/application.conf") }
         single { get<ConfigRoot>().kafka }
-        single<FhirMessageProcessor> { FhirMessageProcessorImpl(getLogger<FhirMessageProcessorImpl>()) }
+        single<FhirMessageProcessor> { FhirMessageProcessorImpl(get(), get(), getLogger<FhirMessageProcessorImpl>()) }
+
+        single<FhirResourceValidator> { FhirResourceValidatorHapi() }
+        single<MessageBus> { MessageBusKafka(get(), get()) }
 
         singleClosable { KafkaFactory.createFhirProducer(get()) }
         singleClosable { KafkaFactory.createFhirConsumer(get()) }

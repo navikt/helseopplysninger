@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class KafkaFhirResourceDeserializerTests {
+internal class KafkaFhirResourceDeserializerTest {
     @Test
     fun `deserializing valid fhir resource`() {
         val sut = KafkaFhirResourceDeserializer()
