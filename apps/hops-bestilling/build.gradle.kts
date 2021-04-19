@@ -29,7 +29,7 @@ dependencies {
     implementation("com.sksamuel.hoplite:hoplite-core:1.4.0")
     implementation("io.insert-koin:koin-ktor:3.0.1")
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
-    implementation("org.apache.kafka:kafka-clients:2.7.0")
+    implementation("org.apache.kafka:kafka-clients:2.8.0")
     testImplementation("org.junit.jupiter:junit-jupiter:5.7.1")
     runtimeOnly("ca.uhn.hapi.fhir:hapi-fhir-client:$hapiVersion")
     runtimeOnly("ch.qos.logback:logback-classic:1.2.3")
