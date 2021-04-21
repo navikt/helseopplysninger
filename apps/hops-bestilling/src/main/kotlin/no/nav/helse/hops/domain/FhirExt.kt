@@ -20,12 +20,12 @@ fun IBaseResource.toJson(): String {
     return parser.encodeResourceToString(this)
 }
 
-fun OperationOutcome.okWithoutWarnings(): Boolean {
-    val errorStates = setOf(
+fun OperationOutcome.isAllOk(): Boolean {
+    val errorStates = listOf(
         OperationOutcome.IssueSeverity.FATAL,
         OperationOutcome.IssueSeverity.ERROR,
         OperationOutcome.IssueSeverity.WARNING
     )
 
-    return issue.none { errorStates.contains(it.severity) }
+    return issue.none { it.severity in errorStates }
 }

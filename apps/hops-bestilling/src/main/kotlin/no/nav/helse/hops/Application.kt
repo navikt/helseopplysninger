@@ -8,7 +8,7 @@ import io.ktor.features.DefaultHeaders
 import io.ktor.response.respondText
 import io.ktor.routing.get
 import io.ktor.routing.routing
-import no.nav.helse.hops.infrastructure.BestillingProducerJob
+import no.nav.helse.hops.domain.BestillingProducerJob
 import no.nav.helse.hops.infrastructure.KoinBootstrapper
 import no.nav.helse.hops.koin.HttpRequestKoinScope
 import org.koin.ktor.ext.Koin
@@ -19,7 +19,7 @@ fun Application.module() {
     install(DefaultHeaders)
     install(CallLogging)
     install(Koin) {
-        modules(KoinBootstrapper.module)
+        modules(KoinBootstrapper.singleModule, KoinBootstrapper.scopeModule)
     }
 
     routing {

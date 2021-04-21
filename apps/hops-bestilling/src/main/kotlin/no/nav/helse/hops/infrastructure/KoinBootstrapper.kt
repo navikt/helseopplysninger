@@ -1,8 +1,8 @@
 package no.nav.helse.hops.infrastructure
 
 import com.sksamuel.hoplite.ConfigLoader
-import no.nav.helse.hops.domain.FhirMessageProcessor
-import no.nav.helse.hops.domain.FhirMessageProcessorImpl
+import no.nav.helse.hops.domain.BestillingConsumerJob
+import no.nav.helse.hops.domain.BestillingProducerJob
 import no.nav.helse.hops.domain.FhirResourceValidator
 import no.nav.helse.hops.domain.MessageBus
 import no.nav.helse.hops.koin.HttpRequestKoinScope
@@ -13,21 +13,25 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 object KoinBootstrapper {
-    val module = module {
-        data class ConfigRoot(val kafka: Configuration.Kafka)
+    val singleModule = module {
+        data class ConfigRoot(val kafka: Configuration.Kafka, val fhirMessaging: Configuration.FhirMessaging)
         single { ConfigLoader().loadConfigOrThrow<ConfigRoot>("/application.conf") }
         single { get<ConfigRoot>().kafka }
-        single<FhirMessageProcessor> { FhirMessageProcessorImpl(get(), get(), getLogger<FhirMessageProcessorImpl>()) }
+        single { get<ConfigRoot>().fhirMessaging }
 
         single<FhirResourceValidator> { FhirResourceValidatorHapi() }
-        single<MessageBus> { MessageBusKafka(get(), get()) }
+        single<MessageBus> { MessageBusKafka(get(), get(), get(), getLogger<MessageBus>()) }
 
         singleClosable { KafkaFactory.createFhirProducer(get()) }
         singleClosable { KafkaFactory.createFhirConsumer(get()) }
-        singleClosable(createdAtStart = true) { BestillingConsumerJob(get(), get(), getLogger<BestillingConsumerJob>(), get()) }
+        singleClosable(createdAtStart = true) {
+            BestillingConsumerJob(get(), getLogger<BestillingConsumerJob>(), get(), get())
+        }
+    }
 
+    val scopeModule = module {
         scope<HttpRequestKoinScope> {
-            scopedClosable { BestillingProducerJob(get(), get()) }
+            scopedClosable { BestillingProducerJob(get(), get(), get()) }
         }
     }
 

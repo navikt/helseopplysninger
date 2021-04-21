@@ -10,7 +10,7 @@
         "id": "dc80d242-4877-4b9a-8966-f07ae6cd7106",
         "resourceType": "MessageHeader",
         "source": {
-          "endpoint": "http://hops-bestiller-backend"
+          "endpoint": "helseopplysninger.hops-bestilling"
         },
         "eventUri": "bestilling",
         "focus": [
