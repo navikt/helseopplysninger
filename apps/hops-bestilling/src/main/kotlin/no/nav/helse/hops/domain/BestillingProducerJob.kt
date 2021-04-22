@@ -1,13 +1,10 @@
-package no.nav.helse.hops.infrastructure
+package no.nav.helse.hops.domain
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import no.nav.helse.hops.domain.addResource
-import org.apache.kafka.clients.producer.Producer
-import org.apache.kafka.clients.producer.ProducerRecord
-import org.hl7.fhir.instance.model.api.IBaseResource
+import no.nav.helse.hops.infrastructure.Configuration
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.Coding
 import org.hl7.fhir.r4.model.MessageHeader
@@ -18,14 +15,13 @@ import java.io.Closeable
 import kotlin.coroutines.CoroutineContext
 
 class BestillingProducerJob(
-    private val producer: Producer<Unit, IBaseResource>,
-    config: Configuration.Kafka,
+    private val messageBus: MessageBus,
+    private val messagingConfig: Configuration.FhirMessaging,
     context: CoroutineContext = Dispatchers.Default
 ) : Closeable {
     private val job = CoroutineScope(context).launch {
-        val msg = createFhirMessage()
-        val future = producer.send(ProducerRecord(config.topic, msg))
-        future.get()
+        val message = createFhirMessage()
+        messageBus.publish(message)
     }
 
     override fun close() {
@@ -37,6 +33,7 @@ class BestillingProducerJob(
     private fun createFhirMessage(): Bundle {
         val eventType = Coding("nav:hops:eventType", "bestilling", "Bestilling")
         val messageHeader = MessageHeader(eventType, MessageHeader.MessageSourceComponent(UrlType("")))
+        messageHeader.destination = listOf(MessageHeader.MessageDestinationComponent(UrlType(messagingConfig.endpoint)))
         val task = Task()
         val questionnaire = Questionnaire()
 

@@ -12,4 +12,7 @@ object Configuration {
         val keystorePath: String,
         val credstorePsw: String
     )
+    data class FhirMessaging(
+        val endpoint: String,
+    )
 }
