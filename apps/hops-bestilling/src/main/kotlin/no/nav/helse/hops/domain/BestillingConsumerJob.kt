@@ -2,9 +2,10 @@ package no.nav.helse.hops.domain
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import no.nav.helse.hops.infrastructure.Configuration
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.InstantType
@@ -23,34 +24,32 @@ class BestillingConsumerJob(
     messagingConfig: Configuration.FhirMessaging,
     context: CoroutineContext = Dispatchers.Default
 ) : Closeable {
-    private val scope = CoroutineScope(context)
+    private val job = CoroutineScope(context).launch {
+        while (isActive) {
+            val messages = messageBus.poll()
 
-    init {
-        scope.launch {
-            while (isActive) {
-                val messages = messageBus.poll()
+            messages.forEach {
+                logger.debug("Message: ${it.toJson()}")
 
-                messages.forEach {
-                    logger.debug("Message: ${it.toJson()}")
-
-                    if (it.isMessageWithSingleDestination(messagingConfig.endpoint)) {
-                        process(it)
-                    }
+                if (it.isMessageWithSingleDestination(messagingConfig.endpoint)) {
+                    process(it)
                 }
             }
         }
     }
 
     override fun close() {
-        scope.cancel()
+        runBlocking {
+            job.cancelAndJoin()
+        }
     }
 
     suspend fun process(message: Bundle) {
         // TODO: Publish resources to the HAPI fhir server
-        val requestMessageHeader = message.entry[0].resource as MessageHeader
         val operationOutcome = validator.validate(message)
 
         if (!operationOutcome.isAllOk()) {
+            val requestMessageHeader = message.entry.first().resource as MessageHeader
             val validationErrorResponse = createResponseMessage(requestMessageHeader, operationOutcome)
             messageBus.publish(validationErrorResponse)
         }
@@ -71,11 +70,11 @@ private fun createResponseMessage(
     operationOutcome: OperationOutcome
 ): Bundle {
     val outcomeCopy = operationOutcome.copy().apply {
-        id = "${requestMessageHeader.id}-outcome"
+        id = IdentityGenerator.CreateUUID5(requestMessageHeader.id, "details").toString()
     }
 
     val responseMessageHeader = MessageHeader().apply {
-        id = "${requestMessageHeader.id}-response"
+        id = IdentityGenerator.CreateUUID5(requestMessageHeader.id, "response").toString()
         event = requestMessageHeader.event
         destination = listOf(asDestination(requestMessageHeader.source))
         source = asSource(requestMessageHeader.destination.single())
@@ -91,7 +90,7 @@ private fun createResponseMessage(
         timestampElement = InstantType.withCurrentTime()
         type = Bundle.BundleType.MESSAGE
         addResource(responseMessageHeader)
-        addResource(operationOutcome)
+        addResource(outcomeCopy)
     }
 }
 

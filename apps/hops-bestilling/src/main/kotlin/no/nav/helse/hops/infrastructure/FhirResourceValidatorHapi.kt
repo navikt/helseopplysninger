@@ -12,7 +12,7 @@ import org.hl7.fhir.common.hapi.validation.validator.FhirInstanceValidator
 import org.hl7.fhir.instance.model.api.IBaseResource
 import org.hl7.fhir.r4.model.OperationOutcome
 
-class FhirResourceValidatorHapi : FhirResourceValidator {
+object FhirResourceValidatorHapi : FhirResourceValidator {
     private val validator: FhirValidator
 
     init {

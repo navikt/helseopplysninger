@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test
 internal class FhirResourceValidatorHapiTest {
     @Test
     fun `validate valid message bundle`() {
-        val sut = FhirResourceValidatorHapi()
+        val sut = FhirResourceValidatorHapi
 
         val message = ResourceLoader.asFhirResource<Bundle>("/fhir/valid-message.json")
         val result = runBlocking { sut.validate(message) }
@@ -20,7 +20,7 @@ internal class FhirResourceValidatorHapiTest {
 
     @Test
     fun `validate message bundle without required message-header`() {
-        val sut = FhirResourceValidatorHapi()
+        val sut = FhirResourceValidatorHapi
 
         val message = ResourceLoader.asFhirResource<Bundle>("/fhir/invalid-message-missing-header.json")
         val result = runBlocking { sut.validate(message) }

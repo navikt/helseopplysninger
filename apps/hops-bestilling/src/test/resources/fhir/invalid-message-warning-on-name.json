@@ -63,7 +63,7 @@
       "fullUrl": "urn:uuid:0358dcea-de26-430f-8cc2-8591e701a5b5",
       "resource": {
         "id": "0358dcea-de26-430f-8cc2-8591e701a5b5",
-        "name": "Skjema1",
+        "name": "not machine readable name",
         "resourceType": "Questionnaire",
         "status": "draft",
         "item": [

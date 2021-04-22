@@ -28,7 +28,13 @@ class MessageBusKafka(
     override suspend fun poll(): List<Bundle> {
         try {
             val records = consumer.poll(Duration.ofSeconds(1))
-            return records.mapNotNull { it.value() as? Bundle }
+            val bundles = records.mapNotNull { it.value() as? Bundle }
+
+            // For some reason the HAPI's json parser replaces all resource.id with entry.fullUrl.
+            val resources = bundles.flatMap { bundle -> bundle.entry.map { it.resource } }
+            resources.forEach { it.id = it.id?.removePrefix("urn:uuid:") }
+
+            return bundles
         } catch (ex: DataFormatException) {
             logger.error("Unable to parse received message on topic={}, error={}", config.topic, ex.message)
         }
