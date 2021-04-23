@@ -20,7 +20,7 @@ object KoinBootstrapper {
         single { get<ConfigRoot>().fhirMessaging }
 
         single<FhirResourceValidator> { FhirResourceValidatorHapi }
-        single<MessageBus> { MessageBusKafka(get(), get(), get(), getLogger<MessageBus>()) }
+        single<MessageBus> { MessageBusKafka(get(), get(), get()) }
 
         singleClosable { KafkaFactory.createFhirProducer(get()) }
         singleClosable { KafkaFactory.createFhirConsumer(get()) }
