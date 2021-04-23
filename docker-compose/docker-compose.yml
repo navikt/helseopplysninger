@@ -25,6 +25,11 @@ services:
       - 8082:8080
     networks:
       - hops_network
+    environment:
+      AZURE_APP_WELL_KNOWN_URL: http://mock-oauth2-service:8081/default/.well-known/openid-configuration
+      HAPI_BASE_URL: http://hops-hapi-service:8080/fhir
+      HAPI_ID_DISCOVERY_URL: http://mock-oauth2-service:8081/default/.well-known/openid-configuration
+
 
   hops-oppslag-service:
     container_name: hops-oppslag_container

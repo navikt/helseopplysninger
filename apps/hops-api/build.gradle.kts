@@ -21,9 +21,14 @@ tasks {
 
 dependencies {
     val ktorVersion = "1.5.3"
+    val hapiVersion = "5.3.2"
 
-    implementation("io.ktor:ktor-server-netty:$ktorVersion")
+    api(project(":libs:hops-common-fhir"))
+    implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:$hapiVersion")
+    implementation("com.sksamuel.hoplite:hoplite-hocon:1.4.0")
     implementation("no.nav.security:token-validation-ktor:1.3.5")
+    implementation("io.insert-koin:koin-ktor:3.0.1")
+    implementation("io.ktor:ktor-server-netty:$ktorVersion")
     implementation("io.micrometer:micrometer-registry-prometheus:1.6.6")
     implementation("io.ktor:ktor-auth:$ktorVersion")
     implementation("io.ktor:ktor-metrics-micrometer:$ktorVersion")
