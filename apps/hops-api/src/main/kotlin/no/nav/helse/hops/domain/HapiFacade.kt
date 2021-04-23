@@ -4,20 +4,18 @@ import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.Task
 
 interface HapiFacade {
-    suspend fun tasks(): Array<Task>
+    suspend fun tasks(): List<Task>
 }
 
 class HapiFacadeImpl(private val _fhirClient: IGenericClient) : HapiFacade {
-    override suspend fun tasks(): Array<Task> {
+    override suspend fun tasks(): List<Task> {
 
         val bundle = _fhirClient
             .search<Bundle>()
             .byUrl("Task")
             .execute()
 
-        val task: Array<Task> = arrayOf(bundle.entry.firstOrNull()?.resource as Task)
-
-        /* return bundle.entry as Array<Task> */
-        return task
+        val entries = bundle.entry ?: arrayListOf()
+        return entries.mapNotNull { it.resource as? Task }
     }
 }

@@ -35,6 +35,7 @@ dependencies {
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
     testImplementation("no.nav.security:mock-oauth2-server:0.3.2")
     testImplementation("org.junit.jupiter:junit-jupiter:5.7.1")
+    runtimeOnly("ca.uhn.hapi.fhir:hapi-fhir-client:$hapiVersion")
     runtimeOnly("ch.qos.logback:logback-classic:1.2.3")
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
 }
