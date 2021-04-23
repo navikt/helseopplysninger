@@ -1,4 +1,5 @@
 services:
+  # A mock implementation of an oauth2\openid authorization-server.
   # Must add 127.0.0.1 mock-oauth2-service to hosts file in order for issuer to be correct when testing from host.
   mock-oauth2-service:
     container_name: mock-oauth2_container
@@ -14,6 +15,7 @@ services:
     volumes:
       - ./config/oauth-mock-config.json:/etc/oauth-mock-config.json
 
+  # The FHIR REST API exposed to external consumers, e.g. EHRs.
   hops-api-service:
     container_name: hops-api_container
     build:
@@ -26,6 +28,7 @@ services:
     networks:
       - hops_network
 
+  # hops-oppslag provides a facade with a common REST API and security-mechanism towards external dependencies.
   hops-oppslag-service:
     container_name: hops-oppslag_container
     build:
@@ -46,6 +49,7 @@ services:
       FKR_BASE_URL: http://hops-hapi-service:8080/fhir
       HELSE_ID_DISCOVERY_URL: http://mock-oauth2-service:8081/default/.well-known/openid-configuration
 
+  # HAPI FHIR Server is a generic FHIR Server for storing and retrieving FHIR resources through a REST API.
   hops-hapi-service:
     container_name: hops-hapi_container
     build:
@@ -72,6 +76,7 @@ services:
       AZURE_APP_CLIENT_ID: hapi_test_client_id
       AZURE_APP_TENANT_ID: na
 
+  # hops-bestilling consumes FHIR-messages on Kafka from NAV services and produces responses.
   hops-bestilling-service:
     container_name: hops-bestilling_container
     build:
@@ -90,6 +95,7 @@ services:
       KAFKA_BROKERS: kafka-service:9093
       KAFKA_CLIENT_ID: hops-bestilling
 
+  # pgAdmin provides an administration web UI for PostgreSQL.
   pgadmin-service:
     container_name: pgadmin_container
     image: dpage/pgadmin4:latest
@@ -108,6 +114,7 @@ services:
       PGADMIN_DEFAULT_PASSWORD: admin
       PGADMIN_SERVER_JSON_FILE: /etc/hopsconfig/pgadmin.json
 
+  # PostgreSQL is the database used by HAPI-fhir-server.
   postgres-service:
     container_name: postgres_container
     image: postgres:12.6
@@ -123,6 +130,7 @@ services:
       POSTGRES_DB: postgres
       PGDATA: /data/postgres
 
+  # Zookeeper keeps track of status of the Kafka cluster nodes, topics, partitions etc.
   zookeeper-service:
     container_name: zookeper_container
     image: wurstmeister/zookeeper:latest
@@ -131,6 +139,7 @@ services:
     networks:
       - kafka_network
 
+  # Apache Kafka broker.
   kafka-service:
     container_name: kafka_container
     image: wurstmeister/kafka:latest
@@ -150,6 +159,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 
+  # Kafdrop is a web UI for viewing Kafka topics and browsing consumer groups.
   kafdrop-service:
     container_name: kafkadrop_container
     image: obsidiandynamics/kafdrop:latest
