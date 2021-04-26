@@ -3,7 +3,7 @@ name: hops-hapi-fhir-server
 on:
   push:
     branches:
-      - 'main'
+      - 'kalle_hapiserver'
     paths:
       - apps/hops-hapi-fhir-server/**
       - .github/workflows/hops-hapi-fhir-server.yaml
