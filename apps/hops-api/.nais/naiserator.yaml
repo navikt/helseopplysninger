@@ -38,6 +38,10 @@ spec:
   prometheus:
     enabled: true
     path: /prometheus
+  accessPolicy:
+    outbound:
+      rules:
+        - application: hops-hapi-fhir-server
   ingresses:
   {{#each ingresses as |url|}}
     - {{url}}
