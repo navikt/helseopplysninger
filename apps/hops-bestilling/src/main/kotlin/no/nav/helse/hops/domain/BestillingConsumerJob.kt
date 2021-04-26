@@ -21,6 +21,7 @@ class BestillingConsumerJob(
     private val messageBus: MessageBus,
     private val logger: Logger,
     private val validator: FhirResourceValidator,
+    private val fhirRepo: FhirRepository,
     messagingConfig: Configuration.FhirMessaging,
     context: CoroutineContext = Dispatchers.Default
 ) : Closeable {
@@ -44,12 +45,14 @@ class BestillingConsumerJob(
         }
     }
 
-    suspend fun process(message: Bundle) {
-        // TODO: Publish resources to the HAPI fhir server
+    private suspend fun process(message: Bundle) {
         val operationOutcome = validator.validate(message)
+        val resources = message.entry.mapNotNull { it.resource }
 
-        if (!operationOutcome.isAllOk()) {
-            val requestMessageHeader = message.entry.first().resource as MessageHeader
+        if (operationOutcome.isAllOk()) {
+            fhirRepo.addRange(resources)
+        } else {
+            val requestMessageHeader = resources.first() as MessageHeader
             val validationErrorResponse = createResponseMessage(requestMessageHeader, operationOutcome)
             messageBus.publish(validationErrorResponse)
         }

@@ -1,5 +1,7 @@
 package no.nav.helse.hops.componentTests
 
+import ca.uhn.fhir.rest.client.api.IGenericClient
+import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import no.nav.helse.hops.domain.isAllOk
 import no.nav.helse.hops.domain.toJson
@@ -20,7 +22,6 @@ import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.MessageHeader
 import org.hl7.fhir.r4.model.OperationOutcome
 import org.junit.jupiter.api.Test
-import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 import kotlin.test.assertEquals
@@ -29,21 +30,18 @@ import kotlin.test.assertTrue
 private const val TOPIC = "helseopplysninger.bestilling"
 private const val PARTITION = 0
 
-class ValidationErrorTest() : java.io.Closeable {
+class ValidationErrorTest : java.io.Closeable {
     private val consumerMock = createMockConsumer()
     private val producerMock =
         MockProducer(true, Serializer<Unit> { _, _ -> ByteArray(0) }, KafkaFhirResourceSerializer())
-    private val koinApp: KoinApplication
-
-    init {
+    private val koinApp = startKoin {
         val testKoinModule = module(override = true) {
             single<Producer<Unit, IBaseResource>> { producerMock }
             single<Consumer<Unit, IBaseResource>> { consumerMock }
+            single { mockk<IGenericClient>() }
         }
 
-        koinApp = startKoin {
-            modules(KoinBootstrapper.singleModule, testKoinModule)
-        }
+        modules(KoinBootstrapper.singleModule, testKoinModule)
     }
 
     @Test
@@ -56,9 +54,11 @@ class ValidationErrorTest() : java.io.Closeable {
         assertEquals(1, producerMock.history().size)
 
         val responseMessage = producerMock.history().single().value() as Bundle
-        assertEquals(2, responseMessage.entry.count())
-        assertTrue(responseMessage.entry[0].resource is MessageHeader)
-        assertTrue(responseMessage.entry[1].resource is OperationOutcome)
+
+        val resources = responseMessage.entry.map { it.resource }
+        assertEquals(2, resources.count())
+        assertTrue(resources[0] is MessageHeader)
+        assertTrue(resources[1] is OperationOutcome)
 
         val expectedResponseMessage =
             ResourceLoader.asFhirResource<Bundle>("/fhir/invalid-message-warning-on-name-expected-response.json").apply {
