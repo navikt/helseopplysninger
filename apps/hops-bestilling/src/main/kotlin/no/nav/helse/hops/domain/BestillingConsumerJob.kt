@@ -21,6 +21,7 @@ class BestillingConsumerJob(
     private val messageBus: MessageBus,
     private val logger: Logger,
     private val validator: FhirResourceValidator,
+    private val fhirRepo: FhirRepository,
     messagingConfig: Configuration.FhirMessaging,
     context: CoroutineContext = Dispatchers.Default
 ) : Closeable {
@@ -31,7 +32,7 @@ class BestillingConsumerJob(
             messages.forEach {
                 logger.debug("Message: ${it.toJson()}")
 
-                if (it.isMessageWithSingleDestination(messagingConfig.endpoint)) {
+                if (it.hasDestination(messagingConfig.endpoint)) {
                     process(it)
                 }
             }
@@ -44,25 +45,23 @@ class BestillingConsumerJob(
         }
     }
 
-    suspend fun process(message: Bundle) {
-        // TODO: Publish resources to the HAPI fhir server
+    private suspend fun process(message: Bundle) {
         val operationOutcome = validator.validate(message)
+        val resources = message.entry.mapNotNull { it.resource }
 
-        if (!operationOutcome.isAllOk()) {
-            val requestMessageHeader = message.entry.first().resource as MessageHeader
+        if (operationOutcome.isAllOk()) {
+            fhirRepo.addRange(resources)
+        } else {
+            val requestMessageHeader = resources.first() as MessageHeader
             val validationErrorResponse = createResponseMessage(requestMessageHeader, operationOutcome)
             messageBus.publish(validationErrorResponse)
         }
     }
 }
 
-private fun Bundle.isMessageWithSingleDestination(expectedDestination: String): Boolean {
-    if (type == Bundle.BundleType.MESSAGE) {
-        val header = entry.firstOrNull()?.resource as? MessageHeader ?: return false
-        return header.destination.count() == 1 && header.destination.any { it.endpoint == expectedDestination }
-    }
-
-    return false
+private fun Bundle.hasDestination(expectedDestination: String): Boolean {
+    val header = entry[0].resource as MessageHeader
+    return header.destination?.count() == 1 && header.destination.any { it.endpoint == expectedDestination }
 }
 
 private fun createResponseMessage(

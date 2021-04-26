@@ -1,4 +1,8 @@
 {
   "ingresses":  ["https://hops-bestilling.dev.adeo.no"],
-  "kafka_pool": "nav-dev"
+  "kafka_pool": "nav-dev",
+  "env": {
+    "HOPS_HAPI_BASE_URL": "https://hops-hapi-fhir-server.dev.adeo.no/fhir",
+    "HOPS_HAPI_SCOPE": "api://dev-gcp.helseopplysninger.hops-hapi-fhir-server/.default"
+  }
 }

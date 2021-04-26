@@ -1,5 +1,7 @@
 package no.nav.helse.hops.infrastructure
 
+import ca.uhn.fhir.rest.client.api.IGenericClient
+import io.mockk.mockk
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.MockConsumer
 import org.apache.kafka.clients.consumer.OffsetResetStrategy
@@ -16,6 +18,7 @@ class KoinBootstrapperTest {
         val testKoinModule = module(override = true) {
             single<Producer<Unit, IBaseResource>> { MockProducer() }
             single<Consumer<Unit, IBaseResource>> { MockConsumer(OffsetResetStrategy.EARLIEST) }
+            single { mockk<IGenericClient>() }
         }
 
         checkModules {

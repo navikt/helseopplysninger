@@ -12,7 +12,16 @@ object Configuration {
         val keystorePath: String,
         val credstorePsw: String
     )
+
     data class FhirMessaging(
         val endpoint: String,
+    )
+
+    data class FhirServer(
+        val baseUrl: String,
+        val discoveryUrl: String,
+        val clientId: String,
+        val clientSecret: String,
+        val scope: String,
     )
 }
