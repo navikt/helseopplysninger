@@ -38,6 +38,9 @@ spec:
   prometheus:
     enabled: true
     path: /prometheus
+  azure:
+    application:
+      enabled: true
   accessPolicy:
     outbound:
       rules:
