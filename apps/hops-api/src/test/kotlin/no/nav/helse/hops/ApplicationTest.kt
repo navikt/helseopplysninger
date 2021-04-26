@@ -9,7 +9,6 @@ import io.ktor.server.testing.TestApplicationEngine
 import io.ktor.server.testing.handleRequest
 import io.ktor.server.testing.withTestApplication
 import no.nav.security.mock.oauth2.MockOAuth2Server
-import okhttp3.mockwebserver.MockWebServer
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
@@ -63,36 +62,6 @@ class ApplicationTest {
         }
     }
 
-    fun `Requests for tasks without token should return 401-Unauthorized`() {
-        withHopsTestApplication {
-            with(handleRequest(Get, "/tasks")) {
-                assertEquals(Unauthorized, response.status())
-            }
-        }
-    }
-
-    fun `Requests for tasks with valid token and correct scope should should return 200-Ok`() {
-        withHopsTestApplicationHapi {
-            with(
-                handleRequest(Get, "/tasks") {
-                    val token = oauthServer.issueToken(claims = mapOf("scope" to "nav:helse/v1/helseopplysninger"))
-                    addHeader("Authorization", "Bearer ${token.serialize()}")
-                }
-            ) {
-                assertEquals(OK, response.status())
-            }
-        }
-    }
-
-    private fun <R> withHopsTestApplicationHapi(test: TestApplicationEngine.() -> R): R {
-        return withTestApplication({
-            doConfigHapi()
-            api()
-        }) {
-            test()
-        }
-    }
-
     private fun <R> withHopsTestApplication(test: TestApplicationEngine.() -> R): R {
         return withTestApplication({
             doConfig()
@@ -114,34 +83,19 @@ class ApplicationTest {
         }
     }
 
-    private fun Application.doConfigHapi(
-        acceptedIssuer: String = "default",
-    ) {
-        (environment.config as MapApplicationConfig).apply {
-            put("no.nav.helse.hops.hapi.baseUrl", hapiServer.url("/").toString())
-            put("no.nav.helse.hops.hapi.tokenUrl", "${oauthServer.tokenEndpointUrl(acceptedIssuer)}")
-            put("no.nav.helse.hops.hapi.clientId", "test-client-id")
-            put("no.nav.helse.hops.hapi.clientSecret", "test-secret")
-            put("no.nav.helse.hops.hapi.scope", "test-scope")
-        }
-    }
-
     private companion object {
         val oauthServer = MockOAuth2Server()
-        val hapiServer = MockWebServer().apply { dispatcher = HapiMockDispatcher() }
 
         @BeforeAll
         @JvmStatic
         fun before() {
             oauthServer.start()
-            hapiServer.start()
         }
 
         @AfterAll
         @JvmStatic
         fun after() {
             oauthServer.shutdown()
-            hapiServer.shutdown()
         }
     }
 }

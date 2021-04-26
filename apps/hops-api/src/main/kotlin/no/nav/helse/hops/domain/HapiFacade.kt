@@ -2,7 +2,6 @@ package no.nav.helse.hops.domain
 import ca.uhn.fhir.rest.client.api.IGenericClient
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.Task
-import java.lang.Exception
 
 interface HapiFacade {
     suspend fun tasks(): List<Task>
