@@ -94,6 +94,7 @@ services:
     environment:
       KAFKA_BROKERS: kafka-service:9093
       KAFKA_CLIENT_ID: hops-bestilling
+      HOPS_HAPI_BASE_URL: http://hops-hapi-service:8080/fhir
 
   # pgAdmin provides an administration web UI for PostgreSQL.
   pgadmin-service:

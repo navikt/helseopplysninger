@@ -36,7 +36,7 @@ object KoinBootstrapper {
         single<FhirResourceValidator> { FhirResourceValidatorHapi }
         single<MessageBus> { MessageBusKafka(get(), get(), get()) }
         single { createHapiFhirClient(get()) }
-        single<FhirRepository> { FhirRepositoryImpl(get()) }
+        single<FhirRepository> { FhirRepositoryImpl(get(), getLogger<FhirRepositoryImpl>()) }
 
         singleClosable { KafkaFactory.createFhirProducer(get()) }
         singleClosable { KafkaFactory.createFhirConsumer(get()) }

@@ -14,8 +14,8 @@ object KafkaMock {
     const val TOPIC = "helseopplysninger.bestilling"
     const val PARTITION = 0
 
-    fun createConsumer(): MockConsumer<Unit, IBaseResource> {
-        return MockConsumer<Unit, IBaseResource>(OffsetResetStrategy.EARLIEST).apply {
+    fun createConsumer() =
+        MockConsumer<Unit, IBaseResource>(OffsetResetStrategy.EARLIEST).apply {
             schedulePollTask {
                 rebalance(listOf(TopicPartition(TOPIC, 0)))
             }
@@ -26,12 +26,14 @@ object KafkaMock {
 
             updateBeginningOffsets(startOffsets)
         }
-    }
 
     fun createProducer() =
-        MockProducer(true, Serializer<Unit> { _, _ -> ByteArray(0) }, KafkaFhirResourceSerializer())
+        MockProducer(
+            true,
+            Serializer<Unit> { _, _ -> ByteArray(0) },
+            KafkaFhirResourceSerializer()
+        )
 }
 
-fun MockConsumer<Unit, IBaseResource>.addFhirMessage(msg: Bundle) {
-    schedulePollTask { addRecord(ConsumerRecord(KafkaMock.TOPIC, KafkaMock.PARTITION, 0, Unit, msg) ) }
-}
+fun MockConsumer<Unit, IBaseResource>.addFhirMessage(msg: Bundle) =
+    schedulePollTask { addRecord(ConsumerRecord(KafkaMock.TOPIC, KafkaMock.PARTITION, 0, Unit, msg)) }

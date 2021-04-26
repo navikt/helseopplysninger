@@ -22,7 +22,6 @@ class FkrFacadeImpl(private val _fhirClient: IGenericClient) : FkrFacade {
 
         val tasks = bundle.entry.mapNotNull { it.resource as? Task }
 
-
         return name
     }
 }

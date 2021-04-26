@@ -32,7 +32,7 @@ class BestillingConsumerJob(
             messages.forEach {
                 logger.debug("Message: ${it.toJson()}")
 
-                if (it.isMessageWithSingleDestination(messagingConfig.endpoint)) {
+                if (it.hasDestination(messagingConfig.endpoint)) {
                     process(it)
                 }
             }
@@ -59,13 +59,9 @@ class BestillingConsumerJob(
     }
 }
 
-private fun Bundle.isMessageWithSingleDestination(expectedDestination: String): Boolean {
-    if (type == Bundle.BundleType.MESSAGE) {
-        val header = entry.firstOrNull()?.resource as? MessageHeader ?: return false
-        return header.destination.count() == 1 && header.destination.any { it.endpoint == expectedDestination }
-    }
-
-    return false
+private fun Bundle.hasDestination(expectedDestination: String): Boolean {
+    val header = entry[0].resource as MessageHeader
+    return header.destination?.count() == 1 && header.destination.any { it.endpoint == expectedDestination }
 }
 
 private fun createResponseMessage(
