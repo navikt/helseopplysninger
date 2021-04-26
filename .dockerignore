@@ -3,6 +3,6 @@
 !libs
 !build.gradle.kts
 !settings.gradle.kts
-**.nais
+**/.nais
 **/build
 **/out

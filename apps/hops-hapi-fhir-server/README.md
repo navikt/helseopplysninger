@@ -8,12 +8,15 @@ Backend for forwarding and storing of health-related data
 * Postgres
 
 ## To run locally on Mac 
-To reach the mock oaut2 server you have to make a new mapping in the hosts file.
+To reach the mock oauth2 server you have to make a new mapping in the hosts file.
 To modify the /etc/hosts file
 * Launch Terminal
-* Type sudo nano /etc/hosts and press Return
+* Type `sudo nano /etc/hosts` and press Return
 * Enter your admin password
 * Add this new mapping: `127.0.0.1 mock-oauth2-service`
+
+
+## Build and run from IntelliJ
 
 ### Edit the configurations in IntelliJ:
 (Run -> Edit Configurations)
@@ -23,17 +26,25 @@ Set these values:
 * Tasks: `bootRun`
 * Environment variables: `SPRING_PROFILES_ACTIVE=local`
 
+### Start the mock-oauth2-service manually
+Run: `docker-compose up mock-oauth2-service` to start the mock. Be sure that you have
+modified `/etc/hosts` as described earlier.
+
+
+## Run with Docker
+
 ### To start up the server with docker-compose
 In a terminal run: `docker-compose up hops-hapi-service`
 
 You can start all the applications in this mono repo by running: 
-
 `docker-compose up` (no argument)
 
 ### Check the open endpoint
-http://localhost:8084/fhir/metadata
+http://localhost:8084/fhir/metadata when starting with docker and
+http://localhost:8080/fhir/metadata when running locally.
 
-You should then get at `200 OK` and a (very long) response JSON
+You should then get at `200 OK` and a (very long) response JSON. This is the
+capability statement for the server.
 
 ### Test the secured endpoint
 You need Postman or something equivalent.

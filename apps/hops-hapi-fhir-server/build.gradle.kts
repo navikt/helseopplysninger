@@ -20,7 +20,7 @@ dependencies {
     runtimeOnly("org.springframework.boot:spring-boot-starter-actuator:$springBootVersion")
     runtimeOnly("org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion")
     runtimeOnly("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
-    runtimeOnly("org.postgresql:postgresql:42.2.19")
+    runtimeOnly("org.postgresql:postgresql:42.2.20")
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
     developmentOnly("com.h2database:h2:1.4.200")
     developmentOnly("org.springframework.boot:spring-boot-devtools:$springBootVersion")
