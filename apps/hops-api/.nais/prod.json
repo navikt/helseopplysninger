@@ -1,7 +1,6 @@
 {
   "ingresses":  ["https://hops-api.nais.adeo.no"],
   "env": {
-    "HAPI_BASE_URL": "http://hops-hapi-service:8080/fhir",
-    "HAPI_ID_DISCOVERY_URL": "http://localhost:8081/default/.well-known/openid-configuration"
+    "HAPI_BASE_URL": "https://hops-hapi-fhir-server.nais.adeo.no"
     }
 }

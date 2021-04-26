@@ -39,8 +39,13 @@ spec:
     enabled: true
     path: /prometheus
   ingresses:
-{{#each ingresses as |url|}}
+  {{#each ingresses as |url|}}
     - {{url}}
-{{/each}}
+  {{/each}}
+  env:
+  {{#each env}}
+     - name: {{@key}}
+       value: "{{this}}"
+  {{/each}}
   envFrom:
     - secret: api
