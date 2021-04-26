@@ -43,7 +43,7 @@ spec:
   env:
     - name: KAFKA_SECURITY_ENABLED
       value: "true"
-    { { #each env}}
-        - name: {{@key } }
-    value: "{{this}}"
-    {{/each}}
+  {{#each env}}
+    - name: {{@key}}
+      value: "{{this}}"
+  {{/each}}
