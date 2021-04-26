@@ -15,8 +15,8 @@ fun Bundle.addResource(resource: Resource) {
 }
 
 fun IBaseResource.toJson(): String {
-    val ctx = FhirContext.forCached(FhirVersionEnum.R4)!!
-    val parser = ctx.newJsonParser()!!
+    val ctx = FhirContext.forCached(FhirVersionEnum.R4)
+    val parser = ctx.newJsonParser()
     return parser.encodeResourceToString(this)
 }
 
