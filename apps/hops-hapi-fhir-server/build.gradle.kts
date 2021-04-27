@@ -8,9 +8,16 @@ java {
     sourceCompatibility = JavaVersion.VERSION_11
 }
 
+tasks {
+    test {
+        useJUnitPlatform()
+    }
+}
+
 dependencies {
     val hapiVersion = "5.3.2"
     val springBootVersion = "2.4.5"
+    val h2Version = "1.4.200"
 
     implementation("ca.uhn.hapi.fhir:hapi-fhir-jpaserver-cql:$hapiVersion")
     implementation("ca.uhn.hapi.fhir:hapi-fhir-jpaserver-mdm:$hapiVersion")
@@ -22,6 +29,9 @@ dependencies {
     runtimeOnly("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
     runtimeOnly("org.postgresql:postgresql:42.2.20")
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
-    developmentOnly("com.h2database:h2:1.4.200")
+    testImplementation("org.awaitility:awaitility:4.0.3")
+    testImplementation("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
+    testRuntimeOnly("com.h2database:h2:$h2Version")
+    developmentOnly("com.h2database:h2:$h2Version")
     developmentOnly("org.springframework.boot:spring-boot-devtools:$springBootVersion")
 }
