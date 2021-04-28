@@ -7,7 +7,9 @@ plugins {
     id("org.jlleitschuh.gradle.ktlint")
 }
 
-project.setProperty("mainClassName", "io.ktor.server.netty.EngineMain") // Required by shadowJar
+application {
+    mainClass.set("io.ktor.server.netty.EngineMain") // Required by shadowJar
+}
 
 tasks {
     withType<KotlinCompile> {
