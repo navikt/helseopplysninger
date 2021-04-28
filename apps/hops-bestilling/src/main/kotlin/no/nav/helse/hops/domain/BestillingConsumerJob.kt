@@ -3,8 +3,10 @@ package no.nav.helse.hops.domain
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancelAndJoin
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.runBlocking
 import no.nav.helse.hops.infrastructure.Configuration
 import org.hl7.fhir.r4.model.Bundle
@@ -25,19 +27,13 @@ class BestillingConsumerJob(
     messagingConfig: Configuration.FhirMessaging,
     context: CoroutineContext = Dispatchers.Default
 ) : Closeable {
-    private val job = CoroutineScope(context).launch {
-        while (isActive) {
-            val messages = messageBus.poll()
-
-            messages.forEach {
-                logger.debug("Message: ${it.toJson()}")
-
-                if (it.hasDestination(messagingConfig.endpoint)) {
-                    process(it)
-                }
-            }
-        }
-    }
+    private val job = messageBus
+        .poll()
+        .onEach { logger.debug("Message: ${it.toJson()}") }
+        .filter { it.hasDestination(messagingConfig.endpoint) }
+        .onEach(::process)
+        .catch { logger.error("Error while polling message bus.", it) }
+        .launchIn(CoroutineScope(context))
 
     override fun close() {
         runBlocking {

@@ -1,40 +1,64 @@
 package no.nav.helse.hops.infrastructure
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import no.nav.helse.hops.domain.MessageBus
 import org.apache.kafka.clients.consumer.Consumer
+import org.apache.kafka.clients.producer.Callback
 import org.apache.kafka.clients.producer.Producer
 import org.apache.kafka.clients.producer.ProducerRecord
+import org.apache.kafka.clients.producer.RecordMetadata
 import org.hl7.fhir.instance.model.api.IBaseResource
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.MessageHeader
 import java.time.Duration
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 class MessageBusKafka(
     private val consumer: Consumer<Unit, IBaseResource>,
     private val producer: Producer<Unit, IBaseResource>,
     private val config: Configuration.Kafka,
 ) : MessageBus {
-    init {
-        consumer.subscribe(listOf(config.topic))
-    }
-
     override suspend fun publish(message: Bundle) {
-        val future = producer.send(ProducerRecord(config.topic, message))
-        future.get()
+        suspendCoroutine<RecordMetadata> { continuation ->
+            val callback = Callback { metadata, exception ->
+                if (metadata == null) {
+                    continuation.resumeWithException(exception!!)
+                } else {
+                    continuation.resume(metadata)
+                }
+            }
+
+            producer.send(ProducerRecord(config.topic, message), callback)
+        }
     }
 
-    override suspend fun poll(): List<Bundle> {
-        val records = consumer.poll(Duration.ofSeconds(1))
+    override fun poll(): Flow<Bundle> =
+        flow {
+            try {
+                consumer.subscribe(listOf(config.topic))
 
-        // See https://www.hl7.org/fhir/messaging.html
-        val messages = records
-            .mapNotNull { it.value() as? Bundle }
-            .filter { it.type == Bundle.BundleType.MESSAGE && it.entry?.firstOrNull()?.resource is MessageHeader }
+                while (true) { // Will be exited when the flow's CoroutineContext is cancelled.
+                    val records = consumer.poll(Duration.ofSeconds(1))
 
-        // For some reason the HAPI's json parser replaces all resource.id with entry.fullUrl.
-        val resources = messages.flatMap { bundle -> bundle.entry.map { it.resource } }
-        resources.forEach { it.id = it.id?.removePrefix("urn:uuid:") }
+                    // Needed to be cancellable, see: https://kotlinlang.org/docs/flow.html#flow-cancellation-basics
+                    kotlinx.coroutines.delay(1)
 
-        return messages
-    }
+                    // See https://www.hl7.org/fhir/messaging.html
+                    records
+                        .mapNotNull { it.value() as? Bundle }
+                        .filter { it.type == Bundle.BundleType.MESSAGE && it.entry?.firstOrNull()?.resource is MessageHeader }
+                        .map { fixResourceIds(it); it }
+                        .forEach { emit(it) }
+                }
+            } finally {
+                consumer.unsubscribe()
+            }
+        }
 }
+
+/** For some reason the HAPI's json parser replaces all resource.id with entry.fullUrl, this function will fix this. **/
+private fun fixResourceIds(bundle: Bundle) =
+    bundle.entry.map { it.resource }.forEach { it.id = it.id?.removePrefix("urn:uuid:") }

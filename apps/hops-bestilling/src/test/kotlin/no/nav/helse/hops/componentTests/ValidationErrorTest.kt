@@ -2,7 +2,9 @@ package no.nav.helse.hops.componentTests
 
 import ca.uhn.fhir.rest.client.api.IGenericClient
 import io.mockk.mockk
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeout
 import no.nav.helse.hops.domain.isAllOk
 import no.nav.helse.hops.domain.toJson
 import no.nav.helse.hops.infrastructure.FhirResourceValidatorHapi
@@ -40,9 +42,14 @@ class ValidationErrorTest {
         val requestMessage = ResourceLoader.asFhirResource<Bundle>("/fhir/invalid-message-warning-on-name.json")
         consumerMock.addFhirMessage(requestMessage)
 
-        koinApp.close()
+        runBlocking {
+            withTimeout(5000) {
+                while (producerMock.history().size == 0) delay(100)
+            }
+        }
 
         assertEquals(1, producerMock.history().size)
+        koinApp.close()
 
         val responseMessage = producerMock.history().single().value() as Bundle
 
