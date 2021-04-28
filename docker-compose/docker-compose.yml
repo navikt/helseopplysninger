@@ -72,9 +72,8 @@ services:
       DB_DATABASE: postgres
       DB_USERNAME: postgres
       DB_PASSWORD: Welcome01
-      ISSUER_URI: http://mock-oauth2-service:8081/default
+      AZURE_OPENID_CONFIG_ISSUER: http://mock-oauth2-service:8081/default
       AZURE_APP_CLIENT_ID: hapi_test_client_id
-      AZURE_APP_TENANT_ID: na
 
   # hops-bestilling consumes FHIR-messages on Kafka from NAV services and produces responses.
   hops-bestilling-service:

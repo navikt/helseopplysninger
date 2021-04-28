@@ -28,7 +28,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: ${ISSUER_URI:https://login.microsoftonline.com/${AZURE_APP_TENANT_ID}/v2.0}
+          issuer-uri: ${AZURE_OPENID_CONFIG_ISSUER}
           #The client_id of this application
           accepted-audience: ${AZURE_APP_CLIENT_ID}, api://${AZURE_APP_CLIENT_ID}
 

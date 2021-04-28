@@ -13,4 +13,4 @@ spring:
         jwt:
           # Må starte oauth-mock for å kjøre lokalt: docker-compose up mock-oauth2-service
           issuer-uri: http://mock-oauth2-service:8081/default
-          accepted-audience: hello
+          accepted-audience: hapi_test_client_id

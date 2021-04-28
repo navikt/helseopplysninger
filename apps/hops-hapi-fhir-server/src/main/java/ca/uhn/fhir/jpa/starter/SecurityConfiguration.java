@@ -3,6 +3,7 @@ package ca.uhn.fhir.jpa.starter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -15,6 +16,7 @@ import org.springframework.security.oauth2.jwt.*;
 
 import java.util.List;
 
+@Profile("!test")
 @EnableWebSecurity
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
