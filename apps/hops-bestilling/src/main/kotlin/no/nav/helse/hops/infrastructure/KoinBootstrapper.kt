@@ -7,15 +7,15 @@ import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum
 import com.sksamuel.hoplite.ConfigLoader
 import no.nav.helse.hops.domain.BestillingConsumerJob
 import no.nav.helse.hops.domain.BestillingProducerJob
+import no.nav.helse.hops.domain.FhirMessageBus
 import no.nav.helse.hops.domain.FhirRepository
 import no.nav.helse.hops.domain.FhirRepositoryImpl
 import no.nav.helse.hops.domain.FhirResourceValidator
-import no.nav.helse.hops.domain.MessageBus
+import no.nav.helse.hops.domain.FhirHistoryFeed
+import no.nav.helse.hops.domain.StateChangeNotificationsJob
 import no.nav.helse.hops.koin.HttpRequestKoinScope
 import no.nav.helse.hops.koin.scopedClosable
 import no.nav.helse.hops.koin.singleClosable
-import no.nav.helse.hops.security.fhir.OauthRequestInterceptor
-import no.nav.helse.hops.security.oauth.OAuth2ClientFactory
 import org.koin.dsl.module
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -34,14 +34,18 @@ object KoinBootstrapper {
         single { get<ConfigRoot>().fhirServer }
 
         single<FhirResourceValidator> { FhirResourceValidatorHapi }
-        single<MessageBus> { MessageBusKafka(get(), get(), get()) }
+        single<FhirMessageBus> { FhirMessageBusKafka(get(), get(), get()) }
         single { createHapiFhirClient(get()) }
         single<FhirRepository> { FhirRepositoryImpl(get(), getLogger<FhirRepositoryImpl>()) }
+        single<FhirHistoryFeed> { FhirHistoryFeedHapi(get()) }
 
         singleClosable { KafkaFactory.createFhirProducer(get()) }
         singleClosable { KafkaFactory.createFhirConsumer(get()) }
         singleClosable(createdAtStart = true) {
             BestillingConsumerJob(get(), getLogger<BestillingConsumerJob>(), get(), get(), get())
+        }
+        singleClosable(createdAtStart = true) {
+            StateChangeNotificationsJob(get(), getLogger<StateChangeNotificationsJob>())
         }
     }
 
@@ -53,16 +57,10 @@ object KoinBootstrapper {
 }
 
 private fun createHapiFhirClient(config: Configuration.FhirServer): IGenericClient {
-    val oauthClient = OAuth2ClientFactory.create(
-        config.discoveryUrl, config.clientId, config.clientSecret
-    )
-
-    val interceptor = OauthRequestInterceptor(oauthClient, config.scope)
-
     // So that we dont start by requesting /metadata.
     val ctx = FhirContext.forCached(FhirVersionEnum.R4)
     val factory = ctx.restfulClientFactory.apply { serverValidationMode = ServerValidationModeEnum.NEVER }
-    return factory.newGenericClient(config.baseUrl).apply { registerInterceptor(interceptor) }
+    return factory.newGenericClient(config.baseUrl)
 }
 
 private inline fun <reified T : Any> getLogger(): Logger = LoggerFactory.getLogger(T::class.java)

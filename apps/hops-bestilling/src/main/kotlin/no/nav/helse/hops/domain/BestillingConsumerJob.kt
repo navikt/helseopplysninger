@@ -20,7 +20,7 @@ import java.util.UUID
 import kotlin.coroutines.CoroutineContext
 
 class BestillingConsumerJob(
-    private val messageBus: MessageBus,
+    private val messageBus: FhirMessageBus,
     private val logger: Logger,
     private val validator: FhirResourceValidator,
     private val fhirRepo: FhirRepository,

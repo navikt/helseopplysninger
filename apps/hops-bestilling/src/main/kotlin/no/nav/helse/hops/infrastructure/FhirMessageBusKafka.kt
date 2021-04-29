@@ -2,7 +2,7 @@ package no.nav.helse.hops.infrastructure
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import no.nav.helse.hops.domain.MessageBus
+import no.nav.helse.hops.domain.FhirMessageBus
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.producer.Callback
 import org.apache.kafka.clients.producer.Producer
@@ -16,11 +16,11 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-class MessageBusKafka(
+class FhirMessageBusKafka(
     private val consumer: Consumer<Unit, IBaseResource>,
     private val producer: Producer<Unit, IBaseResource>,
     private val config: Configuration.Kafka,
-) : MessageBus {
+) : FhirMessageBus {
     override suspend fun publish(message: Bundle) {
         suspendCoroutine<RecordMetadata> { continuation ->
             val callback = Callback { metadata, exception ->

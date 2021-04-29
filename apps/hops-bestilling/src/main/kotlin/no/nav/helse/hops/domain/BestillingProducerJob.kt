@@ -15,7 +15,7 @@ import java.io.Closeable
 import kotlin.coroutines.CoroutineContext
 
 class BestillingProducerJob(
-    private val messageBus: MessageBus,
+    private val messageBus: FhirMessageBus,
     private val messagingConfig: Configuration.FhirMessaging,
     context: CoroutineContext = Dispatchers.Default
 ) : Closeable {
