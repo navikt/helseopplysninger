@@ -22,7 +22,7 @@ tasks {
 }
 
 dependencies {
-    val ktorVersion = "1.5.3"
+    val ktorVersion = "1.5.4"
     val junitVersion = "5.7.1"
 
     implementation("io.ktor:ktor-auth:$ktorVersion")
