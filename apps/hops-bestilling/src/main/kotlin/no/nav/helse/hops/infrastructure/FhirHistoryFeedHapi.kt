@@ -3,9 +3,12 @@ package no.nav.helse.hops.infrastructure
 import ca.uhn.fhir.rest.client.api.IGenericClient
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.isActive
+import kotlinx.coroutines.isActive
 import no.nav.helse.hops.domain.FhirHistoryFeed
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.Resource
+import kotlin.coroutines.coroutineContext
 
 class FhirHistoryFeedHapi(
     private val fhirClient: IGenericClient
@@ -21,13 +24,18 @@ class FhirHistoryFeedHapi(
 //                    .since(Date())
                     .execute()
 
-                while (bundle?.entry?.isEmpty() == false) {
+                while (coroutineContext.isActive && bundle?.entry?.isEmpty() == false) {
                     bundle.entry.forEach { emit(it.resource) }
-                    bundle = fhirClient.loadPage().next(bundle).execute()
-                    kotlinx.coroutines.delay(1)
+                    bundle = nextPageOrNull(bundle)
                 }
 
                 kotlinx.coroutines.delay(5000)
             }
         }
+
+    private fun nextPageOrNull(bundle: Bundle): Bundle? =
+        if (bundle.link?.any { it.relation == "next" } == true)
+            fhirClient.loadPage().next(bundle).execute()
+        else
+            null
 }

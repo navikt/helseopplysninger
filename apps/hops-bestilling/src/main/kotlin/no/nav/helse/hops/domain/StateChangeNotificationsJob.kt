@@ -30,6 +30,6 @@ class StateChangeNotificationsJob(
     }
 
     private suspend fun process(resource: Resource) {
-        logger.debug("Message: ${resource.toJson()}")
+        logger.info("Message: ${resource.toJson()}")
     }
 }
