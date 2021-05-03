@@ -49,6 +49,10 @@ fun Application.api() {
             val t = hapiTasks.tasks().firstOrNull()
             t?.toJson()?.let { it1 -> call.respondText(it1) }
         }
+        get("/hello") {
+            call.respond("Hello")
+        }
+
     }
 }
 fun IBaseResource.toJson(): String {

@@ -1,6 +1,7 @@
 package no.nav.helse.hops.routes
 
 import io.ktor.application.call
+import io.ktor.http.*
 import io.ktor.response.respond
 import io.ktor.response.respondText
 import io.ktor.routing.Routing
@@ -17,4 +18,8 @@ fun Routing.naisRoutes(prometheusMeterRegistry: PrometheusMeterRegistry) {
     get("/prometheus") {
         call.respond(prometheusMeterRegistry.scrape())
     }
+    get("/naishello") {
+        call.respond("Naishello")
+    }
+
 }
