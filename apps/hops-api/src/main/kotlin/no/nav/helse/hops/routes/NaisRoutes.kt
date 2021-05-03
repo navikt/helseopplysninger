@@ -17,7 +17,4 @@ fun Routing.naisRoutes(prometheusMeterRegistry: PrometheusMeterRegistry) {
     get("/prometheus") {
         call.respond(prometheusMeterRegistry.scrape())
     }
-    get("/naishello") {
-        call.respond("Naishello")
-    }
 }
