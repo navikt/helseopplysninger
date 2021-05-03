@@ -53,7 +53,7 @@ class FhirHistoryFeedHapi(
         else
             null
 
-    private fun <T: Resource> previousVersionOrNull(resource: T): T? {
+    private fun <T : Resource> previousVersionOrNull(resource: T): T? {
         val versionId = resource.version()
         if (versionId == 1) return null
 
