@@ -35,6 +35,11 @@ spec:
   azure:
     application:
       enabled: true
+      tenant: nav.no
+  accessPolicy:
+    inbound:
+      rules:
+        - application: hops-api
   ingresses:
 {{#each ingresses as |url|}}
     - {{url}}

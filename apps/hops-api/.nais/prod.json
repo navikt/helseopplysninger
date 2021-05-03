@@ -1,3 +1,8 @@
 {
-  "ingresses":  ["https://hops-api.nais.adeo.no"]
+  "ingresses": [
+    "https://hops-api.nais.adeo.no"
+  ],
+  "env": {
+    "HAPI_BASE_URL": "http://hops-hapi-fhir-server/fhir"
+  }
 }

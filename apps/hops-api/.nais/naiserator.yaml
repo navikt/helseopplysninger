@@ -38,9 +38,22 @@ spec:
   prometheus:
     enabled: true
     path: /prometheus
+  azure:
+    application:
+      enabled: true
+      tenant: nav.no
+  accessPolicy:
+    outbound:
+      rules:
+        - application: hops-hapi-fhir-server
   ingresses:
-{{#each ingresses as |url|}}
+  {{#each ingresses as |url|}}
     - {{url}}
-{{/each}}
+  {{/each}}
+  env:
+  {{#each env}}
+     - name: {{@key}}
+       value: "{{this}}"
+  {{/each}}
   envFrom:
     - secret: api
