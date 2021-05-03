@@ -3,7 +3,7 @@ name: hops-api
 on:
   push:
     branches:
-      - 'kalle_hapiserver'
+      - 'main'
     paths:
       - apps/hops-api/**
       - .github/workflows/hops-api.yaml
