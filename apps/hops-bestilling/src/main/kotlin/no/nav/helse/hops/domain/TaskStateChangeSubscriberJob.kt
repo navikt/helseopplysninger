@@ -7,13 +7,12 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.runBlocking
-import org.hl7.fhir.r4.model.Resource
 import org.slf4j.Logger
 import java.io.Closeable
 import kotlin.coroutines.CoroutineContext
 
-class StateChangeNotificationsJob(
-    historyFeed: FhirHistoryFeed,
+class TaskStateChangeSubscriberJob(
+    historyFeed: TaskChangeFeed,
     private val logger: Logger,
     context: CoroutineContext = Dispatchers.Default
 ) : Closeable {
@@ -29,7 +28,7 @@ class StateChangeNotificationsJob(
         }
     }
 
-    private suspend fun process(resource: Resource) {
-        logger.info("Message: ${resource.toJson()}")
+    private suspend fun process(change: TaskChange) {
+        logger.info("Message: ${change.current.toJson()}")
     }
 }

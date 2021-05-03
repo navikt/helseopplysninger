@@ -2,16 +2,17 @@ package no.nav.helse.hops.infrastructure
 
 import ca.uhn.fhir.context.FhirContext
 import ca.uhn.fhir.context.FhirVersionEnum
+import ca.uhn.fhir.rest.api.EncodingEnum
 import ca.uhn.fhir.rest.client.api.IGenericClient
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum
 import com.sksamuel.hoplite.ConfigLoader
 import no.nav.helse.hops.domain.BestillingConsumerJob
-import no.nav.helse.hops.domain.FhirHistoryFeed
+import no.nav.helse.hops.domain.TaskChangeFeed
 import no.nav.helse.hops.domain.FhirMessageBus
 import no.nav.helse.hops.domain.FhirRepository
 import no.nav.helse.hops.domain.FhirRepositoryImpl
 import no.nav.helse.hops.domain.FhirResourceValidator
-import no.nav.helse.hops.domain.StateChangeNotificationsJob
+import no.nav.helse.hops.domain.TaskStateChangeSubscriberJob
 import no.nav.helse.hops.koin.singleClosable
 import no.nav.helse.hops.security.fhir.OauthRequestInterceptor
 import no.nav.helse.hops.security.oauth.OAuth2ClientFactory
@@ -36,7 +37,7 @@ object KoinBootstrapper {
         single<FhirMessageBus> { FhirMessageBusKafka(get(), get(), get()) }
         single { createHapiFhirClient(get()) }
         single<FhirRepository> { FhirRepositoryImpl(get(), getLogger<FhirRepositoryImpl>()) }
-        single<FhirHistoryFeed> { FhirHistoryFeedHapi(get()) }
+        single<TaskChangeFeed> { FhirHistoryFeedHapi(get()) }
 
         singleClosable { KafkaFactory.createFhirProducer(get()) }
         singleClosable { KafkaFactory.createFhirConsumer(get()) }
@@ -44,7 +45,7 @@ object KoinBootstrapper {
             BestillingConsumerJob(get(), getLogger<BestillingConsumerJob>(), get(), get(), get())
         }
         singleClosable(createdAtStart = true) {
-            StateChangeNotificationsJob(get(), getLogger<StateChangeNotificationsJob>())
+            TaskStateChangeSubscriberJob(get(), getLogger<TaskStateChangeSubscriberJob>())
         }
     }
 }
@@ -59,7 +60,10 @@ private fun createHapiFhirClient(config: Configuration.FhirServer): IGenericClie
     // So that we dont start by requesting /metadata.
     val ctx = FhirContext.forCached(FhirVersionEnum.R4)
     val factory = ctx.restfulClientFactory.apply { serverValidationMode = ServerValidationModeEnum.NEVER }
-    return factory.newGenericClient(config.baseUrl).apply { registerInterceptor(interceptor) }
+    return factory.newGenericClient(config.baseUrl).apply {
+        registerInterceptor(interceptor)
+        encoding = EncodingEnum.JSON
+    }
 }
 
 private inline fun <reified T : Any> getLogger(): Logger = LoggerFactory.getLogger(T::class.java)
