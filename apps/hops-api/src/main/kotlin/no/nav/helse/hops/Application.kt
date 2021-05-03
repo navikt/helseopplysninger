@@ -52,7 +52,6 @@ fun Application.api() {
         get("/hello") {
             call.respond("Hello")
         }
-
     }
 }
 fun IBaseResource.toJson(): String {
