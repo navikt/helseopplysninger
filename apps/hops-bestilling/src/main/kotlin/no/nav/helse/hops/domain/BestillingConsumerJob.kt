@@ -46,6 +46,10 @@ class BestillingConsumerJob(
         val resources = message.entry.mapNotNull { it.resource }
 
         if (operationOutcome.isAllOk()) {
+            // MessageHeader's focus references should be versioned to simplify auditing.
+            val header = resources.first() as MessageHeader
+            header.focus.forEach { it.referenceElement = it.referenceElement.withVersion("1") }
+
             fhirRepo.addRange(resources)
         } else {
             val requestMessageHeader = resources.first() as MessageHeader

@@ -6,6 +6,7 @@ import ca.uhn.fhir.rest.api.EncodingEnum
 import ca.uhn.fhir.rest.client.api.IGenericClient
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum
 import com.sksamuel.hoplite.ConfigLoader
+import no.nav.helse.hops.domain.MessageBusProducer
 import no.nav.helse.hops.domain.TaskChangeFeed
 import no.nav.helse.hops.domain.TaskChangeToMessageResponseMapper
 import no.nav.helse.hops.domain.TaskStateChangeSubscriberJob
@@ -32,11 +33,12 @@ object KoinBootstrapper {
         single { createHapiFhirClient(get()) }
         single<TaskChangeFeed> { FhirHistoryFeedHapi(get()) }
         single { TaskChangeToMessageResponseMapper(get()) }
+        single<MessageBusProducer> { MessageBusProducerKafka(get(), get()) }
 
         singleClosable { KafkaFactory.createFhirProducer(get()) }
         singleClosable { KafkaFactory.createFhirConsumer(get()) }
         singleClosable(createdAtStart = true) {
-            TaskStateChangeSubscriberJob(get(), get(), getLogger<TaskStateChangeSubscriberJob>())
+            TaskStateChangeSubscriberJob(get(), get(), get(), getLogger<TaskStateChangeSubscriberJob>())
         }
     }
 }

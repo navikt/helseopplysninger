@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.runBlocking
-import org.hl7.fhir.r4.model.Bundle
 import org.slf4j.Logger
 import java.io.Closeable
 import kotlin.coroutines.CoroutineContext
@@ -16,6 +15,7 @@ import kotlin.coroutines.CoroutineContext
 class TaskStateChangeSubscriberJob(
     taskChangeFeed: TaskChangeFeed,
     responseMapper: TaskChangeToMessageResponseMapper,
+    messageBusProducer: MessageBusProducer,
     private val logger: Logger,
     context: CoroutineContext = Dispatchers.Default
 ) : Closeable {
@@ -23,7 +23,8 @@ class TaskStateChangeSubscriberJob(
         .poll()
         .filter { it.current.status != it.previous?.status }
         .mapWith(responseMapper)
-        .onEach(::process)
+        .onEach { logger.info("Message: ${it.toJson()}") }
+        .onEach { messageBusProducer.publish(it) }
         .catch { logger.error("Error while polling history.", it) }
         .launchIn(CoroutineScope(context))
 
@@ -31,9 +32,5 @@ class TaskStateChangeSubscriberJob(
         runBlocking {
             job.cancelAndJoin()
         }
-    }
-
-    private suspend fun process(msg: Bundle) {
-        logger.info("Message: ${msg.toJson()}")
     }
 }

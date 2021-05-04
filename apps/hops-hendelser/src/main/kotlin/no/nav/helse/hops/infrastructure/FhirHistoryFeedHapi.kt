@@ -55,14 +55,13 @@ class FhirHistoryFeedHapi(
             .toList()
 }
 
-private fun createQuery(since: LocalDateTime?): String {
-    var query = "_sort=lastUpdated" // ascending.
-    if (since != null) query += "&_lastUpdated=gt${since.format(fhirDateFormat)}"
+private fun createQuery(lastUpdated: LocalDateTime?): String {
+    var query = "_sort=_lastUpdated" // ascending.
+    if (lastUpdated != null)
+        query += "&_lastUpdated=gt${lastUpdated.format(DateTimeFormatter.ISO_INSTANT)}"
 
     return query
 }
 
-/** See https://www.hl7.org/fhir/search.html#date **/
-private val fhirDateFormat = DateTimeFormatter.ofPattern("yyyy-mm-ddThh:mm:ss")
 private fun Date.toLocalDateTime(): LocalDateTime = LocalDateTime.ofInstant(toInstant(), ZoneId.systemDefault())
-private fun Date.toFhirString(): String = toLocalDateTime().format(fhirDateFormat)
+private fun Date.toFhirString(): String = toLocalDateTime().format(DateTimeFormatter.ISO_INSTANT)

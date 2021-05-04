@@ -52,11 +52,10 @@ class TaskChangeToMessageResponseMapper(
 
     private fun resourceAtInstant(id: IIdType, instant: LocalDateTime) =
         fhirClient
-            .allByUrl("${id.value}/_history?_count=1&_at=le${instant.format(fhirDateFormat)}")
+            .allByUrl("${id.value}/_history?_count=1&_at=le${instant.format(DateTimeFormatter.ISO_INSTANT)}")
             .single()
 }
 
-private val fhirDateFormat = DateTimeFormatter.ofPattern("yyyy-mm-ddThh:mm:ss")
 private fun Date.toLocalDateTime(): LocalDateTime = LocalDateTime.ofInstant(toInstant(), ZoneId.systemDefault())
 
 private fun asDestination(src: MessageHeader.MessageSourceComponent) =
