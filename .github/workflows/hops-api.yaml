@@ -9,8 +9,8 @@ on:
       - .github/workflows/hops-api.yaml
 
 env: # Used by nais/deploy/actions/deploy.
-  IMAGE: ghcr.io/${{ github.workflow }}:${{ github.sha }}
-  IMAGE_LATEST: ghcr.io/${{ github.workflow }}:latest
+  IMAGE: ghcr.io/navikt/${{ github.workflow }}:${{ github.sha }}
+  IMAGE_LATEST:  ghcr.io/navikt/${{ github.workflow }}:latest
   APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
   RESOURCE: apps/${{ github.workflow }}/.nais/naiserator.yaml
   BUILDX_CACHE_PATH: /tmp/.buildx-cache
