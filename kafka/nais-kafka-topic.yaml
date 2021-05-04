@@ -12,5 +12,8 @@ spec:
       application: hops-bestilling
       access: readwrite
     - team: helseopplysninger
+      application: hops-hendelser
+      access: readwrite
+    - team: helseopplysninger
       application: hops-bestiller-backend
       access: readwrite

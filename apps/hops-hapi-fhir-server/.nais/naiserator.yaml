@@ -40,6 +40,8 @@ spec:
     inbound:
       rules:
         - application: hops-api
+        - application: hops-bestilling
+        - application: hops-hendelser
   ingresses:
 {{#each ingresses as |url|}}
     - {{url}}

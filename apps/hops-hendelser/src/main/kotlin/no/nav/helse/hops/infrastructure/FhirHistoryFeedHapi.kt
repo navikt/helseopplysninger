@@ -1,72 +1,59 @@
 package no.nav.helse.hops.infrastructure
 
 import ca.uhn.fhir.rest.client.api.IGenericClient
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.isActive
 import no.nav.helse.hops.domain.TaskChange
 import no.nav.helse.hops.domain.TaskChangeFeed
-import org.hl7.fhir.instance.model.api.IBaseResource
-import org.hl7.fhir.r4.model.Bundle
+import no.nav.helse.hops.domain.allByQuery
+import no.nav.helse.hops.domain.allByUrl
 import org.hl7.fhir.r4.model.Resource
 import org.hl7.fhir.r4.model.Task
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Date
-import kotlin.coroutines.coroutineContext
 
 class FhirHistoryFeedHapi(
     private val fhirClient: IGenericClient
 ) : TaskChangeFeed {
     override fun poll(since: LocalDateTime?): Flow<TaskChange> =
         flow {
-            var query = createQuery(since)
+            var lastUpdated = since
             while (true) { // Will be exited when the flow's CoroutineContext is cancelled.
+                val query = createQuery(lastUpdated)
                 var last: Task? = null
-                var bundle = fhirClient
-                    .search<Bundle>()
-                    .byUrl("Task?$query")
-                    .execute()
 
-                while (coroutineContext.isActive && bundle?.entry?.isEmpty() == false) {
-                    bundle.entry.map { it.resource as Task }.forEach {
-                        val prev = previousVersionOrNull(it)
-                        emit(TaskChange(it, prev))
-                        last = it
+                fhirClient.allByQuery<Task>(query).forEach {
+                    if (!currentCoroutineContext().isActive) return@forEach
+
+                    history(it).fold(null as Task?) { previous, current ->
+                        if (current.lastModified.toLocalDateTime() > lastUpdated)
+                            emit(TaskChange(current, previous))
+                        current
                     }
-                    bundle = nextPageOrNull(bundle)
+
+                    last = it
                 }
 
-                if (last != null) {
-                    val lastUpdated = last!!.meta.lastUpdated.toLocalDateTime()
-                    query = createQuery(lastUpdated)
-                }
+                if (last != null)
+                    lastUpdated = last!!.meta.lastUpdated.toLocalDateTime()
 
                 kotlinx.coroutines.delay(5000)
             }
         }
 
-    private fun nextPageOrNull(bundle: Bundle): Bundle? =
-        if (bundle.link?.any { it.relation == "next" } == true)
-            fhirClient.loadPage().next(bundle).execute()
-        else
-            null
-
-    private fun <T : Resource> previousVersionOrNull(resource: T): T? {
-        val versionId = resource.version()
-        if (versionId == 1) return null
-
-        return fhirClient
-            .read()
-            .resource(resource.javaClass)
-            .withIdAndVersion(resource.id, (versionId - 1).toString())
-            .execute()
-    }
+    /** Returns a list of all the versions of a resource, ordered from first to (inclusive) the supplied version. **/
+    private inline fun <reified T : Resource> history(resource: T) =
+        fhirClient
+            .allByUrl("${resource.fhirType()}/${resource.id}/_history?_at=lt${resource.meta.lastUpdated.toFhirString()}")
+            .map { it as T }
+            .sortedBy { it.meta.lastUpdated }
+            .plus(resource)
+            .toList()
 }
-
-/** See https://www.hl7.org/fhir/search.html#date **/
-private val fhirDateFormat = DateTimeFormatter.ofPattern("yyyy-mm-ddThh:mm:ss")
 
 private fun createQuery(since: LocalDateTime?): String {
     var query = "_sort=lastUpdated" // ascending.
@@ -75,6 +62,7 @@ private fun createQuery(since: LocalDateTime?): String {
     return query
 }
 
+/** See https://www.hl7.org/fhir/search.html#date **/
+private val fhirDateFormat = DateTimeFormatter.ofPattern("yyyy-mm-ddThh:mm:ss")
 private fun Date.toLocalDateTime(): LocalDateTime = LocalDateTime.ofInstant(toInstant(), ZoneId.systemDefault())
-
-private fun IBaseResource.version() = meta.versionId.toInt()
+private fun Date.toFhirString(): String = toLocalDateTime().format(fhirDateFormat)

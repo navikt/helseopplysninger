@@ -34,6 +34,10 @@ spec:
   azure:
     application:
       enabled: true
+  accessPolicy:
+    outbound:
+      rules:
+        - application: hops-hapi-fhir-server
   kafka:
     pool: {{ kafka_pool }}
   ingresses:

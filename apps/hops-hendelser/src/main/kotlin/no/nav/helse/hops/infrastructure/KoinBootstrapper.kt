@@ -7,6 +7,7 @@ import ca.uhn.fhir.rest.client.api.IGenericClient
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum
 import com.sksamuel.hoplite.ConfigLoader
 import no.nav.helse.hops.domain.TaskChangeFeed
+import no.nav.helse.hops.domain.TaskChangeToMessageResponseMapper
 import no.nav.helse.hops.domain.TaskStateChangeSubscriberJob
 import no.nav.helse.hops.koin.singleClosable
 import no.nav.helse.hops.security.fhir.OauthRequestInterceptor
@@ -30,11 +31,12 @@ object KoinBootstrapper {
 
         single { createHapiFhirClient(get()) }
         single<TaskChangeFeed> { FhirHistoryFeedHapi(get()) }
+        single { TaskChangeToMessageResponseMapper(get()) }
 
         singleClosable { KafkaFactory.createFhirProducer(get()) }
         singleClosable { KafkaFactory.createFhirConsumer(get()) }
         singleClosable(createdAtStart = true) {
-            TaskStateChangeSubscriberJob(get(), getLogger<TaskStateChangeSubscriberJob>())
+            TaskStateChangeSubscriberJob(get(), get(), getLogger<TaskStateChangeSubscriberJob>())
         }
     }
 }
