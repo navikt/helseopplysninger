@@ -103,7 +103,7 @@ services:
   # pgAdmin provides an administration web UI for PostgreSQL.
   pgadmin-service:
     container_name: pgadmin_container
-    image: dpage/pgadmin4:latest
+    image: dpage/pgadmin4
     restart: unless-stopped
     depends_on:
       - postgres-service
@@ -114,6 +114,8 @@ services:
     volumes:
       - pgadmin_volume:/root/.pgadmin
       - ./config:/etc/hopsconfig:ro
+    profiles:
+      - debug
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: admin
@@ -122,7 +124,7 @@ services:
   # PostgreSQL is the database used by HAPI-fhir-server.
   postgres-service:
     container_name: postgres_container
-    image: postgres:12.6
+    image: postgres
     restart: unless-stopped
     networks:
       - hapi-postgres_network
@@ -147,7 +149,7 @@ services:
   # Apache Kafka broker.
   kafka-service:
     container_name: kafka_container
-    image: wurstmeister/kafka:latest
+    image: wurstmeister/kafka
     depends_on:
       - zookeeper-service
     ports:
@@ -167,13 +169,15 @@ services:
   # Kafdrop is a web UI for viewing Kafka topics and browsing consumer groups.
   kafdrop-service:
     container_name: kafkadrop_container
-    image: obsidiandynamics/kafdrop:latest
+    image: obsidiandynamics/kafdrop
     depends_on:
       - kafka-service
     ports:
       - 9000:9000
     networks:
       - kafka_network
+    profiles:
+      - debug
     environment:
       KAFKA_BROKERCONNECT: kafka-service:9093
 
