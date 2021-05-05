@@ -3,9 +3,9 @@ package no.nav.helse.hops.infrastructure
 import ca.uhn.fhir.context.FhirContext
 import ca.uhn.fhir.rest.client.api.IGenericClient
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum
-import com.sksamuel.hoplite.ConfigLoader
 import no.nav.helse.hops.domain.FkrFacade
 import no.nav.helse.hops.domain.FkrFacadeImpl
+import no.nav.helse.hops.hoplite.loadConfigOrThrow
 import no.nav.helse.hops.security.fhir.OauthRequestInterceptor
 import no.nav.helse.hops.security.oauth.OAuth2ClientFactory
 import org.koin.dsl.module
@@ -14,7 +14,7 @@ object KoinBootstrapper {
 
     val module = module {
         data class ConfigRoot(val kontaktregister: Configuration.Kontaktregister)
-        single { ConfigLoader().loadConfigOrThrow<ConfigRoot>("/application.conf") }
+        single { loadConfigOrThrow<ConfigRoot>() }
         single { get<ConfigRoot>().kontaktregister }
         single { FhirContext.forR4() }
         single { createHapiFhirClient(get(), get()) }

@@ -27,8 +27,8 @@ dependencies {
     val junitVersion = "5.7.1"
 
     api(project(":libs:hops-common-fhir"))
+    api(project(":libs:hops-common-ktor"))
     implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:$hapiVersion")
-    implementation("com.sksamuel.hoplite:hoplite-hocon:1.4.0")
     implementation("no.nav.security:token-validation-ktor:1.3.5")
     implementation("io.insert-koin:koin-ktor:3.0.1")
     implementation("io.ktor:ktor-metrics-micrometer:$ktorVersion")

@@ -15,6 +15,7 @@ import io.ktor.routing.routing
 import io.micrometer.prometheus.PrometheusConfig
 import io.micrometer.prometheus.PrometheusMeterRegistry
 import no.nav.helse.hops.domain.FkrFacade
+import no.nav.helse.hops.hoplite.asHoplitePropertySourceModule
 import no.nav.helse.hops.infrastructure.KoinBootstrapper
 import no.nav.security.token.support.ktor.tokenValidationSupport
 import org.koin.ktor.ext.Koin
@@ -29,7 +30,7 @@ fun Application.module() {
     install(DefaultHeaders)
     install(CallLogging)
     install(Koin) {
-        modules(KoinBootstrapper.module)
+        modules(KoinBootstrapper.module, environment.config.asHoplitePropertySourceModule())
     }
     install(Authentication) {
         tokenValidationSupport(config = environment.config)

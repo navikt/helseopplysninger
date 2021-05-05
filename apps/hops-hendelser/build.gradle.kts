@@ -31,7 +31,6 @@ dependencies {
     implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:$hapiVersion")
     implementation("ca.uhn.hapi.fhir:hapi-fhir-validation:$hapiVersion")
     implementation("com.fasterxml.uuid:java-uuid-generator:4.0.1")
-    implementation("com.sksamuel.hoplite:hoplite-hocon:1.4.0")
     implementation("org.apache.kafka:kafka-clients:2.8.0")
     runtimeOnly("ca.uhn.hapi.fhir:hapi-fhir-client:$hapiVersion")
     runtimeOnly("ca.uhn.hapi.fhir:hapi-fhir-validation-resources-r4:$hapiVersion")
@@ -44,6 +43,7 @@ dependencies {
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion") { exclude(group = "junit", module = "junit") }
     testImplementation("no.nav.security:mock-oauth2-server:0.3.2")
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
+    testImplementation("org.testcontainers:junit-jupiter:1.15.3")
     testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
 }

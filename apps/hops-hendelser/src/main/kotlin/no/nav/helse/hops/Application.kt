@@ -8,6 +8,7 @@ import io.ktor.features.DefaultHeaders
 import io.ktor.response.respondText
 import io.ktor.routing.get
 import io.ktor.routing.routing
+import no.nav.helse.hops.hoplite.asHoplitePropertySourceModule
 import no.nav.helse.hops.infrastructure.KoinBootstrapper
 import org.koin.ktor.ext.Koin
 
@@ -16,7 +17,7 @@ fun Application.module() {
     install(DefaultHeaders)
     install(CallLogging)
     install(Koin) {
-        modules(KoinBootstrapper.singleModule)
+        modules(KoinBootstrapper.singleModule, environment.config.asHoplitePropertySourceModule())
     }
 
     routing {

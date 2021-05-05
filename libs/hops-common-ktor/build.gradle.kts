@@ -19,4 +19,5 @@ tasks {
 dependencies {
     api(project(":libs:hops-common-core"))
     api("io.insert-koin:koin-ktor:3.0.1")
+    implementation("com.sksamuel.hoplite:hoplite-hocon:1.4.0")
 }

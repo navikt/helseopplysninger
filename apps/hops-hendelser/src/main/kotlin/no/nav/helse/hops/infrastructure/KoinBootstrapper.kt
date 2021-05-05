@@ -5,11 +5,11 @@ import ca.uhn.fhir.context.FhirVersionEnum
 import ca.uhn.fhir.rest.api.EncodingEnum
 import ca.uhn.fhir.rest.client.api.IGenericClient
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum
-import com.sksamuel.hoplite.ConfigLoader
 import no.nav.helse.hops.domain.MessageBusProducer
 import no.nav.helse.hops.domain.TaskChangeFeed
 import no.nav.helse.hops.domain.TaskChangeToMessageResponseMapper
 import no.nav.helse.hops.domain.TaskStateChangeSubscriberJob
+import no.nav.helse.hops.hoplite.loadConfigOrThrow
 import no.nav.helse.hops.koin.singleClosable
 import no.nav.helse.hops.security.fhir.OauthRequestInterceptor
 import no.nav.helse.hops.security.oauth.OAuth2ClientFactory
@@ -25,7 +25,7 @@ object KoinBootstrapper {
             val fhirServer: Configuration.FhirServer
         )
 
-        single { ConfigLoader().loadConfigOrThrow<ConfigRoot>("/application.conf") }
+        single { loadConfigOrThrow<ConfigRoot>() }
         single { get<ConfigRoot>().kafka }
         single { get<ConfigRoot>().fhirMessaging }
         single { get<ConfigRoot>().fhirServer }
