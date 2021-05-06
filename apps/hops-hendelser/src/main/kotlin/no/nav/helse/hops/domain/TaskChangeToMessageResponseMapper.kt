@@ -2,6 +2,7 @@ package no.nav.helse.hops.domain
 
 import ca.uhn.fhir.rest.client.api.IGenericClient
 import no.nav.helse.hops.IdentityGenerator
+import no.nav.helse.hops.Mapper
 import no.nav.helse.hops.fhir.addResource
 import no.nav.helse.hops.fhir.allByQuery
 import no.nav.helse.hops.fhir.allByUrl

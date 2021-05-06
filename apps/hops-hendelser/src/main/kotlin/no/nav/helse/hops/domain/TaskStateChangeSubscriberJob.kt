@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.runBlocking
 import no.nav.helse.hops.fhir.toJson
+import no.nav.helse.hops.mapWith
 import org.slf4j.Logger
 import java.io.Closeable
 import kotlin.coroutines.CoroutineContext

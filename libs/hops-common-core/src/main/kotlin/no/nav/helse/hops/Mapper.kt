@@ -1,4 +1,4 @@
-package no.nav.helse.hops.domain
+package no.nav.helse.hops
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
