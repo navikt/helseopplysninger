@@ -24,7 +24,7 @@ object KoinBootstrapper {
         single { get<ConfigRoot>().fhirMessaging }
         single { get<ConfigRoot>().fhirServer }
 
-        single { FhirClientFactory.create(get()) }
+        single { FhirClientFactory.createWithAuth(get()) }
         single<TaskChangeFeed> { FhirHistoryFeedHapi(get()) }
         single { TaskChangeToMessageResponseMapper(get()) }
         single<MessageBusProducer> { MessageBusProducerKafka(get(), get()) }

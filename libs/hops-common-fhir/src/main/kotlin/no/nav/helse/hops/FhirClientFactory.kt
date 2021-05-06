@@ -17,21 +17,24 @@ object FhirClientFactory {
         val scope: String,
     )
 
-    /** Creates a FHIR http-client configured with an oauth2 interceptor. **/
-    fun create(config: Config): IGenericClient {
-        val oauthClient = OAuth2ClientFactory.create(
-            config.discoveryUrl.toString(), config.clientId, config.clientSecret
-        )
-
-        val interceptor = OauthRequestInterceptor(oauthClient, config.scope)
+    /** Creates a FHIR http-client. **/
+    fun create(baseUrl: URL): IGenericClient {
         val ctx = FhirContext.forCached(FhirVersionEnum.R4)
         val factory = ctx.restfulClientFactory.apply {
             // So that we dont start by requesting '/metadata'.
             serverValidationMode = ServerValidationModeEnum.NEVER
         }
 
-        return factory.newGenericClient(config.baseUrl.toString()).apply {
-            registerInterceptor(interceptor)
-        }
+        return factory.newGenericClient(baseUrl.toString())
+    }
+
+    /** Creates a FHIR http-client configured with an OAuth2 interceptor. **/
+    fun createWithAuth(config: Config): IGenericClient {
+        val oauthClient = OAuth2ClientFactory.create(
+            config.discoveryUrl.toString(), config.clientId, config.clientSecret
+        )
+
+        val interceptor = OauthRequestInterceptor(oauthClient, config.scope)
+        return create(config.baseUrl).apply { registerInterceptor(interceptor) }
     }
 }

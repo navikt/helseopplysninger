@@ -3,6 +3,8 @@ package no.nav.helse.hops.infrastructure
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import no.nav.helse.hops.domain.FhirMessageBus
+import no.nav.helse.hops.resources
+import no.nav.helse.hops.withUuidPrefixFix
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.producer.Callback
 import org.apache.kafka.clients.producer.Producer
@@ -11,6 +13,7 @@ import org.apache.kafka.clients.producer.RecordMetadata
 import org.hl7.fhir.instance.model.api.IBaseResource
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.MessageHeader
+import org.hl7.fhir.r4.model.Resource
 import java.time.Duration
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -49,8 +52,8 @@ class FhirMessageBusKafka(
                     // See https://www.hl7.org/fhir/messaging.html
                     records
                         .mapNotNull { it.value() as? Bundle }
-                        .filter { it.type == Bundle.BundleType.MESSAGE && it.entry?.firstOrNull()?.resource is MessageHeader }
-                        .map { fixResourceIds(it); it }
+                        .filter { it.type == Bundle.BundleType.MESSAGE && it.resources<Resource>().firstOrNull() is MessageHeader }
+                        .map { it.withUuidPrefixFix() }
                         .forEach { emit(it) }
                 }
             } finally {
@@ -58,7 +61,3 @@ class FhirMessageBusKafka(
             }
         }
 }
-
-/** For some reason the HAPI's json parser replaces all resource.id with entry.fullUrl, this function will fix this. **/
-private fun fixResourceIds(bundle: Bundle) =
-    bundle.entry.map { it.resource }.forEach { it.id = it.id?.removePrefix("urn:uuid:") }

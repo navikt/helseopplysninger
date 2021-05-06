@@ -1,6 +1,11 @@
 package no.nav.helse.hops.domain
 
 import ca.uhn.fhir.rest.client.api.IGenericClient
+import no.nav.helse.hops.IdentityGenerator
+import no.nav.helse.hops.allByQuery
+import no.nav.helse.hops.allByUrl
+import no.nav.helse.hops.toIsoString
+import no.nav.helse.hops.toLocalDateTime
 import org.hl7.fhir.instance.model.api.IIdType
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.InstantType
@@ -8,9 +13,6 @@ import org.hl7.fhir.r4.model.MessageHeader
 import org.hl7.fhir.r4.model.Reference
 import org.hl7.fhir.r4.model.Task
 import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import java.util.Date
 import java.util.UUID
 
 class TaskChangeToMessageResponseMapper(
@@ -29,7 +31,7 @@ class TaskChangeToMessageResponseMapper(
         }
 
         val responseMessageHeader = MessageHeader().apply {
-            id = IdentityGenerator.CreateUUID5(task.id, task.meta.versionId).toString()
+            id = IdentityGenerator.createUUID5(task.id, task.meta.versionId).toString()
             event = requestMessageHeader.event
             destination = listOf(asDestination(requestMessageHeader.source))
             source = asSource(requestMessageHeader.destination.single())
@@ -52,11 +54,9 @@ class TaskChangeToMessageResponseMapper(
 
     private fun resourceAtInstant(id: IIdType, instant: LocalDateTime) =
         fhirClient
-            .allByUrl("${id.value}/_history?_count=1&_at=le${instant.format(DateTimeFormatter.ISO_INSTANT)}")
+            .allByUrl("${id.value}/_history?_count=1&_at=le${instant.toIsoString()}")
             .single()
 }
-
-private fun Date.toLocalDateTime(): LocalDateTime = LocalDateTime.ofInstant(toInstant(), ZoneId.systemDefault())
 
 private fun asDestination(src: MessageHeader.MessageSourceComponent) =
     MessageHeader.MessageDestinationComponent(src.endpointElement).apply { name = src.name }

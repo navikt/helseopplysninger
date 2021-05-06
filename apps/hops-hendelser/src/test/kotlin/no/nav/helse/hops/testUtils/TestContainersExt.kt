@@ -1,3 +1,5 @@
+@file:Suppress("HttpUrlsUsage")
+
 package no.nav.helse.hops.testUtils
 
 import org.testcontainers.containers.GenericContainer

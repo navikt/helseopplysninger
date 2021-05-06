@@ -6,12 +6,12 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
 import no.nav.helse.hops.domain.isAllOk
-import no.nav.helse.hops.domain.toJson
 import no.nav.helse.hops.infrastructure.FhirResourceValidatorHapi
 import no.nav.helse.hops.infrastructure.KoinBootstrapper
 import no.nav.helse.hops.testUtils.KafkaMock
 import no.nav.helse.hops.testUtils.ResourceLoader
 import no.nav.helse.hops.testUtils.addFhirMessage
+import no.nav.helse.hops.toJson
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.producer.Producer
 import org.hl7.fhir.instance.model.api.IBaseResource

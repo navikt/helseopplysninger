@@ -26,6 +26,7 @@ dependencies {
     implementation("io.ktor:ktor-client-java:$ktorVersion")
     implementation("no.nav.security:token-client-core:$naviktTokenSupportVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.4.3")
+    implementation("com.fasterxml.uuid:java-uuid-generator:4.0.1")
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion") { exclude(group = "junit", module = "junit") }
     testImplementation("io.kotest:kotest-assertions-shared:$kotestVersion")
     testImplementation("io.ktor:ktor-server-netty:$ktorVersion")

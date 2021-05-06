@@ -8,12 +8,17 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.runBlocking
+import no.nav.helse.hops.IdentityGenerator
+import no.nav.helse.hops.addResource
 import no.nav.helse.hops.infrastructure.Configuration
+import no.nav.helse.hops.resources
+import no.nav.helse.hops.toJson
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.InstantType
 import org.hl7.fhir.r4.model.MessageHeader
 import org.hl7.fhir.r4.model.OperationOutcome
 import org.hl7.fhir.r4.model.Reference
+import org.hl7.fhir.r4.model.Resource
 import org.slf4j.Logger
 import java.io.Closeable
 import java.util.UUID
@@ -43,7 +48,7 @@ class BestillingConsumerJob(
 
     private suspend fun process(message: Bundle) {
         val operationOutcome = validator.validate(message)
-        val resources = message.entry.mapNotNull { it.resource }
+        val resources = message.resources<Resource>()
 
         if (operationOutcome.isAllOk()) {
             // MessageHeader's focus references should be versioned to simplify auditing.
@@ -69,11 +74,11 @@ private fun createResponseMessage(
     operationOutcome: OperationOutcome
 ): Bundle {
     val outcomeCopy = operationOutcome.copy().apply {
-        id = IdentityGenerator.CreateUUID5(requestMessageHeader.id, "details").toString()
+        id = IdentityGenerator.createUUID5(requestMessageHeader.id, "details").toString()
     }
 
     val responseMessageHeader = MessageHeader().apply {
-        id = IdentityGenerator.CreateUUID5(requestMessageHeader.id, "response").toString()
+        id = IdentityGenerator.createUUID5(requestMessageHeader.id, "response").toString()
         event = requestMessageHeader.event
         destination = listOf(asDestination(requestMessageHeader.source))
         source = asSource(requestMessageHeader.destination.single())
@@ -88,8 +93,7 @@ private fun createResponseMessage(
         id = UUID.randomUUID().toString()
         timestampElement = InstantType.withCurrentTime()
         type = Bundle.BundleType.MESSAGE
-        addResource(responseMessageHeader)
-        addResource(outcomeCopy)
+        addResource(responseMessageHeader, outcomeCopy)
     }
 }
 

@@ -14,7 +14,7 @@ object KoinBootstrapper {
         single { loadConfigOrThrow<ConfigRoot>() }
         single { get<ConfigRoot>().kontaktregister }
         single { FhirContext.forR4() }
-        single { FhirClientFactory.create(get()) }
+        single { FhirClientFactory.createWithAuth(get()) }
         single<FkrFacade> { FkrFacadeImpl(get()) }
     }
 }

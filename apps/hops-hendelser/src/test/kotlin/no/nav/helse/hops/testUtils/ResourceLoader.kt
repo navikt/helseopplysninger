@@ -1,7 +1,6 @@
 package no.nav.helse.hops.testUtils
 
-import ca.uhn.fhir.context.FhirContext
-import ca.uhn.fhir.context.FhirVersionEnum
+import no.nav.helse.hops.JsonParser
 import org.hl7.fhir.instance.model.api.IBaseResource
 
 internal object ResourceLoader {
@@ -19,9 +18,6 @@ internal object ResourceLoader {
             throw RuntimeException("Failed to load resource=$resource!", all)
         }
 
-    inline fun <reified T : IBaseResource> asFhirResource(resource: String): T {
-        val fhirContext = FhirContext.forCached(FhirVersionEnum.R4)!!
-        val jsonParser = fhirContext.newJsonParser()!!
-        return jsonParser.parseResource(T::class.java, asString(resource))
-    }
+    inline fun <reified R : IBaseResource> asFhirResource(resource: String) =
+        JsonParser.parse<R>(asString(resource))
 }
