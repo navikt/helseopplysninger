@@ -23,7 +23,7 @@ dependencies {
     val junitVersion = "5.7.1"
 
     implementation("io.ktor:ktor-client-jackson:$ktorVersion")
-    implementation("io.ktor:ktor-client-cio-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-client-java:$ktorVersion")
     implementation("no.nav.security:token-client-core:$naviktTokenSupportVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.4.3")
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion") { exclude(group = "junit", module = "junit") }

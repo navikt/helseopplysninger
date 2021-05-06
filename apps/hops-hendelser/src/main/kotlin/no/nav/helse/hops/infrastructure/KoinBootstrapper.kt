@@ -1,18 +1,12 @@
 package no.nav.helse.hops.infrastructure
 
-import ca.uhn.fhir.context.FhirContext
-import ca.uhn.fhir.context.FhirVersionEnum
-import ca.uhn.fhir.rest.api.EncodingEnum
-import ca.uhn.fhir.rest.client.api.IGenericClient
-import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum
+import no.nav.helse.hops.FhirClientFactory
 import no.nav.helse.hops.domain.MessageBusProducer
 import no.nav.helse.hops.domain.TaskChangeFeed
 import no.nav.helse.hops.domain.TaskChangeToMessageResponseMapper
 import no.nav.helse.hops.domain.TaskStateChangeSubscriberJob
 import no.nav.helse.hops.hoplite.loadConfigOrThrow
 import no.nav.helse.hops.koin.singleClosable
-import no.nav.helse.hops.security.fhir.OauthRequestInterceptor
-import no.nav.helse.hops.security.oauth.OAuth2ClientFactory
 import org.koin.dsl.module
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -22,7 +16,7 @@ object KoinBootstrapper {
         data class ConfigRoot(
             val kafka: Configuration.Kafka,
             val fhirMessaging: Configuration.FhirMessaging,
-            val fhirServer: Configuration.FhirServer
+            val fhirServer: FhirClientFactory.Config
         )
 
         single { loadConfigOrThrow<ConfigRoot>() }
@@ -30,7 +24,7 @@ object KoinBootstrapper {
         single { get<ConfigRoot>().fhirMessaging }
         single { get<ConfigRoot>().fhirServer }
 
-        single { createHapiFhirClient(get()) }
+        single { FhirClientFactory.create(get()) }
         single<TaskChangeFeed> { FhirHistoryFeedHapi(get()) }
         single { TaskChangeToMessageResponseMapper(get()) }
         single<MessageBusProducer> { MessageBusProducerKafka(get(), get()) }
@@ -40,22 +34,6 @@ object KoinBootstrapper {
         singleClosable(createdAtStart = true) {
             TaskStateChangeSubscriberJob(get(), get(), get(), getLogger<TaskStateChangeSubscriberJob>())
         }
-    }
-}
-
-private fun createHapiFhirClient(config: Configuration.FhirServer): IGenericClient {
-    val oauthClient = OAuth2ClientFactory.create(
-        config.discoveryUrl, config.clientId, config.clientSecret
-    )
-
-    val interceptor = OauthRequestInterceptor(oauthClient, config.scope)
-
-    // So that we dont start by requesting /metadata.
-    val ctx = FhirContext.forCached(FhirVersionEnum.R4)
-    val factory = ctx.restfulClientFactory.apply { serverValidationMode = ServerValidationModeEnum.NEVER }
-    return factory.newGenericClient(config.baseUrl).apply {
-        registerInterceptor(interceptor)
-        encoding = EncodingEnum.JSON
     }
 }
 

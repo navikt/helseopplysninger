@@ -16,7 +16,7 @@ class ApplicationTest {
     @Test
     fun `my test example`() {
         withHopsTestApplication {
-            Thread.sleep(100000)
+            Thread.sleep(1000)
         }
     }
 

@@ -28,6 +28,10 @@ interface IOAuth2Client : Closeable {
     suspend fun getToken(scope: String): String
 }
 
+/**
+ * Reference implementation:
+ * https://github.com/navikt/token-support/blob/master/token-client-kotlin-demo/src/main/kotlin/no/nav/security/token/support/ktor/oauth/OAuth2Client.kt
+ */
 internal class OAuth2Client(
     private val httpClient: HttpClient,
     private val wellKnownUrl: String,
@@ -71,7 +75,7 @@ internal class OAuth2Client(
     )
 
     override suspend fun getToken(scope: String) =
-        clientCredentials(scope).accessToken
+        clientCredentials(scope).accessToken!!
 
     override fun close() {
         httpClient.close()
