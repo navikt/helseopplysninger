@@ -24,7 +24,7 @@ class TaskChangeToMessageResponseMapper(
 
     private fun createMessageResponse(task: Task): Bundle {
         val requestMessageHeader = fhirClient
-            .allByQuery<MessageHeader>("focus=${task.id}")
+            .allByQuery<MessageHeader>("focus=${task.idElement.idPart}")
             .single()
 
         val instant = task.meta.lastUpdated.toLocalDateTime()
@@ -33,7 +33,7 @@ class TaskChangeToMessageResponseMapper(
         }
 
         val responseMessageHeader = MessageHeader().apply {
-            id = IdentityGenerator.createUUID5(task.id, task.meta.versionId).toString()
+            id = IdentityGenerator.createUUID5(task.idElement.idPart, task.meta.versionId).toString()
             event = requestMessageHeader.event
             destination = listOf(asDestination(requestMessageHeader.source))
             source = asSource(requestMessageHeader.destination.single())
@@ -55,7 +55,7 @@ class TaskChangeToMessageResponseMapper(
 
     private fun resourceAtInstant(id: IIdType, instant: LocalDateTime) =
         fhirClient
-            .allByUrl("${id.value}/_history?_count=1&_at=le${instant.toIsoString()}")
+            .allByUrl("${id.toVersionless()}/_history?_count=1&_at=le${instant.toIsoString()}")
             .single()
 }
 

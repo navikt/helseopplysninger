@@ -12,7 +12,7 @@ fun IGenericClient.allByUrl(url: String): Sequence<Resource> =
     sequence {
         var bundle: Bundle? = this@allByUrl
             .search<Bundle>()
-            .byUrl(url)
+            .byUrl(if (url.startsWith("http")) url else "$serverBase/$url")
             .execute()
 
         while (bundle?.entry?.isEmpty() == false) {

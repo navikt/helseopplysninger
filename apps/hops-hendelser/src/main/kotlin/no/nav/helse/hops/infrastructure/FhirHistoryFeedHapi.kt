@@ -20,7 +20,7 @@ class FhirHistoryFeedHapi(
 ) : TaskChangeFeed {
     override fun poll(since: LocalDateTime?): Flow<TaskChange> =
         flow {
-            var lastUpdated = since
+            var lastUpdated = since ?: LocalDateTime.MIN!!
             while (true) { // Will be exited when the flow's CoroutineContext is cancelled.
                 val query = createQuery(lastUpdated)
                 var last: Task? = null
@@ -29,7 +29,7 @@ class FhirHistoryFeedHapi(
                     if (!currentCoroutineContext().isActive) return@forEach
 
                     history(it).fold(null as Task?) { previous, current ->
-                        if (current.lastModified.toLocalDateTime() > lastUpdated)
+                        if (lastUpdated < current.meta.lastUpdated.toLocalDateTime())
                             emit(TaskChange(current, previous))
                         current
                     }
@@ -47,16 +47,16 @@ class FhirHistoryFeedHapi(
     /** Returns a list of all the versions of a resource, ordered from first to (inclusive) the supplied version. **/
     private inline fun <reified T : Resource> history(resource: T) =
         fhirClient
-            .allByUrl("${resource.fhirType()}/${resource.id}/_history?_at=lt${resource.meta.lastUpdated.toIsoString()}")
+            .allByUrl("${resource.idElement.toVersionless()}/_history?_at=lt${resource.meta.lastUpdated.toIsoString()}")
             .map { it as T }
             .sortedBy { it.meta.lastUpdated }
             .plus(resource)
             .toList()
 }
 
-private fun createQuery(lastUpdated: LocalDateTime?): String {
+private fun createQuery(lastUpdated: LocalDateTime): String {
     var query = "_sort=_lastUpdated" // ascending.
-    if (lastUpdated != null)
+    if (lastUpdated > LocalDateTime.MIN)
         query += "&_lastUpdated=gt${lastUpdated.toIsoString()}"
 
     return query

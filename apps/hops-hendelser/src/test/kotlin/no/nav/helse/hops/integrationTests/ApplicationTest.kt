@@ -25,7 +25,7 @@ class ApplicationTest {
         withFhirData("/fhir/valid-message.json")
 
         withHopsTestApplication {
-            Thread.sleep(1000)
+            Thread.sleep(100000)
         }
     }
 
