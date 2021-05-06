@@ -1,10 +1,9 @@
-package no.nav.helse.hops
+package no.nav.helse.hops.fhir
 
 import ca.uhn.fhir.context.FhirContext
 import ca.uhn.fhir.context.FhirVersionEnum
 import ca.uhn.fhir.rest.client.api.IGenericClient
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum
-import no.nav.helse.hops.security.fhir.OauthRequestInterceptor
 import no.nav.helse.hops.security.oauth.OAuth2ClientFactory
 import java.net.URL
 

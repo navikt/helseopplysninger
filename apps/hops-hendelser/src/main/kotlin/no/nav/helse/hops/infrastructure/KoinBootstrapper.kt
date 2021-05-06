@@ -1,10 +1,10 @@
 package no.nav.helse.hops.infrastructure
 
-import no.nav.helse.hops.FhirClientFactory
 import no.nav.helse.hops.domain.MessageBusProducer
 import no.nav.helse.hops.domain.TaskChangeFeed
 import no.nav.helse.hops.domain.TaskChangeToMessageResponseMapper
 import no.nav.helse.hops.domain.TaskStateChangeSubscriberJob
+import no.nav.helse.hops.fhir.FhirClientFactory
 import no.nav.helse.hops.hoplite.loadConfigOrThrow
 import no.nav.helse.hops.koin.singleClosable
 import org.koin.dsl.module

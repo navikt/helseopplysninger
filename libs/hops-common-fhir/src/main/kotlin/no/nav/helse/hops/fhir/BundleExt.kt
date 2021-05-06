@@ -1,4 +1,4 @@
-package no.nav.helse.hops
+package no.nav.helse.hops.fhir
 
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.Resource
@@ -24,6 +24,6 @@ fun Bundle.addResource(vararg res: Resource) =
 
 private fun createEntry(res: Resource) =
     Bundle.BundleEntryComponent().apply {
-        fullUrl = "urn:uuid:${res.id}"
+        fullUrlElement = res.idElement.toUriType()
         resource = res
     }

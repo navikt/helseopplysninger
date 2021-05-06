@@ -2,6 +2,7 @@ package no.nav.helse.hops.domain
 
 import ca.uhn.fhir.rest.client.api.IGenericClient
 import ca.uhn.fhir.rest.server.exceptions.ResourceVersionConflictException
+import no.nav.helse.hops.fhir.toUriType
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.Resource
 import org.slf4j.Logger
@@ -36,7 +37,7 @@ private fun createTransaction(resources: List<Resource>) =
         entry = resources.map {
             Bundle.BundleEntryComponent().apply {
                 resource = it
-                fullUrl = "urn:uuid:${it.id}"
+                fullUrlElement = it.idElement.toUriType()
                 request = Bundle.BundleEntryRequestComponent().apply {
                     method = Bundle.HTTPVerb.PUT
                     url = "${it.fhirType()}/${it.id}"

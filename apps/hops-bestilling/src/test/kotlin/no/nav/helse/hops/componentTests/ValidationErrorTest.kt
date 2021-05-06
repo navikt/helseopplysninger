@@ -6,12 +6,13 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
 import no.nav.helse.hops.domain.isAllOk
+import no.nav.helse.hops.fhir.toJson
+import no.nav.helse.hops.fhir.withUuidPrefixFix
 import no.nav.helse.hops.infrastructure.FhirResourceValidatorHapi
 import no.nav.helse.hops.infrastructure.KoinBootstrapper
 import no.nav.helse.hops.testUtils.KafkaMock
 import no.nav.helse.hops.testUtils.ResourceLoader
 import no.nav.helse.hops.testUtils.addFhirMessage
-import no.nav.helse.hops.toJson
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.producer.Producer
 import org.hl7.fhir.instance.model.api.IBaseResource
@@ -59,11 +60,13 @@ class ValidationErrorTest {
         assertTrue(resources[1] is OperationOutcome)
 
         val expectedResponseMessage =
-            ResourceLoader.asFhirResource<Bundle>("/fhir/invalid-message-warning-on-name-expected-response.json").apply {
-                id = responseMessage.id
-                timestamp = responseMessage.timestamp
-                entry.forEach { it.resource.id = it.resource.id.removePrefix("urn:uuid:") }
-            }
+            ResourceLoader
+                .asFhirResource<Bundle>("/fhir/invalid-message-warning-on-name-expected-response.json")
+                .withUuidPrefixFix()
+                .apply {
+                    id = responseMessage.id
+                    timestamp = responseMessage.timestamp
+                }
 
         assertEquals(expectedResponseMessage.toJson(), responseMessage.toJson())
 

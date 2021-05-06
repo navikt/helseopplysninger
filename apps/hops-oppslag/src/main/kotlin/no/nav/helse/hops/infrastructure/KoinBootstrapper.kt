@@ -1,9 +1,9 @@
 package no.nav.helse.hops.infrastructure
 
 import ca.uhn.fhir.context.FhirContext
-import no.nav.helse.hops.FhirClientFactory
 import no.nav.helse.hops.domain.FkrFacade
 import no.nav.helse.hops.domain.FkrFacadeImpl
+import no.nav.helse.hops.fhir.FhirClientFactory
 import no.nav.helse.hops.hoplite.loadConfigOrThrow
 import org.koin.dsl.module
 

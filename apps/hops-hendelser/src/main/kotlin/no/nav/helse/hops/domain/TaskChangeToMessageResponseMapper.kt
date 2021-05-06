@@ -2,8 +2,9 @@ package no.nav.helse.hops.domain
 
 import ca.uhn.fhir.rest.client.api.IGenericClient
 import no.nav.helse.hops.IdentityGenerator
-import no.nav.helse.hops.allByQuery
-import no.nav.helse.hops.allByUrl
+import no.nav.helse.hops.fhir.addResource
+import no.nav.helse.hops.fhir.allByQuery
+import no.nav.helse.hops.fhir.allByUrl
 import no.nav.helse.hops.toIsoString
 import no.nav.helse.hops.toLocalDateTime
 import org.hl7.fhir.instance.model.api.IIdType
@@ -46,8 +47,7 @@ class TaskChangeToMessageResponseMapper(
             id = UUID.randomUUID().toString()
             timestampElement = InstantType.withCurrentTime()
             type = Bundle.BundleType.MESSAGE
-            addResource(responseMessageHeader)
-            addResource(task)
+            addResource(responseMessageHeader, task)
             focusResources.forEach { addResource(it) }
         }
     }

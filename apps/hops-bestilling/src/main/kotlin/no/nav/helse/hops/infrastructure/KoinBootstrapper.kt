@@ -1,11 +1,11 @@
 package no.nav.helse.hops.infrastructure
 
-import no.nav.helse.hops.FhirClientFactory
 import no.nav.helse.hops.domain.BestillingConsumerJob
 import no.nav.helse.hops.domain.FhirMessageBus
 import no.nav.helse.hops.domain.FhirRepository
 import no.nav.helse.hops.domain.FhirRepositoryImpl
 import no.nav.helse.hops.domain.FhirResourceValidator
+import no.nav.helse.hops.fhir.FhirClientFactory
 import no.nav.helse.hops.hoplite.loadConfigOrThrow
 import no.nav.helse.hops.koin.singleClosable
 import org.koin.dsl.module

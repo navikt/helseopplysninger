@@ -1,7 +1,7 @@
 package no.nav.helse.hops.domain
 
 import ca.uhn.fhir.rest.client.api.IGenericClient
-import no.nav.helse.hops.resources
+import no.nav.helse.hops.fhir.resources
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.Practitioner
 

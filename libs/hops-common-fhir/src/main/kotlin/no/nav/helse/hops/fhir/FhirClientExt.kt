@@ -1,4 +1,4 @@
-package no.nav.helse.hops
+package no.nav.helse.hops.fhir
 
 import ca.uhn.fhir.rest.client.api.IGenericClient
 import org.hl7.fhir.r4.model.Bundle

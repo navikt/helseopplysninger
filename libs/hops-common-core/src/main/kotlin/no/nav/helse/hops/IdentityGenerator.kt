@@ -1,6 +1,7 @@
 package no.nav.helse.hops
 
 import com.fasterxml.uuid.Generators
+import java.net.URI
 import java.util.UUID
 
 object IdentityGenerator {
@@ -10,3 +11,5 @@ object IdentityGenerator {
     /** Used to create deterministic UUID. **/
     fun createUUID5(namespace: UUID, name: String): UUID = Generators.nameBasedGenerator(namespace).generate(name)
 }
+
+fun UUID.toUri() = URI("urn:uuid:$this")

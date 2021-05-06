@@ -3,11 +3,12 @@ package no.nav.helse.hops.integrationTests
 import io.ktor.config.MapApplicationConfig
 import io.ktor.server.testing.TestApplicationEngine
 import io.ktor.server.testing.withTestApplication
-import no.nav.helse.hops.FhirClientFactory
+import no.nav.helse.hops.fhir.FhirClientFactory
+import no.nav.helse.hops.fhir.toUriType
+import no.nav.helse.hops.fhir.withUuidPrefixFix
 import no.nav.helse.hops.module
 import no.nav.helse.hops.testUtils.ResourceLoader
 import no.nav.helse.hops.testUtils.url
-import no.nav.helse.hops.withUuidPrefixFix
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.Resource
 import org.junit.jupiter.api.Test
@@ -71,7 +72,7 @@ private fun List<Resource>.asTransaction() =
         entry = map {
             Bundle.BundleEntryComponent().apply {
                 resource = it
-                fullUrl = "urn:uuid:${it.id}"
+                fullUrlElement = it.idElement.toUriType()
                 request = Bundle.BundleEntryRequestComponent().apply {
                     method = Bundle.HTTPVerb.PUT
                     url = "${it.fhirType()}/${it.id}"

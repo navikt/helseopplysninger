@@ -3,8 +3,8 @@ package no.nav.helse.hops.infrastructure
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import no.nav.helse.hops.domain.FhirMessageBus
-import no.nav.helse.hops.resources
-import no.nav.helse.hops.withUuidPrefixFix
+import no.nav.helse.hops.fhir.resources
+import no.nav.helse.hops.fhir.withUuidPrefixFix
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.producer.Callback
 import org.apache.kafka.clients.producer.Producer

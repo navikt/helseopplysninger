@@ -5,10 +5,10 @@ import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.isActive
-import no.nav.helse.hops.allByQuery
-import no.nav.helse.hops.allByUrl
 import no.nav.helse.hops.domain.TaskChange
 import no.nav.helse.hops.domain.TaskChangeFeed
+import no.nav.helse.hops.fhir.allByQuery
+import no.nav.helse.hops.fhir.allByUrl
 import no.nav.helse.hops.toIsoString
 import no.nav.helse.hops.toLocalDateTime
 import org.hl7.fhir.r4.model.Resource

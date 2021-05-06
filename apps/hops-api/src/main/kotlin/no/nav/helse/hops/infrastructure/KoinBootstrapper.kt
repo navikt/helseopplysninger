@@ -6,7 +6,7 @@ import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum
 import com.sksamuel.hoplite.ConfigLoader
 import no.nav.helse.hops.domain.HapiFacade
 import no.nav.helse.hops.domain.HapiFacadeImpl
-import no.nav.helse.hops.security.fhir.OauthRequestInterceptor
+import no.nav.helse.hops.fhir.OauthRequestInterceptor
 import no.nav.helse.hops.security.oauth.OAuth2ClientFactory
 import org.koin.dsl.module
 

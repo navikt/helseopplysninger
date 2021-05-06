@@ -9,10 +9,10 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.runBlocking
 import no.nav.helse.hops.IdentityGenerator
-import no.nav.helse.hops.addResource
+import no.nav.helse.hops.fhir.addResource
+import no.nav.helse.hops.fhir.resources
+import no.nav.helse.hops.fhir.toJson
 import no.nav.helse.hops.infrastructure.Configuration
-import no.nav.helse.hops.resources
-import no.nav.helse.hops.toJson
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.InstantType
 import org.hl7.fhir.r4.model.MessageHeader

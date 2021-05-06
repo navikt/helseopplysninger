@@ -1,6 +1,6 @@
 package no.nav.helse.hops.testUtils
 
-import no.nav.helse.hops.JsonParser
+import no.nav.helse.hops.fhir.JsonParser
 import org.hl7.fhir.instance.model.api.IBaseResource
 
 internal object ResourceLoader {
