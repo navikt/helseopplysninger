@@ -9,7 +9,8 @@ on:
       - .github/workflows/hops-api.yaml
 
 env: # Used by nais/deploy/actions/deploy.
-  IMAGE: ghcr.io/${{ github.repository }}/${{ github.workflow }}:${{ github.sha }}
+  IMAGE: ghcr.io/navikt/${{ github.workflow }}:${{ github.sha }}
+  IMAGE_LATEST:  ghcr.io/navikt/${{ github.workflow }}:latest
   APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
   RESOURCE: apps/${{ github.workflow }}/.nais/naiserator.yaml
   BUILDX_CACHE_PATH: /tmp/.buildx-cache
@@ -45,7 +46,7 @@ jobs:
         with:
           build-args: project=${{ github.workflow }}
           push: true
-          tags: ${{ env.IMAGE }}
+          tags: ${{ env.IMAGE }},${{ env.IMAGE_LATEST }}
           cache-from: type=local,src=${{ env.BUILDX_CACHE_PATH }}
           cache-to: type=local,dest=${{ env.BUILDX_CACHE_PATH }}-new
 

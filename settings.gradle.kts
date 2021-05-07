@@ -1,5 +1,6 @@
 rootProject.name = "helseopplysninger"
 
+include("apps:autotest")
 include("apps:hops-api")
 include("apps:hops-bestilling")
 include("apps:hops-oppslag")
