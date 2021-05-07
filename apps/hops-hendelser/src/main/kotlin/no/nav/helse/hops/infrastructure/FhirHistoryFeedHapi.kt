@@ -11,7 +11,6 @@ import no.nav.helse.hops.fhir.allByQuery
 import no.nav.helse.hops.fhir.allByUrl
 import no.nav.helse.hops.toIsoString
 import no.nav.helse.hops.toLocalDateTime
-import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.Resource
 import org.hl7.fhir.r4.model.Task
 import java.time.LocalDateTime
@@ -29,7 +28,7 @@ class FhirHistoryFeedHapi(
                 fhirClient.allByQuery<Task>(query).forEach {
                     if (!currentCoroutineContext().isActive) return@forEach
 
-                    history(it).fold(null as Task?) { previous, current ->
+                    getHistoryOf(it).fold(null as Task?) { previous, current ->
                         if (lastUpdated < current.meta.lastUpdated.toLocalDateTime())
                             emit(TaskChange(current, previous))
                         current
@@ -46,7 +45,7 @@ class FhirHistoryFeedHapi(
         }
 
     /** Returns a list of all the versions of a resource, ordered from first to (inclusive) the supplied version. **/
-    private inline fun <reified T : Resource> history(resource: T) =
+    private inline fun <reified T : Resource> getHistoryOf(resource: T) =
         fhirClient
             .allByUrl("${resource.idElement.toVersionless()}/_history?_at=lt${resource.meta.lastUpdated.toIsoString()}")
             .map { it as T }

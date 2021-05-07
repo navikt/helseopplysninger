@@ -10,14 +10,17 @@ import io.ktor.routing.get
 import io.ktor.routing.routing
 import no.nav.helse.hops.hoplite.asHoplitePropertySourceModule
 import no.nav.helse.hops.infrastructure.KoinBootstrapper
+import org.koin.core.module.Module
 import org.koin.ktor.ext.Koin
+import org.koin.ktor.ext.modules
 
 @Suppress("unused") // Referenced in application.conf
-fun Application.module() {
+fun Application.main(vararg koinModules: Module) {
     install(DefaultHeaders)
     install(CallLogging)
     install(Koin) {
         modules(KoinBootstrapper.singleModule, environment.config.asHoplitePropertySourceModule())
+        modules(koinModules.toList())
     }
 
     routing {

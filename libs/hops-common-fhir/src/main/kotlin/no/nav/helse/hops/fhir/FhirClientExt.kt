@@ -1,8 +1,12 @@
 package no.nav.helse.hops.fhir
 
 import ca.uhn.fhir.rest.client.api.IGenericClient
+import no.nav.helse.hops.fhir.models.Transaction
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.Resource
+
+fun IGenericClient.executeTransaction(t: Transaction): Bundle =
+    transaction().withBundle(t.bundle).execute()
 
 inline fun <reified T : Resource> IGenericClient.allByQuery(query: String): Sequence<T> =
     allByUrl("${T::class.java.simpleName}?$query").mapNotNull { it as T }

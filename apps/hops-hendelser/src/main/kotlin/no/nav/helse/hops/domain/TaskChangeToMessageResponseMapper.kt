@@ -3,26 +3,22 @@ package no.nav.helse.hops.domain
 import ca.uhn.fhir.rest.client.api.IGenericClient
 import no.nav.helse.hops.IdentityGenerator
 import no.nav.helse.hops.Mapper
-import no.nav.helse.hops.fhir.addResource
 import no.nav.helse.hops.fhir.allByQuery
 import no.nav.helse.hops.fhir.allByUrl
+import no.nav.helse.hops.fhir.messages.OkResponseMessage
 import no.nav.helse.hops.toIsoString
 import no.nav.helse.hops.toLocalDateTime
 import org.hl7.fhir.instance.model.api.IIdType
-import org.hl7.fhir.r4.model.Bundle
-import org.hl7.fhir.r4.model.InstantType
 import org.hl7.fhir.r4.model.MessageHeader
-import org.hl7.fhir.r4.model.Reference
 import org.hl7.fhir.r4.model.Task
 import java.time.LocalDateTime
-import java.util.UUID
 
 class TaskChangeToMessageResponseMapper(
     private val fhirClient: IGenericClient
-) : Mapper<TaskChange, Bundle> {
+) : Mapper<TaskChange, OkResponseMessage> {
     override suspend fun map(input: TaskChange) = createMessageResponse(input.current)
 
-    private fun createMessageResponse(task: Task): Bundle {
+    private fun createMessageResponse(task: Task): OkResponseMessage {
         val requestMessageHeader = fhirClient
             .allByQuery<MessageHeader>("focus=${task.idElement.idPart}")
             .single()
@@ -32,25 +28,9 @@ class TaskChangeToMessageResponseMapper(
             resourceAtInstant(it.referenceElement, instant)
         }
 
-        val responseMessageHeader = MessageHeader().apply {
-            id = IdentityGenerator.createUUID5(task.idElement.idPart, task.meta.versionId).toString()
-            event = requestMessageHeader.event
-            destination = listOf(asDestination(requestMessageHeader.source))
-            source = asSource(requestMessageHeader.destination.single())
-            response = MessageHeader.MessageHeaderResponseComponent().apply {
-                identifier = requestMessageHeader.id
-                code = MessageHeader.ResponseType.OK
-            }
-            focus = listOf(Reference(task)) + focusResources.map { Reference(it) }
-        }
+        val responseId = IdentityGenerator.createUUID5(task.idElement.idPart, task.meta.versionId)
 
-        return Bundle().apply {
-            id = UUID.randomUUID().toString()
-            timestampElement = InstantType.withCurrentTime()
-            type = Bundle.BundleType.MESSAGE
-            addResource(responseMessageHeader, task)
-            focusResources.forEach { addResource(it) }
-        }
+        return OkResponseMessage(requestMessageHeader, responseId, focusResources)
     }
 
     private fun resourceAtInstant(id: IIdType, instant: LocalDateTime) =
@@ -58,9 +38,3 @@ class TaskChangeToMessageResponseMapper(
             .allByUrl("${id.toVersionless()}/_history?_count=1&_at=le${instant.toIsoString()}")
             .single()
 }
-
-private fun asDestination(src: MessageHeader.MessageSourceComponent) =
-    MessageHeader.MessageDestinationComponent(src.endpointElement).apply { name = src.name }
-
-private fun asSource(dest: MessageHeader.MessageDestinationComponent) =
-    MessageHeader.MessageSourceComponent(dest.endpointElement).apply { name = dest.name }

@@ -25,7 +25,7 @@ class TaskStateChangeSubscriberJob(
         .poll()
         .filter { it.current.status != it.previous?.status }
         .mapWith(responseMapper)
-        .onEach { logger.info("Message: ${it.toJson()}") }
+        .onEach { logger.info("Message: ${it.bundle.toJson()}") }
         .onEach { messageBusProducer.publish(it) }
         .catch { logger.error("Error while polling history.", it) }
         .launchIn(CoroutineScope(context))
