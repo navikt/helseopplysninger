@@ -29,7 +29,6 @@ class TaskChangeToMessageResponseMapper(
         }
 
         val responseId = IdentityGenerator.createUUID5(task.idElement.idPart, task.meta.versionId)
-
         return OkResponseMessage(requestMessageHeader, responseId, focusResources)
     }
 

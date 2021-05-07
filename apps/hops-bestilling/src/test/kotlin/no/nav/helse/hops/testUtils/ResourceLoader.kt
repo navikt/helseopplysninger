@@ -1,6 +1,6 @@
 package no.nav.helse.hops.testUtils
 
-import no.nav.helse.hops.fhir.JsonParser
+import no.nav.helse.hops.fhir.JsonConverter
 import org.hl7.fhir.instance.model.api.IBaseResource
 
 internal object ResourceLoader {
@@ -19,5 +19,5 @@ internal object ResourceLoader {
         }
 
     inline fun <reified R : IBaseResource> asFhirResource(resource: String) =
-        JsonParser.parse<R>(asString(resource))
+        JsonConverter.parse<R>(asString(resource))
 }

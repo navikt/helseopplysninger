@@ -32,7 +32,7 @@ object KoinBootstrapper {
         singleClosable { KafkaFactory.createFhirProducer(get()) }
         singleClosable { KafkaFactory.createFhirConsumer(get()) }
         singleClosable(createdAtStart = true) {
-            TaskStateChangeSubscriberJob(get(), get(), get(), getLogger<TaskStateChangeSubscriberJob>())
+            TaskStateChangeSubscriberJob(get(), get(), get(), get(), getLogger<TaskStateChangeSubscriberJob>())
         }
     }
 }

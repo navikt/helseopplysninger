@@ -8,10 +8,13 @@ import org.hl7.fhir.r4.model.Reference
 import org.hl7.fhir.r4.model.Resource
 import java.util.UUID
 
-class OkResponseMessage(requestHeader: MessageHeader, responseId: UUID, data: List<Resource>) :
-    BaseMessage(createBundle(requestHeader, responseId, data)) {
-        val data: List<Resource> get() = bundle.entry.drop(1).map { it.resource as Resource }
-    }
+class OkResponseMessage : BaseMessage {
+    constructor(bundle: Bundle) : super(bundle)
+    constructor(requestHeader: MessageHeader, responseId: UUID, data: List<Resource>) :
+        super(createBundle(requestHeader, responseId, data))
+
+    val data: List<Resource> get() = bundle.entry.drop(1).map { it.resource as Resource }
+}
 
 private fun createBundle(requestHeader: MessageHeader, responseId: UUID, data: List<Resource>): Bundle {
     val responseHeader = MessageHeader().apply {
@@ -20,10 +23,10 @@ private fun createBundle(requestHeader: MessageHeader, responseId: UUID, data: L
         destination = listOf(asDestination(requestHeader.source))
         source = asSource(requestHeader.destination.single())
         response = MessageHeader.MessageHeaderResponseComponent().apply {
-            identifier = requestHeader.id
+            identifierElement = requestHeader.idElement.toUnqualifiedVersionless()
             code = MessageHeader.ResponseType.OK
         }
-        focus = data.map { Reference(it) }
+        focus = data.map { Reference(it.idElement.toUnqualified()) }
     }
 
     return Bundle().apply {
