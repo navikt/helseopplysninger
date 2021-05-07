@@ -11,6 +11,7 @@ import no.nav.helse.hops.fhir.allByQuery
 import no.nav.helse.hops.fhir.allByUrl
 import no.nav.helse.hops.toIsoString
 import no.nav.helse.hops.toLocalDateTime
+import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.Resource
 import org.hl7.fhir.r4.model.Task
 import java.time.LocalDateTime
@@ -18,9 +19,9 @@ import java.time.LocalDateTime
 class FhirHistoryFeedHapi(
     private val fhirClient: IGenericClient
 ) : TaskChangeFeed {
-    override fun poll(since: LocalDateTime?): Flow<TaskChange> =
+    override fun poll(since: LocalDateTime): Flow<TaskChange> =
         flow {
-            var lastUpdated = since ?: LocalDateTime.MIN!!
+            var lastUpdated = since
             while (true) { // Will be exited when the flow's CoroutineContext is cancelled.
                 val query = createQuery(lastUpdated)
                 var last: Task? = null
