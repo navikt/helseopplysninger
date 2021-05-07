@@ -9,7 +9,7 @@ class Transaction {
         type = Bundle.BundleType.TRANSACTION
     }
 
-    fun addUpsert(res: Resource, ifMatchVid: Int) {
+    fun withUpsert(res: Resource, ifMatchVid: Int): Transaction {
         val entry = Bundle.BundleEntryComponent().apply {
             resource = res
             fullUrlElement = res.idElement.toUriType()
@@ -21,5 +21,7 @@ class Transaction {
         }
 
         bundle.addEntry(entry)
+
+        return this
     }
 }

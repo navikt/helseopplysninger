@@ -28,6 +28,8 @@ class FhirHistoryFeedHapi(
                 fhirClient.allByQuery<Task>(query).forEach {
                     if (!currentCoroutineContext().isActive) return@forEach
 
+                    // Pull the whole history of the Task, in case there are older changes
+                    // that are within the requested timespan.
                     getHistoryOf(it).fold(null as Task?) { previous, current ->
                         if (lastUpdated < current.meta.lastUpdated.toLocalDateTime())
                             emit(TaskChange(current, previous))
@@ -40,6 +42,7 @@ class FhirHistoryFeedHapi(
                 if (last != null)
                     lastUpdated = last!!.meta.lastUpdated.toLocalDateTime()
 
+                // TODO: The polling-interval should be dynamically adjusted according to activity level.
                 kotlinx.coroutines.delay(5000)
             }
         }

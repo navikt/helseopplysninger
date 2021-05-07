@@ -1,5 +1,6 @@
 package no.nav.helse.hops.integrationTests
 
+import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException
 import io.ktor.config.MapApplicationConfig
 import io.ktor.server.testing.TestApplicationEngine
 import io.ktor.server.testing.withTestApplication
@@ -20,7 +21,6 @@ import org.apache.kafka.clients.producer.Producer
 import org.hl7.fhir.instance.model.api.IBaseResource
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.MessageHeader
-import org.hl7.fhir.r4.model.Resource
 import org.junit.jupiter.api.Test
 import org.koin.dsl.module
 import org.testcontainers.junit.jupiter.Container
@@ -36,27 +36,35 @@ class ApplicationTest {
     }
 
     @Test
-    fun `hapi-fhir-server med bestilling skal generere response-message på kafka og lagre den i hapi`() {
+    fun `hapi-fhir-server med bestilling skal generere response-message paa kafka og lagre kopi i hapi`() {
         populateHapiTestContainer()
-
         withHopsTestApplication {
             runBlocking {
-                withTimeout(5000) {
+                val kafkaMsgHeader = withTimeout(1000) {
                     while (producerMock.history().size == 0) delay(100)
+                    val kafkaMsg = OkResponseMessage(producerMock.history().single().value() as Bundle)
+                    kafkaMsg.header
                 }
+
+                val hapiMsgHeader = withTimeout(1000) {
+                    val fhirClient = FhirClientFactory.create(URL("${hapiFhirContainer.url}/fhir"))
+                    var messageHeader: MessageHeader? = null
+                    do {
+                        try {
+                            messageHeader = fhirClient
+                                .read()
+                                .resource(MessageHeader::class.java)
+                                .withId(kafkaMsgHeader.idElement.idPart)
+                                .execute()
+                        } catch (ex: ResourceNotFoundException) {
+                            delay(100)
+                        }
+                    } while (messageHeader == null)
+                    return@withTimeout messageHeader
+                }
+
+                assertEquals(kafkaMsgHeader.idElement.idPart, hapiMsgHeader.idElement.idPart)
             }
-
-            val kafkaMsg = OkResponseMessage(producerMock.history().single().value() as Bundle)
-            val responseHeaderId = kafkaMsg.header.idElement.idPart
-
-            val client = FhirClientFactory.create(URL("${hapiFhirContainer.url}/fhir"))
-            val existing = client
-                .read()
-                .resource(MessageHeader::class.java)
-                .withId(responseHeaderId)
-                .execute() as Resource
-
-            assertEquals(responseHeaderId, existing.idElement.idPart)
         }
     }
 
@@ -75,8 +83,8 @@ class ApplicationTest {
     private fun populateHapiTestContainer() {
         val message = ResourceLoader.asFhirResource<Bundle>("/fhir/valid-message.json").withUuidPrefixFix()
         val transaction = createTransaction(message)
-        val client = FhirClientFactory.create(URL("${hapiFhirContainer.url}/fhir"))
-        client.executeTransaction(transaction)
+        val fhirClient = FhirClientFactory.create(URL("${hapiFhirContainer.url}/fhir"))
+        fhirClient.executeTransaction(transaction)
     }
 
     @Container
@@ -88,5 +96,5 @@ class ApplicationTest {
 
 private fun createTransaction(bundle: Bundle): Transaction {
     val resources = bundle.entry.map { it.resource }
-    return Transaction().apply { resources.forEach { addUpsert(it, 0) } }
+    return Transaction().apply { resources.forEach { withUpsert(it, 0) } }
 }
