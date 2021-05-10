@@ -1,0 +1,20 @@
+name: reviewdog-ktlint
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  code-style-violations:
+    name: Check coding style violations
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+        with:
+          fetch-depth: 1
+      - name: ktlint
+        uses: ScaCap/action-ktlint@master
+        with:
+          github_token: ${{ secrets.github_token }}
