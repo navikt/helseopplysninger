@@ -6,7 +6,6 @@ on:
 
 jobs:
   ktlint: # https://github.com/ScaCap/action-ktlint
-    name: Check coding style violations
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -15,10 +14,8 @@ jobs:
         uses: ScaCap/action-ktlint@1.3
         with:
           github_token: ${{ secrets.github_token }}
-          fail_on_error: true
           level: warning
   detekt: # https://github.com/alaegin/Detekt-Action
-    name: Code smell analysis
     runs-on: ubuntu-latest
     steps:
       - name: Clone repo
