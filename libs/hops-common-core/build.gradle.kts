@@ -9,7 +9,6 @@ plugins {
 tasks {
     withType<KotlinCompile> {
         kotlinOptions.jvmTarget = "11"
-        dependsOn("ktlintFormat")
     }
     test {
         useJUnitPlatform()
