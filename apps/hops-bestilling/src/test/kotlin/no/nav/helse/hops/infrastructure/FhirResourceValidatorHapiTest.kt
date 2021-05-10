@@ -2,7 +2,7 @@ package no.nav.helse.hops.infrastructure
 
 import kotlinx.coroutines.runBlocking
 import no.nav.helse.hops.domain.isAllOk
-import no.nav.helse.hops.domain.toJson
+import no.nav.helse.hops.fhir.toJson
 import no.nav.helse.hops.testUtils.ResourceLoader
 import org.hl7.fhir.r4.model.Bundle
 import org.junit.jupiter.api.Test

@@ -2,9 +2,12 @@ package no.nav.helse.hops.componentTests
 
 import ca.uhn.fhir.rest.client.api.IGenericClient
 import io.mockk.mockk
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeout
 import no.nav.helse.hops.domain.isAllOk
-import no.nav.helse.hops.domain.toJson
+import no.nav.helse.hops.fhir.toJson
+import no.nav.helse.hops.fhir.withUuidPrefixFix
 import no.nav.helse.hops.infrastructure.FhirResourceValidatorHapi
 import no.nav.helse.hops.infrastructure.KoinBootstrapper
 import no.nav.helse.hops.testUtils.KafkaMock
@@ -40,9 +43,14 @@ class ValidationErrorTest {
         val requestMessage = ResourceLoader.asFhirResource<Bundle>("/fhir/invalid-message-warning-on-name.json")
         consumerMock.addFhirMessage(requestMessage)
 
-        koinApp.close()
+        runBlocking {
+            withTimeout(5000) {
+                while (producerMock.history().size == 0) delay(100)
+            }
+        }
 
         assertEquals(1, producerMock.history().size)
+        koinApp.close()
 
         val responseMessage = producerMock.history().single().value() as Bundle
 
@@ -52,11 +60,13 @@ class ValidationErrorTest {
         assertTrue(resources[1] is OperationOutcome)
 
         val expectedResponseMessage =
-            ResourceLoader.asFhirResource<Bundle>("/fhir/invalid-message-warning-on-name-expected-response.json").apply {
-                id = responseMessage.id
-                timestamp = responseMessage.timestamp
-                entry.forEach { it.resource.id = it.resource.id.removePrefix("urn:uuid:") }
-            }
+            ResourceLoader
+                .asFhirResource<Bundle>("/fhir/invalid-message-warning-on-name-expected-response.json")
+                .withUuidPrefixFix()
+                .apply {
+                    id = responseMessage.id
+                    timestamp = responseMessage.timestamp
+                }
 
         assertEquals(expectedResponseMessage.toJson(), responseMessage.toJson())
 

@@ -28,12 +28,8 @@ dependencies {
 
     implementation(project(":libs:hops-common-fhir"))
     implementation(project(":libs:hops-common-ktor"))
-    implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:$hapiVersion")
     implementation("ca.uhn.hapi.fhir:hapi-fhir-validation:$hapiVersion")
-    implementation("com.fasterxml.uuid:java-uuid-generator:4.0.1")
-    implementation("com.sksamuel.hoplite:hoplite-hocon:1.4.0")
     implementation("org.apache.kafka:kafka-clients:2.8.0")
-    runtimeOnly("ca.uhn.hapi.fhir:hapi-fhir-client:$hapiVersion")
     runtimeOnly("ca.uhn.hapi.fhir:hapi-fhir-validation-resources-r4:$hapiVersion")
     runtimeOnly("ch.qos.logback:logback-classic:1.2.3")
     runtimeOnly("io.ktor:ktor-server-netty:$ktorVersion")

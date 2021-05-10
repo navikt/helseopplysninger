@@ -8,6 +8,10 @@ import kotlinx.coroutines.future.future
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenResponse
 import java.util.concurrent.TimeUnit
 
+/**
+ * Reference implementation:
+ * https://github.com/navikt/token-support/blob/master/token-client-kotlin-demo/src/main/kotlin/no/nav/security/token/support/ktor/oauth/OAuth2Cache.kt
+ */
 internal data class OAuth2CacheConfig(
     val enabled: Boolean,
     val maximumSize: Long = 1000,

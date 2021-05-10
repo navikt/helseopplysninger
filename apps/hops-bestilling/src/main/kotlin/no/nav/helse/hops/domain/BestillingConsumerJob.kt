@@ -3,41 +3,42 @@ package no.nav.helse.hops.domain
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancelAndJoin
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.runBlocking
+import no.nav.helse.hops.IdentityGenerator
+import no.nav.helse.hops.fhir.addResource
+import no.nav.helse.hops.fhir.resources
+import no.nav.helse.hops.fhir.toJson
 import no.nav.helse.hops.infrastructure.Configuration
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.InstantType
 import org.hl7.fhir.r4.model.MessageHeader
 import org.hl7.fhir.r4.model.OperationOutcome
 import org.hl7.fhir.r4.model.Reference
+import org.hl7.fhir.r4.model.Resource
 import org.slf4j.Logger
 import java.io.Closeable
 import java.util.UUID
 import kotlin.coroutines.CoroutineContext
 
 class BestillingConsumerJob(
-    private val messageBus: MessageBus,
+    private val messageBus: FhirMessageBus,
     private val logger: Logger,
     private val validator: FhirResourceValidator,
     private val fhirRepo: FhirRepository,
     messagingConfig: Configuration.FhirMessaging,
     context: CoroutineContext = Dispatchers.Default
 ) : Closeable {
-    private val job = CoroutineScope(context).launch {
-        while (isActive) {
-            val messages = messageBus.poll()
-
-            messages.forEach {
-                logger.debug("Message: ${it.toJson()}")
-
-                if (it.hasDestination(messagingConfig.endpoint)) {
-                    process(it)
-                }
-            }
-        }
-    }
+    private val job = messageBus
+        .poll()
+        .onEach { logger.debug("Message: ${it.toJson()}") }
+        .filter { it.hasDestination(messagingConfig.endpoint) }
+        .onEach(::process)
+        .catch { logger.error("Error while polling message bus.", it) }
+        .launchIn(CoroutineScope(context))
 
     override fun close() {
         runBlocking {
@@ -47,9 +48,13 @@ class BestillingConsumerJob(
 
     private suspend fun process(message: Bundle) {
         val operationOutcome = validator.validate(message)
-        val resources = message.entry.mapNotNull { it.resource }
+        val resources = message.resources<Resource>()
 
         if (operationOutcome.isAllOk()) {
+            // MessageHeader's focus references should be versioned to simplify auditing.
+            val header = resources.first() as MessageHeader
+            header.focus.forEach { it.referenceElement = it.referenceElement.withVersion("1") }
+
             fhirRepo.addRange(resources)
         } else {
             val requestMessageHeader = resources.first() as MessageHeader
@@ -69,11 +74,11 @@ private fun createResponseMessage(
     operationOutcome: OperationOutcome
 ): Bundle {
     val outcomeCopy = operationOutcome.copy().apply {
-        id = IdentityGenerator.CreateUUID5(requestMessageHeader.id, "details").toString()
+        id = IdentityGenerator.createUUID5(requestMessageHeader.id, "details").toString()
     }
 
     val responseMessageHeader = MessageHeader().apply {
-        id = IdentityGenerator.CreateUUID5(requestMessageHeader.id, "response").toString()
+        id = IdentityGenerator.createUUID5(requestMessageHeader.id, "response").toString()
         event = requestMessageHeader.event
         destination = listOf(asDestination(requestMessageHeader.source))
         source = asSource(requestMessageHeader.destination.single())
@@ -88,8 +93,7 @@ private fun createResponseMessage(
         id = UUID.randomUUID().toString()
         timestampElement = InstantType.withCurrentTime()
         type = Bundle.BundleType.MESSAGE
-        addResource(responseMessageHeader)
-        addResource(outcomeCopy)
+        addResource(responseMessageHeader, outcomeCopy)
     }
 }
 

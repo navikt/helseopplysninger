@@ -1,4 +1,4 @@
-package no.nav.helse.hops.security.fhir
+package no.nav.helse.hops.fhir
 
 import ca.uhn.fhir.rest.client.api.IClientInterceptor
 import ca.uhn.fhir.rest.client.api.IHttpRequest
@@ -11,7 +11,7 @@ class OauthRequestInterceptor(
     private val scope: String
 ) : IClientInterceptor {
     override fun interceptRequest(theRequest: IHttpRequest?) {
-
+        // OAuth2Client should handle caching and refreshing of token.
         val token = runBlocking {
             oauth2Client.getToken(scope)
         }
