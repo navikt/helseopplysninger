@@ -2,10 +2,10 @@ build:
   maxIssues: 0
   excludeCorrectable: false
   weights:
-    # complexity: 2
-    # LongParameterList: 1
-    # style: 1
-    # comments: 1
+  # complexity: 2
+  # LongParameterList: 1
+  # style: 1
+  # comments: 1
 
 config:
   validation: true
@@ -33,11 +33,11 @@ processors:
 console-reports:
   active: true
   exclude:
-     - 'ProjectStatisticsReport'
-     - 'ComplexityReport'
-     - 'NotificationReport'
-  #  - 'FindingsReport'
-     - 'FileBasedFindingsReport'
+    - 'ProjectStatisticsReport'
+    - 'ComplexityReport'
+    - 'NotificationReport'
+    #  - 'FindingsReport'
+    - 'FileBasedFindingsReport'
 
 output-reports:
   active: true
@@ -56,8 +56,6 @@ comments:
   CommentOverPrivateFunction:
     active: false
   CommentOverPrivateProperty:
-    active: false
-  DeprecatedBlockTag:
     active: false
   EndOfSentenceFormat:
     active: false
@@ -89,7 +87,7 @@ complexity:
     ignoreSingleWhenExpression: false
     ignoreSimpleWhenEntries: false
     ignoreNestingFunctions: false
-    nestingFunctions: ['run', 'let', 'apply', 'with', 'also', 'use', 'forEach', 'isNotNull', 'ifNull']
+    nestingFunctions: [run, let, apply, with, also, use, forEach, isNotNull, ifNull]
   LabeledExpression:
     active: false
     ignoredLabels: []
@@ -204,10 +202,10 @@ exceptions:
   SwallowedException:
     active: true
     ignoredExceptionTypes:
-     - InterruptedException
-     - NumberFormatException
-     - ParseException
-     - MalformedURLException
+      - InterruptedException
+      - NumberFormatException
+      - ParseException
+      - MalformedURLException
     allowedExceptionNameRegex: '_|(ignore|expected).*'
   ThrowingExceptionFromFinally:
     active: true
@@ -217,31 +215,31 @@ exceptions:
     active: true
     excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**']
     exceptions:
-     - IllegalArgumentException
-     - IllegalStateException
-     - IOException
+      - IllegalArgumentException
+      - IllegalStateException
+      - IOException
   ThrowingNewInstanceOfSameException:
     active: true
   TooGenericExceptionCaught:
     active: true
     excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**']
     exceptionNames:
-     - ArrayIndexOutOfBoundsException
-     - Error
-     - Exception
-     - IllegalMonitorStateException
-     - NullPointerException
-     - IndexOutOfBoundsException
-     - RuntimeException
-     - Throwable
+      - ArrayIndexOutOfBoundsException
+      - Error
+      - Exception
+      - IllegalMonitorStateException
+      - NullPointerException
+      - IndexOutOfBoundsException
+      - RuntimeException
+      - Throwable
     allowedExceptionNameRegex: '_|(ignore|expected).*'
   TooGenericExceptionThrown:
     active: true
     exceptionNames:
-     - Error
-     - Exception
-     - Throwable
-     - RuntimeException
+      - Error
+      - Exception
+      - Throwable
+      - RuntimeException
 
 formatting:
   active: true
@@ -256,8 +254,6 @@ formatting:
   ArgumentListWrapping:
     active: false
     autoCorrect: true
-    indentSize: 4
-    maxLineLength: 120
   ChainWrapping:
     active: true
     autoCorrect: true
@@ -276,7 +272,7 @@ formatting:
   ImportOrdering:
     active: false
     autoCorrect: true
-    layout: '*,java.**,javax.**,kotlin.**,^'
+    layout: 'idea'
   Indentation:
     active: false
     autoCorrect: true
@@ -285,7 +281,6 @@ formatting:
   MaximumLineLength:
     active: true
     maxLineLength: 120
-    ignoreBackTickedIdentifier: false
   ModifierOrdering:
     active: true
     autoCorrect: true
@@ -334,7 +329,6 @@ formatting:
     active: true
     autoCorrect: true
     indentSize: 4
-    maxLineLength: 120
   SpacingAroundAngleBrackets:
     active: false
     autoCorrect: true
@@ -487,8 +481,6 @@ potential-bugs:
   Deprecation:
     active: false
   DontDowncastCollectionTypes:
-    active: false
-  DoubleMutabilityForCollection:
     active: false
   DuplicateCaseInWhenExpression:
     active: true
