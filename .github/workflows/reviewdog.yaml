@@ -21,3 +21,4 @@ jobs:
           detekt_config: detekt-config.yml
           fail_on_error: true
           reviewdog_level: warning
+          detekt_excludes: '**/build/**,**/.idea/**",**/test/**'
