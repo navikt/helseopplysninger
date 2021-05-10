@@ -29,7 +29,7 @@ dependencies {
     runtimeOnly("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
     runtimeOnly("org.postgresql:postgresql:42.2.20")
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
-    testImplementation("org.awaitility:awaitility:4.0.3")
+    testImplementation("org.awaitility:awaitility:4.1.0")
     testImplementation("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
     testRuntimeOnly("com.h2database:h2:$h2Version")
     developmentOnly("com.h2database:h2:$h2Version")
