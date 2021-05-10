@@ -14,3 +14,6 @@ spec:
     - team: helseopplysninger
       application: hops-bestiller-backend
       access: readwrite
+    - team: teamdigihot
+      application: hm-ditt-nav
+      access: readwrite
