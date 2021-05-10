@@ -15,13 +15,13 @@ import java.time.LocalDateTime
 
 class TaskChangeToMessageResponseMapper(
     private val fhirClient: IGenericClient
-) : Mapper<TaskChange, OkResponseMessage> {
+) : Mapper<TaskChange, OkResponseMessage?> {
     override suspend fun map(input: TaskChange) = createMessageResponse(input.current)
 
-    private fun createMessageResponse(task: Task): OkResponseMessage {
+    private fun createMessageResponse(task: Task): OkResponseMessage? {
         val requestMessageHeader = fhirClient
             .allByQuery<MessageHeader>("focus=${task.idElement.idPart}")
-            .single()
+            .singleOrNull() ?: return null // Returns NULL if the Task is not associated with a Request-Message.
 
         val instant = task.meta.lastUpdated.toLocalDateTime()
         val focusResources = requestMessageHeader.focus.map {

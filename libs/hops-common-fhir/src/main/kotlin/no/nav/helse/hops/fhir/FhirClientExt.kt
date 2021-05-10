@@ -9,19 +9,19 @@ fun IGenericClient.executeTransaction(t: Transaction): Bundle =
     transaction().withBundle(t.bundle).execute()
 
 inline fun <reified T : Resource> IGenericClient.allByQuery(query: String): Sequence<T> =
-    allByUrl("${T::class.java.simpleName}?$query").mapNotNull { it as T }
+    allByUrl("${T::class.java.simpleName}?$query").map { it as T }
 
 /** Returns a Sequence of results where pagination is automatically handled during iteration. **/
 fun IGenericClient.allByUrl(url: String): Sequence<Resource> =
     sequence {
-        var bundle: Bundle? = this@allByUrl
+        var bundle = this@allByUrl
             .search<Bundle>()
             .byUrl(if (url.startsWith("http")) url else "$serverBase/$url")
             .execute()
 
-        while (bundle?.entry?.isEmpty() == false) {
+        while (true) {
             yieldAll(bundle.resources())
-            bundle = nextPageOrNull(bundle)
+            bundle = nextPageOrNull(bundle) ?: break
         }
     }
 

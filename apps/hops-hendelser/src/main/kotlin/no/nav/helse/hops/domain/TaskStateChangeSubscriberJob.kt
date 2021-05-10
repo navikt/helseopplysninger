@@ -7,15 +7,17 @@ import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.runBlocking
+import no.nav.helse.hops.fhir.allByQuery
 import no.nav.helse.hops.fhir.allByUrl
 import no.nav.helse.hops.fhir.messages.OkResponseMessage
 import no.nav.helse.hops.fhir.toJson
 import no.nav.helse.hops.infrastructure.Configuration
 import no.nav.helse.hops.mapWith
 import no.nav.helse.hops.toLocalDateTime
-import org.hl7.fhir.r4.model.Bundle
+import org.hl7.fhir.r4.model.MessageHeader
 import org.hl7.fhir.r4.model.Task
 import org.slf4j.Logger
 import java.io.Closeable
@@ -35,6 +37,7 @@ class TaskStateChangeSubscriberJob(
         .poll(lastUpdatedFromTaskInMostRecentPublishedMessageResponse())
         .filter { it.current.status != it.previous?.status }
         .mapWith(responseMapper)
+        .mapNotNull { it }
         .onEach { process(it) }
         .catch { logger.error("Error while polling history.", it) }
         .launchIn(CoroutineScope(context))
@@ -51,21 +54,20 @@ class TaskStateChangeSubscriberJob(
         val result = fhirClient
             .allByUrl("MessageHeader?source-uri=${config.endpoint}&_include=MessageHeader:focus:Task&_sort=-_lastUpdated&_count=1")
             .filterIsInstance<Task>()
-            .singleOrNull()
+            .singleOrNull() ?: return LocalDateTime.MIN
 
-        return result?.meta?.lastUpdated?.toLocalDateTime() ?: LocalDateTime.MIN
+        return result.meta.lastUpdated.toLocalDateTime()
     }
 
     private suspend fun process(msg: OkResponseMessage) {
         logger.info("Message: ${msg.bundle.toJson()}")
 
-        // Check if message exists in hapi, in that case it has already been published to kafka.
-        val searchResult = fhirClient
-            .search<Bundle>()
-            .byUrl("MessageHeader?_id=${msg.header.idElement.idPart}")
-            .execute()
+        // Check if Response-Message exists in hapi, in that case it has already been published to kafka.
+        val msgResponseExists = fhirClient
+            .allByQuery<MessageHeader>("_id=${msg.header.idElement.idPart}")
+            .any()
 
-        if (searchResult.total == 0) {
+        if (!msgResponseExists) {
             messageBusProducer.publish(msg)
             fhirClient.update().resource(msg.header).execute()
         }
