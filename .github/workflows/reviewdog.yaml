@@ -15,8 +15,10 @@ jobs:
         uses: ScaCap/action-ktlint@1.3
         with:
           github_token: ${{ secrets.github_token }}
+          fail_on_error: true
+          level: warning
   detekt: # https://github.com/alaegin/Detekt-Action
-    name: Check Code Quality
+    name: Code smell analysis
     runs-on: ubuntu-latest
     steps:
       - name: Clone repo
@@ -27,3 +29,6 @@ jobs:
         uses: DominuS-RU/Detekt-Action@v1.16.0
         with:
           github_token: ${{ secrets.github_token }}
+          detekt_config: detekt-config.yml
+          fail_on_error: true
+          reviewdog_level: warning
