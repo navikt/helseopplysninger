@@ -26,9 +26,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      # https://github.com/actions/cache/blob/main/examples.md#java---gradle
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
       - uses: actions/setup-java@v2
         with:
           java-version: 11
           distribution: 'adopt'
       - name: Run tests
         run: ./gradlew test --continue
+      # https://github.com/mikepenz/action-junit-report
+      - uses: scacap/action-surefire-report@v1
+        with:
+          report_paths: '**/build/test-results/test/TEST-*.xml'
