@@ -22,4 +22,4 @@ spec:
       access: readwrite
     - team: teamdigihot
       application: digihot-kafka-debug
-      access: readwrite      
+      access: read    
