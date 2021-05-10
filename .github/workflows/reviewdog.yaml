@@ -5,25 +5,17 @@ on:
       - main
 
 jobs:
-  ktlint: # https://github.com/ScaCap/action-ktlint
+  static-code-analysis:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: ktlint
-        uses: ScaCap/action-ktlint@1.3
+      - uses: actions/checkout@v2
+      # https://github.com/ScaCap/action-ktlint
+      - uses: ScaCap/action-ktlint@1.3
         with:
           github_token: ${{ secrets.github_token }}
           level: warning
-  detekt: # https://github.com/alaegin/Detekt-Action
-    runs-on: ubuntu-latest
-    steps:
-      - name: Clone repo
-        uses: actions/checkout@v2
-        with:
-          ref: ${{ github.head_ref }}
-      - name: detekt
-        uses: DominuS-RU/Detekt-Action@v1.16.0
+      # https://github.com/alaegin/Detekt-Action
+      - uses: DominuS-RU/Detekt-Action@v1.16.0
         with:
           github_token: ${{ secrets.github_token }}
           detekt_config: detekt-config.yml
