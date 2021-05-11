@@ -40,13 +40,13 @@ class ApplicationTest {
         populateHapiTestContainer()
         withHopsTestApplication {
             runBlocking {
-                val kafkaMsgHeader = withTimeout(1000) {
+                val kafkaMsgHeader = withTimeout(5000) {
                     while (producerMock.history().size == 0) delay(100)
                     val kafkaMsg = OkResponseMessage(producerMock.history().single().value() as Bundle)
                     kafkaMsg.header
                 }
 
-                val hapiMsgHeader = withTimeout(1000) {
+                val hapiMsgHeader = withTimeout(5000) {
                     val fhirClient = FhirClientFactory.create(URL("${hapiFhirContainer.url}/fhir"))
                     var messageHeader: MessageHeader? = null
                     do {
