@@ -13,13 +13,3 @@ class Fixtures {
         return parser.parseResource(content) as Bundle
     }
 }
-
-fun dockerEnvVars() {
-    val fileName = "autotest.env"
-    val content = File(fileName).readText()
-    val dotenv = dotenv {
-        filename = fileName
-    }
-    println(content)
-    println(dotenv["DB_PORT"])
-}
