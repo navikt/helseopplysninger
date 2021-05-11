@@ -20,3 +20,6 @@ spec:
     - team: teamdigihot
       application: hm-ditt-nav
       access: readwrite
+    - team: teamdigihot
+      application: digihot-kafka-debug
+      access: read    
