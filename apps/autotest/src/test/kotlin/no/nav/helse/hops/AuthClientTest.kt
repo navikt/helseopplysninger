@@ -11,10 +11,11 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class AuthClientTest {
-    private val auth = Auth()
+
     @Test
     @Disabled
     fun `should give a token`() {
+        val auth = Auth()
         val scope = "myscope"
         val token = runBlocking {
             auth.token(scope)
