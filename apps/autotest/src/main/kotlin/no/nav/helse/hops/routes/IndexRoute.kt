@@ -1,10 +1,14 @@
 package no.nav.helse.hops.routes
 
-import io.ktor.application.*
-import io.ktor.response.*
-import io.ktor.routing.*
+import io.ktor.application.call
+import io.ktor.response.respondText
+import io.ktor.routing.Routing
+import io.ktor.routing.get
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import no.nav.helse.hops.auth.Auth
-import java.io.File
+import no.nav.helse.hops.utils.Fixtures
+import no.nav.helse.hops.utils.checkSutServices
 
 fun Routing.indexRoutes() {
     val auth = Auth()
@@ -15,11 +19,15 @@ fun Routing.indexRoutes() {
         call.respondText("api")
     }
     get("/token") {
-        val token = auth.token();
+        val token = auth.token("myscope")
         call.respondText(token.toString())
     }
-    get("/bestilling"){
-        val fileContent = this.javaClass::class.java.getResource("fixtures/bestilling.json").readText()
-        call.respondText(fileContent)
+    get("/bestilling") {
+        val fileContent = Fixtures().bestillingsBundle()
+        call.respondText(fileContent.toString())
+    }
+    get("/apps") {
+        val apps = checkSutServices()
+        call.respondText(Json.encodeToString(apps))
     }
 }
