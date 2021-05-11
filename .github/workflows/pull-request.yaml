@@ -39,7 +39,7 @@ jobs:
           java-version: 11
           distribution: 'adopt'
       - name: run-test
-        run: ./gradlew test
+        run: ./gradlew test --continue
         continue-on-error: true
       # https://github.com/ScaCap/action-surefire-report
       - uses: ScaCap/action-surefire-report@v1
