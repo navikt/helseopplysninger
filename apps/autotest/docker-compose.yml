@@ -12,13 +12,13 @@ services:
       SERVER_PORT: 8081
       JSON_CONFIG_PATH: /etc/oauth-mock-config.json
     volumes:
-      - ./config/oauth-mock-config.json:/etc/oauth-mock-config.json
+      - ../../docker-compose/config/oauth-mock-config.json:/etc/oauth-mock-config.json
     env_file:
       - autotest.env
 
   # The FHIR REST API exposed to external consumers, e.g. EHRs.
   hops-api:
-    image: ghcr.io/navikt/helseopplysninger/hops-api:535e9d9bd2cf896d3ca2fe801b1d5768ebc15a4d
+    image: ghcr.io/navikt/hops-api
     ports:
       - 8082:8080
     env_file:
@@ -27,7 +27,7 @@ services:
 
   # hops-oppslag provides a facade with a common REST API and security-mechanism towards external dependencies.
   hops-oppslag:
-    image: ghcr.io/navikt/helseopplysninger/hops-oppslag:4f6f121096da8b1fba8910f6ed360897bdc0f0c9
+    image: ghcr.io/navikt/hops-oppslag
     restart: unless-stopped
     ports:
       - 8083:8080
@@ -36,7 +36,7 @@ services:
 
   # HAPI FHIR Server is a generic FHIR Server for storing and retrieving FHIR resources through a REST API.
   hops-hapi:
-    image: ghcr.io/navikt/helseopplysninger/hops-hapi-fhir-server:095dd3d6a2b3e38ca5773886e6481da0f0367d48
+    image: ghcr.io/navikt/hops-hapi-fhir-server
     restart: unless-stopped
     ports:
       - 8084:8080
@@ -45,7 +45,7 @@ services:
 
   # hops-bestilling consumes FHIR-messages on Kafka from NAV services and produces responses.
   hops-bestilling:
-    image: ghcr.io/navikt/helseopplysninger/hops-bestilling:4f6f121096da8b1fba8910f6ed360897bdc0f0c9
+    image: ghcr.io/navikt/hops-bestilling
     restart: unless-stopped
     ports:
       - 8085:8080

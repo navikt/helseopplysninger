@@ -36,7 +36,9 @@ fun Application.api() {
     install(Koin) {
         modules(KoinBootstrapper.module)
     }
+
     routing {
+
         naisRoutes(prometheusMeterRegistry)
         authenticate {
             get("/") {

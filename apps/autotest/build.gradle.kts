@@ -1,6 +1,7 @@
 plugins {
     application
     kotlin("jvm")
+    kotlin("plugin.serialization") version "1.5.0"
     id("org.jlleitschuh.gradle.ktlint")
 }
 
@@ -12,6 +13,7 @@ tasks {
 }
 
 dependencies {
+    implementation("org.junit.jupiter:junit-jupiter:5.7.0")
     val ktorVersion = "1.5.4"
     val junitVersion = "5.7.1"
 
@@ -22,6 +24,13 @@ dependencies {
     implementation("ca.uhn.hapi.fhir:org.hl7.fhir.r4:5.3.11")
     implementation("ca.uhn.hapi.fhir:hapi-fhir-base:5.3.3")
     implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:5.3.3")
+    implementation("ca.uhn.hapi.fhir:org.hl7.fhir.r4:5.3.11")
+    implementation("io.github.cdimascio:dotenv-kotlin:6.2.2")
+    implementation("io.ktor:ktor-auth:$ktorVersion")
+    implementation("no.nav.security:token-validation-ktor:1.3.5")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.0")
+    implementation("org.apache.kafka:kafka-clients:2.8.0")
 
     runtimeOnly("ch.qos.logback:logback-classic:1.2.3")
     runtimeOnly("io.ktor:ktor-server-netty:$ktorVersion")
