@@ -31,6 +31,12 @@ jobs:
         with:
           java-version: 11
           distribution: 'adopt'
+      - name: Login to ghcr.io
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - run: ./gradlew test --continue
         continue-on-error: true
       # https://github.com/ScaCap/action-surefire-report
