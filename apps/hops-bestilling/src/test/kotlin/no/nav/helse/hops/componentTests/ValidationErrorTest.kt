@@ -65,14 +65,16 @@ class ValidationErrorTest {
                 .withUuidPrefixFix()
                 .apply {
                     id = responseMessage.id
-                    responseMessage.timestamp = timestamp
                 }
-
-        assertEquals(expectedResponseMessage.toJson(), responseMessage.toJson())
 
         runBlocking {
             val outcome = FhirResourceValidatorHapi.validate(responseMessage)
             assertTrue(outcome.isAllOk(), outcome.toJson())
         }
+
+        expectedResponseMessage.timestamp = null
+        responseMessage.timestamp = null
+
+        assertEquals(expectedResponseMessage.toJson(), responseMessage.toJson())
     }
 }
