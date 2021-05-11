@@ -19,9 +19,8 @@ jobs:
         with:
           github_token: ${{ secrets.github_token }}
           detekt_config: detekt-config.yml
-          fail_on_error: true
           detekt_excludes: '**/build/**,**/.idea/**",**/test/**'
-  tests:
+  run-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -38,8 +37,7 @@ jobs:
         with:
           java-version: 11
           distribution: 'adopt'
-      - name: run-test
-        run: ./gradlew test --continue
+      - run: ./gradlew test --continue
         continue-on-error: true
       # https://github.com/ScaCap/action-surefire-report
       - uses: ScaCap/action-surefire-report@v1
