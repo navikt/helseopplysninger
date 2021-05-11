@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit
  * Reference implementation:
  * https://github.com/navikt/token-support/blob/master/token-client-kotlin-demo/src/main/kotlin/no/nav/security/token/support/ktor/oauth/OAuth2Cache.kt
  */
-internal data class OAuth2CacheConfig(
+internal data class OAuth2Cache(
     val enabled: Boolean,
     val maximumSize: Long = 1000,
     val evictSkew: Long = 5,

@@ -65,7 +65,7 @@ class ValidationErrorTest {
                 .withUuidPrefixFix()
                 .apply {
                     id = responseMessage.id
-                    timestamp = responseMessage.timestamp
+                    responseMessage.timestamp = timestamp
                 }
 
         assertEquals(expectedResponseMessage.toJson(), responseMessage.toJson())

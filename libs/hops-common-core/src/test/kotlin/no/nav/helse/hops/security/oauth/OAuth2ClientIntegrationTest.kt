@@ -49,7 +49,7 @@ internal class OAuth2ClientIntegrationTest {
                     null,
                     jwk
                 ),
-                cacheConfig = OAuth2CacheConfig(enabled = true, evictSkew = 0)
+                cacheConfig = OAuth2Cache(enabled = true, evictSkew = 0)
             )
             val initialToken = this.issueToken(issuerId = "initialIdp", subject = "foo")
 
