@@ -14,12 +14,6 @@ jobs:
         continue-on-error: true
         with:
           github_token: ${{ secrets.github_token }}
-      # https://github.com/alaegin/Detekt-Action
-      - uses: DominuS-RU/Detekt-Action@v1.16.0
-        with:
-          github_token: ${{ secrets.github_token }}
-          detekt_config: detekt-config.yml
-          detekt_excludes: '**/build/**,**/.idea/**",**/test/**'
   run-tests:
     runs-on: ubuntu-latest
     steps:
