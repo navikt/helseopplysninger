@@ -25,7 +25,6 @@ class ApplicationTest {
         assertEquals(result, true)
     }
 
-
     @Test
     fun `Should create FHIR-message`() {
         val jsonbundle = createFhirMessage().toJson()
@@ -33,5 +32,4 @@ class ApplicationTest {
         assertTrue(jsonbundle.endsWith("}"))
         assertTrue(jsonbundle.contains("Bundle"))
     }
-
 }

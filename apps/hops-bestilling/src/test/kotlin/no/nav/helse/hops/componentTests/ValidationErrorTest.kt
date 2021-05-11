@@ -44,8 +44,8 @@ class ValidationErrorTest {
         consumerMock.addFhirMessage(requestMessage)
 
         runBlocking {
-            withTimeout(5000) {
-                while (producerMock.history().size == 0) delay(100)
+            withTimeout(20000) {
+                while (producerMock.history().size == 0) delay(500)
             }
         }
 
@@ -65,14 +65,16 @@ class ValidationErrorTest {
                 .withUuidPrefixFix()
                 .apply {
                     id = responseMessage.id
-                    timestamp = responseMessage.timestamp
                 }
-
-        assertEquals(expectedResponseMessage.toJson(), responseMessage.toJson())
 
         runBlocking {
             val outcome = FhirResourceValidatorHapi.validate(responseMessage)
             assertTrue(outcome.isAllOk(), outcome.toJson())
         }
+
+        expectedResponseMessage.timestamp = null
+        responseMessage.timestamp = null
+
+        assertEquals(expectedResponseMessage.toJson(), responseMessage.toJson())
     }
 }

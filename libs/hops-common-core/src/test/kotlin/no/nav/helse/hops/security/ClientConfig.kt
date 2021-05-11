@@ -3,7 +3,7 @@ package no.nav.helse.hops.security
 import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod
 import io.ktor.client.HttpClient
 import io.ktor.config.ApplicationConfig
-import no.nav.helse.hops.security.oauth.OAuth2CacheConfig
+import no.nav.helse.hops.security.oauth.OAuth2Cache
 import no.nav.helse.hops.security.oauth.OAuth2Client
 import no.nav.security.token.support.client.core.ClientAuthenticationProperties
 
@@ -11,9 +11,9 @@ class ClientConfig(
     applicationConfig: ApplicationConfig,
     httpClient: HttpClient
 ) {
-    private val cacheConfig: OAuth2CacheConfig =
+    private val cacheConfig: OAuth2Cache =
         with(applicationConfig.config(CACHE_PATH)) {
-            OAuth2CacheConfig(
+            OAuth2Cache(
                 enabled = propertyToStringOrNull("cache.enabled")?.toBoolean() ?: false,
                 maximumSize = propertyToStringOrNull("cache.maximumSize")?.toLong() ?: 0,
                 evictSkew = propertyToStringOrNull("cache.evictSkew")?.toLong() ?: 0

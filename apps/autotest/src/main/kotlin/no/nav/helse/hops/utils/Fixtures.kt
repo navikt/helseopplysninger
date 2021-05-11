@@ -1,9 +1,7 @@
 package no.nav.helse.hops.utils
 
 import ca.uhn.fhir.context.FhirContext
-import io.github.cdimascio.dotenv.dotenv
 import org.hl7.fhir.r4.model.Bundle
-import java.io.File
 
 class Fixtures {
     fun bestillingsBundle(): Bundle {
