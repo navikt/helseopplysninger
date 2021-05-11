@@ -40,12 +40,13 @@ class ValidationErrorTest {
 
     @Test
     fun `invalid message should result in response with operation-outcome`() {
-        val requestMessage = ResourceLoader.asFhirResource<Bundle>("/fhir/invalid-message-warning-on-name.json")
+        val requestMessage = ResourceLoader.asFhirResource<Bundle>(
+            "/fhir/invalid-message-warning-on-name.json")
         consumerMock.addFhirMessage(requestMessage)
 
         runBlocking {
-            withTimeout(5000) {
-                while (producerMock.history().size == 0) delay(100)
+            withTimeout(10000) {
+                while (producerMock.history().size == 0) delay(1000)
             }
         }
 
