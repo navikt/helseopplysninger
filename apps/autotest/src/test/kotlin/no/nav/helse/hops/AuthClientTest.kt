@@ -4,6 +4,7 @@ import kotlinx.coroutines.runBlocking
 import no.nav.helse.hops.auth.Auth
 import no.nav.helse.hops.utils.Fixtures
 import org.hl7.fhir.r4.model.ResourceType
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.util.Date
 import kotlin.test.assertEquals
@@ -12,6 +13,7 @@ import kotlin.test.assertTrue
 class AuthClientTest {
     private val auth = Auth()
     @Test
+    @Disabled
     fun `should give a token`() {
         val scope = "myscope"
         val token = runBlocking {
@@ -27,7 +29,7 @@ class AuthClientTest {
 
     @Test
     fun `read file`() {
-        val dfas = Fixtures().bestillingsBundle()
-        assertEquals(dfas.resourceType, ResourceType.Bundle)
+        val resource = Fixtures().bestillingsBundle()
+        assertEquals(resource.resourceType, ResourceType.Bundle)
     }
 }
