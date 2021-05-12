@@ -13,7 +13,7 @@ tasks {
 }
 
 dependencies {
-    implementation("org.junit.jupiter:junit-jupiter:5.7.0")
+    implementation("org.junit.jupiter:junit-jupiter:5.7.1")
     val ktorVersion = "1.5.4"
     val junitVersion = "5.7.1"
 
