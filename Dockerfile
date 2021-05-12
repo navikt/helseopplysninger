@@ -3,7 +3,7 @@ WORKDIR /home/gradle/src
 COPY --chown=gradle:gradle . .
 ARG project
 ARG task=shadowJar
-RUN gradle apps:${project}:${task} --no-daemon --parallel
+RUN gradle apps:${project}:${task} --no-daemon
 
 FROM navikt/java:11
 ARG project
