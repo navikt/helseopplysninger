@@ -25,12 +25,3 @@ jobs:
           CLUSTER: dev-gcp
           RESOURCE: kafka/nais-kafka-topic.yaml
           PRINT_PAYLOAD: true
-
-      - name: Deploy to Prod
-        uses: nais/deploy/actions/deploy@v1
-        if: ${{ github.ref == 'refs/heads/main' && github.event.inputs.deploy-prod == 'true'}}
-        env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          CLUSTER: dev-gcp
-          RESOURCE: kafka/nais-kafka-topic.yaml
-          PRINT_PAYLOAD: true
