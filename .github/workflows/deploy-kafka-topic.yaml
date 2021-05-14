@@ -3,15 +3,13 @@ name: deploy kafka topic
 on:
   push:
     branches: [main]
-    paths:
-      - kafka/nais-kafka-topic.yaml
+    paths: [kafka/nais-kafka-topic.yaml]
   workflow_dispatch:
-    workflow_dispatch:
-      inputs:
-        deploy-prod:
-          description: 'If the build should be deployed to production (must be main branch.)'
-          required: false
-          default: 'false'
+    inputs:
+      deploy-prod:
+        description: 'If the build should also be deployed to production (must be main branch.)'
+        required: false
+        default: 'false'
 
 jobs:
   deploy:

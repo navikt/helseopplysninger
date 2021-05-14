@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       deploy-prod:
-        description: 'If the build should be deployed to production (must be main branch.)'
+        description: 'If the build should also be deployed to production (must be main branch.)'
         required: false
         default: 'false'
 env:
@@ -47,7 +47,7 @@ jobs:
             project=${{ env.APP_NAME }}
             task=bootJar
           push: true
-          tags: ${{ env.IMAGE }},${{ ghcr.io/navikt/${{ env.APP_NAME }}:latest }}
+          tags: ${{ env.IMAGE }},ghcr.io/navikt/${{ env.APP_NAME }}:latest
           cache-from: type=local,src=${{ env.BUILDX_CACHE_PATH }}
           cache-to: type=local,dest=${{ env.BUILDX_CACHE_PATH }}-new
 
