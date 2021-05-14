@@ -1,6 +1,9 @@
 name: deploy kafka topic
 
 on:
+  push:
+    branches: [main]
+    paths: [kafka/nais-kafka-topic.yaml]
   workflow_dispatch:
     inputs:
       deploy-prod:
