@@ -11,7 +11,6 @@ on:
         required: false
         default: 'false'
 env:
-  APP_NAME: ${{ github.workflow }}
   # Used by nais/deploy/actions/deploy, even though the documentation doesnt specify it.
   IMAGE: ghcr.io/navikt/${{ github.workflow }}:${{ github.sha }}
 
@@ -43,9 +42,9 @@ jobs:
       - uses: docker/build-push-action@v2.4.0
         id: docker_build
         with:
-          build-args: project=${{ env.APP_NAME }}
+          build-args: project=${{ github.workflow }}
           push: true
-          tags: ${{ env.IMAGE }},ghcr.io/navikt/${{ env.APP_NAME }}:latest
+          tags: ${{ env.IMAGE }},ghcr.io/navikt/${{ github.workflow }}:latest
           cache-from: type=local,src=${{ env.BUILDX_CACHE_PATH }}
           cache-to: type=local,dest=${{ env.BUILDX_CACHE_PATH }}-new
 
@@ -62,7 +61,7 @@ jobs:
     needs: build
     env: # Used by nais/deploy/actions/deploy. https://doc.nais.io/deployment/#action-configuration
       APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-      RESOURCE: apps/${{ env.APP_NAME }}/.nais/naiserator.yaml
+      RESOURCE: apps/${{ github.workflow }}/.nais/naiserator.yaml
     steps:
       - uses: actions/checkout@v2.3.4
 
@@ -70,13 +69,13 @@ jobs:
         uses: nais/deploy/actions/deploy@master
         env:
           CLUSTER: dev-gcp
-          ENVIRONMENT: dev-gcp:${{ env.APP_NAME }}
-          VARS: apps/${{ env.APP_NAME }}/.nais/dev.json
+          ENVIRONMENT: dev-gcp:${{ github.workflow }}
+          VARS: apps/${{ github.workflow }}/.nais/dev.json
 
       - name: Deploy to Prod
         uses: nais/deploy/actions/deploy@master
         if: ${{ github.ref == 'refs/heads/main' && github.event.inputs.deploy-prod == 'true'}}
         env:
           CLUSTER: prod-gcp
-          ENVIRONMENT: prod-gcp:${{ env.APP_NAME }}
-          VARS: apps/${{ env.APP_NAME }}/.nais/prod.json
+          ENVIRONMENT: prod-gcp:${{ github.workflow }}
+          VARS: apps/${{ github.workflow }}/.nais/prod.json
