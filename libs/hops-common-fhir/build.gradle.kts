@@ -17,7 +17,7 @@ tasks {
 
 dependencies {
     val hapiVersion = "5.3.3"
-    val junitVersion = "5.7.1"
+    val junitVersion = "5.7.2"
 
     api(project(":libs:hops-common-core"))
     api("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:$hapiVersion")
