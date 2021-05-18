@@ -4,6 +4,26 @@ on:
     branches: [main]
 
 jobs:
+  ktlint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Download ktlint
+        # Reference: https://github.com/ScaCap/action-ktlint/blob/master/Dockerfile
+        run: |
+          curl -SSL https://api.github.com/repos/pinterest/ktlint/releases/latest \
+          | grep "browser_download_url.*ktlint\"" \
+          | cut -d : -f 2,3 \
+          | tr -d \" \
+          | wget -qi -
+      - name: run ktlint
+        run: ./ktlint --reporter=checkstyle,output=build/ktlint-report-in-checkstyle-format.xml
+      - name: Upload Ktlint Results
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: Test-results
+          path: 'build/ktlint-report-in-checkstyle-format.xml'
   run-tests:
     runs-on: ubuntu-latest
     steps:
@@ -30,7 +50,7 @@ jobs:
       - run: ./gradlew test --continue
         continue-on-error: true
       - name: Upload Unit Test Results
-        if: always()
+        if: always() # Publish the results, even if there are failing tests.
         uses: actions/upload-artifact@v2
         with:
           name: Test-results
