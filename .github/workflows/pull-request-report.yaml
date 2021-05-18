@@ -31,4 +31,4 @@ jobs:
           CI_COMMIT: ${{ github.event.workflow_run.head_sha }}
         run: |
           cat Ktlint-results/ktlint-report-in-checkstyle-format.xml \
-          | reviewdog -f=checkstyle -name=ktlint -reporter=github-check
+          | reviewdog -f=checkstyle -name=ktlint -reporter=github-pr-check
