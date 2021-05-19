@@ -1,9 +1,9 @@
-FROM openjdk:11-slim AS build
+FROM gradle:7.0.2-jdk11 AS build
 WORKDIR /home/gradle/src
 COPY --chown=gradle:gradle . .
 ARG project
 ARG task=shadowJar
-RUN ./gradlew apps:${project}:${task} --no-daemon
+RUN gradle apps:${project}:${task} --no-daemon
 
 FROM navikt/java:11
 ARG project

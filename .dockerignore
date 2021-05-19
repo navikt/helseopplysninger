@@ -1,10 +1,8 @@
 *
 !apps
-!gradle
 !libs
 !build.gradle.kts
 !gradle.properties
-!gradlew
 !settings.gradle.kts
 **/.nais
 **/build
