@@ -23,7 +23,7 @@ tasks {
 dependencies {
     val ktorVersion = "1.5.4"
     val hapiVersion = "5.3.3"
-    val junitVersion = "5.7.1"
+    val junitVersion = "5.7.2"
 
     implementation(project(":libs:hops-common-fhir"))
     implementation(project(":libs:hops-common-ktor"))
@@ -35,7 +35,7 @@ dependencies {
     runtimeOnly("io.ktor:ktor-server-netty:$ktorVersion")
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
     testImplementation(kotlin("test-junit5"))
-    testImplementation("io.insert-koin:koin-test-junit5:3.0.1")
+    testImplementation("io.insert-koin:koin-test-junit5:3.0.2")
     testImplementation("io.mockk:mockk:1.11.0")
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion") { exclude(group = "junit", module = "junit") }
     testImplementation("no.nav.security:mock-oauth2-server:0.3.2")
