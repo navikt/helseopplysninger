@@ -23,7 +23,7 @@ dependencies {
     implementation("ca.uhn.hapi.fhir:hapi-fhir-jpaserver-mdm:$hapiVersion")
     implementation("org.springframework.boot:spring-boot-autoconfigure:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server:$springBootVersion")
-    runtimeOnly("io.micrometer:micrometer-registry-prometheus:1.6.7")
+    runtimeOnly("io.micrometer:micrometer-registry-prometheus:1.7.0")
     runtimeOnly("org.springframework.boot:spring-boot-starter-actuator:$springBootVersion")
     runtimeOnly("org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion")
     runtimeOnly("org.springframework.boot:spring-boot-starter-web:$springBootVersion")

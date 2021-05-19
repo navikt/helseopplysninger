@@ -31,7 +31,7 @@ dependencies {
     implementation("no.nav.security:token-validation-ktor:1.3.7")
     implementation("io.insert-koin:koin-ktor:3.0.2")
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
-    implementation("io.micrometer:micrometer-registry-prometheus:1.6.7")
+    implementation("io.micrometer:micrometer-registry-prometheus:1.7.0")
     implementation("io.ktor:ktor-auth:$ktorVersion")
     implementation("io.ktor:ktor-metrics-micrometer:$ktorVersion")
     testImplementation(kotlin("test-junit5"))
