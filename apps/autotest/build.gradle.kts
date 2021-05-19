@@ -15,7 +15,7 @@ tasks {
 dependencies {
     implementation("org.junit.jupiter:junit-jupiter:5.7.2")
     val ktorVersion = "1.5.4"
-    val junitVersion = "5.7.1"
+    val junitVersion = "5.7.2"
 
     api(project(":libs:hops-common-fhir"))
     implementation("io.ktor:ktor-auth:$ktorVersion")

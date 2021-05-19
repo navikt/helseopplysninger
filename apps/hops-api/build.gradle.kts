@@ -23,7 +23,7 @@ tasks {
 dependencies {
     val ktorVersion = "1.5.4"
     val hapiVersion = "5.3.3"
-    val junitVersion = "5.7.1"
+    val junitVersion = "5.7.2"
 
     api(project(":libs:hops-common-fhir"))
     implementation("com.sksamuel.hoplite:hoplite-hocon:1.4.1")
