@@ -29,7 +29,7 @@ dependencies {
     implementation("com.sksamuel.hoplite:hoplite-hocon:1.4.1")
     implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:$hapiVersion")
     implementation("no.nav.security:token-validation-ktor:1.3.7")
-    implementation("io.insert-koin:koin-ktor:3.0.1")
+    implementation("io.insert-koin:koin-ktor:3.0.2")
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
     implementation("io.micrometer:micrometer-registry-prometheus:1.6.7")
     implementation("io.ktor:ktor-auth:$ktorVersion")

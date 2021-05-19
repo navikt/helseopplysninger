@@ -29,7 +29,7 @@ dependencies {
     api(project(":libs:hops-common-ktor"))
     implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:$hapiVersion")
     implementation("no.nav.security:token-validation-ktor:1.3.7")
-    implementation("io.insert-koin:koin-ktor:3.0.1")
+    implementation("io.insert-koin:koin-ktor:3.0.2")
     implementation("io.ktor:ktor-metrics-micrometer:$ktorVersion")
     implementation("io.micrometer:micrometer-registry-prometheus:1.6.7")
     runtimeOnly("ch.qos.logback:logback-classic:1.2.3")
