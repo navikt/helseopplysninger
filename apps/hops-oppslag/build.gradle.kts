@@ -31,7 +31,7 @@ dependencies {
     implementation("no.nav.security:token-validation-ktor:1.3.7")
     implementation("io.insert-koin:koin-ktor:3.0.1")
     implementation("io.ktor:ktor-metrics-micrometer:$ktorVersion")
-    implementation("io.micrometer:micrometer-registry-prometheus:1.6.7")
+    implementation("io.micrometer:micrometer-registry-prometheus:1.7.0")
     runtimeOnly("ch.qos.logback:logback-classic:1.2.3")
     runtimeOnly("io.ktor:ktor-server-netty:$ktorVersion")
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
