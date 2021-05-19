@@ -21,7 +21,7 @@ dependencies {
 
     api(project(":libs:hops-common-core"))
     api("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:$hapiVersion")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.4.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.5.0-native-mt")
     runtimeOnly("ca.uhn.hapi.fhir:hapi-fhir-client:$hapiVersion")
     testImplementation(kotlin("test-junit5"))
     testImplementation("io.mockk:mockk:1.11.0")
