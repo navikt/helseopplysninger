@@ -6,8 +6,11 @@ import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.auth.authenticate
+import io.ktor.features.CallId
+import io.ktor.features.generate
 import io.ktor.features.CallLogging
 import io.ktor.features.DefaultHeaders
+import io.ktor.features.callIdMdc
 import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.metrics.micrometer.MicrometerMetrics
 import io.ktor.response.respond
@@ -16,6 +19,7 @@ import io.ktor.routing.get
 import io.ktor.routing.routing
 import io.micrometer.prometheus.PrometheusConfig.DEFAULT
 import io.micrometer.prometheus.PrometheusMeterRegistry
+import no.nav.helse.hops.Constants.Companion.NAV_CALL_ID
 import no.nav.helse.hops.auth.configureAuthentication
 import no.nav.helse.hops.domain.HapiFacade
 import no.nav.helse.hops.infrastructure.KoinBootstrapper
@@ -27,7 +31,14 @@ import org.koin.ktor.ext.inject
 @Suppress("unused") // Referenced in application.conf
 fun Application.api() {
     install(DefaultHeaders)
-    install(CallLogging)
+    install(CallId) {
+        header(NAV_CALL_ID)
+        generate(17)
+        verify { it.isNotEmpty() }
+    }
+    install(CallLogging) {
+        callIdMdc(NAV_CALL_ID)
+    }
     configureAuthentication()
     val prometheusMeterRegistry = PrometheusMeterRegistry(DEFAULT)
     install(MicrometerMetrics) {
@@ -53,6 +64,7 @@ fun Application.api() {
         }
     }
 }
+
 fun IBaseResource.toJson(): String {
     val ctx = FhirContext.forCached(FhirVersionEnum.R4)!!
     val parser = ctx.newJsonParser()!!
