@@ -18,6 +18,7 @@ import io.micrometer.prometheus.PrometheusConfig.DEFAULT
 import io.micrometer.prometheus.PrometheusMeterRegistry
 import no.nav.helse.hops.auth.configureAuthentication
 import no.nav.helse.hops.domain.HapiFacade
+import no.nav.helse.hops.hoplite.asHoplitePropertySourceModule
 import no.nav.helse.hops.infrastructure.KoinBootstrapper
 import no.nav.helse.hops.routes.naisRoutes
 import org.hl7.fhir.instance.model.api.IBaseResource
@@ -34,7 +35,7 @@ fun Application.api() {
         registry = prometheusMeterRegistry
     }
     install(Koin) {
-        modules(KoinBootstrapper.module)
+        modules(KoinBootstrapper.module, environment.config.asHoplitePropertySourceModule())
     }
 
     routing {

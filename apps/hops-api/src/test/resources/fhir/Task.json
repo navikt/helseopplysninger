@@ -1,0 +1,10 @@
+{
+  "resourceType": "Task",
+  "id": "example3",
+  "status": "draft",
+  "intent": "order",
+  "code": {
+    "text": "Refill Request"
+  },
+  "authoredOn": "2016-03-10T22:39:32-04:00"
+}
