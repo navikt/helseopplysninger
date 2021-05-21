@@ -5,10 +5,10 @@ import org.testcontainers.containers.wait.strategy.Wait
 
 object TestContainerFactory {
     fun hapiFhirServer() = GenericContainer<Nothing>(
-        "hapiproject/hapi"
+        "hapiproject/hapi:v5.3.0"
     ).apply {
         withExposedPorts(8080)
-        waitingFor(Wait.forHttp("/fhir/Task"))
+        waitingFor(Wait.forHttp("/fhir/metadata"))
     }
 
     fun mockOauth2Server() = GenericContainer<Nothing>(
