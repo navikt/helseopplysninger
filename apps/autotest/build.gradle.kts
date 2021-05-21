@@ -23,7 +23,7 @@ dependencies {
     implementation("no.nav.security:token-validation-ktor:1.3.7")
     implementation("ca.uhn.hapi.fhir:org.hl7.fhir.r4:5.3.14")
     implementation("ca.uhn.hapi.fhir:hapi-fhir-base:5.3.3")
-    implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:5.3.3")
+    implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:5.4.0")
     implementation("ca.uhn.hapi.fhir:org.hl7.fhir.r4:5.3.14")
     implementation("io.github.cdimascio:dotenv-kotlin:6.2.2")
     implementation("io.ktor:ktor-auth:$ktorVersion")
