@@ -39,6 +39,7 @@ dependencies {
     testImplementation("no.nav.security:mock-oauth2-server:0.3.2") { exclude(group = "junit", module = "junit") }
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
+    testImplementation("org.testcontainers:junit-jupiter:1.15.3")
     runtimeOnly("ca.uhn.hapi.fhir:hapi-fhir-client:$hapiVersion")
     runtimeOnly("ch.qos.logback:logback-classic:1.2.3")
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
