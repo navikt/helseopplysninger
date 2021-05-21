@@ -36,7 +36,7 @@ dependencies {
     implementation("io.ktor:ktor-metrics-micrometer:$ktorVersion")
     testImplementation(kotlin("test-junit5"))
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion") { exclude(group = "junit", module = "junit") }
-    testImplementation("no.nav.security:mock-oauth2-server:0.3.2") { exclude(group = "junit", module = "junit") }
+    testImplementation("no.nav.security:mock-oauth2-server:0.3.3") { exclude(group = "junit", module = "junit") }
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
     runtimeOnly("ca.uhn.hapi.fhir:hapi-fhir-client:$hapiVersion")
