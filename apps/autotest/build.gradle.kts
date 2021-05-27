@@ -17,7 +17,7 @@ dependencies {
     val junitVersion = "5.7.2"
 
     api(project(":libs:hops-common-fhir"))
-    implementation("ca.uhn.hapi.fhir:hapi-fhir-base:5.3.3")
+    implementation("ca.uhn.hapi.fhir:hapi-fhir-base:5.4.0")
     implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:5.3.3")
     implementation("ca.uhn.hapi.fhir:org.hl7.fhir.r4:5.4.2")
     implementation("io.github.cdimascio:dotenv-kotlin:6.2.2")
