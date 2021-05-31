@@ -8,13 +8,13 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
 import no.nav.helse.hops.fhir.FhirClientFactory
+import no.nav.helse.hops.fhir.FhirResourceLoader
 import no.nav.helse.hops.fhir.executeTransaction
 import no.nav.helse.hops.fhir.messages.OkResponseMessage
 import no.nav.helse.hops.fhir.models.Transaction
 import no.nav.helse.hops.fhir.withUuidPrefixFix
 import no.nav.helse.hops.main
 import no.nav.helse.hops.testUtils.KafkaMock
-import no.nav.helse.hops.testUtils.ResourceLoader
 import no.nav.helse.hops.testUtils.TestContainerFactory
 import no.nav.helse.hops.testUtils.url
 import org.apache.kafka.clients.producer.Producer
@@ -81,7 +81,7 @@ class ApplicationTest {
     }
 
     private fun populateHapiTestContainer() {
-        val message = ResourceLoader.asFhirResource<Bundle>("/fhir/valid-message.json").withUuidPrefixFix()
+        val message = FhirResourceLoader.asResource<Bundle>("/fhir/valid-message.json").withUuidPrefixFix()
         val transaction = createTransaction(message)
         val fhirClient = FhirClientFactory.create(URL("${hapiFhirContainer.url}/fhir"))
         fhirClient.executeTransaction(transaction)
