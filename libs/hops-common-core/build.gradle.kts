@@ -16,7 +16,7 @@ tasks {
 }
 
 dependencies {
-    val ktorVersion = "1.5.4"
+    val ktorVersion = "1.6.0"
     val naviktTokenSupportVersion = "1.3.7"
     val kotestVersion = "4.6.0"
     val junitVersion = "5.7.2"
