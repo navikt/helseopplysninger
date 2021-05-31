@@ -22,7 +22,7 @@ tasks {
 
 dependencies {
     val ktorVersion = "1.6.0"
-    val hapiVersion = "5.3.3"
+    val hapiVersion = "5.4.0"
     val junitVersion = "5.7.2"
 
     implementation(project(":libs:hops-common-fhir"))
@@ -37,7 +37,7 @@ dependencies {
     testImplementation(kotlin("test-junit5"))
     testImplementation("io.insert-koin:koin-test-junit5:3.0.1")
     testImplementation("io.mockk:mockk:1.11.0")
-    testImplementation("io.ktor:ktor-server-test-host:$ktorVersion") { exclude(group = "junit", module = "junit") }
+    testImplementation("io.ktor:ktor-server-test-host:$ktorVersion") { exclude("org.jetbrains.kotlin", "kotlin-test-junit") }
     testImplementation("no.nav.security:mock-oauth2-server:0.3.3")
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
     testImplementation("org.testcontainers:junit-jupiter:1.15.3")

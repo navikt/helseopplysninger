@@ -1,8 +1,7 @@
 {
   "resourceType":"Bundle",
-  "id":"80e3dfe0-f0d2-45ea-ae47-3956a1313d24",
+  "id":"d6eb258c-799b-4d6d-8f70-94abd65c54f3",
   "type":"message",
-  "timestamp":"2021-04-22T16:45:41.351+02:00",
   "entry":[
     {
       "fullUrl":"urn:uuid:a16bec76-878c-54b8-9b50-8374e5f4d36a",
@@ -36,7 +35,7 @@
           {
             "severity":"warning",
             "code":"processing",
-            "diagnostics":"que-0: 'Name should be usable as an identifier for the module by machine processing applications such as code generation' failed",
+            "diagnostics":"que-0: 'Name should be usable as an identifier for the module by machine processing applications such as code generation' Rule 'Name should be usable as an identifier for the module by machine processing applications such as code generation' Failed",
             "location":[
               "Bundle.entry[2].resource.ofType(Questionnaire)",
               "Line 1, Col 1"
