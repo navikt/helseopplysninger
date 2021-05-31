@@ -1,98 +1,52 @@
-import io.ktor.application.*
-import io.ktor.features.*
-import io.ktor.http.*
-import io.ktor.jackson.*
-import io.ktor.request.*
-import io.ktor.response.*
-import io.ktor.routing.*
-import io.ktor.server.testing.*
-import kotlin.test.*
+package no.nav.helse.hops.convert
+
+import io.ktor.application.call
+import io.ktor.application.install
+import io.ktor.features.ContentNegotiation
+import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpMethod
+import io.ktor.http.HttpStatusCode
+import io.ktor.http.withCharset
+import io.ktor.request.receive
+import io.ktor.response.respond
+import io.ktor.routing.post
+import io.ktor.routing.routing
+import io.ktor.server.testing.withTestApplication
+import org.hl7.fhir.r4.model.Patient
+import org.junit.jupiter.api.Test
+import io.ktor.server.testing.handleRequest
+import io.ktor.server.testing.setBody
+import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 
 class FhirJsonContentConverterTest {
     @Test
-    fun testMap() = withTestApplication {
-        val uc = "\u0422"
-        application.install(ContentNegotiation) {
-            register(ContentType.Application.Json, JacksonConverter())
-        }
-        application.routing {
-            val model = mapOf("id" to 1, "title" to "Hello, World!", "unicode" to uc)
-            get("/") {
-                call.respond(model)
+    fun testConvertOfFhirResource() = withTestApplication {
+        application.apply {
+            install(ContentNegotiation) {
+                register(ContentTypes.fhirJson, FhirJsonContentConverter())
             }
-            post("/") {
-                val map = call.receive<Map<*, *>>()
-                val text = map.entries.joinToString { "${it.key}=${it.value}" }
-                call.respond(text)
+            routing {
+                post("/") {
+                    val patient = call.receive<Patient>()
+                    call.respond(patient)
+                }
             }
         }
 
-        handleRequest(HttpMethod.Get, "/") {
-            addHeader("Accept", "application/json")
-        }.response.let { response ->
-            assertEquals(HttpStatusCode.OK, response.status())
-            assertNotNull(response.content)
-            assertEquals(listOf("""{"id":1,"title":"Hello, World!","unicode":"$uc"}"""), response.content!!.lines())
-            val contentTypeText = assertNotNull(response.headers[HttpHeaders.ContentType])
-            assertEquals(ContentType.Application.Json.withCharset(Charsets.UTF_8), ContentType.parse(contentTypeText))
-        }
+        val patientJson = """{"resourceType":"Patient","id":"hello-world","gender":"female"}"""
 
         handleRequest(HttpMethod.Post, "/") {
-            addHeader("Accept", "text/plain")
-            addHeader("Content-Type", "application/json")
-            setBody("""{"id":1,"title":"Hello, World!","unicode":"$uc"}""")
+            addHeader("Content-Type", "application/fhir+json")
+            setBody(patientJson)
         }.response.let { response ->
             assertEquals(HttpStatusCode.OK, response.status())
             assertNotNull(response.content)
-            assertEquals(listOf("""id=1, title=Hello, World!, unicode=$uc"""), response.content!!.lines())
+            assertEquals(patientJson, response.content)
             val contentTypeText = assertNotNull(response.headers[HttpHeaders.ContentType])
-            assertEquals(ContentType.Text.Plain.withCharset(Charsets.UTF_8), ContentType.parse(contentTypeText))
-        }
-    }
-
-    @Test
-    fun testEntity() = withTestApplication {
-        val uc = "\u0422"
-        application.install(ContentNegotiation) {
-            register(ContentType.Application.Json, JacksonConverter())
-        }
-
-        application.routing {
-            val model = MyEntity(777, "Cargo", listOf(ChildEntity("Qube", 1), ChildEntity("Sphere", 2), ChildEntity(uc, 3)))
-
-            get("/") {
-                call.respond(model)
-            }
-            post("/") {
-                val entity = call.receive<MyEntity>()
-                call.respond(entity.toString())
-            }
-
-        }
-
-        handleRequest(HttpMethod.Get, "/") {
-            addHeader("Accept", "application/json")
-        }.response.let { response ->
-            assertEquals(HttpStatusCode.OK, response.status())
-            assertNotNull(response.content)
-            assertEquals(listOf("""{"id":777,"name":"Cargo","children":[{"item":"Qube","quantity":1},{"item":"Sphere","quantity":2},{"item":"$uc","quantity":3}]}"""), response.content!!.lines())
-            val contentTypeText = assertNotNull(response.headers[HttpHeaders.ContentType])
-            assertEquals(ContentType.Application.Json.withCharset(Charsets.UTF_8), ContentType.parse(contentTypeText))
-        }
-
-        handleRequest(HttpMethod.Post, "/") {
-            addHeader("Content-Type", "application/json")
-            setBody("""{"id":777,"name":"Cargo","children":[{"item":"Qube","quantity":1},{"item":"Sphere","quantity":2},{"item":"$uc","quantity":3}]}""")
-        }.response.let { response ->
-            assertEquals(HttpStatusCode.OK, response.status())
-            assertNotNull(response.content)
-            assertEquals(listOf("""MyEntity(id=777, name=Cargo, children=[ChildEntity(item=Qube, quantity=1), ChildEntity(item=Sphere, quantity=2), ChildEntity(item=$uc, quantity=3)])"""), response.content!!.lines())
-            val contentTypeText = assertNotNull(response.headers[HttpHeaders.ContentType])
-            assertEquals(ContentType.Text.Plain.withCharset(Charsets.UTF_8), ContentType.parse(contentTypeText))
+            assertEquals(ContentTypes.fhirJson.withCharset(Charsets.UTF_8), ContentType.parse(contentTypeText))
         }
 
     }
 }
-
-data class MyEntity(val id: Int, val name: String, val children: List<ChildEntity>)
-data class ChildEntity(val item: String, val quantity: Int)
