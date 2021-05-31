@@ -29,7 +29,6 @@ dependencies {
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion") { exclude("org.jetbrains.kotlin", "kotlin-test-junit") }
     testImplementation("io.kotest:kotest-assertions-shared:4.6.0")
     testImplementation("io.ktor:ktor-server-netty:$ktorVersion")
-    testImplementation("io.ktor:ktor-jackson:$ktorVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
 }
