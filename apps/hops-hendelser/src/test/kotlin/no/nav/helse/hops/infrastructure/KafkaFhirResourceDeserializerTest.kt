@@ -1,6 +1,6 @@
 package no.nav.helse.hops.infrastructure
 
-import no.nav.helse.hops.testUtils.ResourceLoader
+import no.nav.helse.hops.ResourceLoader
 import org.hl7.fhir.r4.model.Bundle
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals

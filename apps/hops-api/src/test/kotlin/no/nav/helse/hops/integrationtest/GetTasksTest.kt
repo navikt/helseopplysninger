@@ -8,8 +8,8 @@ import io.ktor.server.testing.handleRequest
 import io.ktor.server.testing.withTestApplication
 import no.nav.helse.hops.api
 import no.nav.helse.hops.fhir.FhirClientFactory
+import no.nav.helse.hops.fhir.FhirResourceLoader
 import no.nav.helse.hops.fhir.JsonConverter
-import no.nav.helse.hops.testUtils.ResourceLoader
 import no.nav.helse.hops.testUtils.TestContainerFactory
 import no.nav.helse.hops.testUtils.url
 import org.hl7.fhir.r4.model.Task
@@ -54,7 +54,7 @@ class ApplicationTest {
     }
 
     private fun populateHapiTestContainer() {
-        val task = ResourceLoader.asFhirResource<Task>("/fhir/Task.json")
+        val task = FhirResourceLoader.asResource<Task>("/fhir/Task.json")
         val fhirClient = FhirClientFactory.create(URL("${hapiFhirContainer.url}/fhir"))
         fhirClient.update().resource(task).execute()
     }
