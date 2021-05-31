@@ -6,12 +6,12 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
 import no.nav.helse.hops.domain.isAllOk
+import no.nav.helse.hops.fhir.FhirResourceLoader
 import no.nav.helse.hops.fhir.toJson
 import no.nav.helse.hops.fhir.withUuidPrefixFix
 import no.nav.helse.hops.infrastructure.FhirResourceValidatorHapi
 import no.nav.helse.hops.infrastructure.KoinBootstrapper
 import no.nav.helse.hops.testUtils.KafkaMock
-import no.nav.helse.hops.testUtils.ResourceLoader
 import no.nav.helse.hops.testUtils.addFhirMessage
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.producer.Producer
@@ -40,7 +40,7 @@ class ValidationErrorTest {
 
     @Test
     fun `invalid message should result in response with operation-outcome`() {
-        val requestMessage = ResourceLoader.asFhirResource<Bundle>("/fhir/invalid-message-warning-on-name.json")
+        val requestMessage = FhirResourceLoader.asResource<Bundle>("/fhir/invalid-message-warning-on-name.json")
         consumerMock.addFhirMessage(requestMessage)
 
         runBlocking {
@@ -60,8 +60,8 @@ class ValidationErrorTest {
         assertTrue(resources[1] is OperationOutcome)
 
         val expectedResponseMessage =
-            ResourceLoader
-                .asFhirResource<Bundle>("/fhir/invalid-message-warning-on-name-expected-response.json")
+            FhirResourceLoader
+                .asResource<Bundle>("/fhir/invalid-message-warning-on-name-expected-response.json")
                 .withUuidPrefixFix()
                 .apply {
                     id = responseMessage.id

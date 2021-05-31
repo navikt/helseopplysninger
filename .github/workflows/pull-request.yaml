@@ -32,6 +32,8 @@ jobs:
           chmod a+x ktlint
       - name: run ktlint
         run: ./ktlint --reporter=checkstyle,output=build/ktlint-report-in-checkstyle-format.xml
+      - name: print ktlint results
+        run: cat build/ktlint-report-in-checkstyle-format.xml
       - name: Upload Ktlint Results
         if: always()
         uses: actions/upload-artifact@v2
