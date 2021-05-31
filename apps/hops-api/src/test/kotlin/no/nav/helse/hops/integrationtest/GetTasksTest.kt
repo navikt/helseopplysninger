@@ -20,7 +20,7 @@ import java.net.URL
 import kotlin.test.assertEquals
 
 @Testcontainers
-class ApplicationTest {
+class GetTasksTest {
 
     @Test
     fun `hente alle tasks`() {
