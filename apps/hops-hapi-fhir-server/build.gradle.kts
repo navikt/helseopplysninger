@@ -15,7 +15,7 @@ tasks {
 }
 
 dependencies {
-    val hapiVersion = "5.4.0"
+    val hapiVersion = "5.3.3"
     val springBootVersion = "2.4.5"
     val h2Version = "1.4.200"
 
