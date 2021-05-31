@@ -4,7 +4,7 @@ services:
   # A mock implementation of an oauth2\openid authorization-server.
   # Must add 127.0.0.1 mock-oauth2-service to hosts file in order for issuer to be correct when testing from host.
   mock-oauth2-server:
-    image: docker.pkg.github.com/navikt/mock-oauth2-server/mock-oauth2-server:0.3.3
+    image: ghcr.io/navikt/mock-oauth2-server:0.3.3
     restart: unless-stopped
     ports:
       - 8081:8081

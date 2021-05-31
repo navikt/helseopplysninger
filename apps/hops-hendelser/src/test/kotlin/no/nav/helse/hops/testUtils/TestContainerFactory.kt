@@ -13,7 +13,7 @@ object TestContainerFactory {
     }
 
     fun mockOauth2Server() = GenericContainer<Nothing>(
-        "docker.pkg.github.com/navikt/mock-oauth2-server/mock-oauth2-server:0.3.3"
+        "ghcr.io/navikt/mock-oauth2-server:0.3.3"
     ).apply {
         withEnv("SERVER_PORT", "8081")
         withExposedPorts(8081)
