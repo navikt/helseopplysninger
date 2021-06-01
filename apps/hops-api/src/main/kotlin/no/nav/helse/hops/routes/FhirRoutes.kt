@@ -51,14 +51,14 @@ fun Routing.fhirRoutes() {
 
 /** See https://www.hl7.org/fhir/http.html#read **/
 private suspend fun ApplicationCall.readResponse(res: Resource) {
-    respond(res)
     response.lastModified(res.meta.lastUpdated.toZonedDateTime())
     response.etag(res.weakEtag())
+    respond(res)
 }
 
 /** See https://www.hl7.org/fhir/http.html#create **/
 private suspend fun ApplicationCall.createdResponse(res: Resource) {
-    respond(HttpStatusCode.Created, res)
-    response.header(HttpHeaders.Location, res.id)
+    response.header(HttpHeaders.Location, "/${res.id}")
     response.etag(res.weakEtag())
+    respond(HttpStatusCode.Created, res)
 }
