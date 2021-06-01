@@ -12,6 +12,8 @@ import io.ktor.util.pipeline.PipelineContext
 import io.ktor.utils.io.ByteReadChannel
 import io.ktor.utils.io.core.use
 import io.ktor.utils.io.jvm.javaio.toInputStream
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.hl7.fhir.instance.model.api.IBaseResource
 
 class FhirJsonContentConverter : ContentConverter {
@@ -23,15 +25,18 @@ class FhirJsonContentConverter : ContentConverter {
         value: Any
     ): Any? {
         val resource = value as? IBaseResource ?: return null
-        val json = fhirCtx.newJsonParser().encodeResourceToString(resource)
+        val json = fhirCtx.newJsonParser().setPrettyPrint(true).encodeResourceToString(resource)
         return TextContent(json, contentType.withCharset(Charsets.UTF_8))
     }
 
     override suspend fun convertForReceive(
-        context: PipelineContext<ApplicationReceiveRequest, ApplicationCall>): Any? {
+        context: PipelineContext<ApplicationReceiveRequest, ApplicationCall>
+    ): Any? {
         val channel = context.subject.value as? ByteReadChannel ?: return null
-        channel.toInputStream().reader().use {
-            return fhirCtx.newJsonParser().parseResource(it)
+        return withContext(Dispatchers.IO) {
+            channel.toInputStream().reader().use {
+                fhirCtx.newJsonParser().parseResource(it)
+            }
         }
     }
 }

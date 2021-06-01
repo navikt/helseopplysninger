@@ -14,12 +14,12 @@ import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.route
 import no.nav.helse.hops.domain.HapiFacade
+import no.nav.helse.hops.domain.add
+import no.nav.helse.hops.toZonedDateTime
 import org.hl7.fhir.instance.model.api.IBaseResource
 import org.hl7.fhir.r4.model.QuestionnaireResponse
 import org.hl7.fhir.r4.model.Resource
 import org.koin.ktor.ext.inject
-import java.time.ZoneId
-import java.time.ZonedDateTime
 import java.util.UUID
 
 fun Routing.fhirRoutes() {
@@ -38,7 +38,7 @@ fun Routing.fhirRoutes() {
 
         post {
             val inputQr = call.receive<QuestionnaireResponse>()
-            val createdQr = hapi.add(inputQr) as QuestionnaireResponse
+            val createdQr = hapi.add(inputQr)
             call.createdResponse(createdQr)
         }
     }
@@ -47,7 +47,7 @@ fun Routing.fhirRoutes() {
 /** See https://www.hl7.org/fhir/http.html#read **/
 private suspend fun ApplicationCall.readResponse(res: Resource) {
     respond(res)
-    response.lastModified(ZonedDateTime.ofInstant(res.meta.lastUpdated.toInstant(), ZoneId.systemDefault()))
+    response.lastModified(res.meta.lastUpdated.toZonedDateTime())
     response.etag(res.weakEtag())
 }
 
@@ -63,5 +63,5 @@ private fun IBaseResource.weakEtag() = "W/\"${meta.versionId}\""
 
 private suspend inline fun <reified R : Resource> HapiFacade.read(id: String?): R? {
     val logicalId = try { UUID.fromString(id) } catch (ex: IllegalArgumentException) { null } ?: return null
-    return read(R::class, logicalId) as R
+    return read(R::class, logicalId) as R?
 }
