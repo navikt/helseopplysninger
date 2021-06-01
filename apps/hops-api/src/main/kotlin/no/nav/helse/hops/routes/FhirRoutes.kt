@@ -15,8 +15,8 @@ import io.ktor.routing.post
 import io.ktor.routing.route
 import no.nav.helse.hops.domain.HapiFacade
 import no.nav.helse.hops.domain.add
+import no.nav.helse.hops.fhir.weakEtag
 import no.nav.helse.hops.toZonedDateTime
-import org.hl7.fhir.instance.model.api.IBaseResource
 import org.hl7.fhir.r4.model.QuestionnaireResponse
 import org.hl7.fhir.r4.model.Resource
 import org.koin.ktor.ext.inject
@@ -57,9 +57,6 @@ private suspend fun ApplicationCall.createdResponse(res: Resource) {
     response.header(HttpHeaders.Location, res.id)
     response.etag(res.weakEtag())
 }
-
-/** See https://www.hl7.org/fhir/http.html#versioning **/
-private fun IBaseResource.weakEtag() = "W/\"${meta.versionId}\""
 
 private suspend inline fun <reified R : Resource> HapiFacade.read(id: String?): R? {
     val logicalId = try { UUID.fromString(id) } catch (ex: IllegalArgumentException) { null } ?: return null

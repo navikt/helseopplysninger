@@ -20,6 +20,12 @@ import io.ktor.server.testing.setBody
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
+private const val patientJson = """{
+  "resourceType": "Patient",
+  "id": "hello-world",
+  "gender": "female"
+}"""
+
 class FhirJsonContentConverterTest {
     @Test
     fun testConvertOfFhirResource() = withTestApplication {
@@ -34,8 +40,6 @@ class FhirJsonContentConverterTest {
                 }
             }
         }
-
-        val patientJson = """{"resourceType":"Patient","id":"hello-world","gender":"female"}"""
 
         handleRequest(HttpMethod.Post, "/") {
             addHeader("Content-Type", "application/fhir+json")
