@@ -23,6 +23,6 @@ suspend inline fun <reified T : Resource> FhirClient.upsert(resource: T) =
     upsertAsTransaction(listOf(resource)).single() as T
 
 suspend inline fun <reified T : Resource> FhirClient.add(resource: T): T {
-    val defensiveCopy = resource.copy().apply {id = UUID.randomUUID().toString() } as T
+    val defensiveCopy = resource.copy().apply { id = UUID.randomUUID().toString() } as T
     return upsert(defensiveCopy)
 }

@@ -29,7 +29,7 @@ fun Routing.fhirRoutes() {
 
         get("/{id}") {
             val input = call.parameters["id"]
-            val resource: QuestionnaireResponse? =  hapi.run {
+            val resource: QuestionnaireResponse? = hapi.run {
                 val id =
                     try { UUID.fromString(input) } catch (ex: IllegalArgumentException) { null } ?: return@run null
                 return@run readOrNull(id)
