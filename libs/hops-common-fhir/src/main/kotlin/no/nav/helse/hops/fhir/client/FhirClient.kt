@@ -12,6 +12,8 @@ interface FhirClientReadOnly {
 }
 
 interface FhirClient : FhirClientReadOnly {
+    suspend fun upsert(resource: Resource): Resource
+
     /* Atomically upserts all the resources. The id of all the resources must be a valid UUID. */
-    suspend fun upsertAsTransaction(resources: List<Resource>): List<Resource>
+    suspend fun upsertAsTransaction(resources: List<Resource>)
 }

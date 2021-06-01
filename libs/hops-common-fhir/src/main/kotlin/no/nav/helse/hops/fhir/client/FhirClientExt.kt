@@ -19,10 +19,12 @@ suspend inline fun <reified T : Resource> FhirClientReadOnly.history(id: UUID, q
 suspend inline fun <reified T : Resource> FhirClientReadOnly.search(query: String = "") =
     search(T::class, query).map { it as T }
 
-suspend inline fun <reified T : Resource> FhirClient.upsert(resource: T) =
-    upsertAsTransaction(listOf(resource)).single() as T
-
 suspend inline fun <reified T : Resource> FhirClient.add(resource: T): T {
     val defensiveCopy = resource.copy().apply { id = UUID.randomUUID().toString() } as T
-    return upsert(defensiveCopy)
+    return upsert(defensiveCopy) as T
+}
+
+suspend inline fun <reified T : Resource> FhirClient.update(resource: T): T {
+    require(resource.meta.versionId.toInt() > 0) { "Update requires a versioned resource." }
+    return upsert(resource) as T
 }

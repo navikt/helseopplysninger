@@ -29,8 +29,13 @@ class FhirClientHapiGenericClient(private val hapiClient: IGenericClient) : Fhir
     override suspend fun <T : Resource> search(type: KClass<T>, query: String) =
         hapiClient.allByUrl("${type.java.simpleName}?$query")
 
-    override suspend fun upsertAsTransaction(resources: List<Resource>): List<Resource> {
-        if (resources.isEmpty()) return emptyList()
+    override suspend fun upsert(resource: Resource): Resource {
+        UUID.fromString(resource.id) // throws IllegalArgumentException if not a valid UUID.
+        return hapiClient.update().resource(resource).encodedJson().execute().resource as Resource
+    }
+
+    override suspend fun upsertAsTransaction(resources: List<Resource>) {
+        if (resources.isEmpty()) return
         val transaction = createTransaction(resources)
 
         val result = hapiClient
@@ -40,8 +45,6 @@ class FhirClientHapiGenericClient(private val hapiClient: IGenericClient) : Fhir
             .execute()
 
         check(result.link.none { it.relation == Bundle.LINK_NEXT }) { "Unexpected 'next' link in Transaction result." }
-
-        return result.resources()
     }
 }
 
