@@ -19,13 +19,15 @@ import io.micrometer.prometheus.PrometheusMeterRegistry
 import no.nav.helse.hops.auth.configureAuthentication
 import no.nav.helse.hops.convert.ContentTypes
 import no.nav.helse.hops.convert.FhirJsonContentConverter
-import no.nav.helse.hops.domain.HapiFacade
+import no.nav.helse.hops.fhir.client.FhirClientReadOnly
+import no.nav.helse.hops.fhir.client.search
 import no.nav.helse.hops.hoplite.asHoplitePropertySourceModule
 import no.nav.helse.hops.infrastructure.KoinBootstrapper
 import no.nav.helse.hops.routes.fhirRoutes
 import no.nav.helse.hops.routes.naisRoutes
 import org.hl7.fhir.r4.model.Meta
 import org.hl7.fhir.r4.model.OperationOutcome
+import org.hl7.fhir.r4.model.Task
 import org.koin.ktor.ext.Koin
 import org.koin.ktor.ext.inject
 import java.time.LocalDateTime
@@ -72,10 +74,10 @@ fun Application.api() {
             }
         }
         // TODO auth
-        val hapiTasks: HapiFacade by inject()
+        val hapi: FhirClientReadOnly by inject()
         get("/tasks") {
-            val t = hapiTasks.tasks().firstOrNull()
-            if (t != null) call.respond(t) else call.respond(OK)
+            val task = hapi.search<Task>().firstOrNull()
+            if (task != null) call.respond(task) else call.respond(OK)
         }
     }
 }

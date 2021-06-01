@@ -13,8 +13,9 @@ import io.ktor.routing.Routing
 import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.route
-import no.nav.helse.hops.domain.HapiFacade
-import no.nav.helse.hops.domain.add
+import no.nav.helse.hops.fhir.client.FhirClient
+import no.nav.helse.hops.fhir.client.add
+import no.nav.helse.hops.fhir.client.readOrNull
 import no.nav.helse.hops.fhir.weakEtag
 import no.nav.helse.hops.toZonedDateTime
 import org.hl7.fhir.r4.model.QuestionnaireResponse
@@ -24,11 +25,15 @@ import java.util.UUID
 
 fun Routing.fhirRoutes() {
     route("/QuestionnaireResponse") {
-        val hapi: HapiFacade by inject()
+        val hapi: FhirClient by inject()
 
         get("/{id}") {
             val input = call.parameters["id"]
-            val resource = hapi.read<QuestionnaireResponse>(input)
+            val resource: QuestionnaireResponse? =  hapi.run {
+                val id =
+                    try { UUID.fromString(input) } catch (ex: IllegalArgumentException) { null } ?: return@run null
+                return@run readOrNull(id)
+            }
 
             if (resource != null)
                 call.readResponse(resource)
@@ -56,9 +61,4 @@ private suspend fun ApplicationCall.createdResponse(res: Resource) {
     respond(HttpStatusCode.Created, res)
     response.header(HttpHeaders.Location, res.id)
     response.etag(res.weakEtag())
-}
-
-private suspend inline fun <reified R : Resource> HapiFacade.read(id: String?): R? {
-    val logicalId = try { UUID.fromString(id) } catch (ex: IllegalArgumentException) { null } ?: return null
-    return read(R::class, logicalId) as R?
 }

@@ -1,16 +1,28 @@
 package no.nav.helse.hops.fhir.client
 
-import org.hl7.fhir.r4.model.DomainResource
+import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException
+import org.hl7.fhir.r4.model.Resource
 import java.util.UUID
 
-suspend inline fun <reified T : DomainResource> FhirClientReadOnly.read(id: UUID) =
+suspend inline fun <reified T : Resource> FhirClientReadOnly.read(id: UUID) =
     read(T::class, id) as T
-suspend inline fun <reified T : DomainResource> FhirClientReadOnly.vread(id: UUID, version: Int) =
+
+suspend inline fun <reified T : Resource> FhirClientReadOnly.readOrNull(id: UUID) =
+    try { read<T>(id) } catch (ex: ResourceNotFoundException) { null }
+
+suspend inline fun <reified T : Resource> FhirClientReadOnly.vread(id: UUID, version: Int) =
     vread(T::class, id, version) as T
-suspend inline fun <reified T : DomainResource> FhirClientReadOnly.history(id: UUID, query: String = "") =
+
+suspend inline fun <reified T : Resource> FhirClientReadOnly.history(id: UUID, query: String = "") =
     history(T::class, id, query).map { it as T }
-suspend inline fun <reified T : DomainResource> FhirClientReadOnly.search(query: String = "") =
+
+suspend inline fun <reified T : Resource> FhirClientReadOnly.search(query: String = "") =
     search(T::class, query).map { it as T }
 
-suspend inline fun <reified T : DomainResource> FhirClient.upsert(resource: T) =
+suspend inline fun <reified T : Resource> FhirClient.upsert(resource: T) =
     upsertAsTransaction(listOf(resource)).single() as T
+
+suspend inline fun <reified T : Resource> FhirClient.add(resource: T): T {
+    val defensiveCopy = resource.copy().apply {id = UUID.randomUUID().toString() } as T
+    return upsert(defensiveCopy)
+}

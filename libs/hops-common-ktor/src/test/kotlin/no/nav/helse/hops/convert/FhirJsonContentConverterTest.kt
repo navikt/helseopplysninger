@@ -12,11 +12,11 @@ import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.post
 import io.ktor.routing.routing
+import io.ktor.server.testing.handleRequest
+import io.ktor.server.testing.setBody
 import io.ktor.server.testing.withTestApplication
 import org.hl7.fhir.r4.model.Patient
 import org.junit.jupiter.api.Test
-import io.ktor.server.testing.handleRequest
-import io.ktor.server.testing.setBody
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
@@ -51,6 +51,5 @@ class FhirJsonContentConverterTest {
             val contentTypeText = assertNotNull(response.headers[HttpHeaders.ContentType])
             assertEquals(ContentTypes.fhirJson.withCharset(Charsets.UTF_8), ContentType.parse(contentTypeText))
         }
-
     }
 }

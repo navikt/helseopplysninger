@@ -5,31 +5,31 @@ import no.nav.helse.hops.fhir.resources
 import no.nav.helse.hops.fhir.toUriType
 import no.nav.helse.hops.fhir.weakEtag
 import org.hl7.fhir.r4.model.Bundle
-import org.hl7.fhir.r4.model.DomainResource
+import org.hl7.fhir.r4.model.Resource
 import java.util.UUID
 import kotlin.reflect.KClass
 
 class FhirClientHapiGenericClient(private val hapiClient: IGenericClient) : FhirClient {
-    override suspend fun <T : DomainResource> read(type: KClass<T>, id: UUID) =
+    override suspend fun <T : Resource> read(type: KClass<T>, id: UUID) =
         hapiClient.read().resource(type.java).withId(id.toString()).execute()
 
-    override suspend fun <T : DomainResource> vread(
+    override suspend fun <T : Resource> vread(
         type: KClass<T>,
         id: UUID,
         version: Int
     ) = hapiClient.read().resource(type.java).withIdAndVersion(id.toString(), version.toString()).execute()
 
-    override suspend fun <T : DomainResource> history(
+    override suspend fun <T : Resource> history(
         type: KClass<T>,
         id: UUID,
         query: String
     ) =
         hapiClient.allByUrl("${type.java.simpleName}/$id/_history?$query")
 
-    override suspend fun <T : DomainResource> search(type: KClass<T>, query: String) =
+    override suspend fun <T : Resource> search(type: KClass<T>, query: String) =
         hapiClient.allByUrl("${type.java.simpleName}?$query")
 
-    override suspend fun upsertAsTransaction(resources: List<DomainResource>): List<DomainResource> {
+    override suspend fun upsertAsTransaction(resources: List<Resource>): List<Resource> {
         if (resources.isEmpty()) return emptyList()
         val transaction = createTransaction(resources)
 
@@ -39,15 +39,14 @@ class FhirClientHapiGenericClient(private val hapiClient: IGenericClient) : Fhir
             .encodedJson()
             .execute()
 
-        check(result.link.none { it.relation == Bundle.LINK_NEXT }) {
-            "Unexpected 'next' link in Transaction result." }
+        check(result.link.none { it.relation == Bundle.LINK_NEXT }) { "Unexpected 'next' link in Transaction result." }
 
         return result.resources()
     }
 }
 
 /** Returns a Sequence of results where pagination is automatically handled during iteration. **/
-private fun IGenericClient.allByUrl(relativeUrl: String): Sequence<DomainResource> =
+private fun IGenericClient.allByUrl(relativeUrl: String): Sequence<Resource> =
     sequence {
         var bundle = this@allByUrl
             .search<Bundle>()
@@ -66,7 +65,7 @@ private fun IGenericClient.nextPageOrNull(bundle: Bundle) =
     else
         null
 
-private fun createTransaction(resources: List<DomainResource>) =
+private fun createTransaction(resources: List<Resource>) =
     Bundle().apply {
         type = Bundle.BundleType.TRANSACTION
         entry = resources.map {
