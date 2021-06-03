@@ -3,22 +3,23 @@ package no.nav.helse.hops.fhir.client
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException
 import kotlinx.coroutines.flow.map
 import org.hl7.fhir.r4.model.Resource
+import org.hl7.fhir.r4.model.ResourceType
 import java.util.UUID
 
 suspend inline fun <reified T : Resource> FhirClientReadOnly.read(id: UUID) =
-    read(T::class, id) as T
+    read(ResourceType.fromCode(T::class.simpleName), id) as T
 
 suspend inline fun <reified T : Resource> FhirClientReadOnly.readOrNull(id: UUID) =
     try { read<T>(id) } catch (ex: ResourceNotFoundException) { null }
 
 suspend inline fun <reified T : Resource> FhirClientReadOnly.vread(id: UUID, version: Int) =
-    vread(T::class, id, version) as T
+    vread(ResourceType.fromCode(T::class.simpleName), id, version) as T
 
 inline fun <reified T : Resource> FhirClientReadOnly.history(id: UUID, query: String = "") =
-    history(T::class, id, query).map { it as T }
+    history(ResourceType.fromCode(T::class.simpleName), id, query).map { it as T }
 
 inline fun <reified T : Resource> FhirClientReadOnly.search(query: String = "") =
-    search(T::class, query).map { it as T }
+    search(ResourceType.fromCode(T::class.simpleName), query).map { it as T }
 
 suspend inline fun <reified T : Resource> FhirClient.add(resource: T): T {
     val defensiveCopy = resource.copy().apply { id = UUID.randomUUID().toString() } as T

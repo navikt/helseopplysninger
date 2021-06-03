@@ -6,6 +6,9 @@ import no.nav.helse.hops.domain.FhirRepository
 import no.nav.helse.hops.domain.FhirRepositoryImpl
 import no.nav.helse.hops.domain.FhirResourceValidator
 import no.nav.helse.hops.fhir.FhirClientFactory
+import no.nav.helse.hops.fhir.client.FhirClient
+import no.nav.helse.hops.fhir.client.FhirClientHapiGenericClient
+import no.nav.helse.hops.fhir.client.FhirClientReadOnly
 import no.nav.helse.hops.hoplite.loadConfigOrThrow
 import no.nav.helse.hops.koin.singleClosable
 import org.koin.dsl.module
@@ -27,7 +30,8 @@ object KoinBootstrapper {
 
         single<FhirResourceValidator> { FhirResourceValidatorHapi }
         single<FhirMessageBus> { FhirMessageBusKafka(get(), get(), get()) }
-        single { FhirClientFactory.createWithAuth(get()) }
+        single<FhirClient> { FhirClientHapiGenericClient(FhirClientFactory.createWithAuth(get())) }
+        single<FhirClientReadOnly> { get<FhirClient>() }
         single<FhirRepository> { FhirRepositoryImpl(get(), getLogger<FhirRepositoryImpl>()) }
 
         singleClosable { KafkaFactory.createFhirProducer(get()) }
