@@ -16,6 +16,7 @@ import io.ktor.routing.get
 import io.ktor.routing.routing
 import io.micrometer.prometheus.PrometheusConfig.DEFAULT
 import io.micrometer.prometheus.PrometheusMeterRegistry
+import kotlinx.coroutines.flow.firstOrNull
 import no.nav.helse.hops.auth.configureAuthentication
 import no.nav.helse.hops.convert.ContentTypes
 import no.nav.helse.hops.convert.FhirJsonContentConverter

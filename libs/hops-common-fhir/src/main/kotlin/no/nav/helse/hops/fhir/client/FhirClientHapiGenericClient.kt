@@ -1,6 +1,11 @@
 package no.nav.helse.hops.fhir.client
 
 import ca.uhn.fhir.rest.client.api.IGenericClient
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.isActive
 import no.nav.helse.hops.fhir.resources
 import no.nav.helse.hops.fhir.toUriType
 import no.nav.helse.hops.fhir.weakEtag
@@ -19,45 +24,49 @@ class FhirClientHapiGenericClient(private val hapiClient: IGenericClient) : Fhir
         version: Int
     ) = hapiClient.read().resource(type.java).withIdAndVersion(id.toString(), version.toString()).execute()
 
-    override suspend fun <T : Resource> history(
+    override fun <T : Resource> history(
         type: KClass<T>,
         id: UUID,
         query: String
-    ) =
-        hapiClient.allByUrl("${type.java.simpleName}/$id/_history?$query")
+    ) = hapiClient.allByUrl("${type.java.simpleName}/$id/_history?$query")
 
-    override suspend fun <T : Resource> search(type: KClass<T>, query: String) =
+    override fun <T : Resource> search(type: KClass<T>, query: String) =
         hapiClient.allByUrl("${type.java.simpleName}?$query")
 
     override suspend fun upsert(resource: Resource): Resource {
         UUID.fromString(resource.id) // throws IllegalArgumentException if not a valid UUID.
-        return hapiClient.update().resource(resource).encodedJson().execute().resource as Resource
+        return hapiClient
+            .update()
+            .resource(resource)
+            .withAdditionalHeader("If-Match", resource.weakEtag())
+            .encodedJson()
+            .execute()
+            .resource as Resource
     }
 
     override suspend fun upsertAsTransaction(resources: List<Resource>) {
         if (resources.isEmpty()) return
         val transaction = createTransaction(resources)
 
-        val result = hapiClient
+        hapiClient
             .transaction()
             .withBundle(transaction)
             .encodedJson()
             .execute()
-
-        check(result.link.none { it.relation == Bundle.LINK_NEXT }) { "Unexpected 'next' link in Transaction result." }
     }
 }
 
 /** Returns a Sequence of results where pagination is automatically handled during iteration. **/
-private fun IGenericClient.allByUrl(relativeUrl: String): Sequence<Resource> =
-    sequence {
+private fun IGenericClient.allByUrl(relativeUrl: String): Flow<Resource> =
+    flow {
         var bundle = this@allByUrl
             .search<Bundle>()
             .byUrl(relativeUrl)
             .execute()
 
         while (true) {
-            yieldAll(bundle.resources())
+            bundle.resources<Resource>().forEach { emit(it) }
+            if (!currentCoroutineContext().isActive) break
             bundle = nextPageOrNull(bundle) ?: break
         }
     }
