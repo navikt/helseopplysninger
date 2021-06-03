@@ -6,6 +6,7 @@ import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.isActive
+import no.nav.helse.hops.fhir.idAsUUID
 import no.nav.helse.hops.fhir.resources
 import no.nav.helse.hops.fhir.toUriType
 import no.nav.helse.hops.fhir.weakEtag
@@ -34,7 +35,7 @@ class FhirClientHapi(private val hapiClient: IGenericClient) : FhirClient {
         hapiClient.allByUrl("${type.name}?$query")
 
     override suspend fun upsert(resource: Resource): Resource {
-        UUID.fromString(resource.id) // throws IllegalArgumentException if not a valid UUID.
+        resource.idAsUUID() // throws IllegalArgumentException if not a valid UUID.
 
         return hapiClient
             .update()
