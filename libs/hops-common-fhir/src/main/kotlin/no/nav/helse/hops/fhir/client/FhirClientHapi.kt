@@ -1,63 +1,73 @@
 package no.nav.helse.hops.fhir.client
 
+import ca.uhn.fhir.rest.api.Constants
 import ca.uhn.fhir.rest.client.api.IGenericClient
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.isActive
+import no.nav.helse.hops.fhir.idAsUUID
 import no.nav.helse.hops.fhir.resources
 import no.nav.helse.hops.fhir.toUriType
 import no.nav.helse.hops.fhir.weakEtag
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.Resource
+import org.hl7.fhir.r4.model.ResourceType
 import java.util.UUID
-import kotlin.reflect.KClass
 
-class FhirClientHapiGenericClient(private val hapiClient: IGenericClient) : FhirClient {
-    override suspend fun <T : Resource> read(type: KClass<T>, id: UUID) =
-        hapiClient.read().resource(type.java).withId(id.toString()).execute()
+class FhirClientHapi(private val hapiClient: IGenericClient) : FhirClient {
+    override suspend fun read(type: ResourceType, id: UUID) =
+        hapiClient.read().resource(type.name).withId(id.toString()).execute() as Resource
 
-    override suspend fun <T : Resource> vread(
-        type: KClass<T>,
+    override suspend fun vread(
+        type: ResourceType,
         id: UUID,
         version: Int
-    ) = hapiClient.read().resource(type.java).withIdAndVersion(id.toString(), version.toString()).execute()
+    ) = hapiClient.read().resource(type.name).withIdAndVersion(id.toString(), version.toString()).execute() as Resource
 
-    override suspend fun <T : Resource> history(
-        type: KClass<T>,
+    override fun history(
+        type: ResourceType,
         id: UUID,
         query: String
-    ) =
-        hapiClient.allByUrl("${type.java.simpleName}/$id/_history?$query")
+    ) = hapiClient.allByUrl("${type.name}/$id/_history?$query")
 
-    override suspend fun <T : Resource> search(type: KClass<T>, query: String) =
-        hapiClient.allByUrl("${type.java.simpleName}?$query")
+    override fun search(type: ResourceType, query: String) =
+        hapiClient.allByUrl("${type.name}?$query")
 
     override suspend fun upsert(resource: Resource): Resource {
-        UUID.fromString(resource.id) // throws IllegalArgumentException if not a valid UUID.
-        return hapiClient.update().resource(resource).encodedJson().execute().resource as Resource
+        resource.idAsUUID() // throws IllegalArgumentException if not a valid UUID.
+
+        return hapiClient
+            .update()
+            .resource(resource)
+            .withAdditionalHeader(Constants.HEADER_IF_MATCH, resource.weakEtag())
+            .encodedJson()
+            .execute()
+            .resource as Resource
     }
 
     override suspend fun upsertAsTransaction(resources: List<Resource>) {
         if (resources.isEmpty()) return
         val transaction = createTransaction(resources)
 
-        val result = hapiClient
+        hapiClient
             .transaction()
             .withBundle(transaction)
             .encodedJson()
             .execute()
-
-        check(result.link.none { it.relation == Bundle.LINK_NEXT }) { "Unexpected 'next' link in Transaction result." }
     }
 }
 
 /** Returns a Sequence of results where pagination is automatically handled during iteration. **/
-private fun IGenericClient.allByUrl(relativeUrl: String): Sequence<Resource> =
-    sequence {
-        var bundle = this@allByUrl
-            .search<Bundle>()
-            .byUrl(relativeUrl)
-            .execute()
+private fun IGenericClient.allByUrl(relativeUrl: String): Flow<Resource> =
+    flow {
+        var bundle = search<Bundle>().byUrl("$serverBase/$relativeUrl").execute()
 
         while (true) {
-            yieldAll(bundle.resources())
+            bundle.resources<Resource>().forEach {
+                if (!currentCoroutineContext().isActive) return@flow
+                emit(it)
+            }
             bundle = nextPageOrNull(bundle) ?: break
         }
     }

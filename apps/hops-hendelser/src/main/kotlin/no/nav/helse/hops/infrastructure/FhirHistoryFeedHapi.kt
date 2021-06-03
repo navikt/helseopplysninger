@@ -1,14 +1,15 @@
 package no.nav.helse.hops.infrastructure
 
-import ca.uhn.fhir.rest.client.api.IGenericClient
-import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.isActive
+import kotlinx.coroutines.flow.toList
 import no.nav.helse.hops.domain.TaskChange
 import no.nav.helse.hops.domain.TaskChangeFeed
-import no.nav.helse.hops.fhir.allByQuery
-import no.nav.helse.hops.fhir.allByUrl
+import no.nav.helse.hops.fhir.client.FhirClientReadOnly
+import no.nav.helse.hops.fhir.client.history
+import no.nav.helse.hops.fhir.client.search
+import no.nav.helse.hops.fhir.idAsUUID
 import no.nav.helse.hops.toIsoString
 import no.nav.helse.hops.toLocalDateTime
 import org.hl7.fhir.r4.model.Resource
@@ -16,7 +17,7 @@ import org.hl7.fhir.r4.model.Task
 import java.time.LocalDateTime
 
 class FhirHistoryFeedHapi(
-    private val fhirClient: IGenericClient
+    private val fhirClient: FhirClientReadOnly
 ) : TaskChangeFeed {
     override fun poll(since: LocalDateTime): Flow<TaskChange> =
         flow {
@@ -25,9 +26,7 @@ class FhirHistoryFeedHapi(
                 val query = createQuery(lastUpdated)
                 var last: Task? = null
 
-                fhirClient.allByQuery<Task>(query).forEach {
-                    if (!currentCoroutineContext().isActive) return@forEach
-
+                fhirClient.search<Task>(query).collect {
                     // Pull the whole history of the Task, in case there are older changes
                     // that are within the requested timespan.
                     getHistoryOf(it).fold(null as Task?) { previous, current ->
@@ -48,10 +47,10 @@ class FhirHistoryFeedHapi(
         }
 
     /** Returns a list of all the versions of a resource, ordered from first to (inclusive) the supplied version. **/
-    private inline fun <reified T : Resource> getHistoryOf(resource: T) =
+    private suspend inline fun <reified T : Resource> getHistoryOf(resource: T) =
         fhirClient
-            .allByUrl("${resource.idElement.toVersionless()}/_history?_at=lt${resource.meta.lastUpdated.toIsoString()}")
-            .map { it as T }
+            .history<T>(resource.idAsUUID(), "_at=lt${resource.meta.lastUpdated.toIsoString()}")
+            .toList()
             .sortedBy { it.meta.lastUpdated }
             .plus(resource)
             .toList()

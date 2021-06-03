@@ -1,14 +1,15 @@
 package no.nav.helse.hops.fhir.client
 
+import kotlinx.coroutines.flow.Flow
 import org.hl7.fhir.r4.model.Resource
+import org.hl7.fhir.r4.model.ResourceType
 import java.util.UUID
-import kotlin.reflect.KClass
 
 interface FhirClientReadOnly {
-    suspend fun <T : Resource> read(type: KClass<T>, id: UUID): Resource
-    suspend fun <T : Resource> vread(type: KClass<T>, id: UUID, version: Int): Resource
-    suspend fun <T : Resource> history(type: KClass<T>, id: UUID, query: String = ""): Sequence<Resource>
-    suspend fun <T : Resource> search(type: KClass<T>, query: String = ""): Sequence<Resource>
+    suspend fun read(type: ResourceType, id: UUID): Resource
+    suspend fun vread(type: ResourceType, id: UUID, version: Int): Resource
+    fun history(type: ResourceType, id: UUID, query: String = ""): Flow<Resource>
+    fun search(type: ResourceType, query: String = ""): Flow<Resource>
 }
 
 interface FhirClient : FhirClientReadOnly {
