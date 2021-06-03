@@ -59,10 +59,7 @@ class FhirClientHapiGenericClient(private val hapiClient: IGenericClient) : Fhir
 /** Returns a Sequence of results where pagination is automatically handled during iteration. **/
 private fun IGenericClient.allByUrl(relativeUrl: String): Flow<Resource> =
     flow {
-        var bundle =
-            search<Bundle>()
-            .byUrl("$serverBase/$relativeUrl")
-            .execute()
+        var bundle = search<Bundle>().byUrl("$serverBase/$relativeUrl").execute()
 
         while (true) {
             bundle.resources<Resource>().forEach {
