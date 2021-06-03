@@ -1,5 +1,6 @@
 package no.nav.helse.hops.fhir.client
 
+import ca.uhn.fhir.rest.api.Constants
 import ca.uhn.fhir.rest.client.api.IGenericClient
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.Flow
@@ -13,7 +14,7 @@ import org.hl7.fhir.r4.model.Resource
 import org.hl7.fhir.r4.model.ResourceType
 import java.util.UUID
 
-class FhirClientHapiGenericClient(private val hapiClient: IGenericClient) : FhirClient {
+class FhirClientHapi(private val hapiClient: IGenericClient) : FhirClient {
     override suspend fun read(type: ResourceType, id: UUID) =
         hapiClient.read().resource(type.name).withId(id.toString()).execute() as Resource
 
@@ -38,7 +39,7 @@ class FhirClientHapiGenericClient(private val hapiClient: IGenericClient) : Fhir
         return hapiClient
             .update()
             .resource(resource)
-            .withAdditionalHeader("If-Match", resource.weakEtag())
+            .withAdditionalHeader(Constants.HEADER_IF_MATCH, resource.weakEtag())
             .encodedJson()
             .execute()
             .resource as Resource

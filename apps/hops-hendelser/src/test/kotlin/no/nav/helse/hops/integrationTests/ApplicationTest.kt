@@ -9,9 +9,9 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
 import no.nav.helse.hops.fhir.FhirClientFactory
 import no.nav.helse.hops.fhir.FhirResourceLoader
-import no.nav.helse.hops.fhir.executeTransaction
+import no.nav.helse.hops.fhir.client.FhirClientHapi
 import no.nav.helse.hops.fhir.messages.OkResponseMessage
-import no.nav.helse.hops.fhir.models.Transaction
+import no.nav.helse.hops.fhir.resources
 import no.nav.helse.hops.fhir.withUuidPrefixFix
 import no.nav.helse.hops.main
 import no.nav.helse.hops.testUtils.KafkaMock
@@ -82,9 +82,11 @@ class ApplicationTest {
 
     private fun populateHapiTestContainer() {
         val message = FhirResourceLoader.asResource<Bundle>("/fhir/valid-message.json").withUuidPrefixFix()
-        val transaction = createTransaction(message)
-        val fhirClient = FhirClientFactory.create(URL("${hapiFhirContainer.url}/fhir"))
-        fhirClient.executeTransaction(transaction)
+        val fhirClient = FhirClientHapi(FhirClientFactory.create(URL("${hapiFhirContainer.url}/fhir")))
+
+        runBlocking {
+            fhirClient.upsertAsTransaction(message.resources())
+        }
     }
 
     @Container
@@ -92,9 +94,4 @@ class ApplicationTest {
 
     @Container
     val mockOauth2Container = TestContainerFactory.mockOauth2Server()
-}
-
-private fun createTransaction(bundle: Bundle): Transaction {
-    val resources = bundle.entry.map { it.resource }
-    return Transaction().apply { resources.forEach { withUpsert(it, 0) } }
 }

@@ -6,10 +6,12 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.server.testing.TestApplicationEngine
 import io.ktor.server.testing.handleRequest
 import io.ktor.server.testing.withTestApplication
+import kotlinx.coroutines.runBlocking
 import no.nav.helse.hops.api
 import no.nav.helse.hops.fhir.FhirClientFactory
 import no.nav.helse.hops.fhir.FhirResourceLoader
 import no.nav.helse.hops.fhir.JsonConverter
+import no.nav.helse.hops.fhir.client.FhirClientHapi
 import no.nav.helse.hops.testUtils.TestContainerFactory
 import no.nav.helse.hops.testUtils.url
 import org.hl7.fhir.r4.model.Task
@@ -55,8 +57,11 @@ class GetTasksTest {
 
     private fun populateHapiTestContainer() {
         val task = FhirResourceLoader.asResource<Task>("/fhir/Task.json")
-        val fhirClient = FhirClientFactory.create(URL("${hapiFhirContainer.url}/fhir"))
-        fhirClient.update().resource(task).execute()
+        val fhirClient = FhirClientHapi(FhirClientFactory.create(URL("${hapiFhirContainer.url}/fhir")))
+
+        runBlocking {
+            fhirClient.upsert(task)
+        }
     }
 
     @Container
