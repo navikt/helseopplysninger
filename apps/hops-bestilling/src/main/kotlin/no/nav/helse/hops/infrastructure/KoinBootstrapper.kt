@@ -30,7 +30,8 @@ object KoinBootstrapper {
 
         single<FhirResourceValidator> { FhirResourceValidatorHapi }
         single<FhirMessageBus> { FhirMessageBusKafka(get(), get(), get()) }
-        single<FhirClient> { FhirClientHapiGenericClient(FhirClientFactory.createWithAuth(get())) }
+        single { FhirClientFactory.createWithAuth(get()) }
+        single<FhirClient> { FhirClientHapiGenericClient(get()) }
         single<FhirClientReadOnly> { get<FhirClient>() }
         single<FhirRepository> { FhirRepositoryImpl(get(), getLogger<FhirRepositoryImpl>()) }
 

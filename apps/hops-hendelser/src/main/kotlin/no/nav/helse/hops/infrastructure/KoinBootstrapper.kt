@@ -27,7 +27,8 @@ object KoinBootstrapper {
         single { get<ConfigRoot>().fhirMessaging }
         single { get<ConfigRoot>().fhirServer }
 
-        single<FhirClient> { FhirClientHapiGenericClient(FhirClientFactory.createWithAuth(get())) }
+        single { FhirClientFactory.createWithAuth(get()) }
+        single<FhirClient> { FhirClientHapiGenericClient(get()) }
         single<FhirClientReadOnly> { get<FhirClient>() }
         single<TaskChangeFeed> { FhirHistoryFeedHapi(get()) }
         single { TaskChangeToMessageResponseMapper(get()) }
