@@ -2,6 +2,7 @@ package no.nav.helse.hops.fhir.client
 
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException
 import kotlinx.coroutines.flow.map
+import no.nav.helse.hops.fhir.idAsUUID
 import org.hl7.fhir.r4.model.Resource
 import org.hl7.fhir.r4.model.ResourceType
 import java.util.UUID
@@ -11,6 +12,9 @@ suspend inline fun <reified T : Resource> FhirClientReadOnly.read(id: UUID) =
 
 suspend inline fun <reified T : Resource> FhirClientReadOnly.readOrNull(id: UUID) =
     try { read<T>(id) } catch (ex: ResourceNotFoundException) { null }
+
+suspend inline fun <reified T : Resource> FhirClientReadOnly.contains(resource: T) =
+    readOrNull<T>(resource.idAsUUID()) != null
 
 suspend inline fun <reified T : Resource> FhirClientReadOnly.vread(id: UUID, version: Int) =
     vread(ResourceType.fromCode(T::class.simpleName), id, version) as T

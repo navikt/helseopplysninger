@@ -1,5 +1,6 @@
 package no.nav.helse.hops.infrastructure
 
+import no.nav.helse.hops.domain.FhirMessageService
 import no.nav.helse.hops.fhir.FhirClientFactory
 import no.nav.helse.hops.fhir.client.FhirClient
 import no.nav.helse.hops.fhir.client.FhirClientHapi
@@ -15,5 +16,6 @@ object KoinBootstrapper {
         single { get<ConfigRoot>().hapiserver }
         single<FhirClient> { FhirClientHapi(FhirClientFactory.createWithAuth(get())) }
         single<FhirClientReadOnly> { get<FhirClient>() }
+        single { FhirMessageService(get()) }
     }
 }

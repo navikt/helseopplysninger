@@ -14,7 +14,7 @@ abstract class BaseMessage(val bundle: Bundle) {
     val header: MessageHeader get() = resource(0)
 
     protected fun requireEntryCount(count: Int) =
-        require(bundle.entry?.count() == count) { "Should be 3 entries." }
+        require(bundle.entry?.count() == count) { "Should be $count entries." }
     protected inline fun <reified T : Resource> requireEntry(index: Int) =
         require(bundle.entry[index].resource is T) { "Entry[$index] must be a ${T::class.java.simpleName}." }
     protected inline fun <reified R : Resource> resource(index: Int) =
