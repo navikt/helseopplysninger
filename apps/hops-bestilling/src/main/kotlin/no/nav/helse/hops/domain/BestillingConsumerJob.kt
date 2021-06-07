@@ -10,9 +10,11 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.runBlocking
 import no.nav.helse.hops.IdentityGenerator
 import no.nav.helse.hops.fhir.addResource
+import no.nav.helse.hops.fhir.idAsUUID
 import no.nav.helse.hops.fhir.resources
 import no.nav.helse.hops.fhir.toJson
 import no.nav.helse.hops.infrastructure.Configuration
+import no.nav.helse.hops.toUri
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.InstantType
 import org.hl7.fhir.r4.model.MessageHeader
@@ -74,16 +76,16 @@ private fun createResponseMessage(
     operationOutcome: OperationOutcome
 ): Bundle {
     val outcomeCopy = operationOutcome.copy().apply {
-        id = IdentityGenerator.createUUID5(requestMessageHeader.id, "details").toString()
+        id = IdentityGenerator.createUUID5(requestMessageHeader.idAsUUID(), "details").toString()
     }
 
     val responseMessageHeader = MessageHeader().apply {
-        id = IdentityGenerator.createUUID5(requestMessageHeader.id, "response").toString()
+        id = IdentityGenerator.createUUID5(requestMessageHeader.idAsUUID(), "response").toString()
         event = requestMessageHeader.event
         destination = listOf(asDestination(requestMessageHeader.source))
         source = asSource(requestMessageHeader.destination.single())
         response = MessageHeader.MessageHeaderResponseComponent().apply {
-            identifier = requestMessageHeader.id
+            identifier = requestMessageHeader.idElement.idPart
             code = MessageHeader.ResponseType.FATALERROR
             details = Reference(outcomeCopy)
         }

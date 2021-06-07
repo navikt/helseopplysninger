@@ -8,7 +8,6 @@ import kotlinx.coroutines.withTimeout
 import no.nav.helse.hops.domain.isAllOk
 import no.nav.helse.hops.fhir.FhirResourceLoader
 import no.nav.helse.hops.fhir.toJson
-import no.nav.helse.hops.fhir.withUuidPrefixFix
 import no.nav.helse.hops.infrastructure.FhirResourceValidatorHapi
 import no.nav.helse.hops.infrastructure.KoinBootstrapper
 import no.nav.helse.hops.testUtils.KafkaMock
@@ -62,7 +61,6 @@ class ValidationErrorTest {
         val expectedResponseMessage =
             FhirResourceLoader
                 .asResource<Bundle>("/fhir/invalid-message-warning-on-name-expected-response.json")
-                .withUuidPrefixFix()
                 .apply {
                     id = responseMessage.id
                 }

@@ -11,7 +11,7 @@ class KafkaFhirResourceDeserializer : Deserializer<IBaseResource> {
     override fun deserialize(topic: String?, data: ByteArray?): IBaseResource? {
         ByteArrayInputStream(data!!).use {
             val fhirContext = FhirContext.forCached(FhirVersionEnum.R4)!!
-            val jsonParser = fhirContext.newJsonParser()!!
+            val jsonParser = fhirContext.newJsonParser().setOverrideResourceIdWithBundleEntryFullUrl(false)
 
             return try {
                 jsonParser.parseResource(it)

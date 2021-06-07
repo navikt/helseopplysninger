@@ -9,6 +9,8 @@ abstract class BaseMessage(val bundle: Bundle) {
     init {
         require(bundle.entry != null && bundle.entry.count() > 0) { "Message cannot be empty." }
         requireEntry<MessageHeader>(0)
+        requireNotNull(header.source?.endpoint) { "Message must have source.endpoint." }
+        requireNotNull(header.destination?.singleOrNull()?.endpoint) { "Message must have 1 destination[].endpoint." }
     }
 
     val header: MessageHeader get() = resource(0)

@@ -17,7 +17,11 @@ import kotlinx.coroutines.withContext
 import org.hl7.fhir.instance.model.api.IBaseResource
 
 class FhirJsonContentConverter : ContentConverter {
-    private val fhirCtx = FhirContext.forCached(FhirVersionEnum.R4)!!
+    private fun newParser() = FhirContext
+        .forCached(FhirVersionEnum.R4)
+        .newJsonParser()
+        .setPrettyPrint(true)
+        .setOverrideResourceIdWithBundleEntryFullUrl(false)
 
     override suspend fun convertForSend(
         context: PipelineContext<Any, ApplicationCall>,
@@ -25,7 +29,7 @@ class FhirJsonContentConverter : ContentConverter {
         value: Any
     ): Any? {
         val resource = value as? IBaseResource ?: return null
-        val json = fhirCtx.newJsonParser().setPrettyPrint(true).encodeResourceToString(resource)
+        val json = newParser().encodeResourceToString(resource)
         return TextContent(json, contentType.withCharset(Charsets.UTF_8))
     }
 
@@ -35,7 +39,7 @@ class FhirJsonContentConverter : ContentConverter {
         val channel = context.subject.value as? ByteReadChannel ?: return null
         return withContext(Dispatchers.IO) {
             channel.toInputStream().reader().use {
-                fhirCtx.newJsonParser().parseResource(it)
+                newParser().parseResource(it)
             }
         }
     }

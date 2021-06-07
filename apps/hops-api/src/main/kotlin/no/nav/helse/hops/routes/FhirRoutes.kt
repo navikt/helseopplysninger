@@ -33,9 +33,11 @@ fun Routing.fhirRoutes() {
         call.respond(searchResult)
     }
 
+    /** Processes the message event synchronously according to
+     * https://www.hl7.org/fhir/messageheader-operation-process-message.html **/
     post("/\$process-message") {
-        val inputMessage = GenericMessage(call.receive())
-        val processResult = processService.process(inputMessage)
-        call.respond(processResult.bundle)
+        val requestMsg = GenericMessage(call.receive())
+        val responseMsg = processService.process(requestMsg)
+        call.respond(responseMsg.bundle)
     }
 }
