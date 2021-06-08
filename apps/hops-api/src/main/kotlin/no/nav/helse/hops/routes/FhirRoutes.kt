@@ -11,6 +11,7 @@ import io.ktor.routing.post
 import no.nav.helse.hops.domain.FhirMessageProcessService
 import no.nav.helse.hops.domain.FhirMessageSearchService
 import no.nav.helse.hops.domain.GenericMessage
+import no.nav.helse.hops.routing.fullUrl
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.MessageHeader
 import org.koin.ktor.ext.inject
@@ -24,7 +25,7 @@ fun Routing.fhirRoutes() {
     val processService: FhirMessageProcessService by inject()
 
     get("/Bundle") {
-        val base = fhirServerBase(call.request.local)
+        val base = call.request.local.fhirServerBase()
         val lastUpdatedParam = call.request.queryParameters[Constants.PARAM_LASTUPDATED]
         val rcvParam = call.request.queryParameters["${Bundle.SP_MESSAGE}.${MessageHeader.SP_DESTINATION_URI}"]
 
@@ -40,12 +41,12 @@ fun Routing.fhirRoutes() {
 
     /** Processes the message event synchronously according to
      * https://www.hl7.org/fhir/messageheader-operation-process-message.html **/
-    post("/\$process-message") {
+    post("/${Constants.EXTOP_PROCESS_MESSAGE}") {
         val requestMsg = GenericMessage(call.receive())
         val responseMsg = processService.process(requestMsg)
         call.respond(responseMsg.bundle)
     }
 }
 
-private fun fhirServerBase(p: RequestConnectionPoint) =
-    URL(p.scheme, p.host, p.port, p.uri.substringBefore('?').substringBeforeLast('/'))
+private fun RequestConnectionPoint.fhirServerBase() =
+    URL(fullUrl().toString().substringBefore('?').substringBeforeLast('/'))
