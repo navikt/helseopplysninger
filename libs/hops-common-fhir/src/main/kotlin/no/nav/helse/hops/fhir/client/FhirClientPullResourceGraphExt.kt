@@ -14,17 +14,17 @@ suspend fun FhirClientReadOnly.pullResourceGraphSnapshot(root: Resource): List<R
     val at = root.meta.lastUpdated.toLocalDateTime()
     val resources = mutableMapOf<UUID, Resource>()
 
-    suspend fun pullResourceGraphInner(res: Resource) =
+    suspend fun pullResourceGraphInner(res: Resource): Resource =
         res.copy().apply { // defensive copy
             resources[idAsUUID()] = this
             allChildren<Reference>()
                 .filter { it.hasReference() && !it.referenceElement.isAbsolute } // filter only relative references.
                 .forEach {
                     val id = UUID.fromString(it.referenceElement.idPart)
-                    if (!resources.containsKey(id)) {
+                    if (!resources.containsKey(id)) { // prevents loops due to circular-references
                         val type = ResourceType.fromCode(it.referenceElement.resourceType)
                         val referencedResource = readHistory(type, id, at)
-                        resources[id] = referencedResource
+                        pullResourceGraphInner(referencedResource)
                     }
                 }
         }

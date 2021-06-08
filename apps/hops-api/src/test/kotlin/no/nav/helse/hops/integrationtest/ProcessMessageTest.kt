@@ -9,10 +9,13 @@ import io.ktor.server.testing.setBody
 import io.ktor.server.testing.withTestApplication
 import no.nav.helse.hops.api
 import no.nav.helse.hops.fhir.FhirResourceLoader
+import no.nav.helse.hops.fhir.JsonConverter
+import no.nav.helse.hops.fhir.resources
 import no.nav.helse.hops.fhir.toJson
 import no.nav.helse.hops.testUtils.TestContainerFactory
 import no.nav.helse.hops.testUtils.url
 import org.hl7.fhir.r4.model.Bundle
+import org.hl7.fhir.r4.model.Resource
 import org.junit.jupiter.api.Test
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
@@ -22,7 +25,7 @@ import kotlin.test.assertEquals
 class ProcessMessageTest {
 
     @Test
-    fun `process message`() {
+    fun `process and retrieve message`() {
         withHopsTestApplication {
             with(
                 handleRequest(HttpMethod.Post, "/\$process-message") {
@@ -32,6 +35,19 @@ class ProcessMessageTest {
                 }
             ) {
                 assertEquals(HttpStatusCode.OK, response.status())
+            }
+
+            with(
+                handleRequest(
+                    HttpMethod.Get,
+                    "/Bundle?message.destination-uri=http%3A%2F%2Fnav.no%2Fhops&_lastUpdated=gt2015-03-01T02%3A00%3A02%2B01%3A00"
+                )
+            ) {
+                assertEquals(HttpStatusCode.OK, response.status())
+
+                val searchResult = JsonConverter.parse<Bundle>(response.content!!)
+                val message = searchResult.resources<Resource>().single() as Bundle
+                assertEquals(3, message.entry.count())
             }
         }
     }

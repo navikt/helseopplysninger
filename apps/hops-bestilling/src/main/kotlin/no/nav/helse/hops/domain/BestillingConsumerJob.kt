@@ -14,7 +14,6 @@ import no.nav.helse.hops.fhir.idAsUUID
 import no.nav.helse.hops.fhir.resources
 import no.nav.helse.hops.fhir.toJson
 import no.nav.helse.hops.infrastructure.Configuration
-import no.nav.helse.hops.toUri
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.InstantType
 import org.hl7.fhir.r4.model.MessageHeader
