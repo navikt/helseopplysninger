@@ -4,7 +4,7 @@ import no.nav.helse.hops.fhir.toJson
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
-internal class Hente_ressurs_fra_hapiKtTest {
+internal class HenteRessursFraFhirTest {
 
     @Test
     @Disabled
