@@ -18,7 +18,7 @@ spec:
       application: hops-bestiller-backend
       access: readwrite
     - team: teamdigihot
-      application: hm-ditt-nav
+      application: hm-fhir
       access: readwrite
     - team: teamdigihot
       application: digihot-kafka-debug

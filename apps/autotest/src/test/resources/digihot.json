@@ -1,0 +1,140 @@
+{
+  "eventName": "nySoknad",
+  "signatur": "BRUKER_BEKREFTER",
+  "fodselNrBruker": "12345678910",
+  "fodselNrInnsender": "12345678910",
+  "eventId": "fec887bc-5a95-49c2-a098-f0e0f7c32df3",
+  "kommunenavn": "Oslo",
+  "soknad": {
+    "soknad": {
+      "date": "2020-06-19",
+      "bruker": {
+        "fnummer": "12345678910",
+        "fornavn": "fornavn",
+        "etternavn": "etternavn",
+        "telefonNummer": "12345678",
+        "signatur": "BRUKER_BEKREFTER"
+      },
+      "brukersituasjon": {
+        "nedsattFunksjon": true,
+        "nedsattFunksjonTypes": {
+          "bevegelse": true,
+          "horsel": true,
+          "kognisjon": true
+        },
+        "storreBehov": true,
+        "praktiskeProblem": true,
+        "bostedRadioButton": "Hjemme",
+        "bruksarenaErDagliglivet": true
+      },
+      "hjelpemidler": {
+        "hjelpemiddelListe": [
+          {
+            "uniqueKey": "1234561592555082660",
+            "hmsNr": "123456",
+            "produkt": {
+              "postrank": "1"
+            },
+            "beskrivelse": "Gåstol Mustang",
+            "navn": "Gåstol Mustang",
+            "antall": 1,
+            "utlevertFraHjelpemiddelsentralen": true,
+            "kanIkkeTilsvarande": true,
+            "tilleggsinformasjon": "Tilleggsinformasjon",
+            "hjelpemiddelkategori": "Arbeidsstoler",
+            "tilbehorListe": [
+              {
+                "hmsnr": "214778",
+                "navn": "Bekkenstøtte gåstol Mustang omkr47-64 h8",
+                "antall": 1
+              },
+              {
+                "hmsnr": "214781",
+                "antall": 1,
+                "navn": "Hoftestøtter gåstol Mustang kurvet stang str1/2"
+              }
+            ]
+          },
+          {
+            "uniqueKey": "2345671592555131417",
+            "hmsNr": "234567",
+            "beskrivelse": "Produktnavn L",
+            "produkt": {
+              "postrank": "1"
+            },
+            "antall": 2,
+            "utlevertFraHjelpemiddelsentralen": false,
+            "tilleggsinformasjon": "Tilleggsinformasjon ",
+            "hjelpemiddelkategori": "Skli, vende og flytte",
+            "kanIkkeTilsvarande": false
+          },
+          {
+            "uniqueKey": "0233441602578892954",
+            "hmsNr": "023344",
+            "produkt": {
+              "postrank": "1"
+            },
+            "beskrivelse": "ROHO Quadtro Select lavprofil sb 30",
+            "navn": "ROHO Quadtro Select lavprofil sb 30",
+            "antall": 1,
+            "utlevertFraHjelpemiddelsentralen": true,
+            "tilleggsinformasjon": "Dette er tillegsinformasjon",
+            "hjelpemiddelkategori": "Sitteputer",
+            "vilkaroverskrift": "Hvorfor trenger bruker sittepute?",
+            "vilkarliste": [
+              {
+                "id": 1,
+                "vilkartekst": "Forebygge trykksår",
+                "checked": false
+              },
+              {
+                "id": 2,
+                "vilkartekst": "Hindre videre utvikling av trykksår",
+                "checked": false
+              },
+              {
+                "id": 3,
+                "vilkartekst": "Andre spesielle behov",
+                "checked": true,
+                "kreverTilleggsinfo": true,
+                "tilleggsinfo": "Dette er grunn til at bruker må ha sitteputte"
+              }
+            ],
+            "begrunnelsen": "Dette er grunnen til at de ikke kan ha tilsvarende eller for at de har valgt et lavere rangert produkt eller et helt annen begrunnelse",
+            "kanIkkeTilsvarande": true
+          }
+        ],
+        "hjelpemiddelTotaltAntall": 5
+      },
+      "levering": {
+        "hmfFornavn": "fornavn",
+        "hmfEtternavn": "etternavn",
+        "hmfArbeidssted": "arbeidssted",
+        "hmfStilling": "stilling",
+        "hmfPostadresse": "postadresse arbeidssted",
+        "hmfPostnr": "1234",
+        "hmfPoststed": "poststed",
+        "hmfTelefon": "12345678",
+        "hmfTreffesEnklest": "treffedager",
+        "hmfEpost": "epost@adad.com",
+        "opfRadioButton": "Hjelpemiddelformidler",
+        "opfFornavn": "",
+        "opfEtternavn": "",
+        "opfTelefon": "",
+        "opfArbeidssted": "",
+        "opfStilling": "",
+        "opfAnsvarFor": "",
+        "utleveringsmaateRadioButton": "FolkeregistrertAdresse",
+        "utleveringPostadresse": "",
+        "utleveringPostnr": "",
+        "utleveringPoststed": "",
+        "utleveringskontaktpersonRadioButton": "Hjelpemiddelbruker",
+        "utleveringFornavn": "",
+        "utleveringEtternavn": "",
+        "utleveringTelefon": "",
+        "merknadTilUtlevering": "utleveringsmerknad"
+      },
+      "id": "fec887bc-5a95-49c2-a098-f0e0f7c32df3"
+    }
+  }
+}
