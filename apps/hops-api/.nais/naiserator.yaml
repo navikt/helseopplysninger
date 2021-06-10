@@ -12,7 +12,8 @@ spec:
   maskinporten:
     enabled: true
     scopes:
-      - name: "nav:helse/v1/helseopplysninger"
+      consumes:
+       - name: "nav:helse/v1/helseopplysninger"
   liveness:
     path: /isAlive
     initialDelay: 10
