@@ -4,7 +4,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import no.nav.helse.hops.domain.FhirMessageBus
 import no.nav.helse.hops.fhir.resources
-import no.nav.helse.hops.fhir.withUuidPrefixFix
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.producer.Callback
 import org.apache.kafka.clients.producer.Producer
@@ -53,7 +52,6 @@ class FhirMessageBusKafka(
                     records
                         .mapNotNull { it.value() as? Bundle }
                         .filter { it.type == Bundle.BundleType.MESSAGE && it.resources<Resource>().firstOrNull() is MessageHeader }
-                        .map { it.withUuidPrefixFix() }
                         .forEach { emit(it) }
                 }
             } finally {

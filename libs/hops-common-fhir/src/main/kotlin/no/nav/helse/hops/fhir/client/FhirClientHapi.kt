@@ -87,7 +87,7 @@ private fun createTransaction(resources: List<Resource>) =
                 fullUrlElement = it.idElement.toUriType()
                 request = Bundle.BundleEntryRequestComponent().apply {
                     method = Bundle.HTTPVerb.PUT
-                    url = "${it.fhirType()}/${it.id}"
+                    url = it.idElement.toUnqualifiedVersionless().value
                     ifMatch = it.weakEtag()
                 }
             }

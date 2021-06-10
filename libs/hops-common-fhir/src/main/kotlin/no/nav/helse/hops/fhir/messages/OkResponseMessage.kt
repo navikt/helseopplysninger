@@ -1,7 +1,7 @@
 package no.nav.helse.hops.fhir.messages
 
 import no.nav.helse.hops.fhir.addResource
-import no.nav.helse.hops.fhir.toUriType
+import no.nav.helse.hops.fhir.resources
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.InstantType
 import org.hl7.fhir.r4.model.MessageHeader
@@ -11,13 +11,13 @@ import java.util.UUID
 
 class OkResponseMessage : BaseMessage {
     constructor(bundle: Bundle) : super(bundle)
-    constructor(requestHeader: MessageHeader, responseId: UUID, data: List<Resource>) :
+    constructor(requestHeader: MessageHeader, responseId: UUID, data: List<Resource> = emptyList()) :
         super(createBundle(requestHeader, responseId, data))
 
-    val data: List<Resource> get() = bundle.entry.drop(1).map { it.resource as Resource }
+    val data: List<Resource> get() = bundle.resources<Resource>().drop(1)
 }
 
-fun createBundle(requestHeader: MessageHeader, responseId: UUID, data: List<Resource>): Bundle {
+private fun createBundle(requestHeader: MessageHeader, responseId: UUID, data: List<Resource>): Bundle {
     val responseHeader = MessageHeader().apply {
         id = responseId.toString()
         event = requestHeader.event
@@ -27,7 +27,7 @@ fun createBundle(requestHeader: MessageHeader, responseId: UUID, data: List<Reso
             identifierElement = requestHeader.idElement.toUnqualifiedVersionless()
             code = MessageHeader.ResponseType.OK
         }
-        focus = data.map { Reference(it.idElement.toUriType().value) }
+        focus = data.map { Reference(it.idElement.toUnqualifiedVersionless()) }
     }
 
     return Bundle().apply {

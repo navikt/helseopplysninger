@@ -12,7 +12,6 @@ import no.nav.helse.hops.fhir.FhirResourceLoader
 import no.nav.helse.hops.fhir.client.FhirClientHapi
 import no.nav.helse.hops.fhir.messages.OkResponseMessage
 import no.nav.helse.hops.fhir.resources
-import no.nav.helse.hops.fhir.withUuidPrefixFix
 import no.nav.helse.hops.main
 import no.nav.helse.hops.testUtils.KafkaMock
 import no.nav.helse.hops.testUtils.TestContainerFactory
@@ -81,7 +80,7 @@ class ApplicationTest {
     }
 
     private fun populateHapiTestContainer() {
-        val message = FhirResourceLoader.asResource<Bundle>("/fhir/valid-message.json").withUuidPrefixFix()
+        val message = FhirResourceLoader.asResource<Bundle>("/fhir/valid-message.json")
         val fhirClient = FhirClientHapi(FhirClientFactory.create(URL("${hapiFhirContainer.url}/fhir")))
 
         runBlocking {
