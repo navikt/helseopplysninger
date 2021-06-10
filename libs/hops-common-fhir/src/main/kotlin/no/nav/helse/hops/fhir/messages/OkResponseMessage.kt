@@ -12,7 +12,7 @@ import java.util.UUID
 class OkResponseMessage : BaseMessage {
     constructor(bundle: Bundle) : super(bundle)
     constructor(requestHeader: MessageHeader, responseId: UUID, data: List<Resource> = emptyList()) :
-            super(createBundle(requestHeader, responseId, data))
+        super(createBundle(requestHeader, responseId, data))
 
     val data: List<Resource> get() = bundle.resources<Resource>().drop(1)
 }
