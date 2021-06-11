@@ -3,7 +3,7 @@ package no.nav.helse.hops.domain
 import java.time.LocalDateTime
 import java.util.UUID
 
-interface EventStoreReadOnly {
+interface EventStoreReadOnlyRepository {
     data class Query(
         val offset: Int = 0,
         val count: Int = 10
@@ -12,7 +12,7 @@ interface EventStoreReadOnly {
     suspend fun search(query: Query): List<EventDto>
 }
 
-interface EventStore : EventStoreReadOnly {
+interface EventStoreRepository : EventStoreReadOnlyRepository {
     suspend fun add(event: EventDto)
 }
 

@@ -11,9 +11,9 @@ import java.net.URL
 import java.time.LocalDateTime
 import java.util.UUID
 
-class FhirMessageSearchService(private val eventStore: EventStoreReadOnly) {
+class FhirMessageSearchService(private val eventStore: EventStoreReadOnlyRepository) {
     suspend fun search(base: URL, since: LocalDateTime = LocalDateTime.MIN, destination: URI? = null): Bundle {
-        val events = eventStore.search(EventStoreReadOnly.Query())
+        val events = eventStore.search(EventStoreReadOnlyRepository.Query())
 
         return Bundle().apply {
             id = UUID.randomUUID().toString()

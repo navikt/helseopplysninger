@@ -1,8 +1,8 @@
 package no.nav.helse.hops.infrastructure
 
 import no.nav.helse.hops.domain.EventDto
-import no.nav.helse.hops.domain.EventStore
-import no.nav.helse.hops.domain.EventStoreReadOnly
+import no.nav.helse.hops.domain.EventStoreRepository
+import no.nav.helse.hops.domain.EventStoreReadOnlyRepository
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.StdOutSqlLogger
@@ -13,7 +13,7 @@ import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 
-class EventStoreExposedORM : EventStore {
+class EventStoreRepositoryExposedORM : EventStoreRepository {
     init {
         Database.connect("jdbc:h2:mem:test", driver = "org.h2.Driver", user = "root", password = "")
 
@@ -46,7 +46,7 @@ class EventStoreExposedORM : EventStore {
         }
     }
 
-    override suspend fun search(query: EventStoreReadOnly.Query): List<EventDto> {
+    override suspend fun search(query: EventStoreReadOnlyRepository.Query): List<EventDto> {
         var hits = emptyList<EventDto>()
 
         transaction {

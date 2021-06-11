@@ -14,7 +14,7 @@ import java.io.ByteArrayOutputStream
 import java.io.OutputStreamWriter
 import java.time.LocalDateTime
 
-class FhirMessageProcessService(private val eventStore: EventStore) {
+class FhirMessageProcessService(private val eventStore: EventStoreRepository) {
     suspend fun process(message: IBaseBundle, correlationId: String) {
         if (message is Bundle) {
             val event = createEventDto(message, correlationId)
