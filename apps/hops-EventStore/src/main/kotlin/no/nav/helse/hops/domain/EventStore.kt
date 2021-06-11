@@ -1,6 +1,6 @@
 package no.nav.helse.hops.domain
 
-import java.time.OffsetDateTime
+import java.time.LocalDateTime
 import java.util.UUID
 
 interface EventStoreReadOnly {
@@ -19,12 +19,12 @@ interface EventStore : EventStoreReadOnly {
 class EventDto(
     val bundleId: UUID,
     val messageId: UUID,
+    val correlationId: String,
     val eventType: String,
-    val recorded: OffsetDateTime,
-    val timestamp: OffsetDateTime?,
+    val recorded: LocalDateTime,
+    val timestamp: LocalDateTime,
     val source: String,
     val destinations: List<String>,
     val data: ByteArray,
     val dataType: String,
-    val httpRequestHeaders: List<Pair<String, String>>
 )

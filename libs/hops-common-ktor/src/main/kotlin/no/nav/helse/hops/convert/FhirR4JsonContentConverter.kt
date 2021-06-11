@@ -3,7 +3,6 @@ package no.nav.helse.hops.convert
 import ca.uhn.fhir.context.FhirContext
 import ca.uhn.fhir.context.FhirVersionEnum
 import io.ktor.application.ApplicationCall
-import io.ktor.application.application
 import io.ktor.application.call
 import io.ktor.content.TextContent
 import io.ktor.features.ContentConverter

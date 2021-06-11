@@ -21,6 +21,7 @@ import java.net.URI
 import java.net.URL
 import java.time.LocalDateTime
 import java.time.OffsetDateTime
+import java.util.UUID
 
 fun Routing.fhirRoutes() {
     val searchService: FhirMessageSearchService by inject()
@@ -49,18 +50,12 @@ fun Routing.fhirRoutes() {
             check(get(Constants.PARAM_RESPONSE_URL) == null) { "'response-url' is not supported." }
         }
 
-        val headers = call.request.headers.entries()
-            .flatMap { it.value.map { value -> Pair(it.key, value) } }
-            .filter { it.first != Constants.HEADER_AUTHORIZATION }
-
         val message: Bundle = call.receive()
+        val requestId = call.request.header(Constants.HEADER_REQUEST_ID) ?: UUID.randomUUID().toString()
 
-        processService.process(headers, message)
+        processService.process(message, requestId)
 
-        // http://hl7.org/fhir/http.html#custom
-        val requestId = call.request.header(Constants.HEADER_REQUEST_ID)
-        if (requestId != null) call.response.header(Constants.HEADER_REQUEST_ID, requestId)
-
+        call.response.header(Constants.HEADER_REQUEST_ID, requestId) // http://hl7.org/fhir/http.html#custom
         call.respond(HttpStatusCode.Accepted)
     }
 }
