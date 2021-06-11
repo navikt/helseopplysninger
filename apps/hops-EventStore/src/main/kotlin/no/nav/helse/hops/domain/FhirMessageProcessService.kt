@@ -1,0 +1,86 @@
+package no.nav.helse.hops.domain
+
+import ca.uhn.fhir.context.FhirContext
+import ca.uhn.fhir.context.FhirVersionEnum
+import io.ktor.http.withCharset
+import no.nav.helse.hops.convert.ContentTypes
+import no.nav.helse.hops.fhir.idAsUUID
+import no.nav.helse.hops.toUri
+import no.nav.helse.hops.toZonedDateTime
+import org.hl7.fhir.instance.model.api.IBaseBundle
+import org.hl7.fhir.r4.model.Bundle
+import org.hl7.fhir.r4.model.MessageHeader
+import java.io.ByteArrayOutputStream
+import java.io.OutputStreamWriter
+import java.time.OffsetDateTime
+
+class FhirMessageProcessService(private val eventStore: EventStore) {
+    suspend fun process(httpRequestHeaders: List<Pair<String, String>>, message: IBaseBundle) {
+        if (message is Bundle) {
+            val event = createEventDto(httpRequestHeaders, message)
+            eventStore.add(event)
+        } else {
+            throw NotImplementedError("${message.javaClass.name} is not supported.")
+        }
+    }
+
+    private fun createEventDto(httpRequestHeaders: List<Pair<String, String>>, message: Bundle): EventDto {
+        validate(message)
+        val header = message.entry[0].resource as MessageHeader
+
+        return EventDto(
+            bundleId = message.idAsUUID(),
+            messageId = header.idAsUUID(),
+            eventType = createEventType(header),
+            recorded = OffsetDateTime.now(),
+            timestamp = message.timestamp?.toZonedDateTime()?.toOffsetDateTime(),
+            source = header.source.endpoint,
+            destinations = header.destination.map { it.endpoint }.filter { it.isNotBlank() },
+            data = createJsonByteArray(message),
+            dataType = ContentTypes.fhirJsonR4.withCharset(Charsets.UTF_8).toString(),
+            httpRequestHeaders = httpRequestHeaders,
+        )
+    }
+
+    /** Validerer melding ihht. https://www.hl7.org/fhir/messaging.html **/
+    private fun validate(message: Bundle) {
+        check(message.type == Bundle.BundleType.MESSAGE) { "Bundle must be of type 'Message'" }
+
+        val header = message.entry.firstOrNull()?.resource as? MessageHeader
+        checkNotNull(header) { "First resource in Bundle must be MessageHeader." }
+
+        val bundleId = message.idAsUUID()
+        val headerId = header.idAsUUID()
+
+        check(bundleId.variant() != 0) { "Bundle.Id must be valid UUID." }
+        check(headerId.variant() != 0) { "MessageHeader.Id must be valid UUID." }
+        check(bundleId != headerId) { "Bundle.id and MessageHeader.id cannot be equal." }
+        check(header.source.endpoint.isNullOrBlank()) { "MessageHeader.source.endpoint is required." }
+
+        check(message.entry.first().fullUrl == headerId.toUri().toString()) {
+            "entry.fullUrl does not match MessageHeader.id."
+        }
+    }
+}
+
+private fun createEventType(header: MessageHeader): String =
+    header.eventUriType.value.ifBlank {
+        header.eventCoding.run {
+            require((system + code).isNotBlank()) { "Both 'System' and 'Code' cannot be empty." }
+            var coding = "$system|$code"
+            if (version.isNotEmpty()) coding += "|$version"
+            return coding
+        }
+    }
+
+private fun createJsonByteArray(message: Bundle): ByteArray =
+    ByteArrayOutputStream().use { stream ->
+        OutputStreamWriter(stream).use { writer ->
+            FhirContext
+                .forCached(FhirVersionEnum.R4)
+                .newJsonParser()
+                .encodeResourceToWriter(message, writer)
+        }
+
+        return stream.toByteArray()
+    }

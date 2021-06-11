@@ -3,11 +3,14 @@ package no.nav.helse.hops.convert
 import ca.uhn.fhir.context.FhirContext
 import ca.uhn.fhir.context.FhirVersionEnum
 import io.ktor.application.ApplicationCall
+import io.ktor.application.application
+import io.ktor.application.call
 import io.ktor.content.TextContent
 import io.ktor.features.ContentConverter
 import io.ktor.http.ContentType
 import io.ktor.http.withCharset
 import io.ktor.request.ApplicationReceiveRequest
+import io.ktor.request.contentType
 import io.ktor.util.pipeline.PipelineContext
 import io.ktor.utils.io.ByteReadChannel
 import io.ktor.utils.io.core.use
@@ -16,7 +19,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.hl7.fhir.instance.model.api.IBaseResource
 
-class FhirJsonContentConverter : ContentConverter {
+class FhirR4JsonContentConverter : ContentConverter {
     private fun newParser() = FhirContext
         .forCached(FhirVersionEnum.R4)
         .newJsonParser()
@@ -30,12 +33,13 @@ class FhirJsonContentConverter : ContentConverter {
     ): Any? {
         val resource = value as? IBaseResource ?: return null
         val json = newParser().encodeResourceToString(resource)
-        return TextContent(json, contentType.withCharset(Charsets.UTF_8))
+        return TextContent(json, ContentTypes.fhirJsonR4.withCharset(Charsets.UTF_8))
     }
 
     override suspend fun convertForReceive(
         context: PipelineContext<ApplicationReceiveRequest, ApplicationCall>
     ): Any? {
+        if (!context.call.request.contentType().match(ContentTypes.fhirJsonR4)) return null
         val channel = context.subject.value as? ByteReadChannel ?: return null
         return withContext(Dispatchers.IO) {
             channel.toInputStream().reader().use {

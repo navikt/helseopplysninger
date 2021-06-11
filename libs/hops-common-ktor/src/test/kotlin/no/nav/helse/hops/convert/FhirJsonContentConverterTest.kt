@@ -31,7 +31,7 @@ class FhirJsonContentConverterTest {
     fun testConvertOfFhirResource() = withTestApplication {
         application.apply {
             install(ContentNegotiation) {
-                register(ContentTypes.fhirJson, FhirJsonContentConverter())
+                register(ContentTypes.fhirJson, FhirR4JsonContentConverter())
             }
             routing {
                 post("/") {
@@ -42,14 +42,14 @@ class FhirJsonContentConverterTest {
         }
 
         handleRequest(HttpMethod.Post, "/") {
-            addHeader("Content-Type", "application/fhir+json")
+            addHeader("Content-Type", "application/fhir+json; fhirVersion=4.0")
             setBody(patientJson)
         }.response.let { response ->
             assertEquals(HttpStatusCode.OK, response.status())
             assertNotNull(response.content)
             assertEquals(patientJson, response.content)
             val contentTypeText = assertNotNull(response.headers[HttpHeaders.ContentType])
-            assertEquals(ContentTypes.fhirJson.withCharset(Charsets.UTF_8), ContentType.parse(contentTypeText))
+            assertEquals(ContentTypes.fhirJsonR4.withCharset(Charsets.UTF_8), ContentType.parse(contentTypeText))
         }
     }
 }
