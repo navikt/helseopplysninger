@@ -37,6 +37,7 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-java-time:$exposedVersion")
+    implementation("io.ktor:ktor-webjars:$ktorVersion")
     testImplementation(kotlin("test-junit5"))
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion") { exclude("org.jetbrains.kotlin", "kotlin-test-junit") }
     testImplementation("no.nav.security:mock-oauth2-server:0.3.3")
@@ -46,4 +47,6 @@ dependencies {
     runtimeOnly("ca.uhn.hapi.fhir:hapi-fhir-client:$hapiVersion")
     runtimeOnly("ch.qos.logback:logback-classic:1.2.3")
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
+    runtimeOnly("org.webjars:swagger-ui:3.50.0")
+    runtimeOnly("com.h2database:h2:1.4.200")
 }

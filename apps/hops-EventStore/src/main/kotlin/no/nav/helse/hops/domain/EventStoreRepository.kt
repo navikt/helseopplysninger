@@ -22,9 +22,8 @@ class EventDto(
     val correlationId: String,
     val eventType: String,
     val recorded: LocalDateTime,
-    val timestamp: LocalDateTime,
     val source: String,
     val destinations: List<String>,
     val data: ByteArray,
-    val dataType: String,
+    val dataType: String
 )

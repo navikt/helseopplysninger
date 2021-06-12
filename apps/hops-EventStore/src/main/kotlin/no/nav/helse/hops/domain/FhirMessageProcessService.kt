@@ -5,7 +5,6 @@ import ca.uhn.fhir.context.FhirVersionEnum
 import io.ktor.http.withCharset
 import no.nav.helse.hops.convert.ContentTypes
 import no.nav.helse.hops.fhir.idAsUUID
-import no.nav.helse.hops.toLocalDateTime
 import no.nav.helse.hops.toUri
 import org.hl7.fhir.instance.model.api.IBaseBundle
 import org.hl7.fhir.r4.model.Bundle
@@ -25,7 +24,7 @@ class FhirMessageProcessService(private val eventStore: EventStoreRepository) {
     }
 
     private fun createEventDto(message: Bundle, correlationId: String): EventDto {
-        validate(message)
+        //validate(message)
         val header = message.entry[0].resource as MessageHeader
 
         return EventDto(
@@ -34,11 +33,10 @@ class FhirMessageProcessService(private val eventStore: EventStoreRepository) {
             correlationId = correlationId,
             eventType = createEventType(header),
             recorded = LocalDateTime.now(),
-            timestamp = message.timestamp.toLocalDateTime(),
             source = header.source.endpoint,
             destinations = header.destination.map { it.endpoint }.filter { it.isNotBlank() },
             data = createJsonByteArray(message),
-            dataType = ContentTypes.fhirJsonR4.withCharset(Charsets.UTF_8).toString(),
+            dataType = ContentTypes.fhirJsonR4.withCharset(Charsets.UTF_8).toString()
         )
     }
 
@@ -65,13 +63,12 @@ class FhirMessageProcessService(private val eventStore: EventStoreRepository) {
 }
 
 private fun createEventType(header: MessageHeader): String =
-    header.eventUriType.value.ifBlank {
-        header.eventCoding.run {
-            require((system + code).isNotBlank()) { "Both 'System' and 'Code' cannot be empty." }
-            var coding = "$system|$code"
-            if (version.isNotEmpty()) coding += "|$version"
-            return coding
-        }
+    if (header.hasEventUriType()) header.eventUriType.value
+    else header.eventCoding.run {
+        require(hasSystem() || hasCode()) { "Both 'System' and 'Code' cannot be empty." }
+        var coding = "$system|$code"
+        if (hasVersion()) coding += "|$version"
+        return coding
     }
 
 private fun createJsonByteArray(message: Bundle): ByteArray =

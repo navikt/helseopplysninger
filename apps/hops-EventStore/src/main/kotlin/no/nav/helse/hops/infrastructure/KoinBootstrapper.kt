@@ -1,5 +1,7 @@
 package no.nav.helse.hops.infrastructure
 
+import no.nav.helse.hops.domain.EventStoreReadOnlyRepository
+import no.nav.helse.hops.domain.EventStoreRepository
 import no.nav.helse.hops.domain.FhirMessageProcessService
 import no.nav.helse.hops.domain.FhirMessageSearchService
 import no.nav.helse.hops.fhir.FhirClientFactory
@@ -19,5 +21,7 @@ object KoinBootstrapper {
         single<FhirClientReadOnly> { get<FhirClient>() }
         single { FhirMessageProcessService(get()) }
         single { FhirMessageSearchService(get()) }
+        single<EventStoreRepository> { EventStoreRepositoryExposedORM() }
+        single<EventStoreReadOnlyRepository> { get<EventStoreRepository>() }
     }
 }

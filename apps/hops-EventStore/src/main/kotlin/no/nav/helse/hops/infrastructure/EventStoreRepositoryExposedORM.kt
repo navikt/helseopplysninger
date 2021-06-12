@@ -1,5 +1,7 @@
 package no.nav.helse.hops.infrastructure
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import no.nav.helse.hops.domain.EventDto
 import no.nav.helse.hops.domain.EventStoreRepository
 import no.nav.helse.hops.domain.EventStoreReadOnlyRepository
@@ -12,62 +14,62 @@ import org.jetbrains.exposed.sql.addLogger
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
+import javax.sql.rowset.serial.SerialBlob
 
 class EventStoreRepositoryExposedORM : EventStoreRepository {
     init {
-        Database.connect("jdbc:h2:mem:test", driver = "org.h2.Driver", user = "root", password = "")
+        Database.connect("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1", driver = "org.h2.Driver")
 
+        // TODO: Exposed har ikke har støtte for migrations, se derfor på bruk av flywaydb eller andre verktøy for å
+        //  generere skjemaer før dette taes i bruk i produksjon.
         transaction {
             addLogger(StdOutSqlLogger)
             SchemaUtils.create(EventTable, DestinationTable)
         }
     }
 
-    override suspend fun add(event: EventDto) {
-        transaction {
-            val insertedEventId = EventTable.insert {
-                it[bundleId] = event.bundleId
-                it[messageId] = event.messageId
-                it[correlationId] = event.correlationId
-                it[eventType] = event.eventType
-                it[recorded] = event.recorded
-                it[timestamp] = event.timestamp
-                it[_source] = event.source
-                it[data] = event.data
-                it[dataType] = event.dataType
-            }[EventTable.id]
+    override suspend fun add(event: EventDto) =
+        withContext(Dispatchers.IO) {
+            transaction {
+                val insertedEventId = EventTable.insert {
+                    it[bundleId] = event.bundleId
+                    it[messageId] = event.messageId
+                    it[correlationId] = event.correlationId
+                    it[eventType] = event.eventType
+                    it[recorded] = event.recorded
+                    it[_source] = event.source
+                    it[data] = event.data.decodeToString()
+                    it[dataType] = event.dataType
+                    it[dataBytes] = event.data.size
+                }[EventTable.id]
 
-            event.destinations.forEach { dest ->
-                DestinationTable.insert {
-                    it[eventId] = insertedEventId
-                    it[endpoint] = dest
+                event.destinations.forEach { dest ->
+                    DestinationTable.insert {
+                        it[eventId] = insertedEventId
+                        it[endpoint] = dest
+                    }
                 }
             }
         }
-    }
 
-    override suspend fun search(query: EventStoreReadOnlyRepository.Query): List<EventDto> {
-        var hits = emptyList<EventDto>()
-
-        transaction {
-            hits = EventTable.selectAll().map {
-                EventDto(
-                    messageId = it[EventTable.messageId],
-                    bundleId = it[EventTable.bundleId],
-                    correlationId = it[EventTable.correlationId],
-                    eventType = it[EventTable.eventType],
-                    recorded = it[EventTable.recorded],
-                    timestamp = it[EventTable.timestamp],
-                    source = it[EventTable._source],
-                    destinations = emptyList(), // Not needed for now.
-                    data = it[EventTable.data],
-                    dataType = it[EventTable.dataType],
-                )
+    override suspend fun search(query: EventStoreReadOnlyRepository.Query) =
+        withContext(Dispatchers.IO) {
+            return@withContext transaction {
+                return@transaction EventTable.selectAll().map {
+                    EventDto(
+                        messageId = it[EventTable.messageId],
+                        bundleId = it[EventTable.bundleId],
+                        correlationId = it[EventTable.correlationId],
+                        eventType = it[EventTable.eventType],
+                        recorded = it[EventTable.recorded],
+                        source = it[EventTable._source],
+                        destinations = emptyList(), // Not needed for now.
+                        data = it[EventTable.data].toByteArray(),
+                        dataType = it[EventTable.dataType]
+                    )
+                }
             }
         }
-
-        return hits
-    }
 }
 
 private object EventTable : Table() {
@@ -77,10 +79,10 @@ private object EventTable : Table() {
     val correlationId = varchar("correlation_id", 200)
     val eventType = varchar("event_type", 200)
     val recorded = datetime("recorded")
-    val timestamp = datetime("timestamp")
     val _source = varchar("source", 200)
-    val data = binary("data")
+    val data = text("data")
     val dataType = varchar("data_type", 100)
+    val dataBytes = integer("data_bytes")
 
     override val primaryKey = PrimaryKey(id)
 }
