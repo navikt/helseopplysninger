@@ -3,8 +3,8 @@ package no.nav.helse.hops.infrastructure
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import no.nav.helse.hops.domain.EventDto
-import no.nav.helse.hops.domain.EventStoreRepository
 import no.nav.helse.hops.domain.EventStoreReadOnlyRepository
+import no.nav.helse.hops.domain.EventStoreRepository
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.StdOutSqlLogger
@@ -14,7 +14,6 @@ import org.jetbrains.exposed.sql.addLogger
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
-import javax.sql.rowset.serial.SerialBlob
 
 class EventStoreRepositoryExposedORM : EventStoreRepository {
     init {

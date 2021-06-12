@@ -21,7 +21,6 @@ import org.koin.ktor.ext.inject
 import java.net.URI
 import java.net.URL
 import java.time.LocalDateTime
-import java.time.OffsetDateTime
 import java.util.UUID
 
 fun Routing.fhirRoutes() {

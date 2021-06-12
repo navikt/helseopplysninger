@@ -24,7 +24,7 @@ class FhirMessageProcessService(private val eventStore: EventStoreRepository) {
     }
 
     private fun createEventDto(message: Bundle, correlationId: String): EventDto {
-        //validate(message)
+        // validate(message)
         val header = message.entry[0].resource as MessageHeader
 
         return EventDto(
