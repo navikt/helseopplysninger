@@ -5,6 +5,7 @@ import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.features.CallLogging
 import io.ktor.features.ContentNegotiation
+import io.ktor.features.DoubleReceive
 import io.ktor.features.StatusPages
 import io.ktor.http.HttpStatusCode.Companion.InternalServerError
 import io.ktor.metrics.micrometer.MicrometerMetrics
@@ -37,6 +38,9 @@ fun Application.api() {
     }
     install(ContentNegotiation) {
         register(ContentTypes.fhirJson, FhirR4JsonContentConverter())
+    }
+    install(DoubleReceive) {
+        receiveEntireContent = true
     }
     install(Koin) {
         slf4jLogger()
