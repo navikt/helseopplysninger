@@ -24,7 +24,7 @@ class FhirMessageProcessService(private val eventStore: EventStoreRepository) {
     }
 
     private fun createEventDto(message: Bundle, correlationId: String): EventDto {
-        // validate(message)
+        validate(message)
         val header = message.entry[0].resource as MessageHeader
 
         return EventDto(
@@ -40,13 +40,12 @@ class FhirMessageProcessService(private val eventStore: EventStoreRepository) {
         )
     }
 
-    /** Validerer melding ihht. https://www.hl7.org/fhir/messaging.html **/
+    /** Validerer melding ihht. https://www.hl7.org/fhir/messaging.html
+     * kan erstattes egenlagde Bundle og\eller MessageHeader profiler istedenfor å gjøres her. **/
     private fun validate(message: Bundle) {
         check(message.type == Bundle.BundleType.MESSAGE) { "Bundle must be of type 'Message'" }
 
-        val header = message.entry.firstOrNull()?.resource as? MessageHeader
-        checkNotNull(header) { "First resource in Bundle must be MessageHeader." }
-
+        val header = message.entry.first().resource as MessageHeader
         val bundleId = message.idAsUUID()
         val headerId = header.idAsUUID()
 
@@ -54,7 +53,6 @@ class FhirMessageProcessService(private val eventStore: EventStoreRepository) {
         check(headerId.variant() != 0) { "MessageHeader.Id must be valid UUID." }
         check(bundleId != headerId) { "Bundle.id and MessageHeader.id cannot be equal." }
         checkNotNull(message.timestamp) { "Bundle.timestamp is required." }
-        check(header.source.endpoint.isNullOrBlank()) { "MessageHeader.source.endpoint is required." }
 
         check(message.entry.first().fullUrl == headerId.toUri().toString()) {
             "entry.fullUrl does not match MessageHeader.id."
