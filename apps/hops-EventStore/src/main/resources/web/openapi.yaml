@@ -36,6 +36,14 @@ paths:
       externalDocs:
         url: https://www.hl7.org/fhir/messaging.html#rest
       parameters:
+        - name: _count
+          in: query
+          schema:
+            type: integer
+        - name: _offset
+          in: query
+          schema:
+            type: integer
         - name: message.destination-uri
           in: query
           schema:

@@ -19,6 +19,7 @@ import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.MessageHeader
 import org.hl7.fhir.r4.model.StringType
 import org.hl7.fhir.r4.model.UrlType
+import org.hl7.fhir.r4.model.codesystems.ResourceTypes
 import org.koin.ktor.ext.inject
 import java.net.URI
 
@@ -27,7 +28,7 @@ fun Routing.fhirRoutes() {
     val processService: FhirMessageProcessService by inject()
 
     route("fhir") {
-        get("/Bundle") {
+        get("/${ResourceTypes.BUNDLE.toCode()}") {
             val rcvParam = call.request.queryParameters[SP_RCV]
             val countParam = call.request.queryParameters[Constants.PARAM_COUNT]
             val offsetParam = call.request.queryParameters[Constants.PARAM_OFFSET]
