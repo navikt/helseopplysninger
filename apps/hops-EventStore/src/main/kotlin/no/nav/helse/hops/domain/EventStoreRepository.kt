@@ -5,8 +5,9 @@ import java.util.UUID
 
 interface EventStoreReadOnlyRepository {
     data class Query(
-        val offset: Int = 0,
-        val count: Int = 10
+        val count: Int = 10,
+        val offset: Long = 0,
+        val destinationUri: String? = null
     )
 
     suspend fun search(query: Query): List<EventDto>

@@ -5,7 +5,6 @@ import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.features.callId
 import io.ktor.http.HttpStatusCode
-import io.ktor.http.RequestConnectionPoint
 import io.ktor.request.receiveText
 import io.ktor.response.respond
 import io.ktor.routing.Routing
@@ -18,10 +17,10 @@ import no.nav.helse.hops.fhir.JsonConverter
 import no.nav.helse.hops.routing.fullUrl
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.MessageHeader
+import org.hl7.fhir.r4.model.StringType
+import org.hl7.fhir.r4.model.UrlType
 import org.koin.ktor.ext.inject
 import java.net.URI
-import java.net.URL
-import java.time.LocalDateTime
 
 fun Routing.fhirRoutes() {
     val searchService: FhirMessageSearchService by inject()
@@ -29,13 +28,26 @@ fun Routing.fhirRoutes() {
 
     route("fhir") {
         get("/Bundle") {
-            val base = call.request.local.fhirServerBase()
-            val rcvParam = call.request.queryParameters["${Bundle.SP_MESSAGE}.${MessageHeader.SP_DESTINATION_URI}"]
+            val rcvParam = call.request.queryParameters[SP_RCV]
+            val countParam = call.request.queryParameters[Constants.PARAM_COUNT]
+            val offsetParam = call.request.queryParameters[Constants.PARAM_OFFSET]
 
-            val rcv = if (rcvParam != null) URI(rcvParam) else null
+            val rcv = rcvParam?.let { URI(rcvParam) }
+            val count = countParam?.toIntOrNull() ?: 10
+            val offset = offsetParam?.toLongOrNull() ?: 0
 
-            val searchResult = searchService.search(base, LocalDateTime.MIN, rcv)
-            call.respond(searchResult)
+            val searchSet = searchService.search(count, offset, rcv)
+
+            if (searchSet.entry.count() == count) {
+                var url = call.request.local.fullUrl().toString().substringBefore('?')
+                url = "$url?${Constants.PARAM_COUNT}=$count&${Constants.PARAM_OFFSET}=${offset + count}"
+                url = if (rcv != null) "$url&$SP_RCV=$rcv" else url
+
+                val nextLink = Bundle.BundleLinkComponent(StringType(Bundle.LINK_NEXT), UrlType(url))
+                searchSet.addLink(nextLink)
+            }
+
+            call.respond(searchSet)
         }
 
         /** Processes the message event synchronously according to
@@ -57,5 +69,4 @@ fun Routing.fhirRoutes() {
     }
 }
 
-private fun RequestConnectionPoint.fhirServerBase() =
-    URL(fullUrl().toString().substringBefore('?').substringBeforeLast('/'))
+private const val SP_RCV = "${Bundle.SP_MESSAGE}.${MessageHeader.SP_DESTINATION_URI}"

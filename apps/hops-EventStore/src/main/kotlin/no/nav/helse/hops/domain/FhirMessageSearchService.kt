@@ -7,13 +7,12 @@ import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.InstantType
 import java.io.ByteArrayInputStream
 import java.net.URI
-import java.net.URL
-import java.time.LocalDateTime
 import java.util.UUID
 
 class FhirMessageSearchService(private val eventStore: EventStoreReadOnlyRepository) {
-    suspend fun search(base: URL, since: LocalDateTime = LocalDateTime.MIN, destination: URI? = null): Bundle {
-        val events = eventStore.search(EventStoreReadOnlyRepository.Query())
+    suspend fun search(count: Int, offset: Long, destination: URI? = null): Bundle {
+        val query = EventStoreReadOnlyRepository.Query(count, offset, destination?.toString())
+        val events = eventStore.search(query)
 
         return Bundle().apply {
             id = UUID.randomUUID().toString()

@@ -6,11 +6,14 @@ import no.nav.helse.hops.domain.EventStoreReadOnlyRepository
 import no.nav.helse.hops.domain.EventStoreRepository
 import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.JoinType
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.Slf4jSqlDebugLogger
+import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.`java-time`.datetime
 import org.jetbrains.exposed.sql.addLogger
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
@@ -66,21 +69,36 @@ class EventStoreRepositoryExposedORM(config: Config) : EventStoreRepository {
         }
     }
 
-    override suspend fun search(query: EventStoreReadOnlyRepository.Query) =
+    override suspend fun search(filter: EventStoreReadOnlyRepository.Query) =
         newSuspendedTransaction(Dispatchers.IO, database) {
-            EventTable.selectAll().map {
-                EventDto(
-                    messageId = it[EventTable.messageId],
-                    bundleId = it[EventTable.bundleId],
-                    correlationId = it[EventTable.correlationId],
-                    eventType = it[EventTable.eventType],
-                    recorded = it[EventTable.recorded],
-                    source = it[EventTable.src],
-                    destinations = emptyList(), // Not needed for now.
-                    data = it[EventTable.data].toByteArray(),
-                    dataType = it[EventTable.dataType]
-                )
-            }
+            val query =
+                if (filter.destinationUri == null) EventTable.selectAll()
+                else EventTable
+                    .join(
+                        DestinationTable,
+                        JoinType.INNER,
+                        additionalConstraint = {
+                            EventTable.id eq DestinationTable.eventId and(DestinationTable.endpoint eq filter.destinationUri)
+                        }
+                    )
+                    .selectAll()
+
+            query
+                .orderBy(EventTable.id to SortOrder.ASC)
+                .limit(filter.count, filter.offset)
+                .map {
+                    EventDto(
+                        messageId = it[EventTable.messageId],
+                        bundleId = it[EventTable.bundleId],
+                        correlationId = it[EventTable.correlationId],
+                        eventType = it[EventTable.eventType],
+                        recorded = it[EventTable.recorded],
+                        source = it[EventTable.src],
+                        destinations = emptyList(), // Not needed for now.
+                        data = it[EventTable.data].toByteArray(),
+                        dataType = it[EventTable.dataType]
+                    )
+                }
         }
 }
 
