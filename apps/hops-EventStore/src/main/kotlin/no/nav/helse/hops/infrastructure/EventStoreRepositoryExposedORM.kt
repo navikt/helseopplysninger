@@ -4,6 +4,7 @@ import kotlinx.coroutines.Dispatchers
 import no.nav.helse.hops.domain.EventDto
 import no.nav.helse.hops.domain.EventStoreReadOnlyRepository
 import no.nav.helse.hops.domain.EventStoreRepository
+import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.Slf4jSqlDebugLogger
@@ -34,27 +35,36 @@ class EventStoreRepositoryExposedORM(config: Config) : EventStoreRepository {
         }
     }
 
-    override suspend fun add(event: EventDto) =
-        newSuspendedTransaction(Dispatchers.IO, database) {
-            val insertedEventId = EventTable.insert {
-                it[bundleId] = event.bundleId
-                it[messageId] = event.messageId
-                it[correlationId] = event.correlationId
-                it[eventType] = event.eventType
-                it[recorded] = event.recorded
-                it[src] = event.source
-                it[data] = event.data.decodeToString()
-                it[dataType] = event.dataType
-                it[dataBytes] = event.data.size
-            }[EventTable.id]
+    override suspend fun add(event: EventDto) {
+        try {
+            newSuspendedTransaction(Dispatchers.IO, database) {
+                val insertedEventId = EventTable.insert {
+                    it[bundleId] = event.bundleId
+                    it[messageId] = event.messageId
+                    it[correlationId] = event.correlationId
+                    it[eventType] = event.eventType
+                    it[recorded] = event.recorded
+                    it[src] = event.source
+                    it[data] = event.data.decodeToString()
+                    it[dataType] = event.dataType
+                    it[dataBytes] = event.data.size
+                }[EventTable.id]
 
-            event.destinations.forEach { dest ->
-                DestinationTable.insert {
-                    it[eventId] = insertedEventId
-                    it[endpoint] = dest
+                event.destinations.forEach { dest ->
+                    DestinationTable.insert {
+                        it[eventId] = insertedEventId
+                        it[endpoint] = dest
+                    }
                 }
             }
+        } catch (ex: ExposedSQLException) {
+            // Ignore unique-constraint violations in order to provide idempotent behavior.
+            // Exposed will already have logged this as a WARNING.
+            if (ex.errorCode != SqlErrorCodes.uniqueViolation) {
+                throw ex
+            }
         }
+    }
 
     override suspend fun search(query: EventStoreReadOnlyRepository.Query) =
         newSuspendedTransaction(Dispatchers.IO, database) {
@@ -95,4 +105,8 @@ private object DestinationTable : Table() {
     val endpoint = varchar("endpoint", 200)
 
     override val primaryKey = PrimaryKey(id)
+}
+
+private object SqlErrorCodes {
+    const val uniqueViolation = 23505
 }
