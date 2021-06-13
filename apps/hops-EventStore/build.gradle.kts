@@ -49,4 +49,5 @@ dependencies {
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
     runtimeOnly("org.webjars:swagger-ui:3.50.0")
     runtimeOnly("com.h2database:h2:1.4.200")
+    runtimeOnly("org.postgresql:postgresql:42.2.21")
 }

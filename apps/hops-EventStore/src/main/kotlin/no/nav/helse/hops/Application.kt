@@ -5,7 +5,6 @@ import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.features.CallLogging
 import io.ktor.features.ContentNegotiation
-import io.ktor.features.DefaultHeaders
 import io.ktor.features.StatusPages
 import io.ktor.http.HttpStatusCode.Companion.InternalServerError
 import io.ktor.metrics.micrometer.MicrometerMetrics
@@ -24,14 +23,15 @@ import no.nav.helse.hops.routes.swaggerRoutes
 import org.hl7.fhir.r4.model.Meta
 import org.hl7.fhir.r4.model.OperationOutcome
 import org.koin.ktor.ext.Koin
-import java.time.LocalDateTime
+import org.koin.logger.slf4jLogger
+import java.util.Date
 
 @Suppress("unused") // Referenced in application.conf
 fun Application.api() {
-    install(Webjars)
-    install(DefaultHeaders)
-    install(CallLogging)
     val prometheusMeterRegistry = PrometheusMeterRegistry(DEFAULT)
+
+    install(Webjars)
+    install(CallLogging)
     install(MicrometerMetrics) {
         registry = prometheusMeterRegistry
     }
@@ -39,15 +39,15 @@ fun Application.api() {
         register(ContentTypes.fhirJson, FhirR4JsonContentConverter())
     }
     install(Koin) {
+        slf4jLogger()
         modules(KoinBootstrapper.module, environment.config.asHoplitePropertySourceModule())
     }
     install(StatusPages) {
         exception<Throwable> { cause ->
             val outcome = OperationOutcome().apply {
-                meta = Meta().apply { lastUpdated = LocalDateTime.now().toUtilDate() }
+                meta = Meta().apply { lastUpdated = Date() }
 
-                val issue = OperationOutcome.OperationOutcomeIssueComponent()
-                issue.apply {
+                val issue = OperationOutcome.OperationOutcomeIssueComponent().apply {
                     severity = OperationOutcome.IssueSeverity.ERROR
                     code = OperationOutcome.IssueType.EXCEPTION
                     diagnostics = cause.message
