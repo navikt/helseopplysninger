@@ -71,6 +71,8 @@ fun Application.api() {
                 addIssue(issue)
             }
             call.respond(InternalServerError, outcome)
+
+            throw cause
         }
     }
 
