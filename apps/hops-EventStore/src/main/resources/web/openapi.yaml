@@ -32,7 +32,9 @@ paths:
     get:
       tags:
         - FHIR
-      description: Searches for FHIR Messages. https://www.hl7.org/fhir/messaging.html#rest
+      description: Searches for FHIR Messages.
+      externalDocs:
+        url: https://www.hl7.org/fhir/messaging.html#rest
       parameters:
         - name: message.destination-uri
           in: query
@@ -49,12 +51,68 @@ paths:
     post:
       tags:
         - FHIR
-      description: https://www.hl7.org/fhir/messageheader-operation-process-message.html
+      externalDocs:
+        url: https://www.hl7.org/fhir/messageheader-operation-process-message.html
       requestBody:
         content:
           application/fhir+json; fhirVersion=4.0:
+            examples:
+              message-request-link:
+                $ref: '#/components/examples/message-request-link'
             schema:
               type: object
       responses:
         '202':
           description: Message has been determined valid and persisted in EventStore.
+
+components:
+  examples:
+    message-request-link:
+      description: '<https://www.hl7.org/fhir/message-request-link.json.html>'
+      value: >
+        {
+          "resourceType": "Bundle",
+          "id": "10bb101f-a121-4264-a920-67be9cb82c74",
+          "type": "message",
+          "timestamp": "2015-07-14T11:15:33+10:00",
+          "entry": [
+            {
+              "fullUrl": "urn:uuid:267b18ce-3d37-4581-9baa-6fada338038b",
+              "resource": {
+                "resourceType": "MessageHeader",
+                "id": "267b18ce-3d37-4581-9baa-6fada338038b",
+                "eventCoding": {
+                  "system": "http://example.org/fhir/message-events",
+                  "code": "patient-link"
+                },
+                "source": {
+                  "endpoint": "http://example.org/clients/ehr-lite"
+                },
+                "focus": [
+                  {
+                    "reference": "http://acme.com/ehr/fhir/Patient/pat1"
+                  },
+                  {
+                    "reference": "http://acme.com/ehr/fhir/Patient/pat12"
+                  }
+                ]
+              }
+            },
+            {
+              "fullUrl": "http://acme.com/ehr/fhir/Patient/pat1",
+              "resource": {
+                "resourceType": "Patient",
+                "id": "pat1",
+                "gender": "male"
+              }
+            },
+            {
+              "fullUrl": "http://acme.com/ehr/fhir/Patient/pat12",
+              "resource": {
+                "resourceType": "Patient",
+                "id": "pat2",
+                "gender": "other"
+              }
+            }
+          ]
+        }
