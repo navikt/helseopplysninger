@@ -45,6 +45,9 @@ spec:
     inbound:
       rules:
         - application: hops-api
+  env:
+    - name: LOG_APPENDER
+      value: json
   ingresses:
   {{#each ingresses as |url|}}
      - {{url}}
