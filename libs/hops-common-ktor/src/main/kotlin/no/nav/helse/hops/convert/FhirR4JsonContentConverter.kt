@@ -38,7 +38,7 @@ class FhirR4JsonContentConverter : ContentConverter {
     override suspend fun convertForReceive(
         context: PipelineContext<ApplicationReceiveRequest, ApplicationCall>
     ): Any? {
-        if (!context.call.request.contentType().match(ContentTypes.fhirJsonR4)) return null
+        if (!ContentTypes.fhirJsonR4.match(context.call.request.contentType())) return null
         val channel = context.subject.value as? ByteReadChannel ?: return null
         return withContext(Dispatchers.IO) {
             channel.toInputStream().reader().use {
