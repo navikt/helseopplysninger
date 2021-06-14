@@ -20,7 +20,7 @@ class MessageConsumerJob(
     private val job = messageBus
         .poll()
         .onEach { eventStore.add(it) }
-        .catch { logger.error("Error while polling message bus.", it) }
+        .catch { logger.error("Error while polling message bus.", it) } // TODO: Should retry and\or put on DLQ.
         .launchIn(CoroutineScope(context))
 
     override fun close() {

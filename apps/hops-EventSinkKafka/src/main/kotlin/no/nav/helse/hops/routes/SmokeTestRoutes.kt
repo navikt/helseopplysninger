@@ -17,8 +17,7 @@ fun Routing.smokeTestRoutes() {
             try {
                 eventStore.smokeTest()
                 call.respond(HttpStatusCode.OK, "OK!")
-            }
-            catch (ex: Throwable) {
+            } catch (ex: Throwable) {
                 call.respond(HttpStatusCode.InternalServerError, ex.message ?: "No exception message.")
             }
         }

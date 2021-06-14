@@ -28,3 +28,21 @@ paths:
       responses:
         '200':
           description: Metrics.
+  /smokeTests/{name}:
+    get:
+      tags:
+        - diagnostics
+      description: Runs a smoke-test to verify an external integration.
+      parameters:
+        - name: name
+          in: path
+          description: Name of smoke-test.
+          required: true
+          schema:
+            type: string
+            enum: [eventStore]
+      responses:
+        '200':
+          description: Ok.
+        '500':
+          description: Error.

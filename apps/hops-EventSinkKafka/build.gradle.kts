@@ -25,9 +25,7 @@ dependencies {
     val ktorVersion = "1.6.0"
 
     implementation("io.ktor:ktor-client-auth:$ktorVersion")
-    implementation("io.ktor:ktor-client-core:$ktorVersion")
     implementation("io.ktor:ktor-metrics-micrometer:$ktorVersion")
-    implementation("io.ktor:ktor-server-netty:$ktorVersion")
     implementation("io.ktor:ktor-webjars:$ktorVersion")
     implementation("io.micrometer:micrometer-registry-prometheus:1.7.0")
     implementation("org.apache.kafka:kafka-clients:2.8.0")
