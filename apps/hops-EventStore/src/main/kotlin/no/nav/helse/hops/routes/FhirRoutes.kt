@@ -13,6 +13,7 @@ import io.ktor.routing.post
 import io.ktor.routing.route
 import no.nav.helse.hops.domain.FhirMessageProcessService
 import no.nav.helse.hops.domain.FhirMessageSearchService
+import no.nav.helse.hops.domain.FhirValidatorFactory
 import no.nav.helse.hops.fhir.JsonConverter
 import no.nav.helse.hops.routing.fullUrl
 import org.hl7.fhir.r4.model.Bundle
@@ -65,7 +66,7 @@ fun Routing.fhirRoutes() {
         }
 
         install(FhirValidatorKtorPlugin.Feature) {
-            validator = FhirValidatorKtorPlugin.r4Validator
+            validator = FhirValidatorFactory.relaxedR4
         }
     }
 }
