@@ -1,0 +1,30 @@
+openapi: 3.0.1
+info:
+  version: 1.0.0
+  title: EventSinkKafka
+  description: En bakgrunnsprosess som lytter på "dirty"-kafka-topic og publiserer meldinger til EventStore.
+paths:
+  /isReady:
+    get:
+      tags:
+        - diagnostics
+      description: Readiness check.
+      responses:
+        '200':
+          description: Service is ready.
+  /isAlive:
+    get:
+      tags:
+        - diagnostics
+      description: Liveliness check.
+      responses:
+        '200':
+          description: Service is alive.
+  /prometheus:
+    get:
+      tags:
+        - diagnostics
+      description: Pull metrics.
+      responses:
+        '200':
+          description: Metrics.

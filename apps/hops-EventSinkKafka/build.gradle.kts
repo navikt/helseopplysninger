@@ -21,33 +21,27 @@ tasks {
 }
 
 dependencies {
-    val exposedVersion = "0.32.1"
-    val hapiVersion = "5.4.0"
     val junitVersion = "5.7.2"
     val ktorVersion = "1.6.0"
 
-    implementation("ca.uhn.hapi.fhir:hapi-fhir-validation:$hapiVersion")
-    implementation("io.ktor:ktor-auth:$ktorVersion")
+    implementation("io.ktor:ktor-client-auth:$ktorVersion")
+    implementation("io.ktor:ktor-client-core:$ktorVersion")
     implementation("io.ktor:ktor-metrics-micrometer:$ktorVersion")
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
     implementation("io.ktor:ktor-webjars:$ktorVersion")
     implementation("io.micrometer:micrometer-registry-prometheus:1.7.0")
-    implementation("no.nav.security:token-validation-ktor:1.3.7")
-    implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
-    implementation("org.jetbrains.exposed:exposed-java-time:$exposedVersion")
-    implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
-    implementation(project(":libs:hops-common-fhir"))
+    implementation("org.apache.kafka:kafka-clients:2.8.0")
     implementation(project(":libs:hops-common-ktor"))
-    runtimeOnly("ca.uhn.hapi.fhir:hapi-fhir-validation-resources-r4:$hapiVersion")
     runtimeOnly("ch.qos.logback:logback-classic:1.2.3")
-    runtimeOnly("com.h2database:h2:1.4.200")
+    runtimeOnly("io.ktor:ktor-server-netty:$ktorVersion")
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
-    runtimeOnly("org.postgresql:postgresql:42.2.21")
     runtimeOnly("org.webjars:swagger-ui:3.50.0")
+    testImplementation("io.insert-koin:koin-test-junit5:3.0.1")
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion") { exclude("org.jetbrains.kotlin", "kotlin-test-junit") }
+    testImplementation("io.mockk:mockk:1.11.0")
     testImplementation("no.nav.security:mock-oauth2-server:0.3.3")
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
-    testImplementation("org.testcontainers:junit-jupiter:1.15.3")
     testImplementation(kotlin("test-junit5"))
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
 }
