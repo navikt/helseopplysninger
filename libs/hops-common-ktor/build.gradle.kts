@@ -18,7 +18,7 @@ tasks {
 dependencies {
     val ktorVersion = "1.6.0"
     val junitVersion = "5.7.2"
-    val koinVersion = "3.0.2"
+    val koinVersion = "3.1.0"
 
     api(project(":libs:hops-common-core"))
     api("io.insert-koin:koin-ktor:$koinVersion")
