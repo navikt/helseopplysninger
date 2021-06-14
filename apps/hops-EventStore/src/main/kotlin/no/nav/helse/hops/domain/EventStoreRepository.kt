@@ -22,6 +22,7 @@ class EventDto(
     val messageId: UUID,
     val correlationId: String,
     val eventType: String,
+    val bundleTimestamp: LocalDateTime,
     val recorded: LocalDateTime,
     val source: String,
     val destinations: List<String>,

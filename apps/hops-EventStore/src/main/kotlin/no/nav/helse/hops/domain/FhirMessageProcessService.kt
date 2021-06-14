@@ -5,6 +5,7 @@ import ca.uhn.fhir.context.FhirVersionEnum
 import io.ktor.http.withCharset
 import no.nav.helse.hops.convert.ContentTypes
 import no.nav.helse.hops.fhir.idAsUUID
+import no.nav.helse.hops.toLocalDateTime
 import no.nav.helse.hops.toUri
 import org.hl7.fhir.instance.model.api.IBaseBundle
 import org.hl7.fhir.r4.model.Bundle
@@ -32,6 +33,7 @@ class FhirMessageProcessService(private val eventStore: EventStoreRepository) {
             messageId = header.idAsUUID(),
             correlationId = correlationId,
             eventType = createEventType(header),
+            bundleTimestamp = message.timestamp.toLocalDateTime(),
             recorded = LocalDateTime.now(),
             source = header.source.endpoint,
             destinations = header.destination.map { it.endpoint }.filter { it.isNotBlank() },

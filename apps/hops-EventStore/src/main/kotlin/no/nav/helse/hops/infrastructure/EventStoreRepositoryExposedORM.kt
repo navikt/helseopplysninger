@@ -46,6 +46,7 @@ class EventStoreRepositoryExposedORM(config: Config) : EventStoreRepository {
                     it[messageId] = event.messageId
                     it[correlationId] = event.correlationId
                     it[eventType] = event.eventType
+                    it[bundleTimestamp] = event.bundleTimestamp
                     it[recorded] = event.recorded
                     it[src] = event.source
                     it[data] = event.data.decodeToString()
@@ -69,29 +70,30 @@ class EventStoreRepositoryExposedORM(config: Config) : EventStoreRepository {
         }
     }
 
-    override suspend fun search(filter: EventStoreReadOnlyRepository.Query) =
+    override suspend fun search(query: EventStoreReadOnlyRepository.Query) =
         newSuspendedTransaction(Dispatchers.IO, database) {
-            val query =
-                if (filter.destinationUri == null) EventTable.selectAll()
+            val exposedQuery =
+                if (query.destinationUri == null) EventTable.selectAll()
                 else EventTable
                     .join(
                         DestinationTable,
                         JoinType.INNER,
                         additionalConstraint = {
-                            EventTable.id eq DestinationTable.eventId and(DestinationTable.endpoint eq filter.destinationUri)
+                            EventTable.id eq DestinationTable.eventId and(DestinationTable.endpoint eq query.destinationUri)
                         }
                     )
                     .selectAll()
 
-            query
+            exposedQuery
                 .orderBy(EventTable.id to SortOrder.ASC)
-                .limit(filter.count, filter.offset)
+                .limit(query.count, query.offset)
                 .map {
                     EventDto(
                         messageId = it[EventTable.messageId],
                         bundleId = it[EventTable.bundleId],
                         correlationId = it[EventTable.correlationId],
                         eventType = it[EventTable.eventType],
+                        bundleTimestamp = it[EventTable.bundleTimestamp],
                         recorded = it[EventTable.recorded],
                         source = it[EventTable.src],
                         destinations = emptyList(), // Not needed for now.
@@ -107,11 +109,12 @@ private object EventTable : Table() {
     val bundleId = uuid("bundle_id").uniqueIndex()
     val messageId = uuid("message_id").uniqueIndex()
     val correlationId = varchar("correlation_id", 200)
-    val eventType = varchar("event_type", 200)
+    val eventType = varchar("event_type", 200).index()
+    val bundleTimestamp = datetime("bundle_timestamp").index()
     val recorded = datetime("recorded")
-    val src = varchar("source", 200)
+    val src = varchar("source", 200).index()
     val data = text("data")
-    val dataType = varchar("data_type", 100)
+    val dataType = varchar("data_type", 100).index()
     val dataBytes = integer("data_bytes")
 
     override val primaryKey = PrimaryKey(id)
@@ -120,7 +123,7 @@ private object EventTable : Table() {
 private object DestinationTable : Table() {
     val id = integer("id").autoIncrement()
     val eventId = long("event_id").references(EventTable.id)
-    val endpoint = varchar("endpoint", 200)
+    val endpoint = varchar("endpoint", 200).index()
 
     override val primaryKey = PrimaryKey(id)
 }
