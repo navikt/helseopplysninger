@@ -27,7 +27,7 @@ dependencies {
     runtimeOnly("org.springframework.boot:spring-boot-starter-actuator:$springBootVersion")
     runtimeOnly("org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion")
     runtimeOnly("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
-    runtimeOnly("org.postgresql:postgresql:42.2.20")
+    runtimeOnly("org.postgresql:postgresql:42.2.21")
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
     testImplementation("org.awaitility:awaitility:4.1.0")
     testImplementation("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
