@@ -1,0 +1,54 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  name: hops-eventstore
+  namespace: helseopplysninger
+  labels:
+    team: helseopplysninger
+spec:
+  image: {{ image }}
+  gcp:
+    sqlInstances:
+      - type: POSTGRES_12
+        databases:
+          - name: helseopplysninger-db
+            envVarPrefix: DB
+  liveness:
+    path: /isAlive
+    initialDelay: 10
+    timeout: 5
+    periodSeconds: 5
+    failureThreshold: 30
+  readiness:
+    path: /isReady
+    initialDelay: 10
+    periodSeconds: 5
+    timeout: 5
+  prometheus:
+    enabled: true
+    path: /prometheus
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 1024Mi
+    requests:
+      cpu: 500m
+      memory: 512Mi
+  replicas:
+    min: 1
+    max: 1
+  azure:
+    application:
+      enabled: true
+      tenant: nav.no
+  accessPolicy:
+    inbound:
+      rules:
+        - application: hops-api
+  env:
+    - name: LOG_APPENDER
+      value: json
+  ingresses:
+  {{#each ingresses as |url|}}
+     - {{url}}
+  {{/each}}

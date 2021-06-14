@@ -1,0 +1,126 @@
+openapi: 3.0.1
+info:
+  version: 1.0.0
+  title: EventStore
+  description: FHIR API for å lagre og hente FHIR-Messages.
+paths:
+  /isReady:
+    get:
+      tags:
+        - diagnostics
+      description: Readiness check.
+      responses:
+        '200':
+          description: Service is ready.
+  /isAlive:
+    get:
+      tags:
+        - diagnostics
+      description: Liveliness check.
+      responses:
+        '200':
+          description: Service is alive.
+  /prometheus:
+    get:
+      tags:
+        - diagnostics
+      description: Pull metrics.
+      responses:
+        '200':
+          description: Metrics.
+  /fhir/Bundle:
+    get:
+      tags:
+        - FHIR
+      description: Searches for FHIR Messages.
+      externalDocs:
+        url: https://www.hl7.org/fhir/messaging.html#rest
+      parameters:
+        - name: _count
+          in: query
+          schema:
+            type: integer
+        - name: _offset
+          in: query
+          schema:
+            type: integer
+        - name: message.destination-uri
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Bundle of type SearchResult containing Bundles of type Message.
+          content:
+            application/fhir+json; fhirVersion=4.0:
+              schema:
+                type: object
+  /fhir/$process-message:
+    post:
+      tags:
+        - FHIR
+      externalDocs:
+        url: https://www.hl7.org/fhir/messageheader-operation-process-message.html
+      requestBody:
+        content:
+          application/fhir+json; fhirVersion=4.0:
+            examples:
+              message-request-link:
+                $ref: '#/components/examples/message-request-link'
+            schema:
+              type: object
+      responses:
+        '202':
+          description: Message has been determined valid and persisted in EventStore.
+
+components:
+  examples:
+    message-request-link:
+      description: '<https://www.hl7.org/fhir/message-request-link.json.html>'
+      value: >
+        {
+          "resourceType": "Bundle",
+          "id": "10bb101f-a121-4264-a920-67be9cb82c74",
+          "type": "message",
+          "timestamp": "2015-07-14T11:15:33+10:00",
+          "entry": [
+            {
+              "fullUrl": "urn:uuid:267b18ce-3d37-4581-9baa-6fada338038b",
+              "resource": {
+                "resourceType": "MessageHeader",
+                "id": "267b18ce-3d37-4581-9baa-6fada338038b",
+                "eventCoding": {
+                  "system": "http://example.org/fhir/message-events",
+                  "code": "patient-link"
+                },
+                "source": {
+                  "endpoint": "http://example.org/clients/ehr-lite"
+                },
+                "focus": [
+                  {
+                    "reference": "http://acme.com/ehr/fhir/Patient/pat1"
+                  },
+                  {
+                    "reference": "http://acme.com/ehr/fhir/Patient/pat12"
+                  }
+                ]
+              }
+            },
+            {
+              "fullUrl": "http://acme.com/ehr/fhir/Patient/pat1",
+              "resource": {
+                "resourceType": "Patient",
+                "id": "pat1",
+                "gender": "male"
+              }
+            },
+            {
+              "fullUrl": "http://acme.com/ehr/fhir/Patient/pat12",
+              "resource": {
+                "resourceType": "Patient",
+                "id": "pat2",
+                "gender": "other"
+              }
+            }
+          ]
+        }

@@ -18,9 +18,11 @@ tasks {
 dependencies {
     val ktorVersion = "1.6.0"
     val junitVersion = "5.7.2"
+    val koinVersion = "3.0.2"
 
     api(project(":libs:hops-common-core"))
-    api("io.insert-koin:koin-ktor:3.0.2")
+    api("io.insert-koin:koin-ktor:$koinVersion")
+    api("io.insert-koin:koin-logger-slf4j:$koinVersion")
     implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:5.4.0")
     implementation("com.sksamuel.hoplite:hoplite-hocon:1.4.1")
 
