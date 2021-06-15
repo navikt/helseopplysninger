@@ -89,7 +89,7 @@ private object EventTable : Table() {
     val id = long("id").autoIncrement()
     val bundleId = uuid("bundle_id").uniqueIndex()
     val messageId = uuid("message_id").uniqueIndex()
-    val correlationId = varchar("correlation_id", 200)
+    val requestId = varchar("request_id", 200)
     val eventType = varchar("event_type", 200).index()
     val bundleTimestamp = datetime("bundle_timestamp").index()
     val recorded = datetime("recorded")
@@ -116,7 +116,7 @@ private object SqlErrorCodes {
 private fun InsertStatement<Number>.setValues(event: EventDto) {
     this[EventTable.bundleId] = event.bundleId
     this[EventTable.messageId] = event.messageId
-    this[EventTable.correlationId] = event.correlationId
+    this[EventTable.requestId] = event.requestId
     this[EventTable.eventType] = event.eventType
     this[EventTable.bundleTimestamp] = event.bundleTimestamp
     this[EventTable.recorded] = event.recorded
@@ -130,7 +130,7 @@ private fun toEventDto(row: ResultRow) =
     EventDto(
         messageId = row[EventTable.messageId],
         bundleId = row[EventTable.bundleId],
-        correlationId = row[EventTable.correlationId],
+        requestId = row[EventTable.requestId],
         eventType = row[EventTable.eventType],
         bundleTimestamp = row[EventTable.bundleTimestamp],
         recorded = row[EventTable.recorded],

@@ -2,6 +2,7 @@ package no.nav.helse.hops.domain
 
 import ca.uhn.fhir.context.FhirContext
 import ca.uhn.fhir.context.FhirVersionEnum
+import no.nav.helse.hops.fhir.requestId
 import no.nav.helse.hops.toUri
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.InstantType
@@ -11,6 +12,20 @@ import java.util.UUID
 
 class FhirMessageSearchService(private val eventStore: EventStoreReadOnlyRepository) {
     suspend fun search(count: Int, offset: Long, destination: URI? = null): Bundle {
+        val parser = FhirContext
+            .forCached(FhirVersionEnum.R4)
+            .newJsonParser()
+            .setOverrideResourceIdWithBundleEntryFullUrl(false)
+
+        fun toBundleEntry(event: EventDto) =
+            ByteArrayInputStream(event.data).use {
+                Bundle.BundleEntryComponent().apply {
+                    fullUrl = event.bundleId.toUri().toString()
+                    resource = parser.parseResource(Bundle::class.java, it)
+                    requestId = event.requestId
+                }
+            }
+
         val query = EventStoreReadOnlyRepository.Query(count, offset, destination?.toString())
         val events = eventStore.search(query)
 
@@ -22,16 +37,3 @@ class FhirMessageSearchService(private val eventStore: EventStoreReadOnlyReposit
         }
     }
 }
-
-private fun toBundleEntry(event: EventDto): Bundle.BundleEntryComponent =
-    ByteArrayInputStream(event.data).use {
-        val parser = FhirContext
-            .forCached(FhirVersionEnum.R4)
-            .newJsonParser()
-            .setOverrideResourceIdWithBundleEntryFullUrl(false)
-
-        return Bundle.BundleEntryComponent().apply {
-            fullUrl = event.bundleId.toUri().toString()
-            resource = parser.parseResource(Bundle::class.java, it)
-        }
-    }

@@ -1,7 +1,7 @@
 apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
-  name: hops-eventsinkkafka
+  name: hops-eventreplaykafka
   namespace: helseopplysninger
   labels:
     team: helseopplysninger
