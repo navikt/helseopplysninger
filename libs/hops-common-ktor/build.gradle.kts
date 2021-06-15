@@ -23,7 +23,7 @@ dependencies {
     api(project(":libs:hops-common-core"))
     api("io.insert-koin:koin-ktor:$koinVersion")
     api("io.insert-koin:koin-logger-slf4j:$koinVersion")
-    implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:5.4.0")
+    implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:5.4.1")
     implementation("com.sksamuel.hoplite:hoplite-hocon:1.4.1")
 
     testImplementation(kotlin("test-junit5"))
