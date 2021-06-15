@@ -100,6 +100,31 @@ services:
       KAFKA_CLIENT_ID: hops-bestilling
       HOPS_HAPI_BASE_URL: http://hops-hapi-service:8080/fhir
 
+  # hops-eventstore provides a REST API to store and retrieve Events (FHIR Messages).
+  hops-eventstore-service:
+    container_name: hops-eventstore_container
+    build:
+      context: ..
+      args:
+        project: hops-EventStore
+    restart: unless-stopped
+    depends_on:
+      - mock-oauth2-service
+      #- postgres-service
+    ports:
+      - 8086:8080
+    networks:
+      - hops_network
+      - hapi-postgres_network
+    environment:
+      DB_HOST: postgres-service
+      DB_PORT: 5432
+      DB_DATABASE: postgres
+      DB_USERNAME: postgres
+      DB_PASSWORD: Welcome01
+      AZURE_OPENID_CONFIG_ISSUER: http://mock-oauth2-service:8081/default
+      AZURE_APP_CLIENT_ID: eventstore_test_client_id
+
   # pgAdmin provides an administration web UI for PostgreSQL.
   pgadmin-service:
     container_name: pgadmin_container
