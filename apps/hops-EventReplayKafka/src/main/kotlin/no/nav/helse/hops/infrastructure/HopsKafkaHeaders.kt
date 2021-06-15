@@ -1,12 +1,12 @@
 package no.nav.helse.hops.infrastructure
 
 import ca.uhn.fhir.rest.api.Constants
+import no.nav.helse.hops.domain.Constants.MessageHeaders
 import no.nav.helse.hops.domain.FhirMessage
 import no.nav.helse.hops.fhir.fullyQualifiedEventType
 import org.apache.kafka.common.header.Headers
 import org.apache.kafka.common.header.internals.RecordHeaders
 import org.hl7.fhir.r4.model.MessageHeader
-import no.nav.helse.hops.domain.Constants.MessageHeaders
 
 class HopsKafkaHeaders(val kafkaHeaders: Headers) {
     constructor(message: FhirMessage) : this(createRecordHeaders(message))
