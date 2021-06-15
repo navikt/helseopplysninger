@@ -8,7 +8,7 @@ import org.hl7.fhir.r4.model.StringType
 /** Property extension to set\get x-request-id as http-response-header extension.
  * See http://hl7.org/fhir/StructureDefinition/http-response-header **/
 var Bundle.BundleEntryComponent.requestId: String
-    get() = response.extension.single(::isRequestHeader).primitiveValue().substringAfter(':').trim()
+    get() = response.extension.single(::isRequestHeader).valueAsString().substringAfter(':').trim()
     set(value) {
         response = response ?: Bundle.BundleEntryResponseComponent(StringType("201"))
         response.apply {
@@ -20,4 +20,6 @@ var Bundle.BundleEntryComponent.requestId: String
 private const val HTTP_RESPONSE_HEADER_EXTENSION_URL = "http://hl7.org/fhir/StructureDefinition/http-response-header"
 
 private fun isRequestHeader(ext: Extension) =
-    ext.url == HTTP_RESPONSE_HEADER_EXTENSION_URL && ext.primitiveValue().startsWith(HEADER_REQUEST_ID)
+    ext.url == HTTP_RESPONSE_HEADER_EXTENSION_URL && ext.valueAsString().startsWith(HEADER_REQUEST_ID)
+
+private fun Extension.valueAsString(): String = (value as StringType).value

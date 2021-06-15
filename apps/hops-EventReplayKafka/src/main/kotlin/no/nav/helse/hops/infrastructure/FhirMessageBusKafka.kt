@@ -15,6 +15,7 @@ import java.util.UUID
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
+import kotlin.math.max
 
 class FhirMessageBusKafka(
     private val producer: Producer<UUID, IBaseResource>,
@@ -43,7 +44,9 @@ class FhirMessageBusKafka(
             val topicPartitions = partitionInfos.map { TopicPartition(it.topic(), it.partition()) }
 
             consumer.assign(topicPartitions)
-            consumer.seekToEnd(topicPartitions)
+            consumer.endOffsets(topicPartitions).forEach { (topicPartition, endOffset) ->
+                consumer.seek(topicPartition, max(endOffset - 1, 0))
+            }
 
             val records = consumer.poll(Duration.ofSeconds(2))
             val hopsHeaders = records.map { HopsKafkaHeaders(it.headers()) }
@@ -56,7 +59,7 @@ private fun createRecord(topic: String, message: FhirMessage) =
     ProducerRecord<UUID, IBaseResource>(
         topic,
         null,
-        message.content.timestamp.time,
+        null, // message.content.timestamp.time,
         message.content.entry.first().resource.idAsUUID(), // MessageHeader.id
         message.content,
         HopsKafkaHeaders(message).kafkaHeaders

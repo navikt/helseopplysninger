@@ -8,9 +8,9 @@ import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.Producer
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.config.SslConfigs
+import org.apache.kafka.common.serialization.ByteArrayDeserializer
 import org.apache.kafka.common.serialization.UUIDDeserializer
 import org.apache.kafka.common.serialization.UUIDSerializer
-import org.apache.kafka.common.serialization.VoidDeserializer
 import org.hl7.fhir.instance.model.api.IBaseResource
 import java.util.Properties
 import java.util.UUID
@@ -30,7 +30,7 @@ object KafkaFactory {
         val props = createCommonGcpKafkaProperties(config).also {
             it[ConsumerConfig.GROUP_ID_CONFIG] = config.groupId
             it[ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG] = UUIDDeserializer::class.java
-            it[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = VoidDeserializer::class.java // Not needed.
+            it[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = ByteArrayDeserializer::class.java
         }
         return KafkaConsumer(props)
     }
