@@ -52,6 +52,8 @@ spec:
     - {{url}}
   {{/each}}
   env:
+    - name: LOG_APPENDER
+      value: json
   {{#each env}}
      - name: {{@key}}
        value: "{{this}}"

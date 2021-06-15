@@ -7,6 +7,7 @@ import no.nav.helse.hops.domain.EventStoreRepository
 import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.JoinType
+import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.Slf4jSqlDebugLogger
 import org.jetbrains.exposed.sql.SortOrder
@@ -14,8 +15,10 @@ import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.`java-time`.datetime
 import org.jetbrains.exposed.sql.addLogger
 import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.andWhere
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.statements.InsertStatement
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -41,22 +44,11 @@ class EventStoreRepositoryExposedORM(config: Config) : EventStoreRepository {
     override suspend fun add(event: EventDto) {
         try {
             newSuspendedTransaction(Dispatchers.IO, database) {
-                val insertedEventId = EventTable.insert {
-                    it[bundleId] = event.bundleId
-                    it[messageId] = event.messageId
-                    it[correlationId] = event.correlationId
-                    it[eventType] = event.eventType
-                    it[bundleTimestamp] = event.bundleTimestamp
-                    it[recorded] = event.recorded
-                    it[src] = event.source
-                    it[data] = event.data.decodeToString()
-                    it[dataType] = event.dataType
-                    it[dataBytes] = event.data.size
-                }[EventTable.id]
+                val rowId = EventTable.insert {it.setValues(event) }[EventTable.id]
 
                 event.destinations.forEach { dest ->
                     DestinationTable.insert {
-                        it[eventId] = insertedEventId
+                        it[eventId] = rowId
                         it[endpoint] = dest
                     }
                 }
@@ -64,9 +56,7 @@ class EventStoreRepositoryExposedORM(config: Config) : EventStoreRepository {
         } catch (ex: ExposedSQLException) {
             // Ignore unique-constraint violations in order to provide idempotent behavior.
             // Exposed will already have logged this as a WARNING.
-            if (ex.errorCode != SqlErrorCodes.uniqueViolation) {
-                throw ex
-            }
+            if (ex.errorCode != SqlErrorCodes.uniqueViolation) throw ex
         }
     }
 
@@ -84,23 +74,14 @@ class EventStoreRepositoryExposedORM(config: Config) : EventStoreRepository {
                     )
                     .selectAll()
 
+            query.messageId?.let {
+                exposedQuery.andWhere { EventTable.messageId eq it }
+            }
+
             exposedQuery
                 .orderBy(EventTable.id to SortOrder.ASC)
                 .limit(query.count, query.offset)
-                .map {
-                    EventDto(
-                        messageId = it[EventTable.messageId],
-                        bundleId = it[EventTable.bundleId],
-                        correlationId = it[EventTable.correlationId],
-                        eventType = it[EventTable.eventType],
-                        bundleTimestamp = it[EventTable.bundleTimestamp],
-                        recorded = it[EventTable.recorded],
-                        source = it[EventTable.src],
-                        destinations = emptyList(), // Not needed for now.
-                        data = it[EventTable.data].toByteArray(),
-                        dataType = it[EventTable.dataType]
-                    )
-                }
+                .map(::toEventDto)
         }
 }
 
@@ -131,3 +112,30 @@ private object DestinationTable : Table() {
 private object SqlErrorCodes {
     const val uniqueViolation = 23505
 }
+
+private fun InsertStatement<Number>.setValues(event: EventDto) {
+    this[EventTable.bundleId] = event.bundleId
+    this[EventTable.messageId] = event.messageId
+    this[EventTable.correlationId] = event.correlationId
+    this[EventTable.eventType] = event.eventType
+    this[EventTable.bundleTimestamp] = event.bundleTimestamp
+    this[EventTable.recorded] = event.recorded
+    this[EventTable.src] = event.source
+    this[EventTable.data] = event.data.decodeToString()
+    this[EventTable.dataType] = event.dataType
+    this[EventTable.dataBytes] = event.data.size
+}
+
+private fun toEventDto(row: ResultRow) =
+    EventDto(
+        messageId = row[EventTable.messageId],
+        bundleId = row[EventTable.bundleId],
+        correlationId = row[EventTable.correlationId],
+        eventType = row[EventTable.eventType],
+        bundleTimestamp = row[EventTable.bundleTimestamp],
+        recorded = row[EventTable.recorded],
+        source = row[EventTable.src],
+        destinations = emptyList(), // Not needed for now.
+        data = row[EventTable.data].toByteArray(),
+        dataType = row[EventTable.dataType]
+    )

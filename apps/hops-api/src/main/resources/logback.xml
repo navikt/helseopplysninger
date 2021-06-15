@@ -1,10 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <appender name="STDOUT_JSON" class="ch.qos.logback.core.ConsoleAppender">
+
+    <!-- Used to generate human readable messages. -->
+    <appender name="pretty" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%cyan(%d{HH:mm:ss.SSS}) %gray([%thread]) %highlight(%-5level) %magenta(%logger{36}) - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Used to generate json formatted messages, preferred by NAIS. -->
+    <appender name="json" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
     </appender>
 
-    <root level="TRACE">
-        <appender-ref ref="STDOUT_JSON"/>
+    <!-- logLevel and logAppender are configured as environment variables. -->
+    <root level="${LOG_LEVEL:-INFO}">
+        <appender-ref ref="${LOG_APPENDER:-pretty}"/>
     </root>
+
 </configuration>
