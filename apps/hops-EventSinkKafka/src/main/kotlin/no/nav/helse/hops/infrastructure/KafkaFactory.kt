@@ -7,7 +7,6 @@ import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.common.config.SslConfigs
 import org.apache.kafka.common.serialization.ByteArrayDeserializer
 import org.apache.kafka.common.serialization.UUIDDeserializer
-import org.apache.kafka.common.serialization.VoidDeserializer
 import java.util.Properties
 
 object KafkaFactory {
