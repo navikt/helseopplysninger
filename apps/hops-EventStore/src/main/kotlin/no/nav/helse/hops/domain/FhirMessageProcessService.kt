@@ -7,25 +7,21 @@ import no.nav.helse.hops.convert.ContentTypes
 import no.nav.helse.hops.fhir.idAsUUID
 import no.nav.helse.hops.toLocalDateTime
 import no.nav.helse.hops.toUri
-import org.hl7.fhir.instance.model.api.IBaseBundle
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.MessageHeader
 import java.io.ByteArrayOutputStream
 import java.io.OutputStreamWriter
 import java.time.LocalDateTime
+import java.util.UUID
 
 class FhirMessageProcessService(private val eventStore: EventStoreRepository) {
-    suspend fun process(message: IBaseBundle, correlationId: String) {
-        if (message is Bundle) {
-            val event = createEventDto(message, correlationId)
-            eventStore.add(event)
-        } else {
-            throw NotImplementedError("${message.javaClass.name} is not supported.")
-        }
+    suspend fun process(message: Bundle, correlationId: String) {
+        validate(message)
+        val event = createEventDto(message, correlationId)
+        eventStore.add(event)
     }
 
     private fun createEventDto(message: Bundle, correlationId: String): EventDto {
-        validate(message)
         val header = message.entry[0].resource as MessageHeader
 
         return EventDto(
@@ -44,7 +40,7 @@ class FhirMessageProcessService(private val eventStore: EventStoreRepository) {
 
     /** Validerer melding ihht. https://www.hl7.org/fhir/messaging.html
      * kan erstattes egenlagde Bundle og\eller MessageHeader profiler istedenfor å gjøres her. **/
-    private fun validate(message: Bundle) {
+    private suspend fun validate(message: Bundle) {
         check(message.type == Bundle.BundleType.MESSAGE) { "Bundle must be of type 'Message'" }
 
         val header = message.entry.first().resource as MessageHeader
@@ -58,6 +54,13 @@ class FhirMessageProcessService(private val eventStore: EventStoreRepository) {
 
         check(message.entry.first().fullUrl == headerId.toUri().toString()) {
             "entry.fullUrl does not match MessageHeader.id."
+        }
+
+        // Ensure that a response references a request that actually exists.
+        // https://www.hl7.org/fhir/messaging.html#3.4.1.4
+        header.response?.identifier?.let {
+            val requestMessageId = UUID.fromString(it)
+            eventStore.ensureExists(requestMessageId)
         }
     }
 }

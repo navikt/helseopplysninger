@@ -16,21 +16,20 @@ tasks {
 }
 
 dependencies {
-    val ktorVersion = "1.6.0"
     val junitVersion = "5.7.2"
     val koinVersion = "3.1.0"
+    val ktorVersion = "1.6.0"
 
-    api(project(":libs:hops-common-core"))
     api("io.insert-koin:koin-ktor:$koinVersion")
     api("io.insert-koin:koin-logger-slf4j:$koinVersion")
-    implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:5.4.0")
+    api(project(":libs:hops-common-core"))
+    implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:5.4.1")
     implementation("com.sksamuel.hoplite:hoplite-hocon:1.4.1")
-
-    testImplementation(kotlin("test-junit5"))
-    testImplementation("io.mockk:mockk:1.11.0")
-    testImplementation("io.ktor:ktor-server-test-host:$ktorVersion") { exclude("org.jetbrains.kotlin", "kotlin-test-junit") }
     testImplementation("io.kotest:kotest-assertions-shared:4.6.0")
     testImplementation("io.ktor:ktor-server-netty:$ktorVersion")
+    testImplementation("io.ktor:ktor-server-test-host:$ktorVersion") { exclude("org.jetbrains.kotlin", "kotlin-test-junit") }
+    testImplementation("io.mockk:mockk:1.11.0")
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
+    testImplementation(kotlin("test-junit5"))
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
 }
