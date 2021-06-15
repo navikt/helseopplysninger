@@ -44,7 +44,7 @@ class EventStoreRepositoryExposedORM(config: Config) : EventStoreRepository {
     override suspend fun add(event: EventDto) {
         try {
             newSuspendedTransaction(Dispatchers.IO, database) {
-                val rowId = EventTable.insert {it.setValues(event) }[EventTable.id]
+                val rowId = EventTable.insert { it.setValues(event) }[EventTable.id]
 
                 event.destinations.forEach { dest ->
                     DestinationTable.insert {
