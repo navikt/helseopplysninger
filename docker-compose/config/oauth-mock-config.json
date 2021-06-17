@@ -24,15 +24,6 @@
       "requestMappings": [
         {
           "requestParam": "scope",
-          "match": "hops-fhir-hapi-server",
-          "claims": {
-            "aud": [
-              "hapi_test_client_id"
-            ]
-          }
-        },
-        {
-          "requestParam": "scope",
           "match": "eventstore",
           "claims": {
             "sub": "eventstore-subject",

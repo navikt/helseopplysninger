@@ -9,10 +9,10 @@ import io.micrometer.prometheus.PrometheusMeterRegistry
 
 fun Routing.naisRoutes(prometheusMeterRegistry: PrometheusMeterRegistry) {
     get("/isReady") {
-        call.respondText("hops-EventSinkKafka")
+        call.respondText("EventSinkKafka")
     }
     get("/isAlive") {
-        call.respondText("hops-EventSinkKafka")
+        call.respondText("EventSinkKafka")
     }
     get("/prometheus") {
         call.respond(prometheusMeterRegistry.scrape())

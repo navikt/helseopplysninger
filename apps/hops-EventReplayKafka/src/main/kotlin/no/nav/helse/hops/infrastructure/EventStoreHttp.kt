@@ -30,7 +30,7 @@ class EventStoreHttp(
             var msgOffset = startingOffset
             var url: String? = "${config.baseUrl}/fhir/Bundle?_offset=$startingOffset"
             var httpTask = client.fhirGetAsync(url!!)
-            val parser = JsonConverter.newParser().setPrettyPrint(false)
+            val parser = JsonConverter.newParser(false).setPrettyPrint(false)
 
             do {
                 val httpResponse = httpTask.await()

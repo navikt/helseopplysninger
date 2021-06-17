@@ -11,7 +11,7 @@ spec:
     sqlInstances:
       - type: POSTGRES_12
         databases:
-          - name: helseopplysninger-db
+          - name: events-db
             envVarPrefix: DB
   liveness:
     path: /isAlive

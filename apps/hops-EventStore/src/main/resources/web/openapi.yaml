@@ -7,28 +7,25 @@ paths:
   /isReady:
     get:
       tags: [diagnostics]
-      description: Readiness check.
       responses:
         '200':
           description: Service is ready.
   /isAlive:
     get:
       tags: [diagnostics]
-      description: Liveliness check.
       responses:
         '200':
           description: Service is alive.
   /prometheus:
     get:
       tags: [diagnostics]
-      description: Pull metrics.
       responses:
         '200':
           description: Metrics.
   /fhir/Bundle:
     get:
       tags: [FHIR]
-      description: Searches for FHIR Messages.
+      summary: Searches for FHIR Messages.
       externalDocs:
         url: https://www.hl7.org/fhir/messaging.html#rest
       security:
