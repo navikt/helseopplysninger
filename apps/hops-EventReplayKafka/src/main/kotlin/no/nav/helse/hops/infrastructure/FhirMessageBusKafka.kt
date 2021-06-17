@@ -1,5 +1,7 @@
 package no.nav.helse.hops.infrastructure
 
+import ca.uhn.fhir.rest.api.Constants
+import no.nav.helse.hops.domain.Constants.MessageHeaders.SOURCE_OFFSET
 import no.nav.helse.hops.domain.FhirMessage
 import no.nav.helse.hops.domain.FhirMessageBus
 import org.apache.kafka.clients.consumer.Consumer
@@ -8,7 +10,10 @@ import org.apache.kafka.clients.producer.Producer
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.clients.producer.RecordMetadata
 import org.apache.kafka.common.TopicPartition
+import org.apache.kafka.common.header.Headers
+import org.apache.kafka.common.header.internals.RecordHeaders
 import java.time.Duration
+import java.time.ZoneOffset
 import java.util.UUID
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -47,18 +52,30 @@ class FhirMessageBusKafka(
             }
 
             val records = consumer.poll(Duration.ofSeconds(2))
-            val hopsHeaders = records.map { HopsKafkaHeaders(it.headers()) }
+            val offsets = records.map { it.headers()[SOURCE_OFFSET].toLong() }
 
-            return hopsHeaders.map { it.sourceOffset }.maxOrNull() ?: 0
+            return offsets.maxOrNull() ?: 0
         }
 }
 
 private fun createRecord(topic: String, message: FhirMessage) =
-    ProducerRecord<UUID, ByteArray>(
+    ProducerRecord(
         topic,
         null,
-        null, // message.content.timestamp.time,
+        message.timestamp.toInstant(ZoneOffset.UTC).toEpochMilli(),
         message.id,
         message.content,
-        HopsKafkaHeaders(message).kafkaHeaders
+        RecordHeaders().also {
+            it[Constants.HEADER_CONTENT_TYPE] = message.contentType
+            it[Constants.HEADER_REQUEST_ID] = message.requestId
+            it[SOURCE_OFFSET] = message.sourceOffset.toString()
+            it.setReadOnly()
+        }
     )
+
+private operator fun Headers.get(key: String) =
+    headers(key).map { it.value().decodeToString() }.single()
+
+private operator fun Headers.set(key: String, value: String) {
+    remove(key).add(key, value.toByteArray())
+}
