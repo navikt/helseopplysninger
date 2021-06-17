@@ -16,7 +16,7 @@ tasks {
 
 dependencies {
     val hapiVersion = "5.3.3"
-    val springBootVersion = "2.4.5"
+    val springBootVersion = "2.5.1"
     val h2Version = "1.4.200"
 
     implementation("ca.uhn.hapi.fhir:hapi-fhir-jpaserver-cql:$hapiVersion")
