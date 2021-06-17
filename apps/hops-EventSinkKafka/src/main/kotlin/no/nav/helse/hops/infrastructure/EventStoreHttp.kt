@@ -22,5 +22,5 @@ class EventStoreHttp(
         }
 
     override suspend fun smokeTest() =
-        client.get<Unit>("${config.baseUrl}/isAlive")
+        client.get<Unit>("${config.baseUrl}/fhir/Bundle?_count=1")
 }

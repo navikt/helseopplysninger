@@ -13,7 +13,7 @@ import org.slf4j.Logger
 import java.io.Closeable
 import kotlin.coroutines.CoroutineContext
 
-class EventReplayJob(
+class EventSinkJob(
     messageBus: FhirMessageBus,
     logger: Logger,
     eventStore: EventStore,
@@ -22,8 +22,7 @@ class EventReplayJob(
     private val job = CoroutineScope(context).launch {
         while (isActive) {
             try {
-                val startingOffset = messageBus.sourceOffsetOfLatestMessage()
-                eventStore.poll(startingOffset).collect { messageBus.publish(it) }
+                messageBus.poll().collect { eventStore.add(it) }
             }
             catch (ex: Throwable) {
                 if (ex is CancellationException) throw ex

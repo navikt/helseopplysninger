@@ -41,8 +41,7 @@ class FhirMessageBusKafka(
      * Fetches the latest message in all Partitions of the Topic and returns the highest HOPS-Message-Offset value.
      * This Offset represents the offset of an Event in the EventStore and is not necessarily equal to the Kafka-offset.
      * **/
-    override suspend fun sourceOffsetOfLatestMessage(): Long =
-        consumer.use { // Only used on startup and can therefore be closed.
+    override suspend fun sourceOffsetOfLatestMessage(): Long {
             val partitionInfos = consumer.partitionsFor(config.topic) ?: emptyList()
             val topicPartitions = partitionInfos.map { TopicPartition(it.topic(), it.partition()) }
 

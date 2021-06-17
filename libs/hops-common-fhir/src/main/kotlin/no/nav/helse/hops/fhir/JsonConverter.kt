@@ -6,10 +6,12 @@ import ca.uhn.fhir.parser.IParser
 import org.hl7.fhir.instance.model.api.IBaseResource
 
 object JsonConverter {
+    // Not thread safe, new instance must therefore be created.
     fun newParser(): IParser = FhirContext
         .forCached(FhirVersionEnum.R4)
         .newJsonParser()
         .setPrettyPrint(true)
+        .setStripVersionsFromReferences(false)
         .setOverrideResourceIdWithBundleEntryFullUrl(false)
 
     inline fun <reified R : IBaseResource> parse(json: String): R =

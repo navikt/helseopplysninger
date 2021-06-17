@@ -8,8 +8,9 @@ Backend for forwarding and storing of health-related data
 * Postgres
 
 ## To run locally on Mac 
-To reach the mock oauth2 server you have to make a new mapping in the hosts file.
-To modify the /etc/hosts file
+To reach the mock oauth2 server you have to make a new mapping in the hosts
+file according to the [mock-oatuh2-server doc](https://github.com/navikt/mock-oauth2-server#docker-compose).
+To modify the /etc/hosts file:
 * Launch Terminal
 * Type `sudo nano /etc/hosts` and press Return
 * Enter your admin password

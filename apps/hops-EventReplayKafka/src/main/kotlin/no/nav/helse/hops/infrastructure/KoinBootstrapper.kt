@@ -25,7 +25,7 @@ object KoinBootstrapper {
         single<EventStore> { EventStoreHttp(get(), get(named(EVENT_STORE_CLIENT_NAME))) }
         single<FhirMessageBus> { FhirMessageBusKafka(get(), get(), get()) }
 
-        single { KafkaFactory.createFhirConsumer(get()) }
+        singleClosable { KafkaFactory.createFhirConsumer(get()) }
         singleClosable { KafkaFactory.createFhirProducer(get()) }
         singleClosable(createdAtStart = true) {
             EventReplayJob(get(), getLogger<EventReplayJob>(), get())

@@ -1,7 +1,5 @@
 package no.nav.helse.hops.infrastructure
 
-import ca.uhn.fhir.context.FhirContext
-import ca.uhn.fhir.context.FhirVersionEnum
 import io.ktor.client.HttpClient
 import io.ktor.client.call.receive
 import io.ktor.client.request.accept
@@ -16,6 +14,7 @@ import kotlinx.coroutines.flow.flow
 import no.nav.helse.hops.convert.ContentTypes
 import no.nav.helse.hops.domain.EventStore
 import no.nav.helse.hops.domain.FhirMessage
+import no.nav.helse.hops.fhir.JsonConverter
 import no.nav.helse.hops.fhir.idAsUUID
 import no.nav.helse.hops.fhir.requestId
 import no.nav.helse.hops.toLocalDateTime
@@ -31,7 +30,7 @@ class EventStoreHttp(
             var msgOffset = startingOffset
             var url: String? = "${config.baseUrl}/fhir/Bundle?_offset=$startingOffset"
             var httpTask = client.fhirGetAsync(url!!)
-            val parser = createParser()
+            val parser = JsonConverter.newParser().setPrettyPrint(false)
 
             do {
                 val httpResponse = httpTask.await()
@@ -53,9 +52,6 @@ class EventStoreHttp(
                 if (result.hasEntry()) result.entry.map(::toFhirMessage).forEach { emit(it) }
             } while (url != null)
         }
-
-    override suspend fun smokeTest() =
-        client.get<Unit>("${config.baseUrl}/isAlive")
 }
 
 private fun HttpClient.fhirGetAsync(url: String) =
@@ -67,11 +63,3 @@ private fun HttpClient.fhirGetAsync(url: String) =
             }
         }
     }
-
-// Remember that the parser is NOT thread safe.
-private fun createParser() =
-    FhirContext
-        .forCached(FhirVersionEnum.R4)
-        .newJsonParser()
-        .setStripVersionsFromReferences(false)
-        .setOverrideResourceIdWithBundleEntryFullUrl(false)

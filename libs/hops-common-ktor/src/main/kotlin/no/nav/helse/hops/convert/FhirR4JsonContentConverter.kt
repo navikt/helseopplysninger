@@ -19,10 +19,12 @@ import kotlinx.coroutines.withContext
 import org.hl7.fhir.instance.model.api.IBaseResource
 
 class FhirR4JsonContentConverter : ContentConverter {
+    // Not thread safe, new instance must therefore be created.
     private fun newParser() = FhirContext
         .forCached(FhirVersionEnum.R4)
         .newJsonParser()
         .setPrettyPrint(true)
+        .setStripVersionsFromReferences(false)
         .setOverrideResourceIdWithBundleEntryFullUrl(false)
 
     override suspend fun convertForSend(
