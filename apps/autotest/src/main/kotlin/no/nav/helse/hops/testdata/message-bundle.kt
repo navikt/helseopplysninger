@@ -13,19 +13,25 @@ import org.hl7.fhir.r4.model.Resource
 import org.hl7.fhir.r4.model.UriType
 import java.util.UUID
 
-fun createMessageBundle(messageEvent: String, data: List<Resource>) = Bundle().apply {
-    id = UUID.randomUUID().toString()
-    timestampElement = InstantType.withCurrentTime()
-    type = Bundle.BundleType.MESSAGE
-    addResource(createMessageHeader(messageEvent))
-    data.forEach { addResource(it) }
-}
+fun createCommunicationBundle(messageEvent: String, data: List<Resource>, communication: Communication) =
+    Bundle().apply {
+        id = UUID.randomUUID().toString()
+        timestampElement = InstantType.withCurrentTime()
+        type = Bundle.BundleType.MESSAGE
+        addResource(
+            createMessageHeader(messageEvent, listOf(addResource(communication)))
+        )
+        data.forEach { addResource(it) }
+    }
 
-fun createMessageHeader(messageEvent: String) = MessageHeader().apply {
+fun createMessageHeader(messageEvent: String, focusedEntries: List<Bundle.BundleEntryComponent>) = MessageHeader().apply {
     id = UUID.randomUUID().toString()
     event = UriType(messageEvent)
     source = MessageHeader.MessageSourceComponent().apply {
         endpoint = messageEvent
+    }
+    focus = focusedEntries.map {
+        Reference(it.fullUrl)
     }
 }
 

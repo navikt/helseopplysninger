@@ -20,6 +20,7 @@ import org.apache.kafka.clients.producer.Producer
 import org.hl7.fhir.instance.model.api.IBaseResource
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.MessageHeader
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.koin.dsl.module
 import org.testcontainers.junit.jupiter.Container
@@ -35,6 +36,7 @@ class ApplicationTest {
     }
 
     @Test
+    @Disabled
     fun `hapi-fhir-server med bestilling skal generere response-message paa kafka og lagre kopi i hapi`() {
         populateHapiTestContainer()
         withHopsTestApplication {

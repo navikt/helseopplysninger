@@ -6,8 +6,9 @@ import no.nav.helse.hops.ResourceLoader
 import no.nav.helse.hops.fhir.toJson
 import no.nav.helse.hops.models.HjelpemiddelRequest
 import no.nav.helse.hops.models.digihot.DigihotKvittering
+import no.nav.helse.hops.testdata.createCommunicationAboutDeviceRequsts
+import no.nav.helse.hops.testdata.createCommunicationBundle
 import no.nav.helse.hops.testdata.createDeviceRequest
-import no.nav.helse.hops.testdata.createMessageBundle
 import org.hl7.fhir.r4.model.DeviceRequest
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
@@ -56,10 +57,21 @@ internal class DigihotTilFhirMapperTest {
                 )
             }
         }
-        val bundle = createMessageBundle("hjelpemiddelKvittering", deviceRequests)
-        val bundleJson = bundle.toJson()
-        assertTrue(bundleJson.contains("Bundle"))
-        assertTrue(bundleJson.startsWith("{"))
-        assertTrue(bundleJson.endsWith("}"))
+        try {
+            val communication =
+                createCommunicationAboutDeviceRequsts(digihotKvittering.soknad.soknad.id, deviceRequests)
+            val bundle = createCommunicationBundle(
+                "hjelpemiddelKvittering",
+                deviceRequests,
+                communication
+            )
+            val bundleJson = bundle.toJson(false)
+            println(bundleJson)
+            assertTrue(bundleJson.contains("Bundle"))
+            assertTrue(bundleJson.startsWith("{"))
+            assertTrue(bundleJson.endsWith("}"))
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
     }
 }
