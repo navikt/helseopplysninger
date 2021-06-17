@@ -2,14 +2,12 @@ package no.nav.helse.hops.infrastructure
 
 import no.nav.helse.hops.domain.FhirMessage
 import no.nav.helse.hops.domain.FhirMessageBus
-import no.nav.helse.hops.fhir.idAsUUID
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.producer.Callback
 import org.apache.kafka.clients.producer.Producer
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.clients.producer.RecordMetadata
 import org.apache.kafka.common.TopicPartition
-import org.hl7.fhir.instance.model.api.IBaseResource
 import java.time.Duration
 import java.util.UUID
 import kotlin.coroutines.resume
@@ -18,8 +16,8 @@ import kotlin.coroutines.suspendCoroutine
 import kotlin.math.max
 
 class FhirMessageBusKafka(
-    private val producer: Producer<UUID, IBaseResource>,
-    private val consumer: Consumer<UUID, Unit>,
+    private val producer: Producer<UUID, ByteArray>,
+    private val consumer: Consumer<UUID, ByteArray>,
     private val config: Configuration.Kafka,
 ) : FhirMessageBus {
     override suspend fun publish(message: FhirMessage) {
@@ -51,16 +49,16 @@ class FhirMessageBusKafka(
             val records = consumer.poll(Duration.ofSeconds(2))
             val hopsHeaders = records.map { HopsKafkaHeaders(it.headers()) }
 
-            return hopsHeaders.map { it.offset }.maxOrNull() ?: 0
+            return hopsHeaders.map { it.sourceOffset }.maxOrNull() ?: 0
         }
 }
 
 private fun createRecord(topic: String, message: FhirMessage) =
-    ProducerRecord<UUID, IBaseResource>(
+    ProducerRecord<UUID, ByteArray>(
         topic,
         null,
         null, // message.content.timestamp.time,
-        message.content.entry.first().resource.idAsUUID(), // MessageHeader.id
+        message.id,
         message.content,
         HopsKafkaHeaders(message).kafkaHeaders
     )

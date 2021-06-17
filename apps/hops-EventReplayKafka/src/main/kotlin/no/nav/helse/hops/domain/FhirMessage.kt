@@ -1,11 +1,11 @@
 package no.nav.helse.hops.domain
 
-import org.hl7.fhir.r4.model.Bundle
+import java.util.UUID
 
-data class FhirMessage(val content: Bundle, val contentType: String, val requestId: String, val sourceOffset: Long) {
+class FhirMessage(val id: UUID, val content: ByteArray, val contentType: String, val requestId: String, val sourceOffset: Long) {
     init {
-        require(content.type == Bundle.BundleType.MESSAGE) { "Content must be a Message." }
-        require(contentType.startsWith("application/fhir+json; fhirVersion=4.0"))
+        require(content.isNotEmpty()) { "Content cannot be empty." }
+        require(contentType.startsWith("application/fhir+json; fhirVersion="))
         require(requestId.isNotBlank()) { "Request-ID cannot be blank." }
     }
 }

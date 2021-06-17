@@ -1,5 +1,8 @@
 package no.nav.helse.hops.infrastructure
 
+import ca.uhn.fhir.context.FhirContext
+import ca.uhn.fhir.context.FhirVersionEnum
+import ca.uhn.fhir.parser.IParser
 import io.ktor.client.HttpClient
 import io.ktor.client.call.receive
 import io.ktor.client.request.accept
@@ -15,6 +18,7 @@ import no.nav.helse.hops.convert.ContentTypes
 import no.nav.helse.hops.domain.EventStore
 import no.nav.helse.hops.domain.FhirMessage
 import no.nav.helse.hops.fhir.JsonConverter
+import no.nav.helse.hops.fhir.idAsUUID
 import no.nav.helse.hops.fhir.requestId
 import org.hl7.fhir.r4.model.Bundle
 import java.util.UUID
@@ -28,6 +32,7 @@ class EventStoreHttp(
             var msgOffset = startingOffset
             var url: String? = "${config.baseUrl}/fhir/Bundle?_offset=$startingOffset"
             var httpTask = client.fhirGetAsync(url!!)
+            val parser = FhirContext.forCached(FhirVersionEnum.R4).newJsonParser()
 
             do {
                 val httpResponse = httpTask.await()
@@ -38,7 +43,7 @@ class EventStoreHttp(
                 if (url != null) httpTask = client.fhirGetAsync(url) // fetch next page while processing current.
 
                 fun toFhirMessage(entry: Bundle.BundleEntryComponent) =
-                    FhirMessage(entry.resource as Bundle, contentType, entry.requestId, ++msgOffset)
+                    FhirMessage(entry.resource.idAsUUID(), ByteArray(0), contentType, entry.requestId, ++msgOffset)
 
                 if (result.hasEntry()) result.entry.map(::toFhirMessage).forEach { emit(it) }
             } while (url != null)
