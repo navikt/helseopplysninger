@@ -80,17 +80,16 @@ services:
       AZURE_OPENID_CONFIG_ISSUER: http://mock-oauth2-service:8081/default
       AZURE_APP_CLIENT_ID: hapi_test_client_id
 
-  # hops-eventsink consumes FHIR-messages on Kafka from NAV services and publishes them to EventStore.
-  hops-eventsink-service:
-    container_name: hops-eventsink_container
+  # hops-bestilling consumes FHIR-messages on Kafka from NAV services and produces responses.
+  hops-bestilling-service:
+    container_name: hops-bestilling_container
     build:
       context: ..
       args:
-        project: hops-EventSinkKafka
+        project: hops-bestilling
     restart: unless-stopped
     depends_on:
       - kafka-service
-      - hops-eventstore-service
     ports:
       - 8085:8080
     networks:
@@ -98,52 +97,8 @@ services:
       - kafka_network
     environment:
       KAFKA_BROKERS: kafka-service:9093
-      HOPS_EVENTSTORE_BASE_URL: http://hops-eventstore-service:8080
-
-  # hops-eventstore provides a REST API to store and retrieve Events (FHIR Messages).
-  hops-eventstore-service:
-    container_name: hops-eventstore_container
-    build:
-      context: ..
-      args:
-        project: hops-EventStore
-    restart: unless-stopped
-    depends_on:
-      - mock-oauth2-service
-      #- postgres-service
-    ports:
-      - 8086:8080
-    networks:
-      - hops_network
-      - hapi-postgres_network
-    environment:
-      DB_HOST: postgres-service
-      DB_PORT: 5432
-      DB_DATABASE: postgres
-      DB_USERNAME: postgres
-      DB_PASSWORD: Welcome01
-      AZURE_OPENID_CONFIG_ISSUER: http://mock-oauth2-service:8081/default
-      AZURE_APP_CLIENT_ID: eventstore_test_client_id
-
-  # hops-EventReplay polls FHIR-messages from EventStore and publishes them on Kafka.
-  hops-eventreplay-service:
-    container_name: hops-eventreplay_container
-    build:
-      context: ..
-      args:
-        project: hops-EventReplayKafka
-    restart: unless-stopped
-    depends_on:
-      - kafka-service
-      - hops-eventstore-service
-    ports:
-      - 8087:8080
-    networks:
-      - hops_network
-      - kafka_network
-    environment:
-      KAFKA_BROKERS: kafka-service:9093
-      HOPS_EVENTSTORE_BASE_URL: http://hops-eventstore-service:8080
+      KAFKA_CLIENT_ID: hops-bestilling
+      HOPS_HAPI_BASE_URL: http://hops-hapi-service:8080/fhir
 
   # pgAdmin provides an administration web UI for PostgreSQL.
   pgadmin-service:
@@ -205,7 +160,7 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
       KAFKA_LISTENERS: INSIDE://:9093,OUTSIDE://:9092
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
-      KAFKA_CREATE_TOPICS: "helseopplysninger:1:1,helseopplysninger.dirty:1:1"
+      KAFKA_CREATE_TOPICS: "helseopplysninger.bestilling:1:1"
     networks:
       - kafka_network
     volumes:
