@@ -1,75 +1,192 @@
-version: '3.7'
-
 services:
   # A mock implementation of an oauth2\openid authorization-server.
   # Must add 127.0.0.1 mock-oauth2-service to hosts file in order for issuer to be correct when testing from host.
-  mock-oauth2-server:
+  mock-oauth2-service:
+    container_name: mock-oauth2_container
     image: ghcr.io/navikt/mock-oauth2-server:0.3.3
     restart: unless-stopped
     ports:
       - 8081:8081
+    networks:
+      - hops_network
     environment:
       SERVER_PORT: 8081
       JSON_CONFIG_PATH: /etc/oauth-mock-config.json
     volumes:
-      - ../../docker-compose/config/oauth-mock-config.json:/etc/oauth-mock-config.json
-    env_file:
-      - autotest.env
+      - ./config/oauth-mock-config.json:/etc/oauth-mock-config.json
 
   # The FHIR REST API exposed to external consumers, e.g. EHRs.
-  hops-api:
-    image: ghcr.io/navikt/hops-api
+  hops-api-service:
+    container_name: hops-api_container
+    build:
+      context: ..
+      args:
+        project: hops-api
+    restart: unless-stopped
     ports:
       - 8082:8080
-    env_file:
-      - autotest.env
+    networks:
+      - hops_network
+    environment:
+      AZURE_APP_WELL_KNOWN_URL: http://mock-oauth2-service:8081/default/.well-known/openid-configuration
+      HAPI_BASE_URL: http://hops-hapi-service:8080/fhir
+      HAPI_ID_DISCOVERY_URL: http://mock-oauth2-service:8081/default/.well-known/openid-configuration
 
 
   # hops-oppslag provides a facade with a common REST API and security-mechanism towards external dependencies.
-  hops-oppslag:
-    image: ghcr.io/navikt/hops-oppslag
+  hops-oppslag-service:
+    container_name: hops-oppslag_container
+    build:
+      context: ..
+      args:
+        project: hops-oppslag
     restart: unless-stopped
     ports:
       - 8083:8080
-    env_file:
-      - autotest.env
+    networks:
+      - hops_network
+    environment:
+      DB_HOST: postgres-service
+      DB_DATABASE: postgres
+      DB_USERNAME: postgres
+      DB_PASSWORD: Welcome01
+      AZURE_APP_WELL_KNOWN_URL: http://mock-oauth2-service:8081/default/.well-known/openid-configuration
+      FKR_BASE_URL: http://hops-hapi-service:8080/fhir
+      HELSE_ID_DISCOVERY_URL: http://mock-oauth2-service:8081/default/.well-known/openid-configuration
 
   # HAPI FHIR Server is a generic FHIR Server for storing and retrieving FHIR resources through a REST API.
-  hops-hapi:
-    image: ghcr.io/navikt/hops-hapi-fhir-server
+  hops-hapi-service:
+    container_name: hops-hapi_container
+    build:
+      context: ..
+      args:
+        project: hops-hapi-fhir-server
+        task: bootJar
     restart: unless-stopped
+    depends_on:
+      - mock-oauth2-service
+      - postgres-service
     ports:
       - 8084:8080
-    env_file:
-      - autotest.env
+    networks:
+      - hops_network
+      - hapi-postgres_network
+    environment:
+      DB_HOST: postgres-service
+      DB_PORT: 5432
+      DB_DATABASE: postgres
+      DB_USERNAME: postgres
+      DB_PASSWORD: Welcome01
+      AZURE_OPENID_CONFIG_ISSUER: http://mock-oauth2-service:8081/default
+      AZURE_APP_CLIENT_ID: hapi_test_client_id
 
   # hops-bestilling consumes FHIR-messages on Kafka from NAV services and produces responses.
-  hops-bestilling:
-    image: ghcr.io/navikt/hops-bestilling
+  hops-bestilling-service:
+    container_name: hops-bestilling_container
+    build:
+      context: ..
+      args:
+        project: hops-bestilling
     restart: unless-stopped
+    depends_on:
+      - kafka-service
     ports:
       - 8085:8080
-    env_file:
-      - autotest.env
+    networks:
+      - hops_network
+      - kafka_network
+    environment:
+      KAFKA_BROKERS: kafka-service:9093
+      KAFKA_CLIENT_ID: hops-bestilling
+      HOPS_HAPI_BASE_URL: http://hops-hapi-service:8080/fhir
+
+  # pgAdmin provides an administration web UI for PostgreSQL.
+  pgadmin-service:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4
+    restart: unless-stopped
+    depends_on:
+      - postgres-service
+    ports:
+      - 5050:80
+    networks:
+      - pgadmin-postgres_network
+    volumes:
+      - pgadmin_volume:/root/.pgadmin
+      - ./config:/etc/hopsconfig:ro
+    profiles:
+      - debug
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_SERVER_JSON_FILE: /etc/hopsconfig/pgadmin.json
 
   # PostgreSQL is the database used by HAPI-fhir-server.
-  postgres:
+  postgres-service:
+    container_name: postgres_container
     image: postgres
-    env_file:
-      - autotest.env
+    restart: unless-stopped
+    networks:
+      - hapi-postgres_network
+      - pgadmin-postgres_network
+    volumes:
+      - postgres_volume:/data/postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Welcome01
+      POSTGRES_DB: postgres
+      PGDATA: /data/postgres
 
   # Zookeeper keeps track of status of the Kafka cluster nodes, topics, partitions etc.
-  zookeeper:
-    image: wurstmeister/zookeeper
+  zookeeper-service:
+    container_name: zookeper_container
+    image: wurstmeister/zookeeper:latest
     ports:
       - 2181:2181
+    networks:
+      - kafka_network
 
   # Apache Kafka broker.
-  kafka:
+  kafka-service:
+    container_name: kafka_container
     image: wurstmeister/kafka
+    depends_on:
+      - zookeeper-service
     ports:
       - 9092:9092
-    env_file:
-      - autotest.env
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper-service:2181
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka-service:9093,OUTSIDE://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_LISTENERS: INSIDE://:9093,OUTSIDE://:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+      KAFKA_CREATE_TOPICS: "helseopplysninger.bestilling:1:1"
+    networks:
+      - kafka_network
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+
+  # Kafdrop is a web UI for viewing Kafka topics and browsing consumer groups.
+  kafdrop-service:
+    container_name: kafkadrop_container
+    image: obsidiandynamics/kafdrop
+    depends_on:
+      - kafka-service
+    ports:
+      - 9000:9000
+    networks:
+      - kafka_network
+    profiles:
+      - debug
+    environment:
+      KAFKA_BROKERCONNECT: kafka-service:9093
+
+networks:
+  hops_network:
+  kafka_network:
+  hapi-postgres_network:
+  pgadmin-postgres_network:
+
+volumes:
+  postgres_volume:
+  pgadmin_volume:
