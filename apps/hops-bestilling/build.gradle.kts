@@ -33,7 +33,7 @@ dependencies {
     runtimeOnly("ch.qos.logback:logback-classic:1.2.3")
     runtimeOnly("io.ktor:ktor-server-netty:$ktorVersion")
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
-    testImplementation("io.insert-koin:koin-test-junit5:3.1.0")
+    testImplementation("io.insert-koin:koin-test-junit5:3.1.0") { exclude("org.jetbrains.kotlin", "kotlin-test-junit") }
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion") { exclude("org.jetbrains.kotlin", "kotlin-test-junit") }
     testImplementation("io.mockk:mockk:1.11.0")
     testImplementation("no.nav.security:mock-oauth2-server:0.3.3")

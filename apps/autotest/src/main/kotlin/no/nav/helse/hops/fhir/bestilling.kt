@@ -8,11 +8,15 @@ import org.hl7.fhir.r4.model.Resource
 import org.hl7.fhir.r4.model.Task
 import org.hl7.fhir.r4.model.UrlType
 
-fun Bundle.addResource(resource: Resource) {
+fun Bundle.addResource(resource: Resource): Bundle.BundleEntryComponent {
     val entry = Bundle.BundleEntryComponent()
     entry.fullUrl = "urn:uuid:${resource.id}"
     entry.resource = resource
     addEntry(entry)
+    if (resource.resourceType == MessageHeader().resourceType) {
+        this.entry.reverse()
+    }
+    return entry
 }
 
 fun createFhirMessage(): Bundle {
