@@ -2,8 +2,10 @@ package no.nav.helse.hops.domain
 
 import ca.uhn.fhir.context.FhirContext
 import ca.uhn.fhir.context.FhirVersionEnum
+import ca.uhn.fhir.rest.server.exceptions.UnprocessableEntityException
 import io.ktor.http.withCharset
 import no.nav.helse.hops.convert.ContentTypes
+import no.nav.helse.hops.fhir.fullyQualifiedEventType
 import no.nav.helse.hops.fhir.idAsUUID
 import no.nav.helse.hops.toLocalDateTime
 import no.nav.helse.hops.toUri
@@ -21,14 +23,14 @@ class FhirMessageProcessService(private val eventStore: EventStoreRepository) {
         eventStore.add(event)
     }
 
-    private fun createEventDto(message: Bundle, correlationId: String): EventDto {
+    private fun createEventDto(message: Bundle, requestId: String): EventDto {
         val header = message.entry[0].resource as MessageHeader
 
         return EventDto(
             bundleId = message.idAsUUID(),
             messageId = header.idAsUUID(),
-            correlationId = correlationId,
-            eventType = createEventType(header),
+            requestId = requestId,
+            eventType = header.fullyQualifiedEventType,
             bundleTimestamp = message.timestamp.toLocalDateTime(),
             recorded = LocalDateTime.now(),
             source = header.source.endpoint,
@@ -41,38 +43,33 @@ class FhirMessageProcessService(private val eventStore: EventStoreRepository) {
     /** Validerer melding ihht. https://www.hl7.org/fhir/messaging.html
      * kan erstattes egenlagde Bundle og\eller MessageHeader profiler istedenfor å gjøres her. **/
     private suspend fun validate(message: Bundle) {
-        check(message.type == Bundle.BundleType.MESSAGE) { "Bundle must be of type 'Message'" }
+        try {
+            check(message.type == Bundle.BundleType.MESSAGE) { "Bundle must be of type 'Message'" }
 
-        val header = message.entry.first().resource as MessageHeader
-        val bundleId = message.idAsUUID()
-        val headerId = header.idAsUUID()
+            val header = message.entry.first().resource as MessageHeader
+            val bundleId = message.idAsUUID()
+            val headerId = header.idAsUUID()
 
-        check(bundleId.variant() != 0) { "Bundle.Id must be valid UUID." }
-        check(headerId.variant() != 0) { "MessageHeader.Id must be valid UUID." }
-        check(bundleId != headerId) { "Bundle.id and MessageHeader.id cannot be equal." }
-        checkNotNull(message.timestamp) { "Bundle.timestamp is required." }
+            check(bundleId.variant() != 0) { "Bundle.Id must be valid UUID." }
+            check(headerId.variant() != 0) { "MessageHeader.Id must be valid UUID." }
+            check(bundleId != headerId) { "Bundle.id and MessageHeader.id cannot be equal." }
+            checkNotNull(message.timestamp) { "Bundle.timestamp is required." }
 
-        check(message.entry.first().fullUrl == headerId.toUri().toString()) {
-            "entry.fullUrl does not match MessageHeader.id."
-        }
+            check(message.entry.first().fullUrl == headerId.toUri().toString()) {
+                "entry.fullUrl does not match MessageHeader.id."
+            }
 
-        // Ensure that a response references a request that actually exists.
-        // https://www.hl7.org/fhir/messaging.html#3.4.1.4
-        header.response?.identifier?.let {
-            val requestMessageId = UUID.fromString(it)
-            eventStore.ensureExists(requestMessageId)
+            // Ensure that a response references a request that actually exists.
+            // https://www.hl7.org/fhir/messaging.html#3.4.1.4
+            header.response?.identifier?.let {
+                val requestMessageId = UUID.fromString(it)
+                eventStore.ensureExists(requestMessageId)
+            }
+        } catch (ex: Throwable) {
+            throw UnprocessableEntityException(ex.message, ex)
         }
     }
 }
-
-private fun createEventType(header: MessageHeader): String =
-    if (header.hasEventUriType()) header.eventUriType.value
-    else header.eventCoding.run {
-        require(hasSystem() || hasCode()) { "Both 'System' and 'Code' cannot be empty." }
-        var coding = "$system|$code"
-        if (hasVersion()) coding += "|$version"
-        return coding
-    }
 
 private fun createJsonByteArray(message: Bundle): ByteArray =
     ByteArrayOutputStream().use { stream ->

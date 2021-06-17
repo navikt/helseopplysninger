@@ -1,5 +1,6 @@
 package no.nav.helse.hops
 
+import ca.uhn.fhir.rest.server.exceptions.BaseServerResponseException
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -10,9 +11,9 @@ import io.ktor.features.DoubleReceive
 import io.ktor.features.RejectedCallIdException
 import io.ktor.features.StatusPages
 import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpStatusCode
 import io.ktor.http.HttpStatusCode.Companion.InternalServerError
 import io.ktor.metrics.micrometer.MicrometerMetrics
-import io.ktor.request.header
 import io.ktor.response.respond
 import io.ktor.routing.routing
 import io.ktor.webjars.Webjars
@@ -69,7 +70,12 @@ fun Application.api() {
 
                 addIssue(issue)
             }
-            call.respond(InternalServerError, outcome)
+
+            val statusCode =
+                if (cause is BaseServerResponseException) HttpStatusCode.fromValue(cause.statusCode)
+                else InternalServerError
+
+            call.respond(statusCode, outcome)
 
             throw cause
         }

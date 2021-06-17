@@ -1,0 +1,4 @@
+{
+  "ingresses":  ["https://hops-eventreplaykafka.nais.adeo.no"],
+  "kafka_pool": "nav-prod"
+}
