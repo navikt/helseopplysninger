@@ -24,8 +24,7 @@ class EventReplayJob(
             try {
                 val startingOffset = messageBus.sourceOffsetOfLatestMessage()
                 eventStore.poll(startingOffset).collect { messageBus.publish(it) }
-            }
-            catch (ex: Throwable) {
+            } catch (ex: Throwable) {
                 if (ex is CancellationException) throw ex
                 logger.error("Error while publishing to message bus.", ex)
                 delay(5000)

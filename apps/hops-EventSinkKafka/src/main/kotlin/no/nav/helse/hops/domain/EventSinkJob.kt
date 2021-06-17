@@ -23,8 +23,7 @@ class EventSinkJob(
         while (isActive) {
             try {
                 messageBus.poll().collect { eventStore.add(it) }
-            }
-            catch (ex: Throwable) {
+            } catch (ex: Throwable) {
                 if (ex is CancellationException) throw ex
                 logger.error("Error while publishing to message bus.", ex)
                 delay(5000)
