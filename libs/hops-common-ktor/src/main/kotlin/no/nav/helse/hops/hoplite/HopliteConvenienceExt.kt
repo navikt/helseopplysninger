@@ -12,7 +12,10 @@ import java.util.Properties
 
 /** Uses Hoplite to load and parse configuration file and combines it with registered PropertySources. **/
 inline fun <reified T : Any> Scope.loadConfigOrThrow(resource: String = "/application.conf") =
-    ConfigLoader.Builder().addPropertySources(getAll()).build().loadConfigOrThrow<T>(resource)
+    loadConfigsOrThrow<T>(resource)
+
+inline fun <reified T : Any> Scope.loadConfigsOrThrow(vararg resources: String) =
+    ConfigLoader.Builder().addPropertySources(getAll()).build().loadConfigOrThrow<T>(resources.toList())
 
 /** Use this to register MapApplicationConfig as a Hops PropertySource in a Koin Module. **/
 fun ApplicationConfig.asHoplitePropertySourceModule(): Module {

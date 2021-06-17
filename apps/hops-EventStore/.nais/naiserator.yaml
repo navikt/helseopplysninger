@@ -45,6 +45,8 @@ spec:
     inbound:
       rules:
         - application: hops-api
+        - application: hops-eventreplaykafka
+        - application: hops-eventsinkkafka
   env:
     - name: LOG_APPENDER
       value: json

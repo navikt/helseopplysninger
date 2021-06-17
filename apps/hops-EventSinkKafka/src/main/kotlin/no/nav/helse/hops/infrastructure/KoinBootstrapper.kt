@@ -1,8 +1,8 @@
 package no.nav.helse.hops.infrastructure
 
+import no.nav.helse.hops.domain.EventSinkJob
 import no.nav.helse.hops.domain.EventStore
 import no.nav.helse.hops.domain.FhirMessageBus
-import no.nav.helse.hops.domain.MessageConsumerJob
 import no.nav.helse.hops.hoplite.loadConfigOrThrow
 import no.nav.helse.hops.koin.singleClosable
 import org.koin.core.qualifier.named
@@ -27,7 +27,7 @@ object KoinBootstrapper {
 
         singleClosable { KafkaFactory.createFhirConsumer(get()) }
         singleClosable(createdAtStart = true) {
-            MessageConsumerJob(get(), getLogger<MessageConsumerJob>(), get())
+            EventSinkJob(get(), getLogger<EventSinkJob>(), get())
         }
     }
 }

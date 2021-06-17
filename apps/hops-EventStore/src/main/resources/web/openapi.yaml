@@ -6,48 +6,55 @@ info:
 paths:
   /isReady:
     get:
-      tags:
-        - diagnostics
+      tags: [diagnostics]
       description: Readiness check.
       responses:
         '200':
           description: Service is ready.
   /isAlive:
     get:
-      tags:
-        - diagnostics
+      tags: [diagnostics]
       description: Liveliness check.
       responses:
         '200':
           description: Service is alive.
   /prometheus:
     get:
-      tags:
-        - diagnostics
+      tags: [diagnostics]
       description: Pull metrics.
       responses:
         '200':
           description: Metrics.
   /fhir/Bundle:
     get:
-      tags:
-        - FHIR
+      tags: [FHIR]
       description: Searches for FHIR Messages.
       externalDocs:
         url: https://www.hl7.org/fhir/messaging.html#rest
+      security:
+        - oidcAuth: [eventstore]
+        - bearerAuth: []
       parameters:
         - name: _count
           in: query
           schema:
             type: integer
+            format: int32
+            minimum: 0
+            default: 10
         - name: _offset
           in: query
           schema:
             type: integer
+            format: int64
+            minimum: 0
+            default: 0
         - name: message.destination-uri
           in: query
           schema:
             type: string
+            format: uri
+        - $ref: '#/components/parameters/requestId'
       responses:
         '200':
           description: Bundle of type SearchResult containing Bundles of type Message.
@@ -57,10 +64,14 @@ paths:
                 type: object
   /fhir/$process-message:
     post:
-      tags:
-        - FHIR
+      tags: [FHIR]
       externalDocs:
         url: https://www.hl7.org/fhir/messageheader-operation-process-message.html
+      security:
+        - oidcAuth: [eventstore]
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/requestId'
       requestBody:
         content:
           application/fhir+json; fhirVersion=4.0:
@@ -74,6 +85,25 @@ paths:
           description: Message has been determined valid and persisted in EventStore.
 
 components:
+  securitySchemes:
+    oidcAuth:
+      type: openIdConnect
+      openIdConnectUrl: http://mock-oauth2-service:8081/default/.well-known/openid-configuration
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Pass in a valid JWT, a new token must be added once the old expires.
+
+  parameters:
+    requestId:
+      name: X-Request-ID
+      in: header
+      description: To help connect between requests and logs/audit trails.
+      schema:
+        type: string
+        maxLength: 200
+        example: 0ff7d846-16bb-47b5-a2f1-0598dcca4bc8
   examples:
     message-request-link:
       description: '<https://www.hl7.org/fhir/message-request-link.json.html>'

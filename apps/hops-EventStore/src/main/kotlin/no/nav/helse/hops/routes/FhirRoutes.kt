@@ -1,8 +1,10 @@
 package no.nav.helse.hops.routes
 
 import ca.uhn.fhir.rest.api.Constants
+import io.ktor.application.ApplicationCall
 import io.ktor.application.call
 import io.ktor.application.install
+import io.ktor.auth.authenticate
 import io.ktor.features.callId
 import io.ktor.http.HttpStatusCode
 import io.ktor.request.receiveText
@@ -20,7 +22,6 @@ import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.MessageHeader
 import org.hl7.fhir.r4.model.StringType
 import org.hl7.fhir.r4.model.UrlType
-import org.hl7.fhir.r4.model.codesystems.ResourceTypes
 import org.koin.ktor.ext.inject
 import java.net.URI
 
@@ -28,47 +29,47 @@ fun Routing.fhirRoutes() {
     val searchService: FhirMessageSearchService by inject()
     val processService: FhirMessageProcessService by inject()
 
-    route("fhir") {
-        get("/${ResourceTypes.BUNDLE.toCode()}") {
-            val rcvParam = call.request.queryParameters[SP_RCV]
-            val countParam = call.request.queryParameters[Constants.PARAM_COUNT]
-            val offsetParam = call.request.queryParameters[Constants.PARAM_OFFSET]
+    authenticate {
+        route("fhir") {
+            get("/Bundle") {
+                val rcv = call.destinationParam()
+                val count = call.countParam() ?: 10
+                val offset = call.offsetParam() ?: 0
 
-            val rcv = rcvParam?.let { URI(rcvParam) }
-            val count = countParam?.toIntOrNull() ?: 10
-            val offset = offsetParam?.toLongOrNull() ?: 0
+                val searchSet = searchService.search(count, offset, rcv)
 
-            val searchSet = searchService.search(count, offset, rcv)
+                if (searchSet.entry.count() == count) {
+                    var url = call.request.local.fullUrl().toString().substringBefore('?')
+                    url = "$url?${Constants.PARAM_COUNT}=$count&${Constants.PARAM_OFFSET}=${offset + count}"
+                    url = if (rcv != null) "$url&$SP_RCV=$rcv" else url
 
-            if (searchSet.entry.count() == count) {
-                var url = call.request.local.fullUrl().toString().substringBefore('?')
-                url = "$url?${Constants.PARAM_COUNT}=$count&${Constants.PARAM_OFFSET}=${offset + count}"
-                url = if (rcv != null) "$url&$SP_RCV=$rcv" else url
+                    val nextLink = Bundle.BundleLinkComponent(StringType(Bundle.LINK_NEXT), UrlType(url))
+                    searchSet.addLink(nextLink)
+                }
 
-                val nextLink = Bundle.BundleLinkComponent(StringType(Bundle.LINK_NEXT), UrlType(url))
-                searchSet.addLink(nextLink)
+                call.respond(searchSet)
             }
 
-            call.respond(searchSet)
-        }
+            /** Processes the message event synchronously according to
+             * https://www.hl7.org/fhir/messageheader-operation-process-message.html **/
+            post("/${Constants.EXTOP_PROCESS_MESSAGE}") {
 
-        /** Processes the message event synchronously according to
-         * https://www.hl7.org/fhir/messageheader-operation-process-message.html **/
-        post("/${Constants.EXTOP_PROCESS_MESSAGE}") {
+                // TODO: Cannot use receive because it uses converter due to bug in Ktor: https://youtrack.jetbrains.com/issue/KTOR-2189
+                // val message: Bundle = call.receive()
+                val message: Bundle = JsonConverter.parse(call.receiveText())
 
-            // TODO: Cannot use receive because it uses converter due to bug in Ktor: https://youtrack.jetbrains.com/issue/KTOR-2189
-            // val message: Bundle = call.receive()
-            val message: Bundle = JsonConverter.parse(call.receiveText())
+                processService.process(message, call.callId!!)
+                call.respond(HttpStatusCode.Accepted)
+            }
 
-            processService.process(message, call.callId!!)
-
-            call.respond(HttpStatusCode.Accepted)
-        }
-
-        install(FhirValidatorKtorPlugin.Feature) {
-            validator = FhirValidatorFactory.relaxedR4
+            install(FhirValidatorKtorPlugin.Feature) {
+                validator = FhirValidatorFactory.relaxedR4
+            }
         }
     }
 }
 
 private const val SP_RCV = "${Bundle.SP_MESSAGE}.${MessageHeader.SP_DESTINATION_URI}"
+private fun ApplicationCall.destinationParam() = request.queryParameters[SP_RCV]?.let { URI(it) }
+private fun ApplicationCall.countParam() = request.queryParameters[Constants.PARAM_COUNT]?.toIntOrNull()
+private fun ApplicationCall.offsetParam() = request.queryParameters[Constants.PARAM_OFFSET]?.toLongOrNull()
