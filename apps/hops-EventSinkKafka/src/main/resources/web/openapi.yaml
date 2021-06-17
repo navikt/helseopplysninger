@@ -6,33 +6,26 @@ info:
 paths:
   /isReady:
     get:
-      tags:
-        - diagnostics
-      description: Readiness check.
+      tags: [diagnostics]
       responses:
         '200':
           description: Service is ready.
   /isAlive:
     get:
-      tags:
-        - diagnostics
-      description: Liveliness check.
+      tags: [diagnostics]
       responses:
         '200':
           description: Service is alive.
   /prometheus:
     get:
-      tags:
-        - diagnostics
-      description: Pull metrics.
+      tags: [diagnostics]
       responses:
         '200':
           description: Metrics.
   /smokeTests/{name}:
     get:
-      tags:
-        - diagnostics
-      description: Runs a smoke-test to verify an external integration.
+      tags: [diagnostics]
+      summary: Runs a smoke-test to verify an external integration.
       parameters:
         - name: name
           in: path

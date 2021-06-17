@@ -4,7 +4,6 @@ import kotlinx.coroutines.Dispatchers
 import no.nav.helse.hops.domain.EventDto
 import no.nav.helse.hops.domain.EventStoreReadOnlyRepository
 import no.nav.helse.hops.domain.EventStoreRepository
-import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.JoinType
 import org.jetbrains.exposed.sql.ResultRow
@@ -21,6 +20,8 @@ import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.statements.InsertStatement
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
+import java.sql.SQLException
+import kotlin.math.max
 
 class EventStoreRepositoryExposedORM(config: Config) : EventStoreRepository {
     data class Config(
@@ -53,10 +54,11 @@ class EventStoreRepositoryExposedORM(config: Config) : EventStoreRepository {
                     }
                 }
             }
-        } catch (ex: ExposedSQLException) {
+        } catch (ex: SQLException) {
             // Ignore unique-constraint violations in order to provide idempotent behavior.
             // Exposed will already have logged this as a WARNING.
-            if (ex.errorCode != SqlErrorCodes.uniqueViolation) throw ex
+            val errorCode = max(ex.errorCode, ex.sqlState.toIntOrNull() ?: 0)
+            if (errorCode != SqlErrorCodes.uniqueViolation) throw ex
         }
     }
 

@@ -21,5 +21,5 @@ object JsonConverter {
         newParser(pretty).encodeResourceToString(resource)
 }
 
-fun IBaseResource.toJson() =
-    JsonConverter.serialize(this)
+fun IBaseResource.toJson(pretty: Boolean = true) =
+    JsonConverter.serialize(this, pretty)

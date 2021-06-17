@@ -2,6 +2,7 @@ package no.nav.helse.hops.hoplite
 
 import com.sksamuel.hoplite.ConfigLoader
 import com.sksamuel.hoplite.PropertySource
+import com.sksamuel.hoplite.parsers.PropsParser
 import io.ktor.config.ApplicationConfig
 import io.ktor.config.MapApplicationConfig
 import org.koin.core.module.Module
@@ -15,7 +16,12 @@ inline fun <reified T : Any> Scope.loadConfigOrThrow(resource: String = "/applic
     loadConfigsOrThrow<T>(resource)
 
 inline fun <reified T : Any> Scope.loadConfigsOrThrow(vararg resources: String) =
-    ConfigLoader.Builder().addPropertySources(getAll()).build().loadConfigOrThrow<T>(resources.toList())
+    ConfigLoader
+        .Builder()
+        .addFileExtensionMapping("properties", PropsParser()) // for some reason this is needed to work in docker.
+        .addPropertySources(getAll())
+        .build()
+        .loadConfigOrThrow<T>(resources.toList())
 
 /** Use this to register MapApplicationConfig as a Hops PropertySource in a Koin Module. **/
 fun ApplicationConfig.asHoplitePropertySourceModule(): Module {
