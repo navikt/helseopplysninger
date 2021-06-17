@@ -45,21 +45,7 @@ services:
       KAFKA_BROKERS: kafka:9093
       HOPS_EVENTSTORE_BASE_URL: http://eventstore:8080
 
-  # pgAdmin provides an administration web UI for PostgreSQL.
-  pgadmin:
-    image: dpage/pgadmin4
-    depends_on: [postgres]
-    ports: [5050:80]
-    volumes:
-      - pgadmin_volume:/root/.pgadmin
-      - ./config:/etc/hopsconfig:ro
-    profiles: [debug]
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: admin
-      PGADMIN_SERVER_JSON_FILE: /etc/hopsconfig/pgadmin.json
-
-  # PostgreSQL is the database used by HAPI-fhir-server.
+  # PostgreSQL is the database used by EventStore.
   postgres:
     image: postgres
     ports: [5432:5432]
@@ -97,6 +83,20 @@ services:
     profiles: [debug]
     environment:
       KAFKA_BROKERCONNECT: kafka:9093
+
+  # pgAdmin provides an administration web UI for PostgreSQL.
+  pgadmin:
+    image: dpage/pgadmin4
+    depends_on: [postgres]
+    ports: [5050:80]
+    volumes:
+      - pgadmin_volume:/root/.pgadmin
+      - ./config:/etc/hopsconfig:ro
+    profiles: [debug]
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_SERVER_JSON_FILE: /etc/hopsconfig/pgadmin.json
 
 volumes:
   postgres_volume:
