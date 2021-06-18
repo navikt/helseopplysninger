@@ -23,11 +23,12 @@ import no.nav.helse.hops.routes.naisRoutes
 import no.nav.helse.hops.routes.smokeTestRoutes
 import no.nav.helse.hops.routes.swaggerRoutes
 import no.nav.helse.hops.statuspages.useFhirErrorStatusPage
+import org.koin.core.module.Module
 import org.koin.ktor.ext.Koin
 import org.koin.logger.slf4jLogger
 
 @Suppress("unused") // Referenced in application.conf
-fun Application.api() {
+fun Application.module(vararg koinModules: Module) {
     val prometheusMeterRegistry = PrometheusMeterRegistry(DEFAULT)
 
     install(Authentication) { useNaviktTokenSupport(environment.config) }
@@ -39,7 +40,7 @@ fun Application.api() {
     install(Webjars)
     install(Koin) {
         slf4jLogger()
-        modules(KoinBootstrapper.module, environment.config.asHoplitePropertySourceModule())
+        modules(listOf(KoinBootstrapper.module, environment.config.asHoplitePropertySourceModule()) + koinModules)
     }
 
     routing {

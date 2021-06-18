@@ -20,4 +20,4 @@ object KoinBootstrapper {
     }
 }
 
-private const val EVENT_STORE_CLIENT_NAME = "eventStore"
+const val EVENT_STORE_CLIENT_NAME = "eventStore"
