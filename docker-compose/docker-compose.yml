@@ -45,6 +45,17 @@ services:
       KAFKA_BROKERS: kafka:9093
       HOPS_EVENTSTORE_BASE_URL: http://eventstore:8080
 
+  # The FHIR REST API exposed to external consumers, e.g. EHRs.
+  api:
+    build:
+      context: ..
+      args:
+        project: hops-api
+    depends_on: [eventstore]
+    ports: [8085:8080]
+    environment:
+      HOPS_EVENTSTORE_BASE_URL: http://eventstore:8080
+
   # PostgreSQL is the database used by EventStore.
   postgres:
     image: postgres

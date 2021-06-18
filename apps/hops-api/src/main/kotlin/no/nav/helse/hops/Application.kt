@@ -28,7 +28,7 @@ import org.koin.ktor.ext.Koin
 import org.koin.logger.slf4jLogger
 
 @Suppress("unused") // Referenced in application.conf
-fun Application.module(vararg koinModules: Module) {
+fun Application.module(testModule: Module = Module()) {
     val prometheusMeterRegistry = PrometheusMeterRegistry(DEFAULT)
 
     install(Authentication) { useNaviktTokenSupport(environment.config) }
@@ -40,7 +40,7 @@ fun Application.module(vararg koinModules: Module) {
     install(Webjars)
     install(Koin) {
         slf4jLogger()
-        modules(listOf(KoinBootstrapper.module, environment.config.asHoplitePropertySourceModule()) + koinModules)
+        modules(listOf(KoinBootstrapper.module, environment.config.asHoplitePropertySourceModule()) + testModule)
     }
 
     routing {
