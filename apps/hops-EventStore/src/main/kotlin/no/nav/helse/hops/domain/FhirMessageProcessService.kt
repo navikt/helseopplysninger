@@ -1,10 +1,9 @@
 package no.nav.helse.hops.domain
 
-import ca.uhn.fhir.context.FhirContext
-import ca.uhn.fhir.context.FhirVersionEnum
 import ca.uhn.fhir.rest.server.exceptions.UnprocessableEntityException
 import io.ktor.http.withCharset
 import no.nav.helse.hops.convert.ContentTypes
+import no.nav.helse.hops.fhir.JsonConverter
 import no.nav.helse.hops.fhir.fullyQualifiedEventType
 import no.nav.helse.hops.fhir.idAsUUID
 import no.nav.helse.hops.toLocalDateTime
@@ -74,10 +73,8 @@ class FhirMessageProcessService(private val eventStore: EventStoreRepository) {
 private fun createJsonByteArray(message: Bundle): ByteArray =
     ByteArrayOutputStream().use { stream ->
         OutputStreamWriter(stream).use { writer ->
-            FhirContext
-                .forCached(FhirVersionEnum.R4)
-                .newJsonParser()
-                .encodeResourceToWriter(message, writer)
+            val parser = JsonConverter.newParser()
+            parser.encodeResourceToWriter(message, writer)
         }
 
         return stream.toByteArray()
