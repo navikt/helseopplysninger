@@ -39,6 +39,5 @@ dependencies {
     testImplementation("no.nav.security:mock-oauth2-server:0.3.3")
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
-    testImplementation("org.testcontainers:junit-jupiter:1.15.3")
     testImplementation(kotlin("test-junit5"))
 }

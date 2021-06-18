@@ -17,19 +17,22 @@ import io.ktor.routing.route
 import io.ktor.utils.io.copyAndClose
 import no.nav.helse.hops.convert.ContentTypes
 import no.nav.helse.hops.domain.EventStore
+import no.nav.helse.hops.infrastructure.Constants
 import org.koin.ktor.ext.inject
 
 fun Routing.fhirRoutes() {
-    authenticate {
-        route("fhir/4.0") {
-            val eventStore: EventStore by inject()
-            val ct = ContentTypes.fhirJsonR4
+    route("fhir/4.0") {
+        val eventStore: EventStore by inject()
+        val ct = ContentTypes.fhirJsonR4
 
+        authenticate(Constants.SUBSCRIBE) {
             get("/Bundle") {
                 val response = eventStore.search(call.request.queryString(), ct, call.callId!!)
                 call.proxyDownstream(response)
             }
+        }
 
+        authenticate(Constants.PUBLISH) {
             post("/\$process-message") {
                 val response = eventStore.publish(call.request.receiveChannel(), ct, call.callId!!)
                 call.proxyDownstream(response)

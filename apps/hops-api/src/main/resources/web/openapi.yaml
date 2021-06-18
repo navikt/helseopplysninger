@@ -39,14 +39,13 @@ paths:
           description: Ok.
         '500':
           description: Error.
-  /fhir/Bundle:
+  /fhir/4.0/Bundle:
     get:
       tags: [FHIR]
       summary: Searches for FHIR Messages.
       externalDocs:
         url: https://www.hl7.org/fhir/messaging.html#rest
       security:
-        - oidcAuth: [eventstore]
         - bearerAuth: []
       parameters:
         - name: _count
@@ -72,23 +71,18 @@ paths:
       responses:
         '200':
           description: Bundle of type SearchResult containing Bundles of type Message.
-          content:
-            application/fhir+json; fhirVersion=4.0:
-              schema:
-                type: object
-  /fhir/$process-message:
+  /fhir/4.0/$process-message:
     post:
       tags: [FHIR]
       externalDocs:
         url: https://www.hl7.org/fhir/messageheader-operation-process-message.html
       security:
-        - oidcAuth: [eventstore]
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parameters/requestId'
       requestBody:
         content:
-          application/fhir+json; fhirVersion=4.0:
+          application/fhir+json:
             examples:
               message-request-link:
                 $ref: '#/components/examples/message-request-link'
@@ -100,9 +94,6 @@ paths:
 
 components:
   securitySchemes:
-    oidcAuth:
-      type: openIdConnect
-      openIdConnectUrl: http://mock-oauth2-service:8081/default/.well-known/openid-configuration
     bearerAuth:
       type: http
       scheme: bearer
