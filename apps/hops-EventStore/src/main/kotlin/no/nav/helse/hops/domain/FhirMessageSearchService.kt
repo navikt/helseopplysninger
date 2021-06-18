@@ -1,7 +1,6 @@
 package no.nav.helse.hops.domain
 
-import ca.uhn.fhir.context.FhirContext
-import ca.uhn.fhir.context.FhirVersionEnum
+import no.nav.helse.hops.fhir.JsonConverter
 import no.nav.helse.hops.fhir.requestId
 import no.nav.helse.hops.toUri
 import org.hl7.fhir.r4.model.Bundle
@@ -12,10 +11,7 @@ import java.util.UUID
 
 class FhirMessageSearchService(private val eventStore: EventStoreReadOnlyRepository) {
     suspend fun search(count: Int, offset: Long, destination: URI? = null): Bundle {
-        val parser = FhirContext
-            .forCached(FhirVersionEnum.R4)
-            .newJsonParser()
-            .setOverrideResourceIdWithBundleEntryFullUrl(false)
+        val parser = JsonConverter.newParser()
 
         fun toBundleEntry(event: EventDto) =
             ByteArrayInputStream(event.data).use {

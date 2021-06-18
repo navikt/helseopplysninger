@@ -8,12 +8,35 @@
       "requestMappings": [
         {
           "requestParam": "scope",
-          "match": "nav:helse/v1/helseopplysninger",
+          "match": "hops",
           "claims": {
+            "sub": "helseopplysninger-subject",
             "aud": [
-              "aud-localhost"
+              "helseopplysninger-audience"
             ],
-            "scope": "nav:helse/v1/helseopplysninger"
+            "scope": "nav:helse/v1/helseopplysninger/publish nav:helse/v1/helseopplysninger/subscribe"
+          }
+        },
+        {
+          "requestParam": "scope",
+          "match": "hops:pub",
+          "claims": {
+            "sub": "helseopplysninger-subject",
+            "aud": [
+              "helseopplysninger-audience"
+            ],
+            "scope": "nav:helse/v1/helseopplysninger/publish"
+          }
+        },
+        {
+          "requestParam": "scope",
+          "match": "hops:sub",
+          "claims": {
+            "sub": "helseopplysninger-subject",
+            "aud": [
+              "helseopplysninger-audience"
+            ],
+            "scope": "nav:helse/v1/helseopplysninger/subscribe"
           }
         }
       ]

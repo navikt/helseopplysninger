@@ -33,6 +33,7 @@ jobs:
       - name: run ktlint
         run: ./ktlint --reporter=checkstyle,output=build/ktlint-report-in-checkstyle-format.xml
       - name: print ktlint results
+        if: always()
         run: cat build/ktlint-report-in-checkstyle-format.xml
       - name: Upload Ktlint Results
         if: always()

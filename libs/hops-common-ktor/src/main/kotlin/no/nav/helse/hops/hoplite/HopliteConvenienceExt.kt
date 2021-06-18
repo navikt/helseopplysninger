@@ -18,12 +18,13 @@ inline fun <reified T : Any> Scope.loadConfigOrThrow(resource: String = "/applic
 inline fun <reified T : Any> Scope.loadConfigsOrThrow(vararg resources: String) =
     ConfigLoader
         .Builder()
-        .addFileExtensionMapping("properties", PropsParser()) // for some reason this is needed to work in docker.
-        .addPropertySources(getAll())
+        .addFileExtensionMapping("properties", PropsParser()) // For some reason this is needed to work in Docker.
+        .addPropertySources(getAll()) // Gets the MapApplicationConfig-PropertySource using Koin Dependency-Injection.
         .build()
         .loadConfigOrThrow<T>(resources.toList())
 
-/** Use this to register MapApplicationConfig as a Hops PropertySource in a Koin Module. **/
+/** Use this to register MapApplicationConfig as a Hops PropertySource in a Koin Module.
+ * This simplifies configuration in Ktor unit-tests. **/
 fun ApplicationConfig.asHoplitePropertySourceModule(): Module {
     val appConfig = this
     return module { if (appConfig is MapApplicationConfig) single { appConfig.asPropertySource() } }

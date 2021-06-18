@@ -7,7 +7,7 @@ import org.hl7.fhir.instance.model.api.IBaseResource
 
 object JsonConverter {
     // Not thread safe, new instance must therefore be created.
-    fun newParser(pretty: Boolean): IParser = FhirContext
+    fun newParser(pretty: Boolean = false): IParser = FhirContext
         .forCached(FhirVersionEnum.R4)
         .newJsonParser()
         .setPrettyPrint(pretty)
@@ -15,7 +15,7 @@ object JsonConverter {
         .setOverrideResourceIdWithBundleEntryFullUrl(false)
 
     inline fun <reified R : IBaseResource> parse(json: String): R =
-        newParser(false).parseResource(R::class.java, json)
+        newParser().parseResource(R::class.java, json)
 
     fun serialize(resource: IBaseResource, pretty: Boolean): String =
         newParser(pretty).encodeResourceToString(resource)
