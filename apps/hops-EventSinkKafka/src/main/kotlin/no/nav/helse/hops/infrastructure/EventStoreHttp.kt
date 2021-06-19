@@ -9,6 +9,7 @@ import io.ktor.http.HttpHeaders
 import no.nav.helse.hops.convert.ContentTypes
 import no.nav.helse.hops.domain.EventStore
 import no.nav.helse.hops.domain.FhirMessage
+import java.util.UUID
 
 class EventStoreHttp(
     private val config: Configuration.EventStore,
@@ -19,7 +20,7 @@ class EventStoreHttp(
             body = event.content
             headers {
                 append(HttpHeaders.ContentType, event.contentType) // can be STU3, R4, R5 etc.
-                append(HttpHeaders.XRequestId, event.requestId)
+                append(HttpHeaders.XRequestId, UUID.randomUUID().toString())
             }
         }
 

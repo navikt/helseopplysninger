@@ -1,5 +1,6 @@
 package no.nav.helse.hops.domain
 
+import ca.uhn.fhir.rest.server.exceptions.ResourceVersionConflictException
 import ca.uhn.fhir.rest.server.exceptions.UnprocessableEntityException
 import io.ktor.http.withCharset
 import no.nav.helse.hops.convert.ContentTypes
@@ -16,19 +17,25 @@ import java.time.LocalDateTime
 import java.util.UUID
 
 class FhirMessageProcessService(private val eventStore: EventStoreRepository) {
-    suspend fun process(message: Bundle, correlationId: String) {
+    suspend fun process(message: Bundle) {
         validate(message)
-        val event = createEventDto(message, correlationId)
+
+        val event = createEventDto(message)
+
+        eventStore.getByIdOrNull(event.messageId)?.let { existing ->
+            if (existing.data == event.data) return
+            throw ResourceVersionConflictException("A Message with the ID=${event.messageId} already exists.")
+        }
+
         eventStore.add(event)
     }
 
-    private fun createEventDto(message: Bundle, requestId: String): EventDto {
+    private fun createEventDto(message: Bundle): EventDto {
         val header = message.entry[0].resource as MessageHeader
 
         return EventDto(
             bundleId = message.idAsUUID(),
             messageId = header.idAsUUID(),
-            requestId = requestId,
             eventType = header.fullyQualifiedEventType,
             bundleTimestamp = message.timestamp.toLocalDateTime(),
             recorded = LocalDateTime.now(),

@@ -20,8 +20,6 @@ import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.statements.InsertStatement
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
-import java.sql.SQLException
-import kotlin.math.max
 
 class EventStoreRepositoryExposedORM(config: Config) : EventStoreRepository {
     data class Config(
@@ -43,22 +41,15 @@ class EventStoreRepositoryExposedORM(config: Config) : EventStoreRepository {
     }
 
     override suspend fun add(event: EventDto) {
-        try {
-            newSuspendedTransaction(Dispatchers.IO, database) {
-                val rowId = EventTable.insert { it.setValues(event) }[EventTable.id]
+        newSuspendedTransaction(Dispatchers.IO, database) {
+            val rowId = EventTable.insert { it.setValues(event) }[EventTable.id]
 
-                event.destinations.forEach { dest ->
-                    DestinationTable.insert {
-                        it[eventId] = rowId
-                        it[endpoint] = dest
-                    }
+            event.destinations.forEach { dest ->
+                DestinationTable.insert {
+                    it[eventId] = rowId
+                    it[endpoint] = dest
                 }
             }
-        } catch (ex: SQLException) {
-            // Ignore unique-constraint violations in order to provide idempotent behavior.
-            // Exposed will already have logged this as a WARNING.
-            val errorCode = max(ex.errorCode, ex.sqlState.toIntOrNull() ?: 0)
-            if (errorCode != SqlErrorCodes.uniqueViolation) throw ex
         }
     }
 
@@ -71,7 +62,9 @@ class EventStoreRepositoryExposedORM(config: Config) : EventStoreRepository {
                         DestinationTable,
                         JoinType.INNER,
                         additionalConstraint = {
-                            EventTable.id eq DestinationTable.eventId and(DestinationTable.endpoint eq query.destinationUri)
+                            EventTable.id eq DestinationTable.eventId and(
+                                DestinationTable.endpoint eq query.destinationUri
+                                )
                         }
                     )
                     .selectAll()
@@ -91,7 +84,6 @@ private object EventTable : Table() {
     val id = long("id").autoIncrement()
     val bundleId = uuid("bundle_id").uniqueIndex()
     val messageId = uuid("message_id").uniqueIndex()
-    val requestId = varchar("request_id", 200)
     val eventType = varchar("event_type", 200).index()
     val bundleTimestamp = datetime("bundle_timestamp").index()
     val recorded = datetime("recorded")
@@ -111,14 +103,9 @@ private object DestinationTable : Table() {
     override val primaryKey = PrimaryKey(id)
 }
 
-private object SqlErrorCodes {
-    const val uniqueViolation = 23505
-}
-
 private fun InsertStatement<Number>.setValues(event: EventDto) {
     this[EventTable.bundleId] = event.bundleId
     this[EventTable.messageId] = event.messageId
-    this[EventTable.requestId] = event.requestId
     this[EventTable.eventType] = event.eventType
     this[EventTable.bundleTimestamp] = event.bundleTimestamp
     this[EventTable.recorded] = event.recorded
@@ -132,7 +119,6 @@ private fun toEventDto(row: ResultRow) =
     EventDto(
         messageId = row[EventTable.messageId],
         bundleId = row[EventTable.bundleId],
-        requestId = row[EventTable.requestId],
         eventType = row[EventTable.eventType],
         bundleTimestamp = row[EventTable.bundleTimestamp],
         recorded = row[EventTable.recorded],

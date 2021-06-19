@@ -1,7 +1,6 @@
 package no.nav.helse.hops.domain
 
 import no.nav.helse.hops.fhir.JsonConverter
-import no.nav.helse.hops.fhir.requestId
 import no.nav.helse.hops.toUri
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.InstantType
@@ -18,7 +17,6 @@ class FhirMessageSearchService(private val eventStore: EventStoreReadOnlyReposit
                 Bundle.BundleEntryComponent().apply {
                     fullUrl = event.bundleId.toUri().toString()
                     resource = parser.parseResource(Bundle::class.java, it)
-                    requestId = event.requestId
                 }
             }
 

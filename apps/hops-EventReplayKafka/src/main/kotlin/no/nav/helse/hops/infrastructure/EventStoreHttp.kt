@@ -16,7 +16,6 @@ import no.nav.helse.hops.domain.EventStore
 import no.nav.helse.hops.domain.FhirMessage
 import no.nav.helse.hops.fhir.JsonConverter
 import no.nav.helse.hops.fhir.idAsUUID
-import no.nav.helse.hops.fhir.requestId
 import no.nav.helse.hops.toLocalDateTime
 import org.hl7.fhir.r4.model.Bundle
 import java.util.UUID
@@ -46,7 +45,7 @@ class EventStoreHttp(
                     val id = bundle.entry[0].resource.idAsUUID()
                     val ts = bundle.timestamp.toLocalDateTime()
                     val content = parser.encodeResourceToString(bundle).toByteArray()
-                    return FhirMessage(id, ts, content, contentType, entry.requestId, ++msgOffset)
+                    return FhirMessage(id, ts, content, contentType, ++msgOffset)
                 }
 
                 if (result.hasEntry()) result.entry.map(::toFhirMessage).forEach { emit(it) }
