@@ -5,9 +5,12 @@ import io.ktor.application.call
 import io.ktor.auth.authenticate
 import io.ktor.client.statement.HttpResponse
 import io.ktor.features.callId
+import io.ktor.features.origin
+import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
-import io.ktor.request.queryString
+import io.ktor.request.accept
+import io.ktor.request.contentType
 import io.ktor.response.header
 import io.ktor.response.respondBytesWriter
 import io.ktor.routing.Routing
@@ -15,26 +18,36 @@ import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.route
 import io.ktor.utils.io.copyAndClose
-import no.nav.helse.hops.convert.ContentTypes
 import no.nav.helse.hops.domain.EventStore
 import no.nav.helse.hops.infrastructure.Constants
+import no.nav.helse.hops.routing.fullUrl
 import org.koin.ktor.ext.inject
 
 fun Routing.fhirRoutes() {
     route("fhir/4.0") {
         val eventStore: EventStore by inject()
-        val ct = ContentTypes.fhirJsonR4
 
         authenticate(Constants.SUBSCRIBE) {
             get("/Bundle") {
-                val response = eventStore.search(call.request.queryString(), ct, call.callId!!)
+                val response = eventStore.search(
+                    call.request.origin.fullUrl(),
+                    call.request.accept()?.let { ContentType.parse(it) } ?: ContentType.Any,
+                    call.callId!!
+                )
+
                 call.proxyDownstream(response)
             }
         }
 
         authenticate(Constants.PUBLISH) {
             post("/\$process-message") {
-                val response = eventStore.publish(call.request.receiveChannel(), ct, call.callId!!)
+                val response = eventStore.publish(
+                    call.request.origin.fullUrl(),
+                    call.request.receiveChannel(),
+                    call.request.contentType(),
+                    call.callId!!
+                )
+
                 call.proxyDownstream(response)
             }
         }

@@ -16,7 +16,7 @@ class EventStoreHttp(
     private val client: HttpClient
 ) : EventStore {
     override suspend fun add(event: FhirMessage) =
-        client.post<Unit>("${config.baseUrl}/fhir/\$process-message") {
+        client.post<Unit>("${config.baseUrl}/fhir/4.0/\$process-message") {
             body = event.content
             headers {
                 append(HttpHeaders.ContentType, event.contentType) // can be STU3, R4, R5 etc.
@@ -25,7 +25,10 @@ class EventStoreHttp(
         }
 
     override suspend fun smokeTest() =
-        client.get<Unit>("${config.baseUrl}/fhir/Bundle?_count=1") {
+        client.get<Unit>("${config.baseUrl}/fhir/4.0/Bundle?_count=1") {
             accept(ContentTypes.fhirJsonR4)
+            headers {
+                append(HttpHeaders.XRequestId, UUID.randomUUID().toString())
+            }
         }
 }

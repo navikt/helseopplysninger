@@ -28,7 +28,7 @@ class EventStoreHttp(
     override fun search(startingOffset: Long): Flow<FhirMessage> =
         flow {
             var msgOffset = startingOffset
-            var url: String? = "${config.baseUrl}/fhir/Bundle?_offset=$startingOffset"
+            var url: String? = "${config.baseUrl}/fhir/4.0/Bundle?_offset=$startingOffset"
             var httpTask = client.fhirGetAsync(url!!)
 
             do {

@@ -35,7 +35,7 @@ fun Routing.fhirRoutes() {
 
                 val searchResult = searchService.search(count, offset, dst)
 
-                if (searchResult.entry.count() == count)
+                if (searchResult.entry.count() == count && count > 0)
                     searchResult.addLink(call.createNextLink())
 
                 call.respond(searchResult)

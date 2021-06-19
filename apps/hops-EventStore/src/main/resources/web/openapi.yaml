@@ -22,7 +22,7 @@ paths:
       responses:
         '200':
           description: Metrics.
-  /fhir/Bundle:
+  /fhir/4.0/Bundle:
     get:
       tags: [FHIR]
       summary: Searches for FHIR Messages.
@@ -59,7 +59,7 @@ paths:
             application/fhir+json; fhirVersion=4.0:
               schema:
                 type: object
-  /fhir/$process-message:
+  /fhir/4.0/$process-message:
     post:
       tags: [FHIR]
       externalDocs:
