@@ -30,21 +30,20 @@ class FhirMessageProcessService(private val eventStore: EventStoreRepository) {
         eventStore.add(event)
     }
 
-    private fun createEventDto(message: Bundle): EventDto {
-        val header = message.entry[0].resource as MessageHeader
-
-        return EventDto(
-            bundleId = message.idAsUUID(),
-            messageId = header.idAsUUID(),
-            eventType = header.fullyQualifiedEventType,
-            bundleTimestamp = message.timestamp.toLocalDateTime(),
-            recorded = LocalDateTime.now(),
-            source = header.source.endpoint,
-            destinations = header.destination.map { it.endpoint }.filter { it.isNotBlank() },
-            data = createJsonByteArray(message),
-            dataType = ContentTypes.fhirJsonR4.withCharset(Charsets.UTF_8).toString()
-        )
-    }
+    private fun createEventDto(message: Bundle) =
+        (message.entry[0].resource as MessageHeader).let { header ->
+            EventDto(
+                bundleId = message.idAsUUID(),
+                messageId = header.idAsUUID(),
+                eventType = header.fullyQualifiedEventType,
+                bundleTimestamp = message.timestamp.toLocalDateTime(),
+                recorded = LocalDateTime.now(),
+                source = header.source.endpoint,
+                destinations = header.destination.map { it.endpoint }.filter { it.isNotBlank() },
+                data = createJsonByteArray(message),
+                dataType = ContentTypes.fhirJsonR4.withCharset(Charsets.UTF_8).toString()
+            )
+        }
 
     /** Validerer melding ihht. https://www.hl7.org/fhir/messaging.html
      * kan erstattes egenlagde Bundle og\eller MessageHeader profiler istedenfor å gjøres her. **/
