@@ -9,7 +9,6 @@ import no.nav.helse.hops.domain.FhirMessageBus
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import java.time.Duration
-import java.util.UUID
 
 class FhirMessageBusKafka(
     private val consumer: Consumer<Unit, ByteArray>,
@@ -23,9 +22,6 @@ class FhirMessageBusKafka(
                 while (true) { // Will be exited when the flow's CoroutineContext is cancelled.
                     val records = consumer.poll(Duration.ofSeconds(1))
 
-                    // Needed to be cancellable, see: https://kotlinlang.org/docs/flow.html#flow-cancellation-basics
-                    kotlinx.coroutines.delay(1)
-
                     records
                         .filter { it.value() != null && it.value().isNotEmpty() }
                         .map(::toFhirMessage)
@@ -38,11 +34,8 @@ class FhirMessageBusKafka(
 }
 
 private fun toFhirMessage(record: ConsumerRecord<Unit, ByteArray>): FhirMessage {
-    val contentTypeHeader = record.headers().lastHeader(HttpHeaders.ContentType)
-    val contentType = contentTypeHeader?.value()?.decodeToString() ?: ContentTypes.fhirJsonR4.toString()
+    fun valueOf(header: String) = record.headers().lastHeader(header)?.value()?.decodeToString()
+    val contentType = valueOf(HttpHeaders.ContentType) ?: ContentTypes.fhirJsonR4.toString()
 
-    val requestIdHeader = record.headers().lastHeader(HttpHeaders.XRequestId)
-    val requestId = requestIdHeader?.value()?.decodeToString() ?: UUID.randomUUID().toString()
-
-    return FhirMessage(record.value(), contentType, requestId)
+    return FhirMessage(record.value(), contentType)
 }

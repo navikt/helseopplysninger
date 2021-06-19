@@ -1,8 +1,5 @@
 {
   "ingresses": [
     "https://hops-api.dev.adeo.no"
-  ],
-  "env": {
-    "HAPI_BASE_URL": "http://hops-hapi-fhir-server/fhir"
-  }
+  ]
 }

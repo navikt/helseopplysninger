@@ -5,7 +5,6 @@ import io.ktor.application.ApplicationCall
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.auth.authenticate
-import io.ktor.features.callId
 import io.ktor.http.HttpStatusCode
 import io.ktor.request.receiveText
 import io.ktor.response.respond
@@ -58,7 +57,7 @@ fun Routing.fhirRoutes() {
                 // val message: Bundle = call.receive()
                 val message: Bundle = JsonConverter.parse(call.receiveText())
 
-                processService.process(message, call.callId!!)
+                processService.process(message)
                 call.respond(HttpStatusCode.Accepted)
             }
 

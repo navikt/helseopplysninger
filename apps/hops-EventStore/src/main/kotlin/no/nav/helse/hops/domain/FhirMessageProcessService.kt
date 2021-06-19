@@ -1,43 +1,47 @@
 package no.nav.helse.hops.domain
 
+import ca.uhn.fhir.rest.server.exceptions.ResourceVersionConflictException
 import ca.uhn.fhir.rest.server.exceptions.UnprocessableEntityException
 import io.ktor.http.withCharset
 import no.nav.helse.hops.convert.ContentTypes
-import no.nav.helse.hops.fhir.JsonConverter
 import no.nav.helse.hops.fhir.fullyQualifiedEventType
 import no.nav.helse.hops.fhir.idAsUUID
+import no.nav.helse.hops.fhir.toJsonByteArray
 import no.nav.helse.hops.toLocalDateTime
 import no.nav.helse.hops.toUri
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.MessageHeader
-import java.io.ByteArrayOutputStream
-import java.io.OutputStreamWriter
 import java.time.LocalDateTime
 import java.util.UUID
 
 class FhirMessageProcessService(private val eventStore: EventStoreRepository) {
-    suspend fun process(message: Bundle, correlationId: String) {
+    suspend fun process(message: Bundle) {
         validate(message)
-        val event = createEventDto(message, correlationId)
+
+        val event = createEventDto(message)
+
+        eventStore.getByIdOrNull(event.messageId)?.let { existing ->
+            if (event.data.contentEquals(existing.data)) return
+            throw ResourceVersionConflictException("A Message with ID=${event.messageId} already exists.")
+        }
+
         eventStore.add(event)
     }
 
-    private fun createEventDto(message: Bundle, requestId: String): EventDto {
-        val header = message.entry[0].resource as MessageHeader
-
-        return EventDto(
-            bundleId = message.idAsUUID(),
-            messageId = header.idAsUUID(),
-            requestId = requestId,
-            eventType = header.fullyQualifiedEventType,
-            bundleTimestamp = message.timestamp.toLocalDateTime(),
-            recorded = LocalDateTime.now(),
-            source = header.source.endpoint,
-            destinations = header.destination.map { it.endpoint }.filter { it.isNotBlank() },
-            data = createJsonByteArray(message),
-            dataType = ContentTypes.fhirJsonR4.withCharset(Charsets.UTF_8).toString()
-        )
-    }
+    private fun createEventDto(message: Bundle) =
+        (message.entry[0].resource as MessageHeader).let { header ->
+            EventDto(
+                bundleId = message.idAsUUID(),
+                messageId = header.idAsUUID(),
+                eventType = header.fullyQualifiedEventType,
+                bundleTimestamp = message.timestamp.toLocalDateTime(),
+                recorded = LocalDateTime.now(),
+                source = header.source.endpoint,
+                destinations = header.destination.map { it.endpoint }.filter { it.isNotBlank() },
+                data = message.toJsonByteArray(),
+                dataType = ContentTypes.fhirJsonR4.withCharset(Charsets.UTF_8).toString()
+            )
+        }
 
     /** Validerer melding ihht. https://www.hl7.org/fhir/messaging.html
      * kan erstattes egenlagde Bundle og\eller MessageHeader profiler istedenfor å gjøres her. **/
@@ -69,13 +73,3 @@ class FhirMessageProcessService(private val eventStore: EventStoreRepository) {
         }
     }
 }
-
-private fun createJsonByteArray(message: Bundle): ByteArray =
-    ByteArrayOutputStream().use { stream ->
-        OutputStreamWriter(stream).use { writer ->
-            val parser = JsonConverter.newParser()
-            parser.encodeResourceToWriter(message, writer)
-        }
-
-        return stream.toByteArray()
-    }

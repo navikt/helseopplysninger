@@ -66,7 +66,6 @@ private fun createRecord(topic: String, message: FhirMessage) =
         message.content,
         RecordHeaders().also {
             it[Constants.HEADER_CONTENT_TYPE] = message.contentType
-            it[Constants.HEADER_REQUEST_ID] = message.requestId
             it[SOURCE_OFFSET] = message.sourceOffset.toString()
             it.setReadOnly()
         }

@@ -4,6 +4,8 @@ import ca.uhn.fhir.context.FhirContext
 import ca.uhn.fhir.context.FhirVersionEnum
 import ca.uhn.fhir.parser.IParser
 import org.hl7.fhir.instance.model.api.IBaseResource
+import java.io.ByteArrayOutputStream
+import java.io.OutputStreamWriter
 
 object JsonConverter {
     // Not thread safe, new instance must therefore be created.
@@ -23,3 +25,13 @@ object JsonConverter {
 
 fun IBaseResource.toJson(pretty: Boolean = true) =
     JsonConverter.serialize(this, pretty)
+
+fun IBaseResource.toJsonByteArray(pretty: Boolean = false): ByteArray =
+    ByteArrayOutputStream().use { stream ->
+        OutputStreamWriter(stream).use { writer ->
+            val parser = JsonConverter.newParser(pretty)
+            parser.encodeResourceToWriter(this, writer)
+        }
+
+        return stream.toByteArray()
+    }

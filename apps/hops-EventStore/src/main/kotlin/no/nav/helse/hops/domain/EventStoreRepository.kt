@@ -21,7 +21,6 @@ interface EventStoreRepository : EventStoreReadOnlyRepository {
 class EventDto(
     val bundleId: UUID,
     val messageId: UUID,
-    val requestId: String,
     val eventType: String,
     val bundleTimestamp: LocalDateTime,
     val recorded: LocalDateTime,

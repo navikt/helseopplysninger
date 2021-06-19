@@ -27,7 +27,7 @@ import org.koin.ktor.ext.Koin
 import org.koin.logger.slf4jLogger
 
 @Suppress("unused") // Referenced in application.conf
-fun Application.api() {
+fun Application.module() {
     val prometheusMeterRegistry = PrometheusMeterRegistry(DEFAULT)
 
     install(Authentication) { tokenValidationSupport(config = environment.config) }
