@@ -23,8 +23,8 @@ class FhirMessageProcessService(private val eventStore: EventStoreRepository) {
         val event = createEventDto(message)
 
         eventStore.getByIdOrNull(event.messageId)?.let { existing ->
-            if (existing.data == event.data) return
-            throw ResourceVersionConflictException("A Message with the ID=${event.messageId} already exists.")
+            if (existing.data.contentEquals(event.data)) return
+            throw ResourceVersionConflictException("A Message with ID=${event.messageId} already exists.")
         }
 
         eventStore.add(event)
