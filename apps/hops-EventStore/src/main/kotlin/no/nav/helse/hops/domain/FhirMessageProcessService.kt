@@ -43,9 +43,15 @@ class FhirMessageProcessService(private val eventStore: EventStoreRepository) {
             )
         }
 
-    /** Validerer melding ihht. https://www.hl7.org/fhir/messaging.html
-     * kan erstattes egenlagde Bundle og\eller MessageHeader profiler istedenfor å gjøres her. **/
     private suspend fun validate(message: Bundle) {
+        fhirValidator.validateWithResult(message).run {
+            if (!isSuccessful) {
+                throw UnprocessableEntityException(toString(), toOperationOutcome())
+            }
+        }
+
+        // Validerer melding ihht. https://www.hl7.org/fhir/messaging.html
+        // kan erstattes egenlagde Bundle og\eller MessageHeader profiler slik at FhirValidator kan håndtere det.
         try {
             check(message.type == Bundle.BundleType.MESSAGE) { "Bundle must be of type 'Message'" }
 
@@ -73,3 +79,6 @@ class FhirMessageProcessService(private val eventStore: EventStoreRepository) {
         }
     }
 }
+
+// The validator is thread-safe and can safely be re-used.
+private val fhirValidator by lazy { FhirValidatorFactory.create() }

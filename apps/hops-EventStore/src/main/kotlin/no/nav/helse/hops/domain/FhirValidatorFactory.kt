@@ -11,7 +11,7 @@ import org.hl7.fhir.common.hapi.validation.validator.FhirInstanceValidator
 import org.hl7.fhir.r5.utils.IResourceValidator
 
 object FhirValidatorFactory {
-    val relaxedR4: FhirValidator by lazy {
+    fun create(): FhirValidator {
         val ctx = FhirContext.forCached(FhirVersionEnum.R4)
 
         val validationSupportChain = ValidationSupportChain(
@@ -20,7 +20,7 @@ object FhirValidatorFactory {
             CommonCodeSystemsTerminologyService(ctx)
         )
 
-        ctx.newValidator().apply {
+        return ctx.newValidator().apply {
             val module = FhirInstanceValidator(validationSupportChain).apply {
                 bestPracticeWarningLevel = IResourceValidator.BestPracticeWarningLevel.Ignore
                 isErrorForUnknownProfiles = false
