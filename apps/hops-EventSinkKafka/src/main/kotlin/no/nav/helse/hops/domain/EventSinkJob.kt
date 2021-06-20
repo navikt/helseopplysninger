@@ -1,5 +1,7 @@
 package no.nav.helse.hops.domain
 
+import io.ktor.client.features.ClientRequestException
+import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -15,14 +17,14 @@ import kotlin.coroutines.CoroutineContext
 
 class EventSinkJob(
     messageBus: FhirMessageBus,
-    logger: Logger,
-    eventStore: EventStore,
+    private val logger: Logger,
+    private val eventStore: EventStore,
     context: CoroutineContext = Dispatchers.Default
 ) : Closeable {
     private val job = CoroutineScope(context).launch {
         while (isActive) {
             try {
-                messageBus.poll().collect { eventStore.add(it) }
+                messageBus.poll().collect(::publish)
             } catch (ex: Throwable) {
                 if (ex is CancellationException) throw ex
                 logger.error("Error while publishing to message bus.", ex)
@@ -36,4 +38,13 @@ class EventSinkJob(
             job.cancelAndJoin()
         }
     }
+
+    private suspend fun publish(message: FhirMessage) =
+        try {
+            eventStore.add(message)
+        } catch (ex: ClientRequestException) {
+            if (ex.response.status in listOf(HttpStatusCode.BadRequest, HttpStatusCode.UnprocessableEntity))
+                logger.error("The FHIR Message is invalid and will be ignored.", ex)
+            else throw ex
+        }
 }
