@@ -45,9 +45,7 @@ class FhirMessageProcessService(private val eventStore: EventStoreRepository) {
 
     private suspend fun validate(message: Bundle) {
         fhirValidator.validateWithResult(message).run {
-            if (!isSuccessful) {
-                throw UnprocessableEntityException(toString(), toOperationOutcome())
-            }
+            if (!isSuccessful) throw UnprocessableEntityException(toString(), toOperationOutcome())
         }
 
         // Validerer melding ihht. https://www.hl7.org/fhir/messaging.html
