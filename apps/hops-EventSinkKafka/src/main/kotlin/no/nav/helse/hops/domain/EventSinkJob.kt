@@ -27,7 +27,7 @@ class EventSinkJob(
                 messageBus.poll().collect(::publish)
             } catch (ex: Throwable) {
                 if (ex is CancellationException) throw ex
-                logger.error("Error while publishing to message bus.", ex)
+                logger.error("Error while publishing to EventStore.", ex)
                 delay(5000)
             }
         }
