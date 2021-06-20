@@ -11,6 +11,7 @@ import io.ktor.routing.route
 import no.nav.helse.hops.convert.ContentTypes
 import no.nav.helse.hops.domain.EventStore
 import org.koin.ktor.ext.inject
+import java.net.URL
 
 fun Routing.smokeTestRoutes() {
     route("/smokeTests") {
@@ -19,7 +20,7 @@ fun Routing.smokeTestRoutes() {
         get("/eventStore") {
             try {
                 val response = eventStore.search(
-                    "_count=1",
+                    URL("https://smoke.test?_count=1"),
                     ContentTypes.fhirJsonR4,
                     "smoke-test-by-api"
                 )

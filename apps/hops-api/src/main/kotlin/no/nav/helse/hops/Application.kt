@@ -7,6 +7,7 @@ import io.ktor.features.CallId
 import io.ktor.features.CallLogging
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.StatusPages
+import io.ktor.features.XForwardedHeaderSupport
 import io.ktor.metrics.micrometer.MicrometerMetrics
 import io.ktor.routing.routing
 import io.ktor.webjars.Webjars
@@ -38,6 +39,7 @@ fun Application.module(testModule: Module = Module()) {
     install(MicrometerMetrics) { registry = prometheusMeterRegistry }
     install(StatusPages) { useFhirErrorStatusPage() }
     install(Webjars)
+    install(XForwardedHeaderSupport)
     install(Koin) {
         slf4jLogger()
         modules(listOf(KoinBootstrapper.module, environment.config.asHoplitePropertySourceModule()) + testModule)

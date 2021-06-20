@@ -6,8 +6,8 @@ import io.ktor.auth.Authentication
 import io.ktor.features.CallId
 import io.ktor.features.CallLogging
 import io.ktor.features.ContentNegotiation
-import io.ktor.features.DoubleReceive
 import io.ktor.features.StatusPages
+import io.ktor.features.XForwardedHeaderSupport
 import io.ktor.metrics.micrometer.MicrometerMetrics
 import io.ktor.routing.routing
 import io.ktor.webjars.Webjars
@@ -34,10 +34,10 @@ fun Application.module() {
     install(CallId) { useRequestIdHeader() }
     install(CallLogging)
     install(ContentNegotiation) { register(ContentTypes.fhirJson, FhirR4JsonContentConverter()) }
-    install(DoubleReceive) { receiveEntireContent = true }
     install(MicrometerMetrics) { registry = prometheusMeterRegistry }
     install(StatusPages) { useFhirErrorStatusPage() }
     install(Webjars)
+    install(XForwardedHeaderSupport)
     install(Koin) {
         slf4jLogger()
         modules(KoinBootstrapper.module, environment.config.asHoplitePropertySourceModule())

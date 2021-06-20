@@ -12,27 +12,35 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
 import io.ktor.utils.io.ByteReadChannel
 import no.nav.helse.hops.domain.EventStore
+import java.net.URL
 
 class EventStoreHttp(
     private val httpClient: HttpClient,
     private val config: Configuration.EventStore
 ) : EventStore {
-    override suspend fun search(query: String, accept: ContentType, requestId: String) =
-        httpClient.get<HttpResponse>("${config.baseUrl}/fhir/Bundle?$query") {
+    override suspend fun search(downstreamUrl: URL, accept: ContentType, requestId: String) =
+        httpClient.get<HttpResponse>("${config.baseUrl}/fhir/4.0/Bundle?${downstreamUrl.query}") {
             expectSuccess = false
             accept(accept)
             headers {
                 append(HttpHeaders.XRequestId, requestId)
+                append(HttpHeaders.XForwardedProto, downstreamUrl.protocol)
+                append(HttpHeaders.XForwardedHost, "${downstreamUrl.host}:${downstreamUrl.port}")
             }
         }
 
-    override suspend fun publish(body: ByteReadChannel, contentType: ContentType, requestId: String) =
-        httpClient.post<HttpResponse>("${config.baseUrl}/fhir/\$process-message") {
+    override suspend fun publish(downstreamUrl: URL, body: ByteReadChannel, contentType: ContentType, requestId: String) =
+        httpClient.post<HttpResponse>("${config.baseUrl}/fhir/4.0/\$process-message") {
             this.body = body
             expectSuccess = false
             contentType(contentType)
             headers {
                 append(HttpHeaders.XRequestId, requestId)
+                headers {
+                    append(HttpHeaders.XRequestId, requestId)
+                    append(HttpHeaders.XForwardedProto, downstreamUrl.protocol)
+                    append(HttpHeaders.XForwardedHost, "${downstreamUrl.host}:${downstreamUrl.port}")
+                }
             }
         }
 }

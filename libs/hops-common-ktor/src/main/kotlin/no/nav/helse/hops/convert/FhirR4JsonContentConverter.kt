@@ -2,6 +2,7 @@ package no.nav.helse.hops.convert
 
 import ca.uhn.fhir.context.FhirContext
 import ca.uhn.fhir.context.FhirVersionEnum
+import ca.uhn.fhir.rest.server.exceptions.InvalidRequestException
 import io.ktor.application.ApplicationCall
 import io.ktor.application.call
 import io.ktor.content.TextContent
@@ -44,7 +45,11 @@ class FhirR4JsonContentConverter : ContentConverter {
         val channel = context.subject.value as? ByteReadChannel ?: return null
         return withContext(Dispatchers.IO) {
             channel.toInputStream().reader().use {
-                newParser().parseResource(it)
+                try {
+                    newParser().parseResource(it)
+                } catch (ex: Throwable) {
+                    throw InvalidRequestException(ex.message, ex)
+                }
             }
         }
     }
