@@ -38,10 +38,10 @@ class EventStoreRepositoryExposedORM(config: Config) : EventStoreRepository {
 
     override suspend fun add(event: EventDto) {
         newSuspendedTransaction(Dispatchers.IO, database) {
-            val rowId = EventsTable.insert { it.setValues(event) }[EventsTable.id]
+            val rowId = EventTable.insert { it.setValues(event) }[EventTable.id]
 
             event.destinations.forEach { dest ->
-                DestinationsTable.insert {
+                DestinationTable.insert {
                     it[eventId] = rowId
                     it[endpoint] = dest
                 }
@@ -52,74 +52,74 @@ class EventStoreRepositoryExposedORM(config: Config) : EventStoreRepository {
     override suspend fun search(query: EventStoreReadOnlyRepository.Query) =
         newSuspendedTransaction(Dispatchers.IO, database) {
             val exposedQuery =
-                if (query.destinationUri == null) EventsTable.selectAll()
-                else EventsTable
+                if (query.destinationUri == null) EventTable.selectAll()
+                else EventTable
                     .join(
-                        DestinationsTable,
+                        DestinationTable,
                         JoinType.INNER,
                         additionalConstraint = {
-                            EventsTable.id eq DestinationsTable.eventId and(
-                                DestinationsTable.endpoint eq query.destinationUri
+                            EventTable.id eq DestinationTable.eventId and(
+                                DestinationTable.endpoint eq query.destinationUri
                                 )
                         }
                     )
                     .selectAll()
 
             query.messageId?.let {
-                exposedQuery.andWhere { EventsTable.messageId eq it }
+                exposedQuery.andWhere { EventTable.messageId eq it }
             }
 
             exposedQuery
-                .orderBy(EventsTable.id to SortOrder.ASC)
+                .orderBy(EventTable.id to SortOrder.ASC)
                 .limit(query.count, query.offset)
                 .map(::toEventDto)
         }
 }
 
-private object EventsTable : Table() {
+private object EventTable : Table() {
     val id = long("id").autoIncrement()
     val bundleId = uuid("bundle_id")
     val messageId = uuid("message_id")
     val eventType = varchar("event_type", 200)
     val bundleTimestamp = datetime("bundle_timestamp")
     val recorded = datetime("recorded")
-    val src = varchar("\"source\"", 200)
-    val data = text("\"data\"")
+    val src = varchar("source", 200)
+    val data = text("data")
     val dataType = varchar("data_type", 100)
     val dataBytes = integer("data_bytes")
 
     override val primaryKey = PrimaryKey(id)
 }
 
-private object DestinationsTable : Table() {
+private object DestinationTable : Table() {
     val id = integer("id").autoIncrement()
-    val eventId = long("event_id").references(EventsTable.id)
+    val eventId = long("event_id").references(EventTable.id)
     val endpoint = varchar("endpoint", 200)
 
     override val primaryKey = PrimaryKey(id)
 }
 
 private fun InsertStatement<Number>.setValues(event: EventDto) {
-    this[EventsTable.bundleId] = event.bundleId
-    this[EventsTable.messageId] = event.messageId
-    this[EventsTable.eventType] = event.eventType
-    this[EventsTable.bundleTimestamp] = event.bundleTimestamp
-    this[EventsTable.recorded] = event.recorded
-    this[EventsTable.src] = event.source
-    this[EventsTable.data] = event.data.decodeToString()
-    this[EventsTable.dataType] = event.dataType
-    this[EventsTable.dataBytes] = event.data.size
+    this[EventTable.bundleId] = event.bundleId
+    this[EventTable.messageId] = event.messageId
+    this[EventTable.eventType] = event.eventType
+    this[EventTable.bundleTimestamp] = event.bundleTimestamp
+    this[EventTable.recorded] = event.recorded
+    this[EventTable.src] = event.source
+    this[EventTable.data] = event.data.decodeToString()
+    this[EventTable.dataType] = event.dataType
+    this[EventTable.dataBytes] = event.data.size
 }
 
 private fun toEventDto(row: ResultRow) =
     EventDto(
-        messageId = row[EventsTable.messageId],
-        bundleId = row[EventsTable.bundleId],
-        eventType = row[EventsTable.eventType],
-        bundleTimestamp = row[EventsTable.bundleTimestamp],
-        recorded = row[EventsTable.recorded],
-        source = row[EventsTable.src],
+        messageId = row[EventTable.messageId],
+        bundleId = row[EventTable.bundleId],
+        eventType = row[EventTable.eventType],
+        bundleTimestamp = row[EventTable.bundleTimestamp],
+        recorded = row[EventTable.recorded],
+        source = row[EventTable.src],
         destinations = emptyList(), // Not needed for now.
-        data = row[EventsTable.data].toByteArray(),
-        dataType = row[EventsTable.dataType]
+        data = row[EventTable.data].toByteArray(),
+        dataType = row[EventTable.dataType]
     )
