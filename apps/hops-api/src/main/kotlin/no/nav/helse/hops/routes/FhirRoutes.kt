@@ -7,12 +7,10 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.features.callId
 import io.ktor.features.origin
 import io.ktor.http.ContentType
-import io.ktor.http.HttpHeaders
 import io.ktor.http.contentLength
 import io.ktor.http.contentType
 import io.ktor.request.accept
 import io.ktor.request.contentType
-import io.ktor.response.header
 import io.ktor.response.respond
 import io.ktor.response.respondBytesWriter
 import io.ktor.routing.Routing
@@ -58,7 +56,6 @@ fun Routing.fhirRoutes() {
 
 /** Forward the content of the upstream-response (from EventStore) to the downstream client. **/
 private suspend fun ApplicationCall.proxyDownstream(upstreamResponse: HttpResponse) {
-    response.header(HttpHeaders.XRequestId, callId!!)
     if ((upstreamResponse.contentLength() ?: 0) <= 0) {
         respond(upstreamResponse.status)
     } else {
