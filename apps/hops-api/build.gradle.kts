@@ -30,7 +30,6 @@ dependencies {
     implementation("io.ktor:ktor-webjars:$ktorVersion")
     implementation("io.micrometer:micrometer-registry-prometheus:1.7.0")
     implementation("no.nav.security:token-validation-ktor:1.3.7")
-    implementation(project(":libs:hops-common-fhir"))
     implementation(project(":libs:hops-common-ktor"))
     runtimeOnly("ch.qos.logback:logback-classic:1.2.3")
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")

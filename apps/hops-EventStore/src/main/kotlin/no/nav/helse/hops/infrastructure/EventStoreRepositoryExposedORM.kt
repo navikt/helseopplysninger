@@ -4,22 +4,19 @@ import kotlinx.coroutines.Dispatchers
 import no.nav.helse.hops.domain.EventDto
 import no.nav.helse.hops.domain.EventStoreReadOnlyRepository
 import no.nav.helse.hops.domain.EventStoreRepository
+import org.flywaydb.core.Flyway
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.JoinType
 import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.Slf4jSqlDebugLogger
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.`java-time`.datetime
-import org.jetbrains.exposed.sql.addLogger
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.andWhere
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.statements.InsertStatement
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
-import org.jetbrains.exposed.sql.transactions.transaction
 
 class EventStoreRepositoryExposedORM(config: Config) : EventStoreRepository {
     data class Config(
@@ -32,12 +29,11 @@ class EventStoreRepositoryExposedORM(config: Config) : EventStoreRepository {
         Database.connect(url = config.url, user = config.username, password = config.password)
 
     init {
-        // TODO: Exposed har ikke har støtte for migrations, se derfor på bruk av flywaydb eller andre verktøy for å
-        //  generere skjemaer før dette taes i bruk i produksjon.
-        transaction(database) {
-            addLogger(Slf4jSqlDebugLogger)
-            SchemaUtils.create(EventTable, DestinationTable)
-        }
+        Flyway
+            .configure()
+            .dataSource(config.url, config.username, config.password)
+            .load()
+            .migrate()
     }
 
     override suspend fun add(event: EventDto) {
@@ -82,14 +78,14 @@ class EventStoreRepositoryExposedORM(config: Config) : EventStoreRepository {
 
 private object EventTable : Table() {
     val id = long("id").autoIncrement()
-    val bundleId = uuid("bundle_id").uniqueIndex()
-    val messageId = uuid("message_id").uniqueIndex()
-    val eventType = varchar("event_type", 200).index()
-    val bundleTimestamp = datetime("bundle_timestamp").index()
+    val bundleId = uuid("bundle_id")
+    val messageId = uuid("message_id")
+    val eventType = varchar("event_type", 200)
+    val bundleTimestamp = datetime("bundle_timestamp")
     val recorded = datetime("recorded")
-    val src = varchar("source", 200).index()
+    val src = varchar("source", 200)
     val data = text("data")
-    val dataType = varchar("data_type", 100).index()
+    val dataType = varchar("data_type", 100)
     val dataBytes = integer("data_bytes")
 
     override val primaryKey = PrimaryKey(id)
@@ -98,7 +94,7 @@ private object EventTable : Table() {
 private object DestinationTable : Table() {
     val id = integer("id").autoIncrement()
     val eventId = long("event_id").references(EventTable.id)
-    val endpoint = varchar("endpoint", 200).index()
+    val endpoint = varchar("endpoint", 200)
 
     override val primaryKey = PrimaryKey(id)
 }

@@ -33,7 +33,7 @@ dependencies {
     implementation("io.ktor:ktor-webjars:$ktorVersion")
     implementation("io.micrometer:micrometer-registry-prometheus:1.7.0")
     implementation("no.nav.security:token-validation-ktor:1.3.7")
-    implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
+    implementation("org.flywaydb:flyway-core:7.10.0")
     implementation("org.jetbrains.exposed:exposed-java-time:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
     implementation(project(":libs:hops-common-fhir"))
