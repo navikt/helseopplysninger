@@ -19,7 +19,7 @@ class EventStoreHttp(
         client.post<Unit>("${config.baseUrl}/fhir/4.0/\$process-message") {
             body = event.content
             headers {
-                append(HttpHeaders.ContentType, event.contentType) // can be STU3, R4, R5 etc.
+                append(HttpHeaders.ContentType, event.contentType)
                 append(HttpHeaders.XRequestId, UUID.randomUUID().toString())
             }
         }

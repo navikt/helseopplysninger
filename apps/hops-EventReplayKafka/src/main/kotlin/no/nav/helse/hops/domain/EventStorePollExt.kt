@@ -10,12 +10,7 @@ fun EventStore.poll(startingOffset: Long): Flow<FhirMessage> =
         var offset = startingOffset
 
         while (true) {
-            search(offset)
-                .collect {
-                    emit(it)
-                    offset = it.sourceOffset
-                }
-
+            search(offset).collect { emit(it); offset = it.sourceOffset }
             delay(2000) // cancellable
         }
     }

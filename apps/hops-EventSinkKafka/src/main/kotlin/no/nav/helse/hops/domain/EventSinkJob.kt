@@ -24,7 +24,7 @@ class EventSinkJob(
     private val job = CoroutineScope(context).launch {
         while (isActive) {
             try {
-                messageBus.poll().collect(::publish)
+                messageBus.poll().collect(::addToEventStore)
             } catch (ex: Throwable) {
                 if (ex is CancellationException) throw ex
                 logger.error("Error while publishing to EventStore.", ex)
@@ -39,7 +39,7 @@ class EventSinkJob(
         }
     }
 
-    private suspend fun publish(message: FhirMessage) =
+    private suspend fun addToEventStore(message: FhirMessage) =
         try {
             eventStore.add(message)
         } catch (ex: ClientRequestException) {
