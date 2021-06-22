@@ -25,7 +25,7 @@ dependencies {
     api("io.ktor:ktor-client-auth:$ktorVersion")
     api(project(":libs:hops-common-core"))
     implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:5.4.1")
-    implementation("com.sksamuel.hoplite:hoplite-hocon:1.4.1")
+    implementation("com.sksamuel.hoplite:hoplite-hocon:1.4.2")
     testImplementation("io.kotest:kotest-assertions-shared:4.6.0")
     testImplementation("io.ktor:ktor-server-netty:$ktorVersion")
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion") { exclude("org.jetbrains.kotlin", "kotlin-test-junit") }
