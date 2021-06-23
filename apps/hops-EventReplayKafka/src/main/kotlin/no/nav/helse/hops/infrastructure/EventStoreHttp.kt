@@ -27,7 +27,7 @@ class EventStoreHttp(
 ) : EventStore {
     override fun search(startingOffset: Long): Flow<FhirMessage> =
         flow {
-            var msgOffset = startingOffset
+            var offset = startingOffset
             var url: String? = "${config.baseUrl}/fhir/4.0/Bundle?_offset=$startingOffset"
             var httpTask = client.fhirGetAsync(url!!)
 
@@ -45,7 +45,7 @@ class EventStoreHttp(
                     val id = bundle.entry[0].resource.idAsUUID()
                     val ts = bundle.timestamp.toLocalDateTime()
                     val content = bundle.toJsonByteArray()
-                    return FhirMessage(id, ts, content, contentType, ++msgOffset)
+                    return FhirMessage(id, ts, content, contentType, offset++)
                 }
 
                 if (result.hasEntry()) result.entry.map(::toFhirMessage).forEach { emit(it) }

@@ -6,7 +6,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -45,7 +47,7 @@ private fun EventStore.poll(startingOffset: Long) =
         var offset = startingOffset
 
         while (true) {
-            search(offset).collect { emit(it); offset = it.sourceOffset }
+            emitAll(search(offset).onEach { offset++ })
             delay(2000) // cancellable
         }
     }

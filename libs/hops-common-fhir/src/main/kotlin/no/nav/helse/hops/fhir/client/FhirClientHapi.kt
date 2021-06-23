@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.isActive
 import no.nav.helse.hops.fhir.idAsUUID
-import no.nav.helse.hops.fhir.resources
 import no.nav.helse.hops.fhir.toUriType
 import no.nav.helse.hops.fhir.weakEtag
 import org.hl7.fhir.r4.model.Bundle
@@ -93,3 +92,7 @@ private fun createTransaction(resources: List<Resource>) =
             }
         }
     }
+
+/** Returns resources from entries. **/
+inline fun <reified R : Resource> Bundle.resources() =
+    (entry ?: emptyList()).mapNotNull { it.resource as? R }

@@ -52,9 +52,9 @@ class FhirMessageBusKafka(
             }
 
             val records = consumer.poll(Duration.ofSeconds(2))
-            val offsets = records.map { it.headers()[SOURCE_OFFSET].toLong() }
+            val sourceOffsets = records.map { it.headers()[SOURCE_OFFSET].toLong() }
 
-            return offsets.maxOrNull() ?: 0
+            return sourceOffsets.map { it + 1 }.maxOrNull() ?: 0
         }
         finally {
             consumer.unsubscribe()
