@@ -12,6 +12,7 @@ import no.nav.helse.hops.toUri
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.MessageHeader
 import java.time.LocalDateTime
+import java.util.Date
 import java.util.UUID
 
 class FhirMessageProcessService(private val eventStore: EventStoreRepository) {
@@ -61,6 +62,7 @@ class FhirMessageProcessService(private val eventStore: EventStoreRepository) {
             check(headerId.variant() != 0) { "MessageHeader.Id must be valid UUID." }
             check(bundleId != headerId) { "Bundle.id and MessageHeader.id cannot be equal." }
             checkNotNull(message.timestamp) { "Bundle.timestamp is required." }
+            check(message.timestamp.before(Date())) { "Bundle.timestamp cannot be in the future." }
 
             check(message.entry.first().fullUrl == headerId.toUri().toString()) {
                 "entry.fullUrl does not match MessageHeader.id."

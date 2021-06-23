@@ -21,7 +21,6 @@ dependencies {
     val naviktTokenSupportVersion = "1.3.7"
 
     api("org.jetbrains.kotlin:kotlin-reflect:${kotlin.coreLibrariesVersion}") { because("Prevent different versions in classpath.") }
-    implementation("com.fasterxml.uuid:java-uuid-generator:4.0.1")
     implementation("io.ktor:ktor-client-jackson:$ktorVersion")
     implementation("io.ktor:ktor-client-java:$ktorVersion")
     implementation("no.nav.security:token-client-core:$naviktTokenSupportVersion")

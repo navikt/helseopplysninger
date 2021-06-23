@@ -6,6 +6,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -38,3 +41,13 @@ class EventReplayJob(
         }
     }
 }
+
+private fun EventStore.poll(startingOffset: Long) =
+    flow {
+        var offset = startingOffset
+
+        while (true) {
+            emitAll(search(offset).onEach { offset++ })
+            delay(2000) // cancellable
+        }
+    }

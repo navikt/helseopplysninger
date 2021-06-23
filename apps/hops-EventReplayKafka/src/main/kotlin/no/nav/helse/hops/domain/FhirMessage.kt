@@ -11,7 +11,6 @@ class FhirMessage(
     val sourceOffset: Long
 ) {
     init {
-        require(timestamp.isBefore(LocalDateTime.now())) { "Timestamp cannot be in the future." }
         require(content.isNotEmpty()) { "Content cannot be empty." }
         require(contentType.startsWith("application/fhir+json; fhirVersion=")) { "Unexpected Content-Type format." }
         require(sourceOffset >= 0) { "Source-Offset cannot be negative." }
