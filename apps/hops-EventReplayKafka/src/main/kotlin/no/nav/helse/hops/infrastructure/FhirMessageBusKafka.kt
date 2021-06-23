@@ -55,8 +55,7 @@ class FhirMessageBusKafka(
             val sourceOffsets = records.map { it.headers()[SOURCE_OFFSET].toLong() }
 
             return sourceOffsets.map { it + 1 }.maxOrNull() ?: 0
-        }
-        finally {
+        } finally {
             consumer.unsubscribe()
         }
     }
