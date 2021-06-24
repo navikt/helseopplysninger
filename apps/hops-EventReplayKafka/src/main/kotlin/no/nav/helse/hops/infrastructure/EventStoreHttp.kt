@@ -1,15 +1,16 @@
 package no.nav.helse.hops.infrastructure
 
 import io.ktor.client.HttpClient
-import io.ktor.client.call.receive
 import io.ktor.client.request.accept
 import io.ktor.client.request.get
 import io.ktor.client.request.headers
-import io.ktor.client.statement.HttpResponse
 import io.ktor.http.HttpHeaders
-import io.ktor.http.contentType
-import kotlinx.coroutines.async
+import io.ktor.http.withCharset
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
 import no.nav.helse.hops.convert.ContentTypes
 import no.nav.helse.hops.domain.EventStore
@@ -25,40 +26,40 @@ class EventStoreHttp(
     private val config: Configuration.EventStore,
     private val client: HttpClient
 ) : EventStore {
-    override fun search(startingOffset: Long): Flow<FhirMessage> =
+    @FlowPreview
+    override fun search(startingOffset: Long): Flow<FhirMessage> {
+        var offset = startingOffset
+        val ct = ContentTypes.fhirJsonR4.withCharset(Charsets.UTF_8).toString()
+
+        fun toFhirMessage(entry: Bundle.BundleEntryComponent): FhirMessage {
+            val bundle = entry.resource as Bundle
+            val id = bundle.entry[0].resource.idAsUUID()
+            val ts = bundle.timestamp.toLocalDateTime()
+            val content = bundle.toJsonByteArray()
+            return FhirMessage(id, ts, content, ct, offset++)
+        }
+
+        return paginate(startingOffset)
+            .filter { it.hasEntry() }
+            .flatMapConcat { it.entry.map(::toFhirMessage).asFlow() }
+    }
+
+    private fun paginate(startingOffset: Long): Flow<Bundle> =
         flow {
-            var offset = startingOffset
             var url: String? = "${config.baseUrl}/fhir/4.0/Bundle?_offset=$startingOffset"
-            var httpTask = client.fhirGetAsync(url!!)
 
             do {
-                val httpResponse = httpTask.await()
-                val contentType = httpResponse.contentType().toString()
-                val body: String = httpResponse.receive()
-                val result = JsonConverter.parse<Bundle>(body)
-
-                url = result.link?.singleOrNull { it.relation == Bundle.LINK_NEXT }?.url
-                if (url != null) httpTask = client.fhirGetAsync(url) // fetch next page while processing current.
-
-                fun toFhirMessage(entry: Bundle.BundleEntryComponent): FhirMessage {
-                    val bundle = entry.resource as Bundle
-                    val id = bundle.entry[0].resource.idAsUUID()
-                    val ts = bundle.timestamp.toLocalDateTime()
-                    val content = bundle.toJsonByteArray()
-                    return FhirMessage(id, ts, content, contentType, offset++)
+                val body = client.get<String>(url!!) {
+                    accept(ContentTypes.fhirJsonR4)
+                    headers {
+                        append(HttpHeaders.XRequestId, UUID.randomUUID().toString())
+                    }
                 }
 
-                if (result.hasEntry()) result.entry.map(::toFhirMessage).forEach { emit(it) }
+                val result = JsonConverter.parse<Bundle>(body)
+                url = result.link?.singleOrNull { it.relation == Bundle.LINK_NEXT }?.url
+
+                emit(result)
             } while (url != null)
         }
 }
-
-private fun HttpClient.fhirGetAsync(url: String) =
-    async {
-        get<HttpResponse>(url) {
-            accept(ContentTypes.fhirJsonR4)
-            headers {
-                append(HttpHeaders.XRequestId, UUID.randomUUID().toString())
-            }
-        }
-    }

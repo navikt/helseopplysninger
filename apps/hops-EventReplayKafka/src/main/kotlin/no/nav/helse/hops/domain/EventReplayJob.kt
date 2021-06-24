@@ -5,6 +5,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
@@ -26,7 +27,7 @@ class EventReplayJob(
         while (isActive) {
             try {
                 val startingOffset = messageBus.sourceOffsetOfLatestMessage()
-                eventStore.poll(startingOffset).collect { messageBus.publish(it) }
+                eventStore.poll(startingOffset).buffer(50).collect { messageBus.publish(it) }
             } catch (ex: Throwable) {
                 if (ex is CancellationException) throw ex
                 logger.error("Error while publishing to message bus.", ex)
@@ -48,6 +49,6 @@ private fun EventStore.poll(startingOffset: Long) =
 
         while (true) {
             emitAll(search(offset).onEach { offset++ })
-            delay(2000) // cancellable
+            delay(2000)
         }
     }
