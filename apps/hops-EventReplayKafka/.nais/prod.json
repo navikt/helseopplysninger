@@ -1,4 +1,7 @@
 {
-  "ingresses":  ["https://hops-eventreplaykafka.nais.adeo.no"],
-  "kafka_pool": "nav-prod"
+  "ingresses":  ["https://hops-eventreplaykafka.intern.nav.no"],
+  "kafka_pool": "nav-prod",
+  "env": {
+    "HOPS_EVENTSTORE_SCOPE": "api://prod-gcp.helseopplysninger.event-store/.default"
+  }
 }

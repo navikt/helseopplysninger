@@ -1,5 +1,5 @@
 {
-  "ingresses":  ["https://hops-oppslag.dev.adeo.no"],
+  "ingresses":  ["https://hops-oppslag.dev.intern.nav.no"],
   "fkr_host": "hint-inet.utv.helsedir.no",
   "helseid_host": "helseid-sts.test.nhn.no",
   "env": {

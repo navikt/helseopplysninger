@@ -1,0 +1,18 @@
+apiVersion: kafka.nais.io/v1
+kind: Topic
+metadata:
+  name: rapid
+  namespace: helseopplysninger
+  labels:
+    team: helseopplysninger
+spec:
+  pool: nav-dev
+  acl:
+    - application: event-sink-kafka
+      access: read
+    - team: teamdigihot
+      application: hm-fhir
+      access: write
+    - team: teamdigihot
+      application: digihot-kafka-debug
+      access: write

@@ -1,0 +1,12 @@
+apiVersion: kafka.nais.io/v1
+kind: Topic
+metadata:
+  name: river
+  namespace: helseopplysninger
+  labels:
+    team: helseopplysninger
+spec:
+  pool: nav-prod
+  acl:
+    - application: event-replay-kafka
+      access: readwrite

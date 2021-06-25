@@ -5,6 +5,8 @@ metadata:
   namespace: helseopplysninger
   labels:
     team: helseopplysninger
+  annotations:
+    kafka.nais.io/removeDataWhenResourceIsDeleted: "true"
 spec:
   pool: nav-dev
   acl:
@@ -22,4 +24,4 @@ spec:
       access: readwrite
     - team: teamdigihot
       application: digihot-kafka-debug
-      access: read    
+      access: read

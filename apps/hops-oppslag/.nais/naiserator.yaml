@@ -1,7 +1,7 @@
 apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
-  name: hops-oppslag
+  name: oppslag
   namespace: helseopplysninger
   labels:
     team: helseopplysninger
