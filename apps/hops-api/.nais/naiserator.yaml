@@ -1,7 +1,7 @@
 apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
-  name: external-api
+  name: hops-external-api
   namespace: helseopplysninger
   labels:
     team: helseopplysninger
@@ -47,7 +47,7 @@ spec:
   accessPolicy:
     outbound:
       rules:
-        - application: event-store
+        - application: hops-event-store
   ingresses:
   {{#each ingresses as |url|}}
     - {{url}}
@@ -56,7 +56,7 @@ spec:
     - name: LOG_APPENDER
       value: json
     - name: HOPS_EVENTSTORE_BASE_URL
-      value: http://event-store
+      value: http://hops-event-store
   {{#each env}}
      - name: {{@key}}
        value: "{{this}}"

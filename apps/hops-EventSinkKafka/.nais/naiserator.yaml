@@ -1,7 +1,7 @@
 apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
-  name: event-sink-kafka
+  name: hops-event-sink-kafka
   namespace: helseopplysninger
   labels:
     team: helseopplysninger
@@ -40,7 +40,7 @@ spec:
   accessPolicy:
     outbound:
       rules:
-        - application: event-store
+        - application: hops-event-store
   kafka:
     pool: {{ kafka_pool }}
   ingresses:
@@ -53,7 +53,7 @@ spec:
     - name: KAFKA_SECURITY_ENABLED
       value: "true"
     - name: HOPS_EVENTSTORE_BASE_URL
-      value: http://event-store
+      value: http://hops-event-store
   {{#each env}}
     - name: {{@key}}
       value: "{{this}}"

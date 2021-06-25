@@ -3,6 +3,6 @@
     "https://helseopplysninger.dev.nav.no"
   ],
   "env": {
-    "HOPS_EVENTSTORE_SCOPE": "api://dev-gcp.helseopplysninger.event-store/.default"
+    "HOPS_EVENTSTORE_SCOPE": "api://dev-gcp.helseopplysninger.hops-event-store/.default"
   }
 }
