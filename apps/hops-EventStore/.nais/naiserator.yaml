@@ -1,7 +1,7 @@
 apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
-  name: hops-eventstore
+  name: hops-event-store
   namespace: helseopplysninger
   labels:
     team: helseopplysninger
@@ -11,7 +11,7 @@ spec:
     sqlInstances:
       - type: POSTGRES_12
         databases:
-          - name: events-db
+          - name: hops-events-db
             envVarPrefix: DB
   liveness:
     path: /isAlive
@@ -44,9 +44,9 @@ spec:
   accessPolicy:
     inbound:
       rules:
-        - application: hops-api
-        - application: hops-eventreplaykafka
-        - application: hops-eventsinkkafka
+        - application: hops-external-api
+        - application: hops-event-replay-kafka
+        - application: hops-event-sink-kafka
   env:
     - name: LOG_APPENDER
       value: json

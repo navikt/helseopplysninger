@@ -1,5 +1,8 @@
 {
   "ingresses": [
-    "https://hops-api.nais.adeo.no"
-  ]
+    "https://helseopplysninger.nav.no"
+  ],
+  "env": {
+    "HOPS_EVENTSTORE_SCOPE": "api://prod-gcp.helseopplysninger.hops-event-store/.default"
+  }
 }
