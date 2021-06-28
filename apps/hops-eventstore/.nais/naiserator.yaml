@@ -44,7 +44,7 @@ spec:
   accessPolicy:
     inbound:
       rules:
-        - application: hops-external-api
+        - application: hops-api
         - application: hops-event-replay-kafka
         - application: hops-event-sink-kafka
   env:

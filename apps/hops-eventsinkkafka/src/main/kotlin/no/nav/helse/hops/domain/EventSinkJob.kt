@@ -25,13 +25,19 @@ class EventSinkJob(
         while (isActive) {
             try {
                 messageBus.poll().collect(::addToEventStore)
+                isRunning = true
             } catch (ex: Throwable) {
+                isRunning = false
                 if (ex is CancellationException) throw ex
                 logger.error("Error while publishing to EventStore.", ex)
                 delay(5000)
             }
         }
     }
+
+    @Volatile
+    var isRunning = true
+        private set
 
     override fun close() {
         runBlocking {
