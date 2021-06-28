@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   version: 1.0.0
   title: EventSinkKafka
-  description: En bakgrunnsprosess som lytter på "dirty"-kafka-topic og publiserer meldinger til EventStore.
+  description: En bakgrunnsprosess som lytter på 'rapid' kafka-topic og publiserer meldinger til EventStore.
 paths:
   /isReady:
     get:

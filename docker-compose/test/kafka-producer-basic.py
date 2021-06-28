@@ -12,6 +12,6 @@ for fileName in sys.argv[1:]:
         value_serializer=lambda m: dumps(m).encode('utf-8'),
         bootstrap_servers=['localhost:9092'])
 
-    future = producer.send("helseopplysninger.dirty", value=data)
+    future = producer.send("helseopplysninger.rapid", value=data)
     result = future.get(timeout=60)
     print(result)
