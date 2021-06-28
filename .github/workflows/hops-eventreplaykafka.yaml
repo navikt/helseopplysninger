@@ -1,9 +1,9 @@
-name: hops-eventreplaykafa
+name: hops-eventreplaykafka
 
 on:
   push:
     branches: [main]
-    paths: [apps/hops-eventreplaykafa/**]
+    paths: [apps/hops-eventreplaykafka/**]
   workflow_dispatch:
     inputs:
       deploy-prod:
