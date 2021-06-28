@@ -63,7 +63,8 @@ You should then get at `200 OK`
 For trying the /fhir/4.0/Bundle {GET} or /fhir/4.0/$prosess-message {POST}
 you will need to use Postman or something equivalent.
 
-In Postman:
+In Postman: See [screen dump](./docs/PostmanDump.png)
+
 * Make a `get` request to `http://localhost:8085/fhir/4.0/Bundle`
 * Click the `Authorization` tab
 * In the `Type` dropdown, select `OAuth 2.0`
