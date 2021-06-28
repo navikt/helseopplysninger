@@ -8,5 +8,5 @@ metadata:
 spec:
   pool: nav-prod
   acl:
-    - application: event-sink-kafka
+    - application: hops-event-sink-kafka
       access: read

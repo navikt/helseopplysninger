@@ -8,7 +8,7 @@ metadata:
 spec:
   pool: nav-dev
   acl:
-    - application: event-sink-kafka
+    - application: hops-event-sink-kafka
       access: read
     - team: teamdigihot
       application: hm-fhir

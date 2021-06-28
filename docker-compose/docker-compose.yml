@@ -15,7 +15,7 @@ services:
     build:
       context: ..
       args:
-        project: hops-EventStore
+        project: hops-eventstore
     depends_on: [mock-oauth2-service, postgres]
     ports: [8082:8080]
     environment:
@@ -26,7 +26,7 @@ services:
     build:
       context: ..
       args:
-        project: hops-EventSinkKafka
+        project: hops-eventsinkkafka
     depends_on: [kafka, eventstore]
     ports: [8083:8080]
     environment:
@@ -38,7 +38,7 @@ services:
     build:
       context: ..
       args:
-        project: hops-EventReplayKafka
+        project: hops-eventreplaykafka
     depends_on: [kafka, eventstore]
     ports: [8084:8080]
     environment:
