@@ -58,8 +58,8 @@ spec:
     - name: HOPS_EVENTSTORE_BASE_URL
       value: http://hops-event-store
   {{#each env}}
-     - name: {{@key}}
-       value: "{{this}}"
+    - name: {{@key}}
+      value: "{{this}}"
   {{/each}}
   envFrom:
     - secret: api
