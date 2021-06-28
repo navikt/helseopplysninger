@@ -8,5 +8,5 @@ metadata:
 spec:
   pool: nav-prod
   acl:
-    - application: event-replay-kafka
+    - application: hops-event-replay-kafka
       access: readwrite

@@ -2,9 +2,9 @@ rootProject.name = "helseopplysninger"
 
 include("apps:autotest")
 include("apps:hops-api")
-include("apps:hops-EventReplayKafka")
-include("apps:hops-EventSinkKafka")
-include("apps:hops-EventStore")
+include("apps:hops-eventreplaykafka")
+include("apps:hops-eventsinkkafka")
+include("apps:hops-eventstore")
 include("apps:hops-oppslag")
 
 include("libs:hops-common-core")

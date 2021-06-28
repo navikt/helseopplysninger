@@ -1,9 +1,9 @@
-name: hops-EventSinkKafka
+name: hops-eventreplaykafa
 
 on:
   push:
     branches: [main]
-    paths: [apps/hops-EventSinkKafka/**]
+    paths: [apps/hops-eventreplaykafa/**]
   workflow_dispatch:
     inputs:
       deploy-prod:
