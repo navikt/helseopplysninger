@@ -8,19 +8,14 @@ import io.ktor.routing.Routing
 import io.ktor.routing.get
 import io.micrometer.prometheus.PrometheusMeterRegistry
 import no.nav.helse.hops.domain.EventReplayJob
-import org.koin.ktor.ext.getKoin
+import org.koin.ktor.ext.inject
 
 fun Routing.naisRoutes(prometheusMeterRegistry: PrometheusMeterRegistry) {
-    val koin = getKoin()
+    val job: EventReplayJob by inject()
 
     get("/isReady") {
-        try {
-            checkNotNull(koin.get<EventReplayJob>())
-            call.respondText("EventReplayKafka")
-        } catch (ex: Throwable) {
-            call.application.environment.log.warn("/isReady error.", ex)
-            call.respond(HttpStatusCode.InternalServerError, ex.message ?: "No exception message.")
-        }
+        val statusCode = if (job.isRunning) HttpStatusCode.OK else HttpStatusCode.InternalServerError
+        call.respond(statusCode, "EventReplayKafka")
     }
     get("/isAlive") {
         call.respondText("EventReplayKafka")
