@@ -1,9 +1,9 @@
-name: hops-EventStore
+name: hops-eventsinkkafka
 
 on:
   push:
     branches: [main]
-    paths: [apps/hops-EventStore/**]
+    paths: [apps/hops-eventsinkkafka/**]
   workflow_dispatch:
     inputs:
       deploy-prod:

@@ -1,9 +1,9 @@
-name: hops-EventReplayKafa
+name: hops-eventstore
 
 on:
   push:
     branches: [main]
-    paths: [apps/hops-EventReplayKafa/**]
+    paths: [apps/hops-eventstore/**]
   workflow_dispatch:
     inputs:
       deploy-prod:
