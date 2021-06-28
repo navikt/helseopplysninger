@@ -30,7 +30,7 @@ dependencies {
     implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:$hapiVersion")
     implementation("io.insert-koin:koin-ktor:3.1.0")
     implementation("io.ktor:ktor-metrics-micrometer:$ktorVersion")
-    implementation("io.micrometer:micrometer-registry-prometheus:1.7.0")
+    implementation("io.micrometer:micrometer-registry-prometheus:1.7.1")
     implementation("no.nav.security:token-validation-ktor:1.3.7")
     runtimeOnly("ch.qos.logback:logback-classic:1.2.3")
     runtimeOnly("io.ktor:ktor-server-netty:$ktorVersion")
