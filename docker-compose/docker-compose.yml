@@ -17,6 +17,7 @@ services:
       args:
         project: hops-eventstore
     depends_on: [mock-oauth2-service, postgres]
+    restart: on-failure
     ports: [8082:8080]
     environment:
       DB_HOST: postgres
@@ -52,6 +53,7 @@ services:
       args:
         project: hops-api
     depends_on: [eventstore]
+    restart: on-failure
     ports: [8085:8080]
     environment:
       HOPS_EVENTSTORE_BASE_URL: http://eventstore:8080
