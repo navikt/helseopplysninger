@@ -15,9 +15,10 @@ fun Routing.naisRoutes(prometheusMeterRegistry: PrometheusMeterRegistry) {
 
     get("/isReady") {
         try {
-            searchService.search(1, 0)
+            searchService.search(0, 0)
             call.respondText("EventStore")
         } catch (ex: Throwable) {
+            call.application.environment.log.warn("/isReady error.", ex)
             call.respond(HttpStatusCode.InternalServerError, ex.message ?: "No exception message.")
         }
     }

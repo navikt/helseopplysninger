@@ -21,6 +21,7 @@ fun Routing.smokeTestRoutes() {
                 eventStore.search(0).take(1).toList()
                 call.respondText { "OK!" }
             } catch (ex: Throwable) {
+                call.application.environment.log.warn("/smokeTests/eventStore error.", ex)
                 call.respond(HttpStatusCode.InternalServerError, ex.message ?: "No exception message.")
             }
         }
