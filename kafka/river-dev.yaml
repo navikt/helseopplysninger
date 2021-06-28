@@ -8,7 +8,8 @@ metadata:
 spec:
   pool: nav-dev
   acl:
-    - application: hops-event-replay-kafka
+    - team: helseopplysninger
+      application: hops-event-replay-kafka
       access: readwrite
     - team: teamdigihot
       application: hm-fhir
