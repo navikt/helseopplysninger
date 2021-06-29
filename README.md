@@ -32,7 +32,7 @@ You can start all the applications in this mono repo by running:
 
 `docker-compose up -d` 
 
-To run one of the applications in the mono repo, in this example hops-EventStore, 
+To run one of the applications in the mono repo, in this example hops-eventstore, 
 in a terminal run: `docker-compose up eventstore`
 
 NOTE: All apps needs to have `mock-oauth2-service` and `postgres` 
@@ -47,7 +47,7 @@ For each app:
 * Run -> Edit Configurations
 * in the Configuration window click the + button and select Gradle
 Set these values:
-* Gradle project: `helseopplysninger:apps:hops-EventSinkKafka` (or one of the other apps)
+* Gradle project: `helseopplysninger:apps:hops-eventsinkkafka` (or one of the other apps)
 * Tasks: `run`
 * Environment variables: `SPRING_PROFILES_ACTIVE=local`
 
