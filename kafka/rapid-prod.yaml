@@ -1,0 +1,13 @@
+apiVersion: kafka.nais.io/v1
+kind: Topic
+metadata:
+  name: rapid
+  namespace: helseopplysninger
+  labels:
+    team: helseopplysninger
+spec:
+  pool: nav-prod
+  acl:
+    - team: helseopplysninger
+      application: hops-event-sink-kafka
+      access: read

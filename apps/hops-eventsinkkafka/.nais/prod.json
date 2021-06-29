@@ -1,7 +1,6 @@
 {
-  "ingresses": [
-    "https://helseopplysninger.nav.no"
-  ],
+  "ingresses":  ["https://hops-eventsinkkafka.intern.nav.no"],
+  "kafka_pool": "nav-prod",
   "env": {
     "HOPS_EVENTSTORE_SCOPE": "api://prod-gcp.helseopplysninger.hops-event-store/.default"
   }

@@ -1,4 +1,0 @@
-{
-  "ingresses":  ["https://hops-eventsinkkafka.dev.adeo.no"],
-  "kafka_pool": "nav-dev"
-}

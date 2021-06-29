@@ -1,11 +1,11 @@
 name: deploy kafka topic
 
 on:
-  push:
-    branches: [main]
-    paths: [kafka/nais-kafka-topic.yaml]
   workflow_dispatch:
     inputs:
+      topic:
+        description: 'Name of the topic to deploy. [rapid, river]'
+        required: true
       deploy-prod:
         description: 'If the build should also be deployed to production (must be main branch.)'
         required: false
@@ -18,19 +18,19 @@ jobs:
     steps:
       - uses: actions/checkout@v2.3.4
 
-      - name: Deploy to Dev
+      - name: Deploy ${{ github.event.inputs.topic }} Topic to Dev
         uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-gcp
-          RESOURCE: kafka/nais-kafka-topic.yaml
+          RESOURCE: kafka/${{ github.event.inputs.topic }}-dev.yaml
           PRINT_PAYLOAD: true
 
-      - name: Deploy to Prod
+      - name: Deploy ${{ github.event.inputs.topic }} Topic to Prod
         uses: nais/deploy/actions/deploy@v1
         if: ${{ github.ref == 'refs/heads/main' && github.event.inputs.deploy-prod == 'true'}}
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-gcp
-          RESOURCE: kafka/nais-kafka-topic.yaml
+          RESOURCE: kafka/${{ github.event.inputs.topic }}-prod.yaml
           PRINT_PAYLOAD: true

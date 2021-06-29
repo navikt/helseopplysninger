@@ -15,7 +15,7 @@ services:
     build:
       context: ..
       args:
-        project: hops-EventStore
+        project: hops-eventstore
     depends_on: [mock-oauth2-service, postgres]
     ports: [8082:8080]
     environment:
@@ -26,7 +26,7 @@ services:
     build:
       context: ..
       args:
-        project: hops-EventSinkKafka
+        project: hops-eventsinkkafka
     depends_on: [kafka, eventstore]
     ports: [8083:8080]
     environment:
@@ -38,7 +38,7 @@ services:
     build:
       context: ..
       args:
-        project: hops-EventReplayKafka
+        project: hops-eventreplaykafka
     depends_on: [kafka, eventstore]
     ports: [8084:8080]
     environment:
@@ -82,7 +82,7 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
       KAFKA_LISTENERS: INSIDE://:9093,OUTSIDE://:9092
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
-      KAFKA_CREATE_TOPICS: "helseopplysninger:1:1,helseopplysninger.dirty:1:1"
+      KAFKA_CREATE_TOPICS: "helseopplysninger.rapid:1:1,helseopplysninger.river:1:1"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 
