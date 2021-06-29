@@ -37,7 +37,7 @@ dependencies {
     testImplementation("io.insert-koin:koin-test-junit5:3.1.1")
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion") { exclude("org.jetbrains.kotlin", "kotlin-test-junit") }
     testImplementation("io.mockk:mockk:1.11.0")
-    testImplementation("no.nav.security:mock-oauth2-server:0.3.3")
+    testImplementation("no.nav.security:mock-oauth2-server:0.3.4")
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
     testImplementation("org.testcontainers:junit-jupiter:1.15.3")
