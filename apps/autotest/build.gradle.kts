@@ -18,7 +18,7 @@ dependencies {
     api(project(":libs:hops-common-fhir"))
     implementation("io.github.cdimascio:dotenv-kotlin:6.2.2")
     implementation("io.ktor:ktor-auth:1.6.0")
-    implementation("no.nav.security:token-validation-ktor:1.3.7")
+    implementation("no.nav.security:token-validation-ktor:1.3.8")
     implementation("org.apache.kafka:kafka-clients:2.8.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.1")
     runtimeOnly("ch.qos.logback:logback-classic:1.2.3")
