@@ -21,14 +21,11 @@ tasks {
 }
 
 dependencies {
-    val hapiVersion = "5.4.1"
     val junitVersion = "5.7.2"
     val ktorVersion = "1.6.0"
 
     api(project(":libs:hops-common-fhir"))
     api(project(":libs:hops-common-ktor"))
-    implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:$hapiVersion")
-    implementation("io.insert-koin:koin-ktor:3.1.0")
     implementation("io.ktor:ktor-metrics-micrometer:$ktorVersion")
     implementation("io.micrometer:micrometer-registry-prometheus:1.7.0")
     implementation("no.nav.security:token-validation-ktor:1.3.7")
@@ -36,7 +33,7 @@ dependencies {
     runtimeOnly("io.ktor:ktor-server-netty:$ktorVersion")
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion") { exclude("org.jetbrains.kotlin", "kotlin-test-junit") }
-    testImplementation("no.nav.security:mock-oauth2-server:0.3.3")
+    testImplementation("no.nav.security:mock-oauth2-server:0.3.4")
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
     testImplementation(kotlin("test-junit5"))

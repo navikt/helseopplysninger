@@ -29,7 +29,7 @@ dependencies {
     testImplementation("io.ktor:ktor-jackson:$ktorVersion")
     testImplementation("io.ktor:ktor-server-netty:$ktorVersion")
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion") { exclude("org.jetbrains.kotlin", "kotlin-test-junit") }
-    testImplementation("no.nav.security:mock-oauth2-server:0.3.3")
+    testImplementation("no.nav.security:mock-oauth2-server:0.3.4")
     testImplementation("no.nav.security:token-validation-ktor:$naviktTokenSupportVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
