@@ -18,7 +18,7 @@ tasks {
 dependencies {
     val junitVersion = "5.7.2"
     val koinVersion = "3.1.1"
-    val ktorVersion = "1.6.0"
+    val ktorVersion = "1.6.1"
 
     api("io.insert-koin:koin-ktor:$koinVersion")
     api("io.insert-koin:koin-logger-slf4j:$koinVersion")
