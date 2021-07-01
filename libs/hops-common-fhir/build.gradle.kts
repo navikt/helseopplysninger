@@ -24,7 +24,7 @@ dependencies {
     implementation("com.google.auth:google-auth-library-oauth2-http:0.26.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.5.0")
     runtimeOnly("ca.uhn.hapi.fhir:hapi-fhir-client:$hapiVersion")
-    testImplementation("io.mockk:mockk:1.11.0")
+    testImplementation("io.mockk:mockk:1.12.0")
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
     testImplementation(kotlin("test-junit5"))
