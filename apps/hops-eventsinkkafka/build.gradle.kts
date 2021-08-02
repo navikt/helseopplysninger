@@ -26,7 +26,7 @@ dependencies {
 
     implementation("io.ktor:ktor-metrics-micrometer:$ktorVersion")
     implementation("io.ktor:ktor-webjars:$ktorVersion")
-    implementation("io.micrometer:micrometer-registry-prometheus:1.7.1")
+    implementation("io.micrometer:micrometer-registry-prometheus:1.7.2")
     implementation("org.apache.kafka:kafka-clients:2.8.0")
     implementation(project(":libs:hops-common-ktor"))
     runtimeOnly("ch.qos.logback:logback-classic:1.2.3")
