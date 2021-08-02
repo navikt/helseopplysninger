@@ -69,10 +69,19 @@ class EventStoreRepositoryExposedORM(config: Config) : EventStoreRepository {
                 exposedQuery.andWhere { EventTable.messageId eq it }
             }
 
-            exposedQuery
-                .orderBy(EventTable.id to SortOrder.ASC)
-                .limit(query.count, query.offset)
-                .map(::toEventDto)
+            if (query.destinationUri == null && query.messageId == null) {
+                // Offset using primary-key sequence number, prevents performance issues for large offset values.
+                exposedQuery
+                    .andWhere { EventTable.id greater query.offset }
+                    .orderBy(EventTable.id to SortOrder.ASC)
+                    .limit(query.count)
+                    .map(::toEventDto)
+            } else {
+                exposedQuery
+                    .orderBy(EventTable.id to SortOrder.ASC)
+                    .limit(query.count, query.offset)
+                    .map(::toEventDto)
+            }
         }
 }
 
