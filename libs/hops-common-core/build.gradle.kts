@@ -25,7 +25,7 @@ dependencies {
     implementation("io.ktor:ktor-client-java:$ktorVersion")
     implementation("no.nav.security:token-client-core:$naviktTokenSupportVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.5.0")
-    testImplementation("io.kotest:kotest-assertions-shared:4.6.0")
+    testImplementation("io.kotest:kotest-assertions-shared:4.6.1")
     testImplementation("io.ktor:ktor-jackson:$ktorVersion")
     testImplementation("io.ktor:ktor-server-netty:$ktorVersion")
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion") { exclude("org.jetbrains.kotlin", "kotlin-test-junit") }
