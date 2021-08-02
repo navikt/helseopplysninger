@@ -24,7 +24,7 @@ dependencies {
     val exposedVersion = "0.32.1"
     val hapiVersion = "5.4.1"
     val junitVersion = "5.7.2"
-    val ktorVersion = "1.6.0"
+    val ktorVersion = "1.6.1"
 
     implementation("ca.uhn.hapi.fhir:hapi-fhir-validation:$hapiVersion")
     implementation("io.ktor:ktor-auth:$ktorVersion")
@@ -42,7 +42,7 @@ dependencies {
     runtimeOnly("ch.qos.logback:logback-classic:1.2.3")
     runtimeOnly("com.h2database:h2:1.4.200")
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
-    runtimeOnly("org.postgresql:postgresql:42.2.22")
+    runtimeOnly("org.postgresql:postgresql:42.2.23")
     runtimeOnly("org.webjars:swagger-ui:3.50.0")
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion") { exclude("org.jetbrains.kotlin", "kotlin-test-junit") }
     testImplementation("no.nav.security:mock-oauth2-server:0.3.4")
