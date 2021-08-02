@@ -39,7 +39,7 @@ dependencies {
     implementation(project(":libs:hops-common-fhir"))
     implementation(project(":libs:hops-common-ktor"))
     runtimeOnly("ca.uhn.hapi.fhir:hapi-fhir-validation-resources-r4:$hapiVersion")
-    runtimeOnly("ch.qos.logback:logback-classic:1.2.3")
+    runtimeOnly("ch.qos.logback:logback-classic:1.2.5")
     runtimeOnly("com.h2database:h2:1.4.200")
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
     runtimeOnly("org.postgresql:postgresql:42.2.23")

@@ -29,7 +29,7 @@ dependencies {
     implementation("io.micrometer:micrometer-registry-prometheus:1.7.2")
     implementation("org.apache.kafka:kafka-clients:2.8.0")
     implementation(project(":libs:hops-common-ktor"))
-    runtimeOnly("ch.qos.logback:logback-classic:1.2.3")
+    runtimeOnly("ch.qos.logback:logback-classic:1.2.5")
     runtimeOnly("io.ktor:ktor-server-netty:$ktorVersion")
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
     runtimeOnly("org.webjars:swagger-ui:3.50.0")
