@@ -24,14 +24,14 @@ dependencies {
     val exposedVersion = "0.32.1"
     val hapiVersion = "5.4.1"
     val junitVersion = "5.7.2"
-    val ktorVersion = "1.6.0"
+    val ktorVersion = "1.6.1"
 
     implementation("ca.uhn.hapi.fhir:hapi-fhir-validation:$hapiVersion")
     implementation("io.ktor:ktor-auth:$ktorVersion")
     implementation("io.ktor:ktor-metrics-micrometer:$ktorVersion")
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
     implementation("io.ktor:ktor-webjars:$ktorVersion")
-    implementation("io.micrometer:micrometer-registry-prometheus:1.7.1")
+    implementation("io.micrometer:micrometer-registry-prometheus:1.7.2")
     implementation("no.nav.security:token-validation-ktor:1.3.8")
     implementation("org.flywaydb:flyway-core:7.12.0")
     implementation("org.jetbrains.exposed:exposed-java-time:$exposedVersion")
