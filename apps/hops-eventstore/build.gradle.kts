@@ -43,7 +43,7 @@ dependencies {
     runtimeOnly("com.h2database:h2:1.4.200")
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
     runtimeOnly("org.postgresql:postgresql:42.2.23")
-    runtimeOnly("org.webjars:swagger-ui:3.51.1")
+    runtimeOnly("org.webjars:swagger-ui:3.51.2")
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion") { exclude("org.jetbrains.kotlin", "kotlin-test-junit") }
     testImplementation("no.nav.security:mock-oauth2-server:0.3.4")
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")

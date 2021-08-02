@@ -33,7 +33,7 @@ dependencies {
     implementation(project(":libs:hops-common-ktor"))
     runtimeOnly("ch.qos.logback:logback-classic:1.2.5")
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
-    runtimeOnly("org.webjars:swagger-ui:3.51.1")
+    runtimeOnly("org.webjars:swagger-ui:3.51.2")
     testImplementation("io.ktor:ktor-client-mock:$ktorVersion")
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion") { exclude("org.jetbrains.kotlin", "kotlin-test-junit") }
     testImplementation("no.nav.security:mock-oauth2-server:0.3.4")
