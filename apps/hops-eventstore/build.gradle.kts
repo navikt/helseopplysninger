@@ -33,7 +33,7 @@ dependencies {
     implementation("io.ktor:ktor-webjars:$ktorVersion")
     implementation("io.micrometer:micrometer-registry-prometheus:1.7.1")
     implementation("no.nav.security:token-validation-ktor:1.3.8")
-    implementation("org.flywaydb:flyway-core:7.10.0")
+    implementation("org.flywaydb:flyway-core:7.12.0")
     implementation("org.jetbrains.exposed:exposed-java-time:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
     implementation(project(":libs:hops-common-fhir"))
@@ -48,6 +48,6 @@ dependencies {
     testImplementation("no.nav.security:mock-oauth2-server:0.3.4")
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
-    testImplementation("org.testcontainers:junit-jupiter:1.15.3")
+    testImplementation("org.testcontainers:junit-jupiter:1.16.0")
     testImplementation(kotlin("test-junit5"))
 }
