@@ -24,7 +24,7 @@ dependencies {
     val exposedVersion = "0.32.1"
     val hapiVersion = "5.4.1"
     val junitVersion = "5.7.2"
-    val ktorVersion = "1.6.1"
+    val ktorVersion = "1.6.2"
 
     implementation("ca.uhn.hapi.fhir:hapi-fhir-validation:$hapiVersion")
     implementation("io.ktor:ktor-auth:$ktorVersion")

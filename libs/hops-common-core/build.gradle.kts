@@ -17,7 +17,7 @@ tasks {
 
 dependencies {
     val junitVersion = "5.7.2"
-    val ktorVersion = "1.6.1"
+    val ktorVersion = "1.6.2"
     val naviktTokenSupportVersion = "1.3.8"
 
     api("org.jetbrains.kotlin:kotlin-reflect:${kotlin.coreLibrariesVersion}") { because("Prevent different versions in classpath.") }
