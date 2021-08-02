@@ -31,7 +31,7 @@ dependencies {
     implementation("io.micrometer:micrometer-registry-prometheus:1.7.2")
     implementation("no.nav.security:token-validation-ktor:1.3.8")
     implementation(project(":libs:hops-common-ktor"))
-    runtimeOnly("ch.qos.logback:logback-classic:1.2.3")
+    runtimeOnly("ch.qos.logback:logback-classic:1.2.5")
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
     runtimeOnly("org.webjars:swagger-ui:3.50.0")
     testImplementation("io.ktor:ktor-client-mock:$ktorVersion")
