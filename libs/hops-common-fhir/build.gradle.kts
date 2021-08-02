@@ -21,7 +21,7 @@ dependencies {
 
     api("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:$hapiVersion")
     api(project(":libs:hops-common-core"))
-    implementation("com.google.auth:google-auth-library-oauth2-http:0.26.0")
+    implementation("com.google.auth:google-auth-library-oauth2-http:1.0.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.5.1")
     runtimeOnly("ca.uhn.hapi.fhir:hapi-fhir-client:$hapiVersion")
     testImplementation("io.mockk:mockk:1.12.0")
