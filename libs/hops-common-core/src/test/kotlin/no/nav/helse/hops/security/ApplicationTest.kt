@@ -4,13 +4,10 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import io.kotest.assertions.asClue
 import io.kotest.assertions.assertSoftly
 import io.kotest.matchers.shouldBe
-import io.ktor.application.Application
-import io.ktor.config.MapApplicationConfig
-import io.ktor.http.HttpMethod
-import io.ktor.http.HttpStatusCode
-import io.ktor.server.testing.TestApplicationResponse
-import io.ktor.server.testing.handleRequest
-import io.ktor.server.testing.withTestApplication
+import io.ktor.application.*
+import io.ktor.config.*
+import io.ktor.http.*
+import io.ktor.server.testing.*
 import no.nav.security.mock.oauth2.MockOAuth2Server
 import no.nav.security.mock.oauth2.withMockOAuth2Server
 import org.intellij.lang.annotations.Language
@@ -29,9 +26,9 @@ internal class ApplicationTest {
                 module()
             }) {
                 with(
-                    handleRequest(HttpMethod.Get, "/client_credentials") {
-                        // addHeader("Authorization", "Bearer ${token.serialize()}")
-                    }
+                        handleRequest(HttpMethod.Get, "/client_credentials") {
+                            // addHeader("Authorization", "Bearer ${token.serialize()}")
+                        }
                 ) {
                     assertSoftly(response) {
                         status() shouldBe HttpStatusCode.OK
@@ -42,9 +39,9 @@ internal class ApplicationTest {
                     }
                 }
                 with(
-                    handleRequest(HttpMethod.Get, "/onbehalfof") {
-                        addHeader("Authorization", "Bearer ${token.serialize()}")
-                    }
+                        handleRequest(HttpMethod.Get, "/onbehalfof") {
+                            addHeader("Authorization", "Bearer ${token.serialize()}")
+                        }
                 ) {
                     assertSoftly(response) {
                         status() shouldBe HttpStatusCode.OK
@@ -55,9 +52,9 @@ internal class ApplicationTest {
                     }
                 }
                 with(
-                    handleRequest(HttpMethod.Get, "/tokenx") {
-                        addHeader("Authorization", "Bearer ${token.serialize()}")
-                    }
+                        handleRequest(HttpMethod.Get, "/tokenx") {
+                            addHeader("Authorization", "Bearer ${token.serialize()}")
+                        }
                 ) {
                     assertSoftly(response) {
                         status() shouldBe HttpStatusCode.OK
@@ -72,9 +69,9 @@ internal class ApplicationTest {
     }
 
     private fun Application.configure(
-        server: MockOAuth2Server,
-        issuerId: String = "issuer1",
-        acceptedAudience: String = "default"
+            server: MockOAuth2Server,
+            issuerId: String = "issuer1",
+            acceptedAudience: String = "default"
     ) {
         (environment.config as MapApplicationConfig).apply {
             val prefix = "no.nav.security.jwt"
@@ -92,7 +89,7 @@ internal class ApplicationTest {
     }
 
     private inline fun <reified T> TestApplicationResponse.parseBody(): T =
-        content?.let { defaultMapper.readValue(it) } ?: throw RuntimeException("empty content in response")
+            content?.let { defaultMapper.readValue(it) } ?: throw RuntimeException("empty content in response")
 
     @Language("json")
     private val jwk = """{

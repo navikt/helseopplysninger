@@ -1,13 +1,11 @@
 package no.nav.helse.hops
 
-import io.ktor.application.Application
-import io.ktor.config.MapApplicationConfig
+import io.ktor.application.*
+import io.ktor.config.*
 import io.ktor.http.HttpMethod.Companion.Get
 import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.http.HttpStatusCode.Companion.Unauthorized
-import io.ktor.server.testing.TestApplicationEngine
-import io.ktor.server.testing.handleRequest
-import io.ktor.server.testing.withTestApplication
+import io.ktor.server.testing.*
 import no.nav.helse.hops.infrastructure.EVENT_STORE_CLIENT_NAME
 import no.nav.security.mock.oauth2.MockOAuth2Server
 import org.junit.jupiter.api.AfterAll
@@ -33,19 +31,19 @@ class ApplicationTest {
     fun `Tokens without correct scope hould be rejected and endpoint should return 401-Unauthorized`() {
         withHopsTestApplication {
             with(
-                handleRequest(Get, "/fhir/4.0/Bundle") {
-                    val token = oauthServer.issueToken(claims = mapOf("scope" to "/test-wrong"))
-                    addHeader("Authorization", "Bearer ${token.serialize()}")
-                }
+                    handleRequest(Get, "/fhir/4.0/Bundle") {
+                        val token = oauthServer.issueToken(claims = mapOf("scope" to "/test-wrong"))
+                        addHeader("Authorization", "Bearer ${token.serialize()}")
+                    }
             ) {
                 assertEquals(Unauthorized, response.status())
             }
 
             with(
-                handleRequest(Get, "/fhir/4.0/Bundle") {
-                    val token = oauthServer.issueToken()
-                    addHeader("Authorization", "Bearer ${token.serialize()}")
-                }
+                    handleRequest(Get, "/fhir/4.0/Bundle") {
+                        val token = oauthServer.issueToken()
+                        addHeader("Authorization", "Bearer ${token.serialize()}")
+                    }
             ) {
                 assertEquals(Unauthorized, response.status())
             }
@@ -57,10 +55,10 @@ class ApplicationTest {
         val testModule = module { single(named(EVENT_STORE_CLIENT_NAME)) { createEventStoreMockClient() } }
         withHopsTestApplication(testModule) {
             with(
-                handleRequest(Get, "/fhir/4.0/Bundle") {
-                    val token = oauthServer.issueToken(claims = mapOf("scope" to "/test-subscribe"))
-                    addHeader("Authorization", "Bearer ${token.serialize()}")
-                }
+                    handleRequest(Get, "/fhir/4.0/Bundle") {
+                        val token = oauthServer.issueToken(claims = mapOf("scope" to "/test-subscribe"))
+                        addHeader("Authorization", "Bearer ${token.serialize()}")
+                    }
             ) {
                 assertEquals(OK, response.status())
             }
@@ -77,8 +75,8 @@ class ApplicationTest {
     }
 
     private fun Application.doConfig(
-        acceptedIssuer: String = "default",
-        acceptedAudience: String = "default"
+            acceptedIssuer: String = "default",
+            acceptedAudience: String = "default"
     ) {
         (environment.config as MapApplicationConfig).apply {
             put("no.nav.security.jwt.issuers.size", "1")

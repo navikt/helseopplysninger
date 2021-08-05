@@ -1,12 +1,8 @@
 package no.nav.helse.hops
 
-import io.ktor.config.ApplicationConfig
-import io.ktor.config.MapApplicationConfig
-import io.ktor.http.HttpMethod
-import io.ktor.http.HttpStatusCode
-import io.ktor.server.testing.TestApplicationEngine
-import io.ktor.server.testing.handleRequest
-import io.ktor.server.testing.withTestApplication
+import io.ktor.config.*
+import io.ktor.http.*
+import io.ktor.server.testing.*
 import no.nav.security.mock.oauth2.MockOAuth2Server
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.jupiter.api.AfterAll
@@ -21,9 +17,9 @@ class ApplicationTest {
     fun `existing behandler with valid JWT should give 200`() {
         withHopsTestApplication {
             with(
-                handleRequest(HttpMethod.Get, "/behandler/9111492") {
-                    addHeader("Authorization", "Bearer ${oauthServer.issueToken().serialize()}")
-                }
+                    handleRequest(HttpMethod.Get, "/behandler/9111492") {
+                        addHeader("Authorization", "Bearer ${oauthServer.issueToken().serialize()}")
+                    }
             ) {
                 assertEquals(HttpStatusCode.OK, response.status())
                 assertEquals("Våge", response.content)
@@ -44,23 +40,23 @@ class ApplicationTest {
     fun `behandler with invalid JWT should give 401-Unauthorized`() {
         withTestApplication({
             environment.config.doConfig(
-                acceptedAudience = "some-audience",
-                acceptedIssuer = "some-issuer"
+                    acceptedAudience = "some-audience",
+                    acceptedIssuer = "some-issuer"
             )
             module()
         }) {
             with(
-                handleRequest(HttpMethod.Get, "/behandler/9111492") {
-                    addHeader("Authorization", "Bearer ${oauthServer.issueToken(audience = "not-accepted").serialize()}")
-                }
+                    handleRequest(HttpMethod.Get, "/behandler/9111492") {
+                        addHeader("Authorization", "Bearer ${oauthServer.issueToken(audience = "not-accepted").serialize()}")
+                    }
             ) {
                 assertEquals(HttpStatusCode.Unauthorized, response.status())
             }
 
             with(
-                handleRequest(HttpMethod.Get, "/behandler/9111492") {
-                    addHeader("Authorization", "Bearer ${oauthServer.issueToken(issuerId = "not-accepted").serialize()}")
-                }
+                    handleRequest(HttpMethod.Get, "/behandler/9111492") {
+                        addHeader("Authorization", "Bearer ${oauthServer.issueToken(issuerId = "not-accepted").serialize()}")
+                    }
             ) {
                 assertEquals(HttpStatusCode.Unauthorized, response.status())
             }
@@ -87,8 +83,8 @@ class ApplicationTest {
     }
 
     private fun ApplicationConfig.doConfig(
-        acceptedIssuer: String = "default",
-        acceptedAudience: String = "default"
+            acceptedIssuer: String = "default",
+            acceptedAudience: String = "default"
     ) {
         (this as MapApplicationConfig).apply {
             put("no.nav.security.jwt.issuers.size", "1")
