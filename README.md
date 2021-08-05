@@ -63,7 +63,7 @@ You should then get at `200 OK`
 For trying the /fhir/4.0/Bundle {GET} or /fhir/4.0/$prosess-message {POST}
 you will need to use Postman, Insomnia or something equivalent.
 
-In Postman: ![screen dump](./doc/PostmanDump.png)
+In Postman: ![screen dump](docs/images/PostmanDump.png)
 
 * Make a `get` request to `http://localhost:8085/fhir/4.0/Bundle`
 * Click the `Authorization` tab
