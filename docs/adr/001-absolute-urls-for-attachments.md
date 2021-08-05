@@ -22,9 +22,9 @@ Ved å alltid kreve at klienter laster opp vedlegg til en CDN kan vi samle all l
 * Støtte for henting av metadata om selve filen vha. HEAD etc.
 
 ### Use of Absolute URL
-Når det brukes hele URLer, f.eks `https://nav.no/helse/cdn/report.pdf` kan disse brukes av klienter. Det krever derimot at disse URLene er veldig stabile og URLer som genereres i dag må fremdeles peke til samme fil mange år frem i tid. For å få til dette kan det bli vanskelig å bruke [NAV sin API Portal](https://github.com/navikt/nav-api-portal) for CDN tjenesten fordi eksterne (EPJer) og interne (NAV) apper da må forholde seg til forskjellig domene\host.
+Når det brukes hele URLer, f.eks `https://nav.no/helse/cdn/report.pdf` kan disse brukes direkte av klienter. Det krever derimot at disse URLene er veldig stabile og URLer som genereres i dag må fremdeles fungere mange år frem i tid. For å få til dette kan det bli vanskelig å bruke [NAV sin API Portal](https://github.com/navikt/nav-api-portal) for CDN tjenesten fordi eksterne (EPJer) og interne (NAV) apper da må forholde seg til forskjellig domene\host.
 
-Det har vært vurdert å introdusere logikk som transformerer vedlegg-URLene før de presenteres til EPJer eller NAV apper slik at FHIR meldingene ser forskjellig ut. Dette er derimot en uønsket kompleksitet, det vil også skape forvirring når URLene brukes av mennesker f.eks i support saker.
+Det har vært vurdert å introdusere logikk som transformerer vedlegg-URLene før de presenteres til appene slik at FHIR meldingene ser forskjellig ut avhengig av mottaker. Dette er derimot en uønsket kompleksitet som også kan skape forvirring når URLene brukes av mennesker i f.eks support saker og dialog mellom NAV og EPJ.
 
 En vanlig måte å representere en referanse til en ressurs uavhengig av domene/host er å bruke en identifikator som referanse istedenfor en hel URL.
 Dette alternativet bryter med FHIR spek fordi et vedlegg i FHIR krever en full URL, en FHIR melding skal også inneholde hele konteksten og kan ikke være implsitt om hvor/hvordan en fil hentes.
