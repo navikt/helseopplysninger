@@ -1,6 +1,6 @@
 # Architecture decision record (ADR)
 
-Arkitekturavgjørelser dokumenteres vha. ADR, se
-[joelparkerhenderson / architecture-decision-record](https://github.com/joelparkerhenderson/architecture-decision-record) for mer informasjon.
+Important architecture decisions should be documented using ADRs, see
+[joelparkerhenderson / architecture-decision-record](https://github.com/joelparkerhenderson/architecture-decision-record) for more details.
 
-Følgende [template](https://github.com/joelparkerhenderson/architecture-decision-record/blob/main/templates/decision-record-template-by-michael-nygard/index.md) kan brukes ved oppretting av nye ADRer.
+The following [template](https://github.com/joelparkerhenderson/architecture-decision-record/blob/main/templates/decision-record-template-by-michael-nygard/index.md) can be used.
