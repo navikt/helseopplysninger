@@ -20,20 +20,20 @@ import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransacti
 
 class EventStoreRepositoryExposedORM(config: Config) : EventStoreRepository {
     data class Config(
-            val url: String,
-            val username: String = "",
-            val password: String = ""
+        val url: String,
+        val username: String = "",
+        val password: String = ""
     )
 
     private val database =
-            Database.connect(url = config.url, user = config.username, password = config.password)
+        Database.connect(url = config.url, user = config.username, password = config.password)
 
     init {
         Flyway
-                .configure()
-                .dataSource(config.url, config.username, config.password)
-                .load()
-                .migrate()
+            .configure()
+            .dataSource(config.url, config.username, config.password)
+            .load()
+            .migrate()
     }
 
     override suspend fun add(event: EventDto) {
@@ -50,39 +50,39 @@ class EventStoreRepositoryExposedORM(config: Config) : EventStoreRepository {
     }
 
     override suspend fun search(query: EventStoreReadOnlyRepository.Query) =
-            newSuspendedTransaction(Dispatchers.IO, database) {
-                val exposedQuery =
-                        if (query.destinationUri == null) EventTable.selectAll()
-                        else EventTable
-                                .join(
-                                        DestinationTable,
-                                        JoinType.INNER,
-                                        additionalConstraint = {
-                                            EventTable.id eq DestinationTable.eventId and (
-                                                    DestinationTable.endpoint eq query.destinationUri
-                                                    )
-                                        }
+        newSuspendedTransaction(Dispatchers.IO, database) {
+            val exposedQuery =
+                if (query.destinationUri == null) EventTable.selectAll()
+                else EventTable
+                    .join(
+                        DestinationTable,
+                        JoinType.INNER,
+                        additionalConstraint = {
+                            EventTable.id eq DestinationTable.eventId and (
+                                DestinationTable.endpoint eq query.destinationUri
                                 )
-                                .selectAll()
+                        }
+                    )
+                    .selectAll()
 
-                query.messageId?.let {
-                    exposedQuery.andWhere { EventTable.messageId eq it }
-                }
-
-                if (query.destinationUri == null && query.messageId == null) {
-                    // Offset using primary-key sequence number, prevents performance issues for large offset values.
-                    exposedQuery
-                            .andWhere { EventTable.id greater query.offset }
-                            .orderBy(EventTable.id to SortOrder.ASC)
-                            .limit(query.count)
-                            .map(::toEventDto)
-                } else {
-                    exposedQuery
-                            .orderBy(EventTable.id to SortOrder.ASC)
-                            .limit(query.count, query.offset)
-                            .map(::toEventDto)
-                }
+            query.messageId?.let {
+                exposedQuery.andWhere { EventTable.messageId eq it }
             }
+
+            if (query.destinationUri == null && query.messageId == null) {
+                // Offset using primary-key sequence number, prevents performance issues for large offset values.
+                exposedQuery
+                    .andWhere { EventTable.id greater query.offset }
+                    .orderBy(EventTable.id to SortOrder.ASC)
+                    .limit(query.count)
+                    .map(::toEventDto)
+            } else {
+                exposedQuery
+                    .orderBy(EventTable.id to SortOrder.ASC)
+                    .limit(query.count, query.offset)
+                    .map(::toEventDto)
+            }
+        }
 }
 
 private object EventTable : Table() {
@@ -121,14 +121,14 @@ private fun InsertStatement<Number>.setValues(event: EventDto) {
 }
 
 private fun toEventDto(row: ResultRow) =
-        EventDto(
-                messageId = row[EventTable.messageId],
-                bundleId = row[EventTable.bundleId],
-                eventType = row[EventTable.eventType],
-                bundleTimestamp = row[EventTable.bundleTimestamp],
-                recorded = row[EventTable.recorded],
-                source = row[EventTable.src],
-                destinations = emptyList(), // Not needed for now.
-                data = row[EventTable.data].toByteArray(),
-                dataType = row[EventTable.dataType]
-        )
+    EventDto(
+        messageId = row[EventTable.messageId],
+        bundleId = row[EventTable.bundleId],
+        eventType = row[EventTable.eventType],
+        bundleTimestamp = row[EventTable.bundleTimestamp],
+        recorded = row[EventTable.recorded],
+        source = row[EventTable.src],
+        destinations = emptyList(), // Not needed for now.
+        data = row[EventTable.data].toByteArray(),
+        dataType = row[EventTable.dataType]
+    )

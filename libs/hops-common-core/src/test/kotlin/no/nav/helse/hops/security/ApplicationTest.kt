@@ -29,9 +29,9 @@ internal class ApplicationTest {
                 module()
             }) {
                 with(
-                        handleRequest(HttpMethod.Get, "/client_credentials") {
-                            // addHeader("Authorization", "Bearer ${token.serialize()}")
-                        }
+                    handleRequest(HttpMethod.Get, "/client_credentials") {
+                        // addHeader("Authorization", "Bearer ${token.serialize()}")
+                    }
                 ) {
                     assertSoftly(response) {
                         status() shouldBe HttpStatusCode.OK
@@ -42,9 +42,9 @@ internal class ApplicationTest {
                     }
                 }
                 with(
-                        handleRequest(HttpMethod.Get, "/onbehalfof") {
-                            addHeader("Authorization", "Bearer ${token.serialize()}")
-                        }
+                    handleRequest(HttpMethod.Get, "/onbehalfof") {
+                        addHeader("Authorization", "Bearer ${token.serialize()}")
+                    }
                 ) {
                     assertSoftly(response) {
                         status() shouldBe HttpStatusCode.OK
@@ -55,9 +55,9 @@ internal class ApplicationTest {
                     }
                 }
                 with(
-                        handleRequest(HttpMethod.Get, "/tokenx") {
-                            addHeader("Authorization", "Bearer ${token.serialize()}")
-                        }
+                    handleRequest(HttpMethod.Get, "/tokenx") {
+                        addHeader("Authorization", "Bearer ${token.serialize()}")
+                    }
                 ) {
                     assertSoftly(response) {
                         status() shouldBe HttpStatusCode.OK
@@ -72,9 +72,9 @@ internal class ApplicationTest {
     }
 
     private fun Application.configure(
-            server: MockOAuth2Server,
-            issuerId: String = "issuer1",
-            acceptedAudience: String = "default"
+        server: MockOAuth2Server,
+        issuerId: String = "issuer1",
+        acceptedAudience: String = "default"
     ) {
         (environment.config as MapApplicationConfig).apply {
             val prefix = "no.nav.security.jwt"
@@ -92,7 +92,7 @@ internal class ApplicationTest {
     }
 
     private inline fun <reified T> TestApplicationResponse.parseBody(): T =
-            content?.let { defaultMapper.readValue(it) } ?: throw RuntimeException("empty content in response")
+        content?.let { defaultMapper.readValue(it) } ?: throw RuntimeException("empty content in response")
 
     @Language("json")
     private val jwk = """{
