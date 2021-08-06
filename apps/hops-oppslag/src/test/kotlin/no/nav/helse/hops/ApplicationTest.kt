@@ -1,8 +1,12 @@
 package no.nav.helse.hops
 
-import io.ktor.config.*
-import io.ktor.http.*
-import io.ktor.server.testing.*
+import io.ktor.config.ApplicationConfig
+import io.ktor.config.MapApplicationConfig
+import io.ktor.http.HttpMethod
+import io.ktor.http.HttpStatusCode
+import io.ktor.server.testing.TestApplicationEngine
+import io.ktor.server.testing.handleRequest
+import io.ktor.server.testing.withTestApplication
 import no.nav.security.mock.oauth2.MockOAuth2Server
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.jupiter.api.AfterAll

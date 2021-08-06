@@ -1,11 +1,13 @@
 package no.nav.helse.hops
 
-import io.ktor.application.*
-import io.ktor.config.*
+import io.ktor.application.Application
+import io.ktor.config.MapApplicationConfig
 import io.ktor.http.HttpMethod.Companion.Get
 import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.http.HttpStatusCode.Companion.Unauthorized
-import io.ktor.server.testing.*
+import io.ktor.server.testing.TestApplicationEngine
+import io.ktor.server.testing.handleRequest
+import io.ktor.server.testing.withTestApplication
 import no.nav.helse.hops.infrastructure.EVENT_STORE_CLIENT_NAME
 import no.nav.security.mock.oauth2.MockOAuth2Server
 import org.junit.jupiter.api.AfterAll
