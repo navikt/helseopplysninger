@@ -1,12 +1,14 @@
 # Use of absolute URLs in attachments
 
 * 2021-08-05 - proposed
+* 2021-08-09 - accepted
 
 # Context
 En FHIR melding kan inneholde vedlegg i form av binærdata, dette kan enten være embedded som base64 eller en URL som peker til hvor det kan lastes ned. Se [Attachment](https://www.hl7.org/fhir/datatypes.html#Attachment) i FHIR spek.
 
 ## Decision
-Ikke tillat å embedde binærdata i json, alle attachements må først lastes opp til en immutable [CDN](https://en.wikipedia.org/wiki/Content_delivery_network) (som vi eier) som det deretter linkes til. For å gjøre ting enkelt skal denne URLen være lik for alle aktører; dvs. både for EPJer og NAV-apper, både på internett og helsenett. 
+Ikke tillat å embedde binærdata i json, alle attachements må først lastes opp til en immutable [CDN](https://en.wikipedia.org/wiki/Content_delivery_network) (som vi eier) som det deretter linkes til. For å gjøre ting enkelt skal denne URLen være lik for alle aktører; dvs. både for EPJer og NAV-apper, både på internett og helsenett.
+Å tilby en tjeneste på samme URL til både eksterne og interne klienter [skal la seg gjøre](https://nav-it.slack.com/archives/C5KUST8N6/p1628501122091700?thread_ts=1628499309.090800&cid=C5KUST8N6) ved å bruke [nav.no-ingress](https://doc.nais.io/clusters/gcp/#prod-gcp-ingresses).
 
 ## Consequences
 
