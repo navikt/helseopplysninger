@@ -17,3 +17,9 @@ spec:
     - team: teamdigihot
       application: digihot-kafka-debug
       access: read
+    - team: helseopplysninger
+      application: hops-behandler-backend
+      access: read
+    - team: helseopplysninger
+      application: hops-bestiller-backend
+      access: read
