@@ -18,7 +18,7 @@ For internal (inside NAV) it exposes two Kafka topics, one for writing and one r
 Run `./gradlew build`
 
 ## 🏃 To run locally on Mac
-To reach the mock oaut2 server you have to make a new mapping in the hosts file.
+To reach the mock oauth2 server you have to make a new mapping in the hosts file.
 To modify the /etc/hosts file
 * Launch Terminal
 * Type sudo nano /etc/hosts and press Return
@@ -60,9 +60,9 @@ You should then get at `200 OK`
 
 ### 🔒 To try the secured endpoints 
 For trying the /fhir/4.0/Bundle {GET} or /fhir/4.0/$prosess-message {POST}
-you will need to use Postman or something equivalent.
+you will need to use Postman, Insomnia or something equivalent.
 
-In Postman: See [screen dump](./docs/PostmanDump.png)
+In Postman: ![screen dump](docs/images/PostmanDump.png)
 
 * Make a `get` request to `http://localhost:8085/fhir/4.0/Bundle`
 * Click the `Authorization` tab
