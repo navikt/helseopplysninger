@@ -21,7 +21,7 @@ tasks {
 }
 
 dependencies {
-    val exposedVersion = "0.32.1"
+    val exposedVersion = "0.33.1"
     val hapiVersion = "5.4.2"
     val junitVersion = "5.7.2"
     val ktorVersion = "1.6.2"
