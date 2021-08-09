@@ -58,7 +58,7 @@ class EventStoreRepositoryExposedORM(config: Config) : EventStoreRepository {
                         DestinationTable,
                         JoinType.INNER,
                         additionalConstraint = {
-                            EventTable.id eq DestinationTable.eventId and(
+                            EventTable.id eq DestinationTable.eventId and (
                                 DestinationTable.endpoint eq query.destinationUri
                                 )
                         }
