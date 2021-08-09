@@ -28,7 +28,7 @@ jobs:
       - name: Download newest ktlint
         if: steps.ktlint-cache.outputs.cache-hit != 'true'
         run: |
-          echo ${{ steps.ktlint-latest.outputs.DOWNLOAD_URL }} | wget -qi -
+          echo "https://github.com/pinterest/ktlint/releases/download/0.41.0/ktlint" | wget -qi -
           chmod a+x ktlint
       - name: run ktlint
         run: ./ktlint --reporter=checkstyle,output=build/ktlint-report-in-checkstyle-format.xml
