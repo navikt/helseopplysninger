@@ -51,3 +51,7 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter:1.16.0")
     testImplementation(kotlin("test-junit5"))
 }
+
+kotlin.sourceSets["main"].kotlin.srcDirs("main")
+kotlin.sourceSets["test"].kotlin.srcDirs("test")
+sourceSets["main"].resources.srcDir(".config")
