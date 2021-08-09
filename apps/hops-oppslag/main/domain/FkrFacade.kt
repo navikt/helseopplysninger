@@ -1,8 +1,8 @@
 package domain
 
 import kotlinx.coroutines.flow.firstOrNull
-import no.nav.helse.hops.hops.fhir.client.FhirClientReadOnly
-import no.nav.helse.hops.hops.fhir.client.search
+import no.nav.helse.hops.fhir.client.FhirClientReadOnly
+import no.nav.helse.hops.fhir.client.search
 import org.hl7.fhir.r4.model.Practitioner
 
 interface FkrFacade {

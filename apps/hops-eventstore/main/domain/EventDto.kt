@@ -2,10 +2,10 @@ package domain
 
 import io.ktor.http.withCharset
 import no.nav.helse.hops.convert.ContentTypes
-import no.nav.helse.hops.hops.fhir.fullyQualifiedEventType
-import no.nav.helse.hops.hops.fhir.idAsUUID
-import no.nav.helse.hops.hops.fhir.toJsonByteArray
-import no.nav.helse.hops.hops.toLocalDateTime
+import no.nav.helse.hops.fhir.fullyQualifiedEventType
+import no.nav.helse.hops.fhir.idAsUUID
+import no.nav.helse.hops.fhir.toJsonByteArray
+import no.nav.helse.hops.security.toLocalDateTime
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.MessageHeader
 import java.time.LocalDateTime

@@ -14,10 +14,10 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import no.nav.helse.hops.convert.ContentTypes
-import no.nav.helse.hops.hops.fhir.JsonConverter
-import no.nav.helse.hops.hops.fhir.idAsUUID
-import no.nav.helse.hops.hops.fhir.toJsonByteArray
-import no.nav.helse.hops.hops.toLocalDateTime
+import no.nav.helse.hops.fhir.JsonConverter
+import no.nav.helse.hops.fhir.idAsUUID
+import no.nav.helse.hops.fhir.toJsonByteArray
+import no.nav.helse.hops.security.toLocalDateTime
 import org.hl7.fhir.r4.model.Bundle
 import java.util.UUID
 

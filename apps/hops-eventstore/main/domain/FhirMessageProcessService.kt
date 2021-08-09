@@ -2,8 +2,8 @@ package domain
 
 import ca.uhn.fhir.rest.server.exceptions.ResourceVersionConflictException
 import ca.uhn.fhir.rest.server.exceptions.UnprocessableEntityException
-import no.nav.helse.hops.hops.fhir.idAsUUID
-import no.nav.helse.hops.hops.toUri
+import no.nav.helse.hops.fhir.idAsUUID
+import no.nav.helse.hops.security.toUri
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.MessageHeader
 import java.util.Date

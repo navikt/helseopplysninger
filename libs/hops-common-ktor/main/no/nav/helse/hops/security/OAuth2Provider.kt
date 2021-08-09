@@ -4,7 +4,7 @@ import io.ktor.client.features.auth.AuthProvider
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.http.HttpHeaders
 import io.ktor.http.auth.HttpAuthHeader
-import no.nav.helse.hops.hops.security.oauth.IOAuth2Client
+import no.nav.helse.hops.security.oauth.IOAuth2Client
 
 class OAuth2Provider(
     private val client: IOAuth2Client,

@@ -1,7 +1,7 @@
 package domain
 
-import no.nav.helse.hops.hops.fhir.JsonConverter
-import no.nav.helse.hops.hops.toUri
+import no.nav.helse.hops.fhir.JsonConverter
+import no.nav.helse.hops.security.toUri
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.InstantType
 import java.io.ByteArrayInputStream
