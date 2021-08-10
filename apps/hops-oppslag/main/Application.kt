@@ -1,5 +1,3 @@
-package hops
-
 import domain.FkrFacade
 import infrastructure.KoinBootstrapper
 import io.ktor.application.Application
