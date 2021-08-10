@@ -13,7 +13,7 @@ application {
 
 tasks {
     withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = "11"
+        kotlinOptions.jvmTarget = "16"
     }
     test {
         useJUnitPlatform()
@@ -21,7 +21,7 @@ tasks {
 }
 
 dependencies {
-    val exposedVersion = "0.32.1"
+    val exposedVersion = "0.33.1"
     val hapiVersion = "5.4.2"
     val junitVersion = "5.7.2"
     val ktorVersion = "1.6.2"
@@ -51,3 +51,7 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter:1.16.0")
     testImplementation(kotlin("test-junit5"))
 }
+
+kotlin.sourceSets["main"].kotlin.srcDirs("main")
+kotlin.sourceSets["test"].kotlin.srcDirs("test")
+sourceSets["main"].resources.srcDir(".config")

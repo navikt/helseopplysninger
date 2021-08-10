@@ -2,10 +2,10 @@ package no.nav.helse.hops.cases
 
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import no.nav.helse.hops.ResourceLoader
 import no.nav.helse.hops.fhir.toJson
 import no.nav.helse.hops.models.HjelpemiddelRequest
 import no.nav.helse.hops.models.digihot.DigihotKvittering
+import no.nav.helse.hops.security.ResourceLoader
 import no.nav.helse.hops.testdata.createCommunicationAboutDeviceRequsts
 import no.nav.helse.hops.testdata.createCommunicationBundle
 import no.nav.helse.hops.testdata.createDeviceRequest
