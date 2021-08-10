@@ -22,13 +22,15 @@ jobs:
           java-version: 14
           distribution: 'adopt'
 
+      - run: whereis java
+      - run: echo $JAVA_HOME
       - name: Run vulnerability scan
         uses: snyk/actions/gradle-jdk14@master
         continue-on-error: true # enable for SARIF to upload properly
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          args: --sarif-file-output=snyk.sarif
+          args: --sarif-file-output=snyk.sarif --all-sub-projects
 
       - name: Upload result to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@v1
