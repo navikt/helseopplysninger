@@ -1,0 +1,61 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  name: hops-test-external
+  namespace: helseopplysninger
+  labels:
+    team: helseopplysninger
+spec:
+  image: {{ image }}
+  port: 8080
+  team: helseopplysninger
+  maskinporten:
+    enabled: true
+    scopes:
+      consumes:
+       - name: "nav:helse/v1/helseopplysninger/publish"
+       - name: "nav:helse/v1/helseopplysninger/subscribe"
+  liveness:
+    path: /isAlive
+    initialDelay: 10
+    timeout: 5
+    periodSeconds: 5
+    failureThreshold: 30
+  readiness:
+    path: /isReady
+    initialDelay: 10
+    periodSeconds: 5
+    timeout: 5
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 1024Mi
+    requests:
+      cpu: 500m
+      memory: 512Mi
+  replicas:
+    min: 1
+    max: 1
+  azure:
+    application:
+      enabled: true
+      tenant: nav.no
+  accessPolicy:
+    outbound:
+      rules:
+        - application: hops-event-store
+  ingresses:
+  {{#each ingresses as |url|}}
+    - {{url}}
+  {{/each}}
+  env:
+    - name: LOG_APPENDER
+      value: json
+    - name: HOPS_EVENTSTORE_BASE_URL
+      value: http://hops-event-store
+  {{#each env}}
+    - name: {{@key}}
+      value: "{{this}}"
+  {{/each}}
+  envFrom:
+    - secret: api
