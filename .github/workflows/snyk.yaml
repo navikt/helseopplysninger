@@ -26,7 +26,7 @@ jobs:
         uses: snyk/actions/gradle@master
         continue-on-error: true # enable for SARIF to upload properly
         env:
-          SNYK_TOKEN: {{ secrets.SNYK_TOKEN }}
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           args: --sarif-file-output=snyk.sarif
 
