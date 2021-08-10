@@ -1,6 +1,6 @@
 {
   "ingresses": [
-    "https://helseopplysninger.nav.no"
+    "https://ekstern-api.intern.nav.no"
   ],
   "env": {
     "HOPS_EVENTSTORE_SCOPE": "api://prod-gcp.helseopplysninger.hops-event-store/.default"
