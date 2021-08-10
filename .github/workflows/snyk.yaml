@@ -19,7 +19,7 @@ jobs:
             ${{ runner.os }}-gradle-
       - uses: actions/setup-java@v2
         with:
-          java-version: 16
+          java-version: 14
           distribution: 'adopt'
 
       - name: Run vulnerability scan
