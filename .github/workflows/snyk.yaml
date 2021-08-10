@@ -1,6 +1,8 @@
-name: Snyk Monitor
+name: Daily Snyk Monitor
 
-on: push
+on:
+  schedule:
+    - cron: '0 7 * * *'
 
 jobs:
   security:
