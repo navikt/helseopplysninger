@@ -12,14 +12,14 @@ fun Routing.naisRoutes(prometheusMeterRegistry: PrometheusMeterRegistry) {
 
     get("/isReady") {
         try {
-            call.respondText("FileSharing")
+            call.respondText("FileShare")
         } catch (ex: Throwable) {
             call.application.environment.log.warn("/isReady error.", ex)
             call.respond(HttpStatusCode.InternalServerError, ex.message ?: "No exception message.")
         }
     }
     get("/isAlive") {
-        call.respondText("FileSharing")
+        call.respondText("FileShare")
     }
     get("/prometheus") {
         call.respond(prometheusMeterRegistry.scrape())

@@ -58,12 +58,12 @@ services:
     environment:
       HOPS_EVENTSTORE_BASE_URL: http://eventstore:8080
 
-  # FileSharing provides an API to upload and download binary files. These files can be referenced in FHIR-messages.
-  filesharing:
+  # FileShare provides an API to upload and download binary files. These files can be referenced in FHIR-messages.
+  fileshare:
     build:
       context: ..
       args:
-        project: hops-filesharing
+        project: hops-fileshare
     restart: on-failure
     ports: [ 8086:8080 ]
 

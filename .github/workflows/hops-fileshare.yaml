@@ -1,9 +1,9 @@
-name: hops-filesharing
+name: hops-fileshare
 
 on:
   push:
     branches: [main]
-    paths: [apps/hops-filesharing/**]
+    paths: [apps/hops-fileshare/**]
   workflow_dispatch:
     inputs:
       deploy-prod:

@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   version: 1.0.0
-  title: FileSharing
+  title: FileShare
   description: Et api for å laste opp og ned binærfiler (bilder, video, pdf etc.) som inngår i FHIR meldinger som linker.
 paths:
   /isReady:
