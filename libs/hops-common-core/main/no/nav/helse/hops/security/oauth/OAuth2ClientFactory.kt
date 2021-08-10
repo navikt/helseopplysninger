@@ -14,12 +14,25 @@ object OAuth2ClientFactory {
         wellKnownUrl: String,
         clientId: String,
         clientSecret: String
+    ) = create(wellKnownUrl, clientId, clientSecret, null)
+
+    fun createJwk(
+        wellKnownUrl: String,
+        clientId: String,
+        clientJwk: String
+    ) = create(wellKnownUrl, clientId, null, clientJwk)
+
+    private fun create(
+        wellKnownUrl: String,
+        clientId: String,
+        clientSecret: String?,
+        clientJwk: String?
     ): IOAuth2Client {
         val clientAuth = ClientAuthenticationProperties(
             clientId,
             ClientAuthenticationMethod.CLIENT_SECRET_POST,
             clientSecret,
-            null,
+            clientJwk,
         )
 
         return OAuth2Client(createHttpClient(), wellKnownUrl, clientAuth)

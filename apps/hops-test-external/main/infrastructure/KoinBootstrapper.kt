@@ -1,6 +1,6 @@
 package infrastructure
 
-import domain.EventStore
+import domain.ExternalApiFacade
 import no.nav.helse.hops.hoplite.loadConfigOrThrow
 import no.nav.helse.hops.koin.singleClosable
 import org.koin.core.qualifier.named
@@ -9,15 +9,15 @@ import org.koin.dsl.module
 object KoinBootstrapper {
     val module = module {
         data class ConfigRoot(
-            val eventStore: Configuration.EventStore
+            val externalApi: Configuration.ExternalApi
         )
 
         single { loadConfigOrThrow<ConfigRoot>() }
-        single { get<ConfigRoot>().eventStore }
+        single { get<ConfigRoot>().externalApi }
 
-        singleClosable(named(EVENT_STORE_CLIENT_NAME)) { HttpClientFactory.create(get()) }
-        single<EventStore> { EventStoreHttp(get(named(EVENT_STORE_CLIENT_NAME)), get()) }
+        singleClosable(named(EXTERNAL_API_CLIENT_NAME)) { HttpClientFactory.create(get()) }
+        single<ExternalApiFacade> { ExternalApiHttp(get(named(EXTERNAL_API_CLIENT_NAME)), get()) }
     }
 }
 
-const val EVENT_STORE_CLIENT_NAME = "eventStore"
+const val EXTERNAL_API_CLIENT_NAME = "external-api"

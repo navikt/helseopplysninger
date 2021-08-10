@@ -13,7 +13,6 @@ spec:
     enabled: true
     scopes:
       consumes:
-       - name: "nav:helse/v1/helseopplysninger/publish"
        - name: "nav:helse/v1/helseopplysninger/subscribe"
   liveness:
     path: /isAlive
@@ -40,10 +39,6 @@ spec:
     application:
       enabled: true
       tenant: nav.no
-  accessPolicy:
-    outbound:
-      rules:
-        - application: hops-event-store
   ingresses:
   {{#each ingresses as |url|}}
     - {{url}}
@@ -51,8 +46,8 @@ spec:
   env:
     - name: LOG_APPENDER
       value: json
-    - name: HOPS_EVENTSTORE_BASE_URL
-      value: http://hops-event-store
+    - name: HOPS_EXTERNAL_API_BASE_URL
+      value: https://helseopplysninger.dev.nav.no
   {{#each env}}
     - name: {{@key}}
       value: "{{this}}"

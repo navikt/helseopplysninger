@@ -1,6 +1,6 @@
 package routes
 
-import domain.EventStore
+import domain.ExternalApiFacade
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.response.respond
@@ -12,11 +12,11 @@ import org.koin.ktor.ext.inject
 
 fun Routing.smokeTestRoutes() {
     route("/smokeTests") {
-        val eventStore by inject<EventStore>()
+        val externalApi by inject<ExternalApiFacade>()
 
         get("/external-api") {
             try {
-                val response = eventStore.search()
+                externalApi.get()
                 call.respondText { "OK!" }
             } catch (ex: Throwable) {
                 call.respond(
