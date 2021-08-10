@@ -11,3 +11,9 @@ spec:
     - team: helseopplysninger
       application: hops-event-replay-kafka
       access: readwrite
+    - team: helseopplysninger
+      application: hops-behandler-backend
+      access: read
+    - team: helseopplysninger
+      application: hops-bestiller-backend
+      access: read

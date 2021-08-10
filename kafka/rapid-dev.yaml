@@ -17,3 +17,12 @@ spec:
     - team: teamdigihot
       application: digihot-kafka-debug
       access: write
+    - team: helseopplysninger
+      application: hops-behandler-backend
+      access: write
+    - team: helseopplysninger
+      application: hops-bestiller-backend
+      access: write
+    - team: helseopplysninger
+      application: sof-resource-puller
+      access: write
