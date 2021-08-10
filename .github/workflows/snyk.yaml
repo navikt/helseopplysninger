@@ -22,8 +22,7 @@ jobs:
           java-version: 14
           distribution: 'adopt'
 
-      - run: whereis java
-      - run: echo $JAVA_HOME
+      - run: ls $JAVA_HOME
       - name: Run vulnerability scan
         uses: snyk/actions/gradle-jdk14@master
         continue-on-error: true # enable for SARIF to upload properly
