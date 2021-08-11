@@ -27,6 +27,7 @@ jobs:
           reporter: github-pr-review
           level: info
           filter_mode: nofilter
+          fail_on_error: true
 
       - name: Cleanup gradle cache
         run: |
