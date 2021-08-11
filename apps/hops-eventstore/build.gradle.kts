@@ -31,7 +31,7 @@ dependencies {
     implementation("io.ktor:ktor-metrics-micrometer:$ktorVersion")
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
     implementation("io.ktor:ktor-webjars:$ktorVersion")
-    implementation("io.micrometer:micrometer-registry-prometheus:1.7.2")
+    implementation("io.micrometer:micrometer-registry-prometheus:1.7.3")
     implementation("no.nav.security:token-validation-ktor:1.3.8")
     implementation("org.flywaydb:flyway-core:7.12.1")
     implementation("org.jetbrains.exposed:exposed-java-time:$exposedVersion")
