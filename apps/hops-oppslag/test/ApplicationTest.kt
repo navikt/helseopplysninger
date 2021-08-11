@@ -1,4 +1,3 @@
-import hops.module
 import io.ktor.config.ApplicationConfig
 import io.ktor.config.MapApplicationConfig
 import io.ktor.http.HttpMethod

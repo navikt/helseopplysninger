@@ -4,49 +4,11 @@ on:
     branches: [main]
 
 jobs:
-  ktlint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Get latest ktlint download-url
-        id: ktlint-latest
-        # Reference: https://github.com/ScaCap/action-ktlint/blob/master/Dockerfile
-        run: |
-          echo "::set-output name=DOWNLOAD_URL::$( \
-          curl -SSL https://api.github.com/repos/pinterest/ktlint/releases/latest \
-          | grep "browser_download_url.*ktlint\"" \
-          | cut -d : -f 2,3 \
-          | tr -d \" \
-          )"
-        shell: bash
-      - uses: actions/cache@v2.1.6
-        name: ktlint cache
-        id: ktlint-cache
-        with:
-          path: ktlint
-          key: ${{ runner.os }}-${{ steps.ktlint-latest.outputs.DOWNLOAD_URL }}
-      - name: Download newest ktlint
-        if: steps.ktlint-cache.outputs.cache-hit != 'true'
-        run: |
-          echo "https://github.com/pinterest/ktlint/releases/download/0.41.0/ktlint" | wget -qi -
-          chmod a+x ktlint
-      - name: run ktlint
-        run: ./ktlint --reporter=checkstyle,output=build/ktlint-report-in-checkstyle-format.xml
-      - name: print ktlint results
-        if: always()
-        run: cat build/ktlint-report-in-checkstyle-format.xml
-      - name: Upload Ktlint Results
-        if: always()
-        uses: actions/upload-artifact@v2
-        with:
-          name: Ktlint-results
-          path: 'build/ktlint-report-in-checkstyle-format.xml'
-          retention-days: 5
   run-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.3.4
-      # https://github.com/actions/cache/blob/main/examples.md#java---gradle
+
       - uses: actions/cache@v2.1.6
         with:
           path: |
@@ -55,18 +17,22 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
+
       - uses: actions/setup-java@v2
         with:
           java-version: 16
           distribution: 'adopt'
+
       # Must login to gain access to docker.pkg.github.com/navikt/* images required by some integration-tests.
       - uses: docker/login-action@v1
         with:
           registry: docker.pkg.github.com
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
       - run: ./gradlew test --continue
-        continue-on-error: true
+        continue-on-error: true # enable for uploading failing tests
+
       - name: Upload Unit Test Results
         if: always() # Publish the results, even if there are failing tests.
         uses: actions/upload-artifact@v2
@@ -74,6 +40,7 @@ jobs:
           name: Test-results
           path: '**/build/test-results/test/TEST-*.xml'
           retention-days: 5
+
       - name: Cleanup Gradle Cache
         # Remove some files from the Gradle cache, so they aren't cached by GitHub Actions.
         # Restoring these files from a GitHub Actions cache might cause problems for future builds.
