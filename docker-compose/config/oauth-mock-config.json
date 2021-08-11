@@ -19,7 +19,7 @@
         },
         {
           "requestParam": "scope",
-          "match": "hops:write",
+          "match": "hops:pub",
           "claims": {
             "sub": "helseopplysninger-subject",
             "aud": [
@@ -30,7 +30,7 @@
         },
         {
           "requestParam": "scope",
-          "match": "hops:read",
+          "match": "hops:sub",
           "claims": {
             "sub": "helseopplysninger-subject",
             "aud": [
