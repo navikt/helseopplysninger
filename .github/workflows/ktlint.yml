@@ -24,10 +24,10 @@ jobs:
         uses: ScaCap/action-ktlint@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          reporter: github-pr-review
-          level: info
-          filter_mode: nofilter
-          fail_on_error: true
+          reporter: github-pr-review  # default: github-pr-check
+          level: info                 # default: error
+          filter_mode: nofilter       # default: added
+          fail_on_error: true         # default: false
 
       - name: Cleanup gradle cache
         run: |
