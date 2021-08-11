@@ -50,6 +50,8 @@ object FhirClientGcpFactory {
             )
         }
 
-        override fun interceptResponse(theResponse: IHttpResponse?) {}
+        override fun interceptResponse(theResponse: IHttpResponse?) {
+            // no-op
+        }
     }
 }

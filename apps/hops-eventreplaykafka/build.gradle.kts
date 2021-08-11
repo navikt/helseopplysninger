@@ -5,7 +5,6 @@ plugins {
     kotlin("jvm")
     id("com.github.johnrengelman.shadow")
     id("org.jlleitschuh.gradle.ktlint")
-    id("com.diffplug.spotless")
 }
 
 application {
@@ -44,21 +43,6 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter:1.16.0")
     testImplementation(kotlin("test-junit5"))
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
-}
-
-spotless {
-    kotlin {
-        ktlint("0.42.1")
-    }
-    kotlinGradle {
-        target("*.gradle.kts")
-        ktlint("0.42.1")
-    }
-}
-
-tasks.named("compileKotlin") {
-    dependsOn("spotlessApply")
-    dependsOn("spotlessCheck")
 }
 
 kotlin.sourceSets["main"].kotlin.srcDirs("main")
