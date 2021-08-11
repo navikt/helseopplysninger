@@ -13,13 +13,13 @@ spec:
     enabled: true
     scopes:
       exposes:
-       - name: "hops.read"
+       - name: "helseopplysninger.read"
          enabled: true
          product: "helse"
          consumers:
            - name: "NAV"
              orgno: "889640782"
-       - name: "hops.write"
+       - name: "helseopplysninger.write"
          enabled: true
          product: "helse"
          consumers:

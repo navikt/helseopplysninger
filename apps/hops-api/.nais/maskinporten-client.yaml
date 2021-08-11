@@ -1,10 +1,11 @@
 apiVersion: nais.io/v1
 kind: MaskinportenClient
 metadata:
-  name: hops-maskinportenClient
+  name: hops-maskinporten-client
   namespace: helseopplysninger
 spec:
+  secretName: maskinporten-hops-client
   scopes:
     consumes:
-      - name: "nav:helse/hops.read"
-      - name: "nav:helse/hops.write"
+      - name: "nav:helse/helseopplysninger.read"
+      - name: "nav:helse/helseopplysninger.write"

@@ -14,29 +14,29 @@
             "aud": [
               "helseopplysninger-audience"
             ],
-            "scope": "nav:helse/v1/helseopplysninger/publish nav:helse/v1/helseopplysninger/subscribe"
+            "scope": "nav:helse/helseopplysninger.write nav:helse/helseopplysninger.read"
           }
         },
         {
           "requestParam": "scope",
-          "match": "hops:pub",
+          "match": "hops:write",
           "claims": {
             "sub": "helseopplysninger-subject",
             "aud": [
               "helseopplysninger-audience"
             ],
-            "scope": "nav:helse/v1/helseopplysninger/publish"
+            "scope": "nav:helse/helseopplysninger.write"
           }
         },
         {
           "requestParam": "scope",
-          "match": "hops:sub",
+          "match": "hops:read",
           "claims": {
             "sub": "helseopplysninger-subject",
             "aud": [
               "helseopplysninger-audience"
             ],
-            "scope": "nav:helse/v1/helseopplysninger/subscribe"
+            "scope": "nav:helse/helseopplysninger.read"
           }
         }
       ]
