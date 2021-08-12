@@ -1,5 +1,5 @@
 {
   "ingresses": [
-    "https://hops-test-external.labs.nais.io"
+    "https://hops-test-external.dev.nais.io"
   ]
 }
