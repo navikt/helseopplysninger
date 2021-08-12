@@ -23,10 +23,10 @@ tasks {
 dependencies {
     val ktorVersion = "1.6.2"
 
-    implementation("io.ktor:ktor-auth:$ktorVersion")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.4")
+    implementation("com.nimbusds:nimbus-jose-jwt:9.12")
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
     implementation("io.ktor:ktor-webjars:$ktorVersion")
-    implementation("no.nav.security:token-validation-ktor:1.3.8")
     implementation(project(":libs:hops-common-ktor"))
     runtimeOnly("ch.qos.logback:logback-classic:1.2.5")
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")

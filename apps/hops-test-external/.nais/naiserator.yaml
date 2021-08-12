@@ -13,7 +13,7 @@ spec:
     enabled: true
     scopes:
       consumes:
-       - name: "nav:helse/v1/helseopplysninger/subscribe"
+       - name: "nav:helse/helseopplysninger.read"
   liveness:
     path: /isAlive
     initialDelay: 10
@@ -47,10 +47,4 @@ spec:
     - name: LOG_APPENDER
       value: json
     - name: HOPS_EXTERNAL_API_BASE_URL
-      value: https://helseopplysninger.dev.nav.no
-  {{#each env}}
-    - name: {{@key}}
-      value: "{{this}}"
-  {{/each}}
-  envFrom:
-    - secret: api
+      value: https://ekstern-api.dev.intern.nav.no
