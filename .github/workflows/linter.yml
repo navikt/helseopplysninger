@@ -1,32 +1,30 @@
+# https://github.blog/changelog/2021-02-19-github-actions-workflows-triggered-by-dependabot-prs-will-run-with-read-only-permissions/
 name: Static code analysis
 
 on: [ pull_request ]
-  # https://github.blog/changelog/2021-02-19-github-actions-workflows-triggered-by-dependabot-prs-will-run-with-read-only-permissions/
 
 jobs:
   ktlint:
     runs-on: ubuntu-latest
+    name: Run ktlint
     steps:
       - name: Checkout monorepo
         uses: actions/checkout@v2.3.4
 
-      - name: Get latest ktlint download-url
+      - name: Get latest ktlint download url
         id: ktlint-latest
-        # Reference: https://github.com/ScaCap/action-ktlint/blob/master/Dockerfile
         run: |
-          echo "::set-output name=DOWNLOAD_URL::$( \
-          curl -SSL https://api.github.com/repos/pinterest/ktlint/releases/latest \
-          | grep "browser_download_url.*ktlint\"" \
-          | cut -d : -f 2,3 \
-          | tr -d \" \
+          echo "::set-output name=KTLINT_URL::$( \
+            curl -SSL https://api.github.com/repos/pinterest/ktlint/releases/latest \
+            | jq .assets[0] | jq .browser_download_url -r \
           )"
 
-      - name: ktlint cache
+      - name: Use cache
         uses: actions/cache@v2.1.6
         id: ktlint-cache
         with:
           path: ktlint
-          key: ${{ runner.os }}-${{ steps.ktlint-latest.outputs.DOWNLOAD_URL }}
+          key: ${{ runner.os }}-${{ steps.ktlint-latest.outputs.KTLINT_URL }}
 
       - name: Download newest ktlint
         if: steps.ktlint-cache.outputs.cache-hit != 'true'

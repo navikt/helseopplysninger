@@ -1,4 +1,4 @@
-name: Daily Snyk Monitor
+name: Security
 
 on:
   schedule:
@@ -8,6 +8,7 @@ on:
 jobs:
   security:
     runs-on: ubuntu-latest
+    name: Vulnerability scan
     steps:
       - name: Checkout code
         uses: actions/checkout@v2.3.4
