@@ -47,4 +47,4 @@ spec:
     - name: LOG_APPENDER
       value: json
     - name: HOPS_EXTERNAL_API_BASE_URL
-      value: https://ekstern-api.dev.intern.nav.no
+      value: https://hops.dev.nav.no
