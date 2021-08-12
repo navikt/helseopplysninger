@@ -1,11 +1,55 @@
-name: Testing
+# https://github.blog/changelog/2021-02-19-github-actions-workflows-triggered-by-dependabot-prs-will-run-with-read-only-permissions/
+name: Pull request
 
 on: [ pull_request ]
 
 jobs:
+  ktlint:
+    runs-on: ubuntu-latest
+    name: Run ktlint
+    steps:
+      - name: Checkout monorepo
+        uses: actions/checkout@v2.3.4
+
+      - name: Get latest ktlint download url
+        id: ktlint-latest
+        run: |
+          echo "::set-output name=KTLINT_URL::$( \
+            curl -SSL https://api.github.com/repos/pinterest/ktlint/releases/latest \
+            | jq .assets[0] | jq .browser_download_url -r \
+          )"
+
+      - name: Use cached ktlint
+        uses: actions/cache@v2.1.6
+        id: ktlint-cache
+        with:
+          path: ktlint
+          key: ${{ runner.os }}-${{ steps.ktlint-latest.outputs.KTLINT_URL }}
+
+      - name: Download ktlint
+        if: steps.ktlint-cache.outputs.cache-hit != 'true'
+        run: |
+          echo ${{ steps.ktlint-latest.outputs.KTLINT_URL }} | wget -qi-
+          chmod a+x ktlint
+
+      - name: Run ktlint
+        run: ./ktlint --reporter=checkstyle,output=build/ktlint-report.xml
+
+      - name: Print results
+        if: always()
+        run: cat build/ktlint-report.xml
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: Ktlint-results
+          path: 'build/ktlint-report.xml'
+          retention-days: 5
+
   unit:
     runs-on: ubuntu-latest
-    name: Unit tests
+    name: Run unit tests
     steps:
       - name: Checkout monorepo
         uses: actions/checkout@v2.3.4
@@ -34,13 +78,13 @@ jobs:
       - run: ./gradlew test --continue
         continue-on-error: true # enable for uploading failing tests
 
-      - name: Publish unit test results
+      - name: Publish test result
         uses: EnricoMi/publish-unit-test-result-action/composite@v1
         if: always() # always publish even if test stage fails
         with:
           files: '**/build/test-results/test/TEST-*.xml'
 
-      - name: Cleanup Gradle Cache
+      - name: Cleanup cache
         # Remove some files from the Gradle cache, so they aren't cached by GitHub Actions.
         # Restoring these files from a GitHub Actions cache might cause problems for future builds.
         run: |
