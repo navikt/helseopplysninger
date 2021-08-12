@@ -18,7 +18,8 @@ object HttpClientFactory {
                     "https://${config.discoveryUrl.host}",
                     config.clientId,
                     RSAKey.parse(config.clientJwk),
-                    config.scope
+                    config.scope,
+                    resource = config.audience,
                 )
 
                 val maskinportenClient = MaskinportenClient(maskinportenConfig)
