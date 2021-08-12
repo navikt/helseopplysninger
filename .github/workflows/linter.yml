@@ -19,21 +19,21 @@ jobs:
             | jq .assets[0] | jq .browser_download_url -r \
           )"
 
-      - name: Use cache
+      - name: Use cached ktlint
         uses: actions/cache@v2.1.6
         id: ktlint-cache
         with:
           path: ktlint
           key: ${{ runner.os }}-${{ steps.ktlint-latest.outputs.KTLINT_URL }}
 
-      - name: Download newest ktlint
+      - name: Download newest ktlint on cache miss
         if: steps.ktlint-cache.outputs.cache-hit != 'true'
         run: |
           echo ${{ steps.ktlint-latest.outputs.KTLINT_URL }} | wget -qi-
           chmod a+x ktlint
 
       - name: run ktlint
-        run: ./ktlint --relative --reporter=checkstyle,output=build/ktlint-report.xml
+        run: ./ktlint --reporter=checkstyle,output=build/ktlint-report.xml
 
       - name: print ktlint results
         if: always()
