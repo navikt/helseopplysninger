@@ -58,6 +58,15 @@ services:
     environment:
       HOPS_EVENTSTORE_BASE_URL: http://eventstore:8080
 
+  # FileShare provides an API to upload and download binary files. These files can be referenced in FHIR-messages.
+  fileshare:
+    build:
+      context: ..
+      args:
+        project: hops-fileshare
+    restart: on-failure
+    ports: [ 8086:8080 ]
+
   # PostgreSQL is the database used by EventStore.
   postgres:
     image: postgres

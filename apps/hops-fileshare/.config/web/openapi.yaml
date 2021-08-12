@@ -1,0 +1,24 @@
+openapi: 3.0.1
+info:
+  version: 1.0.0
+  title: FileShare
+  description: Et api for å laste opp og ned binærfiler (bilder, video, pdf etc.) som inngår i FHIR meldinger som linker.
+paths:
+  /isReady:
+    get:
+      tags: [diagnostics]
+      responses:
+        '200':
+          description: Service is ready.
+  /isAlive:
+    get:
+      tags: [diagnostics]
+      responses:
+        '200':
+          description: Service is alive.
+  /prometheus:
+    get:
+      tags: [diagnostics]
+      responses:
+        '200':
+          description: Metrics.
