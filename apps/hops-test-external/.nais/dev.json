@@ -1,0 +1,5 @@
+{
+  "ingresses": [
+    "https://hops-test-external.labs.nais.io"
+  ]
+}
