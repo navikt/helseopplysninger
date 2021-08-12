@@ -35,7 +35,6 @@ private class MaskinportenOAuth2Provider(
     override fun isApplicable(auth: HttpAuthHeader) = true
 
     override suspend fun addRequestHeaders(request: HttpRequestBuilder) {
-        throw RuntimeException("Error: ${client.maskinportenTokenString}")
         request.headers[HttpHeaders.Authorization] = "Bearer ${client.maskinportenTokenString}"
     }
 }
