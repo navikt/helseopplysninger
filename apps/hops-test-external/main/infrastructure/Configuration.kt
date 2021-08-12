@@ -10,5 +10,6 @@ object Configuration {
         val clientId: String,
         val clientJwk: String,
         val scope: String,
+        val audience: String,
     )
 }
