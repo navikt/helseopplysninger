@@ -12,9 +12,19 @@ spec:
   maskinporten:
     enabled: true
     scopes:
-      consumes:
-       - name: "nav:helse/v1/helseopplysninger/publish"
-       - name: "nav:helse/v1/helseopplysninger/subscribe"
+      exposes:
+       - name: "helseopplysninger.read"
+         enabled: true
+         product: "helse"
+         consumers:
+           - name: "NAV"
+             orgno: "889640782"
+       - name: "helseopplysninger.write"
+         enabled: true
+         product: "helse"
+         consumers:
+           - name: "NAV"
+             orgno: "889640782"
   liveness:
     path: /isAlive
     initialDelay: 10
