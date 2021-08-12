@@ -29,7 +29,7 @@ jobs:
       - name: Download newest ktlint
         if: steps.ktlint-cache.outputs.cache-hit != 'true'
         run: |
-          echo ${{ steps.ktlint-latest.outputs.DOWNLOAD_URL }} | wget -qi -
+          echo ${{ steps.ktlint-latest.outputs.DOWNLOAD_URL }} | wget -qi-
           chmod a+x ktlint
 
       - name: run ktlint
