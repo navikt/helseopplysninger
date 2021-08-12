@@ -15,7 +15,7 @@ object HttpClientFactory {
         HttpClient {
             install(Auth) {
                 val maskinportenConfig = MaskinportenConfig(
-                    config.discoveryUrl.host,
+                    "https://${config.discoveryUrl.host}",
                     config.clientId,
                     RSAKey.parse(config.clientJwk),
                     config.scope
