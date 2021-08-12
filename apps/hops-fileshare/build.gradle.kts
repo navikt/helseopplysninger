@@ -28,7 +28,7 @@ dependencies {
     implementation("io.ktor:ktor-webjars:$ktorVersion")
     implementation("io.ktor:ktor-auth:$ktorVersion")
     implementation("no.nav.security:token-validation-ktor:1.3.8")
-    implementation("io.micrometer:micrometer-registry-prometheus:1.7.2")
+    implementation("io.micrometer:micrometer-registry-prometheus:1.7.3")
     implementation(project(":libs:hops-common-ktor"))
     runtimeOnly("ch.qos.logback:logback-classic:1.2.5")
     runtimeOnly("io.ktor:ktor-server-netty:$ktorVersion")
