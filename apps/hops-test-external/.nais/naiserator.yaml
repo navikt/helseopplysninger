@@ -13,7 +13,7 @@ spec:
     enabled: true
     scopes:
       consumes:
-       - name: "nav:helse/helseopplysninger.read"
+       - name: "nav:helse:helseopplysninger.read"
   liveness:
     path: /isAlive
     initialDelay: 10
