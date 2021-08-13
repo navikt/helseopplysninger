@@ -34,6 +34,7 @@ jobs:
 
       - name: Run ktlint
         run: |
+          set -x
           ./ktlint --reporter=checkstyle,output=build/ktlint-report.xml
           cat build/ktlint-report.xml
 
