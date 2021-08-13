@@ -1,25 +1,24 @@
 # https://github.com/EnricoMi/publish-unit-test-result-action#support-fork-repositories-and-dependabot-branches
-name: Review
+name: Pull request review
 
 on:
   workflow_run:
     workflows: [ "Pull request" ]
-    types:
-      - completed
-      - requested
+    types: [ completed ]
 
 jobs:
-  review:
+  review-tests:
     runs-on: ubuntu-latest
-    name: Review pull request
-    if: github.event.workflow_run.conclusion != 'skipped'
+    name: Review tests
+    if: github.event.workflow_run.conclusion == 'success' # != skipped
     steps:
-      - uses: dawidd6/action-download-artifact@v2
+      - name: Download artifact
+        uses: dawidd6/action-download-artifact@v2
         with:
-          workflow: pull-request
+          workflow: "Pull request"
           run_id: ${{ github.event.workflow_run.id }}
 
-      - name: Review tests
+      - name: Upload result
         uses: EnricoMi/publish-unit-test-result-action@v1
         with:
           commit: ${{ github.event.workflow_run.head_sha }}
@@ -27,24 +26,35 @@ jobs:
 
       - uses: reviewdog/action-setup@v1
 
-      - name: Review ktlint
-        if: always()
-        env:
-          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CI_PULL_REQUEST: ${{ github.event.workflow_run.pull_requests[0].number }}
-          CI_COMMIT: ${{ github.event.workflow_run.head_sha }}
-        run: |
-          args=(
-            -f=checkstyle               # SARIF not yet supported
-            -diff="git diff"            #
-            -name=ktlint                # tool name
-            -reporter=github-pr-review  # github-pr-review is the only one supporting code suggestions so far.
-            -level=error                # info, warning, error (default)
-            -filter-mode=nofilter       # nofilter is partially supported
-          )
-          cat ktlint/ktlint-report.sarif | reviewdog "${args[@]}"
+  review-lint:
+    runs-on: ubuntu-latest
+    name: Review linting
+    if: github.event.workflow_run.conclusion == 'success'
+    steps:
+      - name: Download artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: "Pull request"
+          run_id: ${{ github.event.workflow_run.id }}
 
-      - name: Upload ktlint result
+      - name: Upload result
         uses: github/codeql-action/upload-sarif@v1
         with:
           sarif_file: ktlint/ktlint-report.sarif
+
+#      - name: Review ktlint
+#        if: always()
+#        env:
+#          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#          CI_PULL_REQUEST: ${{ github.event.workflow_run.pull_requests[0].number }}
+#          CI_COMMIT: ${{ github.event.workflow_run.head_sha }}
+#        run: |
+#          args=(
+#            -f=checkstyle               # SARIF not yet supported
+#            -diff="git diff"            #
+#            -name=ktlint                # tool name
+#            -reporter=github-pr-review  # github-pr-review is the only one supporting code suggestions so far.
+#            -level=error                # info, warning, error (default)
+#            -filter-mode=nofilter       # nofilter is partially supported
+#          )
+#          cat ktlint/ktlint-report.sarif | reviewdog "${args[@]}"
