@@ -1,6 +1,6 @@
 {
   "ingresses": [
-    "https://ekstern-api.dev.intern.nav.no"
+    "https://hops.dev.nav.no"
   ],
   "env": {
     "HOPS_EVENTSTORE_SCOPE": "api://dev-gcp.helseopplysninger.hops-event-store/.default"

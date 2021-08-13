@@ -1,7 +1,7 @@
 apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
-  name: hops-api
+  name: hops-test-external
   namespace: helseopplysninger
   labels:
     team: helseopplysninger
@@ -12,19 +12,8 @@ spec:
   maskinporten:
     enabled: true
     scopes:
-      exposes:
-       - name: "helseopplysninger.read"
-         enabled: true
-         product: "helse"
-         consumers:
-           - name: "NAV"
-             orgno: "889640782"
-       - name: "helseopplysninger.write"
-         enabled: true
-         product: "helse"
-         consumers:
-           - name: "NAV"
-             orgno: "889640782"
+      consumes:
+       - name: "nav:helse:helseopplysninger.read"
   liveness:
     path: /isAlive
     initialDelay: 10
@@ -36,9 +25,6 @@ spec:
     initialDelay: 10
     periodSeconds: 5
     timeout: 5
-  prometheus:
-    enabled: true
-    path: /prometheus
   resources:
     limits:
       cpu: 1000m
@@ -48,16 +34,11 @@ spec:
       memory: 512Mi
   replicas:
     min: 1
-    max: 2
-    cpuThresholdPercentage: 90
+    max: 1
   azure:
     application:
       enabled: true
       tenant: nav.no
-  accessPolicy:
-    outbound:
-      rules:
-        - application: hops-event-store
   ingresses:
   {{#each ingresses as |url|}}
     - {{url}}
@@ -65,11 +46,5 @@ spec:
   env:
     - name: LOG_APPENDER
       value: json
-    - name: HOPS_EVENTSTORE_BASE_URL
-      value: http://hops-event-store
-  {{#each env}}
-    - name: {{@key}}
-      value: "{{this}}"
-  {{/each}}
-  envFrom:
-    - secret: api
+    - name: HOPS_EXTERNAL_API_BASE_URL
+      value: https://hops.dev.nav.no
