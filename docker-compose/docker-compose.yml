@@ -64,8 +64,18 @@ services:
       context: ..
       args:
         project: hops-fileshare
+    depends_on: [filestore]
+    environment:
+      HOPS_FILESTORAGE_BASE_URL: http://filestore:4443
     restart: on-failure
     ports: [ 8086:8080 ]
+
+  filestore:
+    image: fsouza/fake-gcs-server
+    ports: [ 4443:4443 ]
+    command: "-scheme http"
+    volumes:
+      - fakestorage_volume:/data
 
   # PostgreSQL is the database used by EventStore.
   postgres:
@@ -123,3 +133,4 @@ services:
 volumes:
   postgres_volume:
   pgadmin_volume:
+  fakestorage_volume:
