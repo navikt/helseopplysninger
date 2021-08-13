@@ -1,0 +1,94 @@
+# https://github.blog/changelog/2021-02-19-github-actions-workflows-triggered-by-dependabot-prs-will-run-with-read-only-permissions/
+name: Pull request
+
+on: [ pull_request ]
+
+jobs:
+  lint-ktlint:
+    runs-on: ubuntu-latest
+    name: Run ktlint
+    steps:
+      - name: Checkout monorepo
+        uses: actions/checkout@v2.3.4
+
+      - name: Get latest ktlint download url
+        id: ktlint-latest
+        run: |
+          echo "::set-output name=KTLINT_URL::$( \
+            curl -SSL https://api.github.com/repos/pinterest/ktlint/releases/latest \
+            | jq .assets[0] | jq .browser_download_url -r \
+          )"
+
+      - name: Use cached ktlint
+        uses: actions/cache@v2.1.6
+        id: ktlint-cache
+        with:
+          path: ktlint
+          key: ${{ runner.os }}-${{ steps.ktlint-latest.outputs.KTLINT_URL }}
+
+      - name: Download ktlint
+        if: steps.ktlint-cache.outputs.cache-hit != 'true'
+        run: |
+          echo ${{ steps.ktlint-latest.outputs.KTLINT_URL }} | wget -qi-
+          chmod a+x ktlint
+
+      - name: Run ktlint
+        run: ./ktlint --reporter=sarif,output=ktlint-report.sarif -v || true # sometimes report exit 1 on success
+
+      - name: Print ktlint result
+        if: always()
+        run: cat ktlint-report.sarif
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: ktlint
+          path: ktlint-report.sarif
+          retention-days: 5
+
+  test-unit:
+    runs-on: ubuntu-latest
+    name: Run unit tests
+    env:
+      GRADLE_OPTS: -Dorg.gradle.daemon=false
+    steps:
+      - name: Checkout monorepo
+        uses: actions/checkout@v2.3.4
+
+      - uses: actions/cache@v2.1.6
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - uses: actions/setup-java@v2
+        with:
+          java-version: 16
+          distribution: 'adopt'
+
+      # Must login to gain access to docker.pkg.github.com/navikt/* images required by some integration-tests.
+      - uses: docker/login-action@v1
+        with:
+          registry: docker.pkg.github.com
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - run: ./gradlew test --continue
+        continue-on-error: true # enable for uploading failing tests
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: unit-test
+          path: '**/build/test-results/test/TEST-*.xml'
+          retention-days: 5
+
+      - name: Cleanup cache
+        run: |
+          rm -f ~/.gradle/caches/modules-2/modules-2.lock
+          rm -f ~/.gradle/caches/modules-2/gc.properties

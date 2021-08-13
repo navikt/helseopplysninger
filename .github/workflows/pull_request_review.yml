@@ -1,0 +1,41 @@
+# https://github.com/EnricoMi/publish-unit-test-result-action#support-fork-repositories-and-dependabot-branches
+name: Pull request review
+
+on:
+  workflow_run:
+    workflows: [ "Pull request" ]
+    types: [ completed ]
+
+jobs:
+  review-tests:
+    runs-on: ubuntu-latest
+    name: Review tests
+    if: github.event.workflow_run.conclusion == 'success' # != skipped
+    steps:
+      - name: Download artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: "Pull request"
+          run_id: ${{ github.event.workflow_run.id }}
+
+      - name: Upload result
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        with:
+          commit: ${{ github.event.workflow_run.head_sha }}
+          files: "**/build/test-results/test/TEST-*.xml"
+
+  review-lint:
+    runs-on: ubuntu-latest
+    name: Review linting
+    if: github.event.workflow_run.conclusion == 'success'
+    steps:
+      - name: Download artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: "Pull request"
+          run_id: ${{ github.event.workflow_run.id }}
+
+      - name: Upload result
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: ktlint/ktlint-report.sarif
