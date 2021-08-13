@@ -1,0 +1,56 @@
+# https://github.com/EnricoMi/publish-unit-test-result-action#support-fork-repositories-and-dependabot-branches
+# and https://github.blog/changelog/2021-02-19-github-actions-workflows-triggered-by-dependabot-prs-will-run-with-read-only-permissions/
+name: Pull request report
+on:
+  workflow_run:
+    workflows: [ "Pull request" ]
+    types: [ completed ]
+
+jobs:
+  report-unit-tests:
+    name: Review tests
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion != 'skipped'
+    steps:
+      - name: Download artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: "Pull request"
+          run_id: ${{ github.event.workflow_run.id }}
+
+      - name: Upload result
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        with:
+          commit: ${{ github.event.workflow_run.head_sha }}
+          files: "**/build/test-results/test/TEST-*.xml"
+
+  report-ktlint:
+    name: Review linting
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion != 'skipped'
+    steps:
+      - name: Download artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: "Pull request"
+          run_id: ${{ github.event.workflow_run.id }}
+
+      - name: Install reviewdog
+        uses: reviewdog/action-setup@v1
+
+      - name: Publish ktlint results
+        if: always()
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CI_PULL_REQUEST: ${{ github.event.workflow_run.pull_requests[0].number }}
+          CI_COMMIT: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          args=(
+            -f=checkstyle
+            -diff="git diff"
+            -name=ktlint
+            -reporter=github-pr-review # only supported code suggester
+            -level=info # info, warning, error (default)
+            -filter-mode=nofilter # nofilter is partially supported with github-pr-review
+          )
+          cat ktlint/ktlint-report.xml | reviewdog "${args[@]}"
