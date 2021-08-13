@@ -33,8 +33,11 @@ jobs:
           chmod a+x ktlint
 
       - name: Run ktlint
-        continue-on-error: true
         run: ./ktlint --reporter=checkstyle,output=build/ktlint-report.xml
+
+      - name: Print ktlint result
+        if: always()
+        run: cat build/ktlint-report.xml
 
       - name: Upload results
         if: always()
@@ -47,6 +50,8 @@ jobs:
   unit:
     runs-on: ubuntu-latest
     name: Run unit tests
+    env:
+      GRADLE_OPTS: -Dorg.gradle.daemon=false
     steps:
       - name: Checkout monorepo
         uses: actions/checkout@v2.3.4
