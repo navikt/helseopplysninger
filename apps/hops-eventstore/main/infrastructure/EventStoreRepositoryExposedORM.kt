@@ -30,7 +30,7 @@ class EventStoreRepositoryExposedORM(config: Config) : EventStoreRepository {
 
     init {
         Flyway
-             .configure()
+            .configure()
             .dataSource(config.url, config.username, config.password)
             .load()
             .migrate()
