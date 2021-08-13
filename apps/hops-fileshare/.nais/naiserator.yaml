@@ -34,6 +34,10 @@ spec:
     min: 1
     max: 2
     cpuThresholdPercentage: 90
+  azure:
+    application:
+      enabled: true
+      tenant: nav.no
   ingresses:
   {{#each ingresses as |url|}}
     - {{url}}
