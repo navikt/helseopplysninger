@@ -40,9 +40,9 @@ jobs:
             -level=error                # info, warning, error (default)
             -filter-mode=nofilter       # nofilter is partially supported
           )
-          cat Ktlint-results/ktlint-report.xml | reviewdog "${args[@]}"
+          cat ktlint/ktlint-report.sarif | reviewdog "${args[@]}"
 
       - name: Upload ktlint result
         uses: github/codeql-action/upload-sarif@v1
         with:
-          sarif_file: Ktlint-results/ktlint-report.xml
+          sarif_file: ktlint/ktlint-report.sarif

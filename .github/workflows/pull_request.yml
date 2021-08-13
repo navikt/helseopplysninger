@@ -33,18 +33,18 @@ jobs:
           chmod a+x ktlint
 
       - name: Run ktlint
-        run: ./ktlint --reporter=sarif,output=build/ktlint-report.xml
+        run: ./ktlint --reporter=sarif,output=ktlint-report.sarif
 
       - name: Print ktlint result
         if: always()
-        run: cat build/ktlint-report.xml
+        run: cat ktlint-report.sarif
 
       - name: Upload results
         if: always()
         uses: actions/upload-artifact@v2
         with:
-          name: Ktlint-results
-          path: 'build/ktlint-report.xml'
+          name: ktlint
+          path: ktlint-report.sarif
           retention-days: 5
 
   unit:
