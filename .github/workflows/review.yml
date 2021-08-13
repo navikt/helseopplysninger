@@ -39,20 +39,3 @@ jobs:
         uses: github/codeql-action/upload-sarif@v1
         with:
           sarif_file: ktlint/ktlint-report.sarif
-
-#      - name: Review ktlint
-#        if: always()
-#        env:
-#          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#          CI_PULL_REQUEST: ${{ github.event.workflow_run.pull_requests[0].number }}
-#          CI_COMMIT: ${{ github.event.workflow_run.head_sha }}
-#        run: |
-#          args=(
-#            -f=checkstyle               # SARIF not yet supported
-#            -diff="git diff"            #
-#            -name=ktlint                # tool name
-#            -reporter=github-pr-review  # github-pr-review is the only one supporting code suggestions so far.
-#            -level=error                # info, warning, error (default)
-#            -filter-mode=nofilter       # nofilter is partially supported
-#          )
-#          cat ktlint/ktlint-report.sarif | reviewdog "${args[@]}"
