@@ -53,4 +53,4 @@ jobs:
             -level=info # info, warning, error (default)
             -filter-mode=nofilter # nofilter is partially supported with github-pr-review
           )
-          cat ktlint/ktlint-report.xml | reviewdog "${args[@]}"
+          cat ktlint/ktlint-results.checkstyle | reviewdog "${args[@]}"
