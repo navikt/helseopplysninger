@@ -80,15 +80,15 @@ jobs:
       - run: ./gradlew test --continue
         continue-on-error: true # enable for uploading failing tests
 
-      - name: Publish test result
-        uses: EnricoMi/publish-unit-test-result-action/composite@v1
-        if: always() # always publish even if test stage fails
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v2
         with:
-          files: '**/build/test-results/test/TEST-*.xml'
+          name: unit-test
+          path: '**/build/test-results/test/TEST-*.xml'
+          retention-days: 5
 
       - name: Cleanup cache
-        # Remove some files from the Gradle cache, so they aren't cached by GitHub Actions.
-        # Restoring these files from a GitHub Actions cache might cause problems for future builds.
         run: |
           rm -f ~/.gradle/caches/modules-2/modules-2.lock
           rm -f ~/.gradle/caches/modules-2/gc.properties
