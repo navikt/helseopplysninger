@@ -39,7 +39,7 @@ jobs:
         uses: reviewdog/action-setup@v1
 
       - name: Publish ktlint results
-        if: always()
+        if: always() # Should be published regardless of failing unit-tests.
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CI_PULL_REQUEST: ${{ github.event.workflow_run.pull_requests[0].number }}
