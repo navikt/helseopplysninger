@@ -14,7 +14,7 @@
             "aud": [
               "helseopplysninger-audience"
             ],
-            "scope": "nav:helse/v1/helseopplysninger/publish nav:helse/v1/helseopplysninger/subscribe"
+            "scope": "nav:helse/helseopplysninger.write nav:helse/helseopplysninger.read"
           }
         },
         {
@@ -25,7 +25,7 @@
             "aud": [
               "helseopplysninger-audience"
             ],
-            "scope": "nav:helse/v1/helseopplysninger/publish"
+            "scope": "nav:helse/helseopplysninger.write"
           }
         },
         {
@@ -36,7 +36,7 @@
             "aud": [
               "helseopplysninger-audience"
             ],
-            "scope": "nav:helse/v1/helseopplysninger/subscribe"
+            "scope": "nav:helse/helseopplysninger.read"
           }
         }
       ]
