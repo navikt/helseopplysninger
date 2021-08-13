@@ -4,7 +4,9 @@ name: Review
 on:
   workflow_run:
     workflows: [ "Pull request" ]
-    types: [ completed ]
+    types:
+      - completed
+      - requested
 
 jobs:
   review:
