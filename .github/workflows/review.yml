@@ -26,14 +26,12 @@ jobs:
       - uses: reviewdog/action-setup@v1
 
       - name: Review ktlint
-        if: always() # Should be published regardless of failing unit-tests.
+        if: always()
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CI_PULL_REQUEST: ${{ github.event.workflow_run.pull_requests[0].number }}
           CI_COMMIT: ${{ github.event.workflow_run.head_sha }}
         run: |
-          ls Ktlint-results \
-          ls build \
           args=(
             -f=checkstyle               # SARIF not yet supported
             -diff="git diff"            #
