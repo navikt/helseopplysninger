@@ -3,7 +3,7 @@ name: Review
 
 on:
   workflow_run:
-    workflows: [ pull_request ]
+    workflows: [ "Pull request" ]
     types: [ completed ]
 
 jobs:
