@@ -33,7 +33,7 @@ jobs:
           chmod a+x ktlint
 
       - name: Run ktlint
-        run: ./ktlint --reporter=sarif,output=ktlint-report.sarif
+        run: ./ktlint --reporter=sarif,output=ktlint-report.sarif -v
 
       - name: Print ktlint result
         if: always()
