@@ -24,8 +24,6 @@ jobs:
           commit: ${{ github.event.workflow_run.head_sha }}
           files: "**/build/test-results/test/TEST-*.xml"
 
-      - uses: reviewdog/action-setup@v1
-
   review-lint:
     runs-on: ubuntu-latest
     name: Review linting
