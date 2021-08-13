@@ -30,18 +30,18 @@ jobs:
           chmod a+x ktlint
 
       - name: Run ktlint
-        run: ./ktlint --reporter=checkstyle,output=build/ktlint-results.checkstyle -v || true # when exit 1 on success
+        run: ./ktlint --reporter=checkstyle,output=build/ktlint-report-in-checkstyle-format.xml -v || true # when exit 1 on success
 
       - name: Print ktlint results
         if: always()
-        run: cat build/ktlint-results.checkstyle
+        run: cat build/ktlint-report-in-checkstyle-format.xml
 
       - name: Upload ktlint results artifact
         if: always()
         uses: actions/upload-artifact@v2
         with:
-          name: ktlint
-          path: build/ktlint-results.checkstyle
+          name: Ktlint-results
+          path: build/ktlint-report-in-checkstyle-format.xml
           retention-days: 5
 
   test-unit:
@@ -80,7 +80,7 @@ jobs:
         continue-on-error: true
 
       - name: Upload Unit Test Results
-        if: always()
+        if: always() # Publish the results, even if there are failing tests.
         uses: actions/upload-artifact@v2
         with:
           name: Test-results
@@ -88,6 +88,8 @@ jobs:
           retention-days: 5
 
       - name: Cleanup Gradle Cache
+        # Remove some files from the Gradle cache, so they aren't cached by GitHub Actions.
+        # Restoring these files from a GitHub Actions cache might cause problems for future builds.
         run: |
           rm -f ~/.gradle/caches/modules-2/modules-2.lock
           rm -f ~/.gradle/caches/modules-2/gc.properties
