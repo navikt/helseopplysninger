@@ -34,10 +34,12 @@ jobs:
         run: |
           ls Ktlint-results \
           ls build \
-          cat Ktlint-results/ktlint-report.xml | reviewdog \
-            -f=checkstyle \
-            -diff="git diff" \
-            -name=ktlint \
-            -reporter=github-pr-check \
-            -level="info" \
-            -filter-mode="nofilter"
+          args=(
+            -f=checkstyle               # SARIF not yet supported
+            -diff="git diff"            #
+            -name=ktlint                # tool name
+            -reporter=github-pr-review  # github-pr-review is the only one supporting code suggestions so far.
+            -level=error                # info, warning, error (default)
+            -filter-mode=nofilter       # nofilter is partially supported
+          )
+          cat Ktlint-results/ktlint-report.xml | reviewdog "${args[@]}"
