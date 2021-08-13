@@ -32,8 +32,11 @@ jobs:
           CI_PULL_REQUEST: ${{ github.event.workflow_run.pull_requests[0].number }}
           CI_COMMIT: ${{ github.event.workflow_run.head_sha }}
         run: |
+          ls Ktlint-results \
+          ls build \
           cat Ktlint-results/ktlint-report.xml | reviewdog \
             -f=checkstyle \
+            -diff="git diff" \
             -name=ktlint \
             -reporter=github-pr-check \
             -level="info" \
