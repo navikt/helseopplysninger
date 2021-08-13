@@ -4,7 +4,7 @@ name: Pull request
 on: [ pull_request ]
 
 jobs:
-  ktlint:
+  lint-ktlint:
     runs-on: ubuntu-latest
     name: Run ktlint
     steps:
@@ -47,7 +47,7 @@ jobs:
           path: ktlint-report.sarif
           retention-days: 5
 
-  unit:
+  test-unit:
     runs-on: ubuntu-latest
     name: Run unit tests
     env:
