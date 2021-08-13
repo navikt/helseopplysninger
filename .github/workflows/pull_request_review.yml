@@ -35,7 +35,8 @@ jobs:
           workflow: "Pull request"
           run_id: ${{ github.event.workflow_run.id }}
 
-      - name: Upload result
-        uses: github/codeql-action/upload-sarif@v1
-        with:
-          sarif_file: ktlint/ktlint-report.sarif
+      - name: Install reviewdog
+        uses: reviewdog/action-setup@v1
+
+      - name: Run reviewdog
+        run: echo "ktlint-report.xml" | reviewdog -f=checkstyle -reporter=github-pr-review
