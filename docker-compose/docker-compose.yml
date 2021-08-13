@@ -77,6 +77,12 @@ services:
     volumes:
       - fakestorage_volume:/data
 
+  filestoresetup:
+    image: byrnedo/alpine-curl
+    depends_on: [filestore]
+    restart: "no"
+    command: "--request POST 'http://filestore:4443/storage/v1/b?project=helseopplysingner-dev' --header 'Content-Type: application/json' --data-raw '{\"name\": \"hops\"}'"
+
   # PostgreSQL is the database used by EventStore.
   postgres:
     image: postgres
