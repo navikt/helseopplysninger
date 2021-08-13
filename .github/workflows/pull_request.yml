@@ -33,11 +33,9 @@ jobs:
           chmod a+x ktlint
 
       - name: Run ktlint
-        run: ./ktlint --reporter=checkstyle,output=build/ktlint-report.xml
-
-      - name: Print results
-        if: always()
-        run: cat build/ktlint-report.xml
+        run: |
+          ./ktlint --reporter=checkstyle,output=build/ktlint-report.xml
+          cat build/ktlint-report.xml
 
       - name: Upload results
         if: always()
