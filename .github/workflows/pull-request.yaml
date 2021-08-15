@@ -1,10 +1,11 @@
 name: Pull request
+
 on: pull_request
 
 jobs:
   linter-ktlint:
     runs-on: ubuntu-latest
-    name: Run ktlint linter
+    name: Linting (ktlint)
     steps:
       - uses: actions/checkout@v2
 
@@ -37,10 +38,12 @@ jobs:
         if: always()
         run: cat build/ktlint-report-in-checkstyle-format.xml
 
+      # Will be done in separate workflow when actor is dependabot
       - name: Install reviewdog
         if: github.actor != 'dependabot[bot]'
         uses: reviewdog/action-setup@v1
 
+      # Will be done in separate workflow when actor is dependabot
       - name: Update PR with ktlint results
         if: github.actor != 'dependabot[bot]'
         env:
@@ -51,21 +54,20 @@ jobs:
             -diff="git diff"
             -name=ktlint
             -reporter=github-pr-review  # only supported code suggester
-            -level=info                 # default: error
-            -filter-mode=nofilter       # nofilter is partially supported with github-pr-review
+            -filter-mode=nofilter       # partially supported by github-pr-review
           )
           cat build/ktlint-report-in-checkstyle-format.xml | reviewdog "${args[@]}"
 
-      - name: Upload artifact with ktlint results
+      - name: Upload artifact [ktlint-results] (dependabot)
         if: github.actor == 'dependabot[bot]'
         uses: actions/upload-artifact@v2
         with:
-          name: Ktlint-results
+          name: ktlint-results
           path: build/ktlint-report-in-checkstyle-format.xml
           retention-days: 5
 
   test-unit:
-    name: Run unit tests
+    name: Test (unit test)
     runs-on: ubuntu-latest
     env:
       GRADLE_OPTS: -Dorg.gradle.daemon=false
@@ -99,14 +101,15 @@ jobs:
       - run: ./gradlew test --continue
         continue-on-error: true
 
-      - name: Upload artifact with test results
+      - name: Upload artifact [unit-test-results] (dependabot)
         if: github.actor == 'dependabot[bot]'
         uses: actions/upload-artifact@v2
         with:
-          name: Test-results
+          name: unit-test-results
           path: '**/build/test-results/test/TEST-*.xml'
           retention-days: 5
 
+      # Will be done in separate workflow when actor is dependabot
       - name: Update PR with test results
         if: github.actor != 'dependabot[bot]'
         uses: EnricoMi/publish-unit-test-result-action@v1
