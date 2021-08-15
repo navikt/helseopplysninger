@@ -1,5 +1,3 @@
-[![reviewdog](https://github.com/navikt/helseopplysninger/workflows/reviewdog/badge.svg?branch=master&event=push)](https://github.com/navikt/helseopplysninger/actions?query=workflow%3Areviewdog+event%3Apush+branch%3Amaster)
-
 # 🚑 helseopplysninger
 Backend for forwarding and storing of health-related data
 
