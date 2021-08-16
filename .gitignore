@@ -1,6 +1,7 @@
 # Idea project files
 *.iml
 .idea/
+!.idea/codeStyles/
 .run
 
 # Gradle files
