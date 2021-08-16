@@ -1,79 +1,124 @@
-name: pull-request
-on:
-  pull_request:
-    branches: [main]
+name: Pull request
+
+on: pull_request
 
 jobs:
-  ktlint:
+  linter-ktlint:
     runs-on: ubuntu-latest
+    name: Linting (ktlint)
     steps:
       - uses: actions/checkout@v2
+
       - name: Get latest ktlint download-url
         id: ktlint-latest
-        # Reference: https://github.com/ScaCap/action-ktlint/blob/master/Dockerfile
         run: |
-          echo "::set-output name=DOWNLOAD_URL::$( \
-          curl -SSL https://api.github.com/repos/pinterest/ktlint/releases/latest \
-          | grep "browser_download_url.*ktlint\"" \
-          | cut -d : -f 2,3 \
-          | tr -d \" \
+          echo "::set-output name=KTLINT_URL::$( \
+            curl -SSL https://api.github.com/repos/pinterest/ktlint/releases/latest \
+            | jq .assets[0] | jq .browser_download_url -r \
           )"
-        shell: bash
-      - uses: actions/cache@v2.1.6
-        name: ktlint cache
+
+      - name: Cache ktlint
+        uses: actions/cache@v2
         id: ktlint-cache
         with:
           path: ktlint
-          key: ${{ runner.os }}-${{ steps.ktlint-latest.outputs.DOWNLOAD_URL }}
-      - name: Download newest ktlint
+          key: ${{ runner.os }}-${{ steps.ktlint-latest.outputs.KTLINT_URL }}
+
+      - name: Download ktlint
         if: steps.ktlint-cache.outputs.cache-hit != 'true'
         run: |
-          echo "https://github.com/pinterest/ktlint/releases/download/0.41.0/ktlint" | wget -qi -
+          echo ${{ steps.ktlint-latest.outputs.KTLINT_URL }} | wget -qi-
           chmod a+x ktlint
-      - name: run ktlint
+
+      - name: Run ktlint
+        continue-on-error: true
         run: ./ktlint --reporter=checkstyle,output=build/ktlint-report-in-checkstyle-format.xml
-      - name: print ktlint results
+
+      - name: Print ktlint results
         if: always()
         run: cat build/ktlint-report-in-checkstyle-format.xml
-      - name: Upload Ktlint Results
-        if: always()
+
+      - name: Install reviewdog
+        if: github.actor != 'dependabot[bot]' # requires write permission
+        uses: reviewdog/action-setup@v1
+
+      - name: Publish results (ktlint)
+        if: github.actor != 'dependabot[bot]' # requires write permission
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          args=(
+            -f=checkstyle
+            -diff="git diff"
+            -name=ktlint
+            -reporter=github-pr-review  # only supported code suggester
+            -filter-mode=nofilter       # partially supported by github-pr-review
+            -level=error                # if set to info, a lint error will end the job with exit code 1
+          )
+          cat build/ktlint-report-in-checkstyle-format.xml | reviewdog "${args[@]}"
+
+      # Dependabot will only be granted read access
+      # Therefore we will upload an artifact with the ktlint results
+      - name: Upload artifact [ktlint-results] (dependabot)
+        if: github.actor == 'dependabot[bot]'
         uses: actions/upload-artifact@v2
         with:
-          name: Ktlint-results
-          path: 'build/ktlint-report-in-checkstyle-format.xml'
+          name: ktlint-results
+          path: build/ktlint-report-in-checkstyle-format.xml
           retention-days: 5
-  run-tests:
+
+  test-unit:
+    name: Test (unit test)
     runs-on: ubuntu-latest
+    env:
+      GRADLE_OPTS: -Dorg.gradle.daemon=false
     steps:
-      - uses: actions/checkout@v2.3.4
-      # https://github.com/actions/cache/blob/main/examples.md#java---gradle
-      - uses: actions/cache@v2.1.6
+      - uses: actions/checkout@v2
+
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v2
         with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-caches-${{ hashFiles('**/*.gradle.kts') }}
+
+      - name: Cache Gradle wrapper
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}
+
       - uses: actions/setup-java@v2
         with:
           java-version: 16
           distribution: 'adopt'
+
       # Must login to gain access to docker.pkg.github.com/navikt/* images required by some integration-tests.
       - uses: docker/login-action@v1
         with:
           registry: docker.pkg.github.com
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
       - run: ./gradlew test --continue
         continue-on-error: true
-      - name: Upload Unit Test Results
-        if: always() # Publish the results, even if there are failing tests.
+
+      # Dependabot will only be granted read access
+      # Therefore we will upload an artifact with the unit test results
+      - name: Upload artifact [unit-test-results] (dependabot)
+        if: github.actor == 'dependabot[bot]'
         uses: actions/upload-artifact@v2
         with:
-          name: Test-results
+          name: unit-test-results
           path: '**/build/test-results/test/TEST-*.xml'
           retention-days: 5
+
+      - name: Publish results (unit test)
+        if: github.actor != 'dependabot[bot]' # requires write permission
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        with:
+          commit: ${{ github.event.workflow_run.head_sha }}
+          files: "**/build/test-results/test/TEST-*.xml"
+
       - name: Cleanup Gradle Cache
         # Remove some files from the Gradle cache, so they aren't cached by GitHub Actions.
         # Restoring these files from a GitHub Actions cache might cause problems for future builds.
