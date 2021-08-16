@@ -38,14 +38,12 @@ jobs:
         if: always()
         run: cat build/ktlint-report-in-checkstyle-format.xml
 
-      # Will be done in a separate workflow for dependabot
       - name: Install reviewdog
-        if: github.actor != 'dependabot[bot]'
+        if: github.actor != 'dependabot[bot]' # requires write permission
         uses: reviewdog/action-setup@v1
 
-      # Will be done in a separate workflow for dependabot
       - name: Publish results (ktlint)
-        if: github.actor != 'dependabot[bot]'
+        if: github.actor != 'dependabot[bot]' # requires write permission
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -55,9 +53,12 @@ jobs:
             -name=ktlint
             -reporter=github-pr-review  # only supported code suggester
             -filter-mode=nofilter       # partially supported by github-pr-review
+            -level=error                # if set to info, a lint error will end the job with exit code 1
           )
           cat build/ktlint-report-in-checkstyle-format.xml | reviewdog "${args[@]}"
 
+      # Dependabot will only be granted read access
+      # Therefore we will upload an artifact with the ktlint results
       - name: Upload artifact [ktlint-results] (dependabot)
         if: github.actor == 'dependabot[bot]'
         uses: actions/upload-artifact@v2
@@ -101,6 +102,8 @@ jobs:
       - run: ./gradlew test --continue
         continue-on-error: true
 
+      # Dependabot will only be granted read access
+      # Therefore we will upload an artifact with the unit test results
       - name: Upload artifact [unit-test-results] (dependabot)
         if: github.actor == 'dependabot[bot]'
         uses: actions/upload-artifact@v2
@@ -109,9 +112,8 @@ jobs:
           path: '**/build/test-results/test/TEST-*.xml'
           retention-days: 5
 
-      # Will be done in a separate workflow for dependabot
       - name: Publish results (unit test)
-        if: github.actor != 'dependabot[bot]'
+        if: github.actor != 'dependabot[bot]' # requires write permission
         uses: EnricoMi/publish-unit-test-result-action@v1
         with:
           commit: ${{ github.event.workflow_run.head_sha }}

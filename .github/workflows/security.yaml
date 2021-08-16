@@ -23,12 +23,13 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Run vulnerability scan
-        uses: snyk/actions/gradle-jdk14@master
+        uses: snyk/actions/gradle-jdk16@master
         continue-on-error: true # enable for SARIF to upload properly
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           args: --sarif-file-output=snyk.sarif --all-sub-projects --configuration-matching='^runtimeClasspath'
+          command: test monitor # Use both test (for GitHub security issues) and monitor (for snyk.com monitoring)
 
       - name: Upload result to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@v1
