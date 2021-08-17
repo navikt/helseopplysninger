@@ -49,3 +49,12 @@ spec:
   env:
     - name: LOG_APPENDER
       value: json
+    - name: FILESTORE_BUCKET_NAME
+      value: helse-hops-fileshare
+    - name: FILESTORE_REQUIRES_AUTH
+      value: true
+    - name: "http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token"
+  {{#each env}}
+    - name: {{@key}}
+      value: "{{this}}"
+  {{/each}}

@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     application
     kotlin("jvm")
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.5.21"
     id("com.github.johnrengelman.shadow")
     id("org.jlleitschuh.gradle.ktlint")
 }
@@ -27,6 +28,8 @@ dependencies {
     implementation("io.ktor:ktor-metrics-micrometer:$ktorVersion")
     implementation("io.ktor:ktor-webjars:$ktorVersion")
     implementation("io.ktor:ktor-auth:$ktorVersion")
+    implementation("io.ktor:ktor-client-auth:$ktorVersion")
+    implementation("io.ktor:ktor-client-serialization:$ktorVersion")
     implementation("no.nav.security:token-validation-ktor:1.3.8")
     implementation("io.micrometer:micrometer-registry-prometheus:1.7.3")
     implementation(project(":libs:hops-common-ktor"))

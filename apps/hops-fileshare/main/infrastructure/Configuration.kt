@@ -8,5 +8,7 @@ data class Configuration(
 
 data class FileStoreConfig(
     val baseUrl: URL,
-    val bucketName: String
+    val bucketName: String,
+    val requireAuth: Boolean,
+    val tokenFetchUrl: String
 )
