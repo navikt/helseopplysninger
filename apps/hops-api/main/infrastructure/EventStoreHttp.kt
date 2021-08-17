@@ -19,12 +19,17 @@ class EventStoreHttp(
     private val httpClient: HttpClient,
     private val config: Configuration.EventStore
 ) : EventStore {
-    override suspend fun search(downstreamUrl: URL, accept: ContentType, requestId: String) =
-        httpClient.get<HttpResponse>("${config.baseUrl}/fhir/4.0/Bundle?${downstreamUrl.query}") {
+    override suspend fun search(downstreamUrl: URL, accept: ContentType, requestId: String): HttpResponse {
+        val enrichedDownstreamUrl = when (downstreamUrl.query) {
+            null -> "${config.baseUrl}/fhir/4.0/Bundle"
+            else -> "${config.baseUrl}/fhir/4.0/Bundle?${downstreamUrl.query}"
+        }
+        return httpClient.get(enrichedDownstreamUrl) {
             expectSuccess = false
             accept(accept)
             headers { appendUpstreamHeaders(downstreamUrl, requestId) }
         }
+    }
 
     override suspend fun publish(
         downstreamUrl: URL,
