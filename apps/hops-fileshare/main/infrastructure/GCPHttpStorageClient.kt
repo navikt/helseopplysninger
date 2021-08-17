@@ -2,6 +2,7 @@ package infrastructure
 
 import domain.StorageClient
 import io.ktor.client.HttpClient
+import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
@@ -22,5 +23,9 @@ class GCPHttpStorageClient(
         }
 
         return fileName
+    }
+
+    override suspend fun download(fileName: String): HttpResponse {
+        return httpClient.get("${gcpConfig.baseUrl}/storage/v1/b/${gcpConfig.bucketName}/o/${fileName}?alt=media")
     }
 }
