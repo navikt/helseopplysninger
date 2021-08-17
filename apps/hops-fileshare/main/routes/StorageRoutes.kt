@@ -2,6 +2,7 @@ package routes
 
 import domain.StorageClient
 import io.ktor.application.call
+import io.ktor.auth.authenticate
 import io.ktor.features.origin
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
@@ -16,7 +17,7 @@ import io.ktor.utils.io.copyAndClose
 import no.nav.helse.hops.routing.fullUrl
 
 fun Routing.storageRoutes(storageClient: StorageClient) {
-//    authenticate {
+    authenticate {
         route("files") {
             post {
                 val fileName = storageClient.save(call.request.receiveChannel(), call.request.contentType())
@@ -35,5 +36,5 @@ fun Routing.storageRoutes(storageClient: StorageClient) {
                 }
             }
         }
-//    }
+    }
 }
