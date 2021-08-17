@@ -26,6 +26,6 @@ class GCPHttpStorageClient(
     }
 
     override suspend fun download(fileName: String): HttpResponse {
-        return httpClient.get("${gcpConfig.baseUrl}/storage/v1/b/${gcpConfig.bucketName}/o/${fileName}?alt=media")
+        return httpClient.get("${gcpConfig.baseUrl}/storage/v1/b/${gcpConfig.bucketName}/o/$fileName?alt=media")
     }
 }

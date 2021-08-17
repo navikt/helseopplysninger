@@ -36,7 +36,7 @@ class GCPHttpTransport(private val gcsConfig: FileStoreConfig) {
         }
     }
 
-    private suspend fun fetchToken(httpClient: HttpClient) : BearerTokens {
+    private suspend fun fetchToken(httpClient: HttpClient): BearerTokens {
         /*
         Vi får token av metadata server som kjøres sammen med poden, den token er knyttet til
         workload identity:
@@ -54,7 +54,6 @@ class GCPHttpTransport(private val gcsConfig: FileStoreConfig) {
         )
     }
 }
-
 
 @Serializable
 data class TokenInfo(
