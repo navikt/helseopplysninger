@@ -45,4 +45,3 @@ dependencies {
 kotlin.sourceSets["main"].kotlin.srcDirs("main")
 kotlin.sourceSets["test"].kotlin.srcDirs("test")
 sourceSets["main"].resources.srcDir(".config")
-sourceSets["test"].resources.srcDir("test/config")

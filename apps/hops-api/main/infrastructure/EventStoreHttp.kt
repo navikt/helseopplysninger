@@ -20,11 +20,11 @@ class EventStoreHttp(
     private val config: Configuration.EventStore
 ) : EventStore {
     override suspend fun search(downstreamUrl: URL, accept: ContentType, requestId: String): HttpResponse {
-        val enrichedDownstreamUrl = when (downstreamUrl.query) {
+        val reroutedDownstreamUrl = when (downstreamUrl.query) {
             null -> "${config.baseUrl}/fhir/4.0/Bundle"
             else -> "${config.baseUrl}/fhir/4.0/Bundle?${downstreamUrl.query}"
         }
-        return httpClient.get(enrichedDownstreamUrl) {
+        return httpClient.get(reroutedDownstreamUrl) {
             expectSuccess = false
             accept(accept)
             headers { appendUpstreamHeaders(downstreamUrl, requestId) }
