@@ -8,7 +8,7 @@ import io.ktor.server.testing.withTestApplication
 import no.nav.security.mock.oauth2.MockOAuth2Server
 import org.koin.core.module.Module
 
-internal val oAuthMock = MockOAuth2Server()
+val oAuthMock = MockOAuth2Server()
 internal fun startOAuth() = with(oAuthMock, MockOAuth2Server::start)
 internal fun stopOAuth() = with(oAuthMock, MockOAuth2Server::shutdown)
 
@@ -27,7 +27,7 @@ internal fun Application.doConfig(
     }
 }
 
-internal fun <R> withHopsTestApplication(testKoinModule: Module = Module(), test: TestApplicationEngine.() -> R): R {
+fun <R> withHopsTestApplication(testKoinModule: Module = Module(), test: TestApplicationEngine.() -> R): R {
     return withTestApplication({
         doConfig(oAuthMock)
         module(testKoinModule)
