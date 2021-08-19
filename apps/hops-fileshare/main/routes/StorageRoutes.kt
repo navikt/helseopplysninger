@@ -4,6 +4,7 @@ import domain.StorageClient
 import io.ktor.application.call
 import io.ktor.auth.authenticate
 import io.ktor.features.origin
+import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import io.ktor.request.contentType
@@ -23,7 +24,7 @@ fun Routing.storageRoutes(storageClient: StorageClient) {
                 val fileName = storageClient.save(call.request.receiveChannel(), call.request.contentType())
 
                 val fileUrl = "${call.request.origin.fullUrl()}/$fileName"
-                call.response.headers.append("Location", fileUrl)
+                call.response.headers.append(HttpHeaders.Location, fileUrl)
                 call.respond(HttpStatusCode.Created)
             }
 
