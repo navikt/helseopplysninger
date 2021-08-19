@@ -9,7 +9,7 @@ import io.ktor.config.ApplicationConfigurationException
 import io.ktor.config.MapApplicationConfig
 import no.nav.security.mock.oauth2.MockOAuth2Server
 
-internal class AuthConfiguratorKtTest : StringSpec({
+internal class AuthConfiguratorTest : StringSpec({
     "naviktTokenSupport fail without properties" {
         oAuthProperties.map { (key, _) -> key }.forAll { oAuthProp ->
             val thrown = shouldThrow<ApplicationConfigurationException> {
