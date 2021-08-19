@@ -4,7 +4,6 @@ import io.kotest.matchers.shouldBe
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.testing.handleRequest
-import no.nav.helse.hops.test.oAuthMock
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 

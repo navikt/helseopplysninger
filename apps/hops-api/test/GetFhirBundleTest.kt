@@ -5,7 +5,6 @@ import io.ktor.http.HttpMethod.Companion.Get
 import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.http.HttpStatusCode.Companion.Unauthorized
 import io.ktor.server.testing.handleRequest
-import no.nav.helse.hops.test.oAuthMock
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 

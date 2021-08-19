@@ -5,7 +5,6 @@ plugins {
     kotlin("jvm")
     id("com.github.johnrengelman.shadow")
     id("org.jlleitschuh.gradle.ktlint")
-    id("io.kotest")
 }
 
 application {
