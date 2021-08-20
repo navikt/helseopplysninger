@@ -21,11 +21,11 @@ internal fun Application.config(oauth: MockOAuth2Server) = (environment.config a
     put("security.scopes.subscribe", "/test-subscribe")
 }
 
-internal fun <R> withHopsTestApplication(koinModule: Module = Module(), test: TestApplicationEngine.() -> R): R =
+internal fun <R> withHopsTestApplication(test: TestApplicationEngine.() -> R): R =
     withTestApplication(
         {
             config(oAuthMock)
-            module(koinModule)
+            mainWith(eventStoreMock())
         },
         test = test
     )

@@ -1,15 +1,11 @@
 package routes
 
-import createEventStoreMockClient
-import infrastructure.EVENT_STORE_CLIENT_NAME
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.testing.handleRequest
 import oAuthMock
-import org.koin.core.qualifier.named
-import org.koin.dsl.module
 import withHopsTestApplication
 
 internal class FhirRoutesPostTest : FeatureSpec({
@@ -49,8 +45,7 @@ internal class FhirRoutesPostTest : FeatureSpec({
         }
 
         scenario("with valid tokens and correct claims should return 200") {
-            val eventStoreModule = module { single(named(EVENT_STORE_CLIENT_NAME)) { createEventStoreMockClient() } }
-            withHopsTestApplication(eventStoreModule) {
+            withHopsTestApplication {
                 with(
                     handleRequest(HttpMethod.Post, "/fhir/4.0/\$process-message") {
                         val token = oAuthMock.issueToken(claims = mapOf("scope" to "/test-publish"))
