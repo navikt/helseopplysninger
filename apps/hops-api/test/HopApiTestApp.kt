@@ -12,29 +12,23 @@ val oAuthMock = MockOAuth2Server()
 internal fun startOAuth() = with(oAuthMock, MockOAuth2Server::start)
 internal fun stopOAuth() = with(oAuthMock, MockOAuth2Server::shutdown)
 
-internal fun Application.doConfig(
-    oauth: MockOAuth2Server,
-    acceptedIssuer: String = "default",
-    acceptedAudience: String = "default"
-) {
-    (environment.config as MapApplicationConfig).apply {
-        put("no.nav.security.jwt.issuers.size", "1")
-        put("no.nav.security.jwt.issuers.0.issuer_name", acceptedIssuer)
-        put("no.nav.security.jwt.issuers.0.discoveryurl", "${oauth.wellKnownUrl(acceptedIssuer)}")
-        put("no.nav.security.jwt.issuers.0.accepted_audience", acceptedAudience)
-        put("security.scopes.publish", "/test-publish")
-        put("security.scopes.subscribe", "/test-subscribe")
-    }
+internal fun Application.config(oauth: MockOAuth2Server) = (environment.config as MapApplicationConfig).apply {
+    put("no.nav.security.jwt.issuers.size", "1")
+    put("no.nav.security.jwt.issuers.0.issuer_name", "default")
+    put("no.nav.security.jwt.issuers.0.discoveryurl", "${oauth.wellKnownUrl("default")}")
+    put("no.nav.security.jwt.issuers.0.accepted_audience", "default")
+    put("security.scopes.publish", "/test-publish")
+    put("security.scopes.subscribe", "/test-subscribe")
 }
 
-fun <R> withHopsTestApplication(testKoinModule: Module = Module(), test: TestApplicationEngine.() -> R): R {
-    return withTestApplication({
-        doConfig(oAuthMock)
-        module(testKoinModule)
-    }) {
-        test()
-    }
-}
+internal fun <R> withHopsTestApplication(koinModule: Module = Module(), test: TestApplicationEngine.() -> R): R =
+    withTestApplication(
+        {
+            config(oAuthMock)
+            module(koinModule)
+        },
+        test = test
+    )
 
 internal class KotestSetup() : AbstractProjectConfig() {
     override fun listeners(): List<Listener> = super.listeners() + KotestListener()

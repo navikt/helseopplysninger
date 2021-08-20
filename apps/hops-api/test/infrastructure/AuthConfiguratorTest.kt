@@ -14,7 +14,7 @@ internal class AuthConfiguratorTest : StringSpec({
         oAuthProperties.map { (key, _) -> key }.forAll { oAuthProp ->
             val thrown = shouldThrow<ApplicationConfigurationException> {
                 Authentication().configure {
-                    useNaviktTokenSupport(appConfig(oAuthProp))
+                    useNaviktTokenSupport(appConfig(excludeProperty = oAuthProp))
                 }
             }
 
@@ -41,8 +41,8 @@ val oAuthProperties = listOf(
     "no.nav.security.jwt.issuers.0.accepted_audience" to "test-audience",
 )
 
-internal fun appConfig(vararg excludedProps: String) = MapApplicationConfig(
+internal fun appConfig(excludeProperty: String = "") = MapApplicationConfig(
     *oAuthProperties
-        .filterNot { (key, _) -> excludedProps.contains(key) }
+        .filterNot { (key, _) -> excludeProperty == key }
         .toTypedArray()
 )
