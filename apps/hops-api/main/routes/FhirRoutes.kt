@@ -21,12 +21,9 @@ import io.ktor.routing.post
 import io.ktor.routing.route
 import io.ktor.utils.io.copyAndClose
 import no.nav.helse.hops.routing.fullUrl
-import org.koin.ktor.ext.inject
 
-fun Routing.fhirRoutes() {
+fun Routing.fhirRoutes(eventStore: EventStore) {
     route("fhir/4.0") {
-        val eventStore: EventStore by inject()
-
         authenticate(Constants.SUBSCRIBE) {
             get("/Bundle") {
                 val response = eventStore.search(

@@ -7,7 +7,7 @@ import io.ktor.http.headersOf
 import io.ktor.http.withCharset
 import no.nav.helse.hops.convert.ContentTypes
 
-fun createEventStoreMockClient() =
+fun eventStoreMock() =
     HttpClient(MockEngine) {
         engine {
             addHandler { request ->

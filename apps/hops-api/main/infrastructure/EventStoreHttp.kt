@@ -17,7 +17,7 @@ import java.net.URL
 
 class EventStoreHttp(
     private val httpClient: HttpClient,
-    private val config: Configuration.EventStore
+    private val config: HopsApiConfig.EventStore
 ) : EventStore {
     override suspend fun search(downstreamUrl: URL, accept: ContentType, requestId: String) =
         httpClient.get<HttpResponse>("${config.baseUrl}/fhir/4.0/Bundle?${downstreamUrl.query}") {

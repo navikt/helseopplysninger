@@ -2,8 +2,7 @@ package infrastructure
 
 import java.net.URL
 
-/** Container for typesafe configuration classes. **/
-object Configuration {
+data class HopsApiConfig(val eventStore: EventStore) {
     data class EventStore(
         val baseUrl: URL,
         val discoveryUrl: URL,

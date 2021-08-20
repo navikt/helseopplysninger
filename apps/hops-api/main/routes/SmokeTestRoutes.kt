@@ -10,13 +10,10 @@ import io.ktor.routing.Routing
 import io.ktor.routing.get
 import io.ktor.routing.route
 import no.nav.helse.hops.convert.ContentTypes
-import org.koin.ktor.ext.inject
 import java.net.URL
 
-fun Routing.smokeTestRoutes() {
+fun Routing.smokeTestRoutes(eventStore: EventStore) {
     route("/smokeTests") {
-        val eventStore by inject<EventStore>()
-
         get("/eventStore") {
             try {
                 val response = eventStore.search(
