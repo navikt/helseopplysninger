@@ -19,31 +19,32 @@ class EventStoreHttp(
     private val httpClient: HttpClient,
     private val config: Configuration.EventStore
 ) : EventStore {
-    override suspend fun search(downstreamUrl: URL, accept: ContentType, requestId: String): HttpResponse {
-        val reroutedDownstreamUrl = when (downstreamUrl.query) {
-            null -> "${config.baseUrl}/fhir/4.0/Bundle"
-            else -> "${config.baseUrl}/fhir/4.0/Bundle?${downstreamUrl.query}"
-        }
-        return httpClient.get(reroutedDownstreamUrl) {
+    override suspend fun search(
+        downstreamUrl: URL,
+        accept: ContentType,
+        requestId: String
+    ): HttpResponse =
+        httpClient.get("${config.baseUrl}/fhir/4.0/Bundle" + ifNotNull(downstreamUrl.query) { "?$it" }) {
             expectSuccess = false
             accept(accept)
             headers { appendUpstreamHeaders(downstreamUrl, requestId) }
         }
-    }
 
     override suspend fun publish(
         downstreamUrl: URL,
         body: ByteReadChannel,
         contentType: ContentType,
         requestId: String
-    ) =
-        httpClient.post<HttpResponse>("${config.baseUrl}/fhir/4.0/\$process-message") {
+    ): HttpResponse =
+        httpClient.post("${config.baseUrl}/fhir/4.0/\$process-message") {
             this.body = body
             expectSuccess = false
             contentType(contentType)
             headers { appendUpstreamHeaders(downstreamUrl, requestId) }
         }
 }
+
+private inline fun <T> ifNotNull(src: T?, transform: (T) -> String) = src?.let(transform) ?: ""
 
 private fun HeadersBuilder.appendUpstreamHeaders(downstreamUrl: URL, requestId: String) {
     append(HttpHeaders.XRequestId, requestId)
