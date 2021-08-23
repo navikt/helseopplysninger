@@ -19,7 +19,7 @@ import routes.smokeTestRoutes
 import routes.swaggerRoutes
 
 @Suppress("unused") // Referenced in application.conf
-fun Application.module() {
+fun Application.main() {
     val prometheusMeterRegistry = PrometheusMeterRegistry(DEFAULT)
 
     install(Webjars)

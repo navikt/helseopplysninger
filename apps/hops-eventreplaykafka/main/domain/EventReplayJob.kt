@@ -17,9 +17,9 @@ import java.io.Closeable
 import kotlin.coroutines.CoroutineContext
 
 class EventReplayJob(
-    private val messageBus: FhirMessageBus,
-    private val log: Logger,
-    private val eventStore: EventStore,
+    messageBus: FhirMessageBus,
+    log: Logger,
+    eventStore: EventStore,
     context: CoroutineContext = Dispatchers.Default
 ) : Closeable {
     private val job = CoroutineScope(context).launch {

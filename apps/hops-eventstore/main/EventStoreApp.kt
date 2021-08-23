@@ -26,7 +26,7 @@ import routes.naisRoutes
 import routes.swaggerRoutes
 
 @Suppress("unused") // Referenced in application.conf
-fun Application.module() {
+fun Application.main() {
     val meterRegistry = PrometheusMeterRegistry(DEFAULT)
 
     install(Authentication) { tokenValidationSupport(config = environment.config) }

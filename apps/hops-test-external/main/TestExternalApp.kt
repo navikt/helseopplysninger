@@ -12,7 +12,7 @@ import routes.smokeTestRoutes
 import routes.swaggerRoutes
 
 @Suppress("unused") // Referenced in application.conf
-fun Application.module() {
+fun Application.main() {
     install(CallLogging)
     install(Webjars)
 
