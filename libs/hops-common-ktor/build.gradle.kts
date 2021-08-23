@@ -24,7 +24,7 @@ dependencies {
     api("io.insert-koin:koin-logger-slf4j:$koinVersion")
     api("io.ktor:ktor-client-auth:$ktorVersion")
     api(project(":libs:hops-common-core"))
-    implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:5.4.2")
+    implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:5.5.0")
     implementation("com.sksamuel.hoplite:hoplite-hocon:1.4.7")
     testImplementation("io.kotest:kotest-assertions-shared:4.6.1")
     testImplementation("io.ktor:ktor-server-netty:$ktorVersion")
