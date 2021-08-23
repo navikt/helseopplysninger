@@ -1,15 +1,19 @@
-import infrastructure.KoinBootstrapper
+import domain.EventSinkJob
+import infrastructure.EventSinkConfig
+import infrastructure.EventStoreHttp
+import infrastructure.FhirMessageBusKafka
+import infrastructure.HttpClientFactory
+import infrastructure.KafkaFactory
 import io.ktor.application.Application
 import io.ktor.application.install
+import io.ktor.application.log
 import io.ktor.features.CallLogging
 import io.ktor.metrics.micrometer.MicrometerMetrics
 import io.ktor.routing.routing
 import io.ktor.webjars.Webjars
 import io.micrometer.prometheus.PrometheusConfig.DEFAULT
 import io.micrometer.prometheus.PrometheusMeterRegistry
-import no.nav.helse.hops.hoplite.asHoplitePropertySourceModule
-import org.koin.ktor.ext.Koin
-import org.koin.logger.slf4jLogger
+import no.nav.helse.hops.hoplite.loadConfigsOrThrow
 import routes.naisRoutes
 import routes.smokeTestRoutes
 import routes.swaggerRoutes
@@ -21,14 +25,15 @@ fun Application.module() {
     install(Webjars)
     install(CallLogging)
     install(MicrometerMetrics) { registry = prometheusMeterRegistry }
-    install(Koin) {
-        slf4jLogger()
-        modules(KoinBootstrapper.module, environment.config.asHoplitePropertySourceModule())
-    }
+
+    val config = loadConfigsOrThrow<EventSinkConfig>()
+    val fhirStore = EventStoreHttp(config.eventStore, HttpClientFactory.create(config.eventStore))
+    val kafkaConsumer = FhirMessageBusKafka(KafkaFactory.createFhirConsumer(config.kafka), config.kafka)
+    val fhirSink = EventSinkJob(kafkaConsumer, log, fhirStore)
 
     routing {
-        naisRoutes(prometheusMeterRegistry)
-        smokeTestRoutes()
+        naisRoutes(fhirSink, prometheusMeterRegistry)
+        smokeTestRoutes(fhirStore)
         swaggerRoutes()
     }
 }

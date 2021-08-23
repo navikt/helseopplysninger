@@ -2,8 +2,7 @@ package infrastructure
 
 import java.net.URL
 
-/** Container for typesafe configuration classes. **/
-object Configuration {
+data class EventReplayKafkaConfig(val kafka: Kafka, val eventStore: EventStore) {
     data class Kafka(
         val brokers: String,
         val groupId: String,

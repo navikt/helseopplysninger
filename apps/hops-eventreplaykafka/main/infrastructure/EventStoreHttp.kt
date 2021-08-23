@@ -22,7 +22,7 @@ import org.hl7.fhir.r4.model.Bundle
 import java.util.UUID
 
 class EventStoreHttp(
-    private val config: Configuration.EventStore,
+    private val config: EventReplayKafkaConfig.EventStore,
     private val client: HttpClient
 ) : EventStore {
     override fun search(startingOffset: Long): Flow<FhirMessage> =

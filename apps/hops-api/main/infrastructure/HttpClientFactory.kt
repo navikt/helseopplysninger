@@ -6,7 +6,7 @@ import no.nav.helse.hops.security.OAuth2Provider
 import no.nav.helse.hops.security.oauth.OAuth2ClientFactory
 
 object HttpClientFactory {
-    fun create(config: HopsApiConfig.EventStore) =
+    fun create(config: ApiConfig.EventStore) =
         HttpClient {
             install(Auth) {
                 val oauth2Client = OAuth2ClientFactory.create(

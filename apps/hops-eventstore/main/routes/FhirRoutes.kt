@@ -19,13 +19,12 @@ import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.MessageHeader
 import org.hl7.fhir.r4.model.StringType
 import org.hl7.fhir.r4.model.UrlType
-import org.koin.ktor.ext.inject
 import java.net.URI
 
-fun Routing.fhirRoutes() {
-    val searchService: FhirMessageSearchService by inject()
-    val processService: FhirMessageProcessService by inject()
-
+fun Routing.fhirRoutes(
+    searchService: FhirMessageSearchService,
+    processService: FhirMessageProcessService,
+) {
     authenticate {
         route("fhir/4.0") {
             get("/Bundle") {

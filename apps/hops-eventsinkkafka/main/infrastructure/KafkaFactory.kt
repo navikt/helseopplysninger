@@ -7,34 +7,31 @@ import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.common.config.SslConfigs
 import org.apache.kafka.common.serialization.ByteArrayDeserializer
 import org.apache.kafka.common.serialization.VoidDeserializer
-import java.util.Properties
 
 object KafkaFactory {
-    fun createFhirConsumer(config: Configuration.Kafka): Consumer<Unit, String> {
-        val props = createCommonGcpKafkaProperties(config).also {
-            it[ConsumerConfig.GROUP_ID_CONFIG] = config.groupId
-            it[ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG] = VoidDeserializer::class.java
-            it[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = ByteArrayDeserializer::class.java
+    fun createFhirConsumer(config: EventSinkConfig.Kafka): Consumer<Unit, ByteArray> =
+        when (config.security) {
+            true -> KafkaConsumer(consumerConfig(config) + sslConfig(config))
+            false -> KafkaConsumer(consumerConfig(config))
         }
-        return KafkaConsumer(props)
-    }
 
-    private fun createCommonGcpKafkaProperties(config: Configuration.Kafka): Properties {
-        return Properties().also {
-            it[CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG] = config.brokers
-            it[CommonClientConfigs.CLIENT_ID_CONFIG] = config.clientId
+    private fun consumerConfig(config: EventSinkConfig.Kafka) = mapOf(
+        ConsumerConfig.GROUP_ID_CONFIG to config.groupId,
+        ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG to VoidDeserializer::class.java,
+        ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG to ByteArrayDeserializer::class.java,
+        CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG to config.brokers,
+        CommonClientConfigs.CLIENT_ID_CONFIG to config.clientId,
+    )
 
-            if (config.security) {
-                it[CommonClientConfigs.SECURITY_PROTOCOL_CONFIG] = "SSL"
-                it[SslConfigs.SSL_TRUSTSTORE_TYPE_CONFIG] = "JKS"
-                it[SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG] = config.truststorePath
-                it[SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG] = config.credstorePsw
-                it[SslConfigs.SSL_KEYSTORE_TYPE_CONFIG] = "PKCS12"
-                it[SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG] = config.keystorePath
-                it[SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG] = config.credstorePsw
-                it[SslConfigs.SSL_KEY_PASSWORD_CONFIG] = config.credstorePsw
-                it[SslConfigs.SSL_ENDPOINT_IDENTIFICATION_ALGORITHM_CONFIG] = ""
-            }
-        }
-    }
+    private fun sslConfig(config: EventSinkConfig.Kafka) = mapOf(
+        CommonClientConfigs.SECURITY_PROTOCOL_CONFIG to "SSL",
+        SslConfigs.SSL_TRUSTSTORE_TYPE_CONFIG to "JKS",
+        SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG to config.truststorePath,
+        SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG to config.credstorePsw,
+        SslConfigs.SSL_KEYSTORE_TYPE_CONFIG to "PKCS12",
+        SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG to config.keystorePath,
+        SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG to config.credstorePsw,
+        SslConfigs.SSL_KEY_PASSWORD_CONFIG to config.credstorePsw,
+        SslConfigs.SSL_ENDPOINT_IDENTIFICATION_ALGORITHM_CONFIG to "",
+    )
 }

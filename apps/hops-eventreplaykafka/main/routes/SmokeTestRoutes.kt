@@ -10,12 +10,9 @@ import io.ktor.routing.get
 import io.ktor.routing.route
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
-import org.koin.ktor.ext.inject
 
-fun Routing.smokeTestRoutes() {
+fun Routing.smokeTestRoutes(eventStore: EventStore) {
     route("/smokeTests") {
-        val eventStore by inject<EventStore>()
-
         get("/eventStore") {
             try {
                 eventStore.search(0).take(1).toList()

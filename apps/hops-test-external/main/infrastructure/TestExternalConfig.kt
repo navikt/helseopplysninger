@@ -2,8 +2,7 @@ package infrastructure
 
 import java.net.URL
 
-/** Container for typesafe configuration classes. **/
-object Configuration {
+data class TestExternalConfig(val externalApi: ExternalApi) {
     data class ExternalApi(
         val baseUrl: URL,
         val discoveryUrl: URL,

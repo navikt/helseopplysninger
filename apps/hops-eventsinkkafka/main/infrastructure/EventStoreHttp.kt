@@ -12,7 +12,7 @@ import no.nav.helse.hops.convert.ContentTypes
 import java.util.UUID
 
 class EventStoreHttp(
-    private val config: Configuration.EventStore,
+    private val config: EventSinkConfig.EventStore,
     private val client: HttpClient
 ) : EventStore {
     override suspend fun add(event: FhirMessage) =

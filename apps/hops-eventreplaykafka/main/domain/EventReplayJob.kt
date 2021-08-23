@@ -17,21 +17,21 @@ import java.io.Closeable
 import kotlin.coroutines.CoroutineContext
 
 class EventReplayJob(
-    messageBus: FhirMessageBus,
-    logger: Logger,
-    eventStore: EventStore,
+    private val messageBus: FhirMessageBus,
+    private val log: Logger,
+    private val eventStore: EventStore,
     context: CoroutineContext = Dispatchers.Default
 ) : Closeable {
     private val job = CoroutineScope(context).launch {
         while (isActive) {
-            try {
+            runCatching {
                 val startingOffset = messageBus.sourceOffsetOfLatestMessage()
-                eventStore.poll(startingOffset).collect { messageBus.publish(it) }
+                eventStore.poll(startingOffset).collect(messageBus::publish)
                 isRunning = true
-            } catch (ex: Throwable) {
+            }.onFailure {
                 isRunning = false
-                if (ex is CancellationException) throw ex
-                logger.error("Error while publishing to message bus.", ex)
+                if (it is CancellationException) throw it
+                log.error("Error while publishing to message bus.", it)
                 delay(5000)
             }
         }
@@ -41,11 +41,7 @@ class EventReplayJob(
     var isRunning = true
         private set
 
-    override fun close() {
-        runBlocking {
-            job.cancelAndJoin()
-        }
-    }
+    override fun close() = runBlocking { job.cancelAndJoin() }
 }
 
 private fun EventStore.poll(startingOffset: Long) =

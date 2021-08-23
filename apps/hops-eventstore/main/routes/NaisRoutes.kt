@@ -8,11 +8,11 @@ import io.ktor.response.respondText
 import io.ktor.routing.Routing
 import io.ktor.routing.get
 import io.micrometer.prometheus.PrometheusMeterRegistry
-import org.koin.ktor.ext.inject
 
-fun Routing.naisRoutes(prometheusMeterRegistry: PrometheusMeterRegistry) {
-    val searchService: FhirMessageSearchService by inject()
-
+fun Routing.naisRoutes(
+    searchService: FhirMessageSearchService,
+    meterRegistry: PrometheusMeterRegistry,
+) {
     get("/isReady") {
         try {
             searchService.search(0, 0)
@@ -26,6 +26,6 @@ fun Routing.naisRoutes(prometheusMeterRegistry: PrometheusMeterRegistry) {
         call.respondText("EventStore")
     }
     get("/prometheus") {
-        call.respond(prometheusMeterRegistry.scrape())
+        call.respond(meterRegistry.scrape())
     }
 }

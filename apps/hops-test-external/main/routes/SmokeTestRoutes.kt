@@ -8,12 +8,9 @@ import io.ktor.response.respondText
 import io.ktor.routing.Routing
 import io.ktor.routing.get
 import io.ktor.routing.route
-import org.koin.ktor.ext.inject
 
-fun Routing.smokeTestRoutes() {
+fun Routing.smokeTestRoutes(externalApi: ExternalApiFacade) {
     route("/smokeTests") {
-        val externalApi by inject<ExternalApiFacade>()
-
         get("/external-api") {
             try {
                 externalApi.get()

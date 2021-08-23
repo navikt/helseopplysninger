@@ -1,5 +1,5 @@
+import infrastructure.ApiConfig
 import infrastructure.EventStoreHttp
-import infrastructure.HopsApiConfig
 import infrastructure.HttpClientFactory
 import infrastructure.useNaviktTokenSupport
 import io.ktor.application.Application
@@ -25,8 +25,9 @@ import routes.naisRoutes
 import routes.smokeTestRoutes
 import routes.swaggerRoutes
 
+@Suppress("unused") // Referenced in application.conf
 fun Application.main() {
-    val hopsApiConfig = loadConfigsOrThrow<HopsApiConfig>()
+    val hopsApiConfig = loadConfigsOrThrow<ApiConfig>()
     val httpClient = HttpClientFactory.create(hopsApiConfig.eventStore)
     val eventStoreClient = EventStoreHttp(httpClient, hopsApiConfig.eventStore)
 

@@ -12,7 +12,7 @@ import java.time.Duration
 
 class FhirMessageBusKafka(
     private val consumer: Consumer<Unit, ByteArray>,
-    private val config: Configuration.Kafka,
+    private val config: EventSinkConfig.Kafka,
 ) : FhirMessageBus {
     override fun poll(): Flow<FhirMessage> =
         flow {

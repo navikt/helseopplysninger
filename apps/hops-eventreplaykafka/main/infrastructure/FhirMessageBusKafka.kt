@@ -23,7 +23,7 @@ import kotlin.math.max
 class FhirMessageBusKafka(
     private val producer: Producer<UUID, ByteArray>,
     private val consumer: Consumer<UUID, ByteArray>,
-    private val config: Configuration.Kafka,
+    private val config: EventReplayKafkaConfig.Kafka,
 ) : FhirMessageBus {
     override suspend fun publish(message: FhirMessage) {
         suspendCoroutine<RecordMetadata> { continuation ->

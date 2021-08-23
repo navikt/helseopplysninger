@@ -11,7 +11,7 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.auth.HttpAuthHeader
 
 object HttpClientFactory {
-    fun create(config: Configuration.ExternalApi) =
+    fun create(config: TestExternalConfig.ExternalApi) =
         HttpClient {
             install(Auth) {
                 val maskinportenConfig = MaskinportenConfig(

@@ -16,7 +16,7 @@ import java.util.Properties
 import java.util.UUID
 
 object KafkaFactory {
-    fun createFhirProducer(config: Configuration.Kafka): Producer<UUID, ByteArray> {
+    fun createFhirProducer(config: EventReplayKafkaConfig.Kafka): Producer<UUID, ByteArray> {
         val props = createCommonGcpKafkaProperties(config).also {
             it[ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG] = UUIDSerializer::class.java
             it[ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG] = ByteArraySerializer::class.java
@@ -26,7 +26,7 @@ object KafkaFactory {
         return KafkaProducer(props)
     }
 
-    fun createFhirConsumer(config: Configuration.Kafka): Consumer<UUID, ByteArray> {
+    fun createFhirConsumer(config: EventReplayKafkaConfig.Kafka): Consumer<UUID, ByteArray> {
         val props = createCommonGcpKafkaProperties(config).also {
             it[ConsumerConfig.GROUP_ID_CONFIG] = config.groupId
             it[ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG] = UUIDDeserializer::class.java
@@ -35,7 +35,7 @@ object KafkaFactory {
         return KafkaConsumer(props)
     }
 
-    private fun createCommonGcpKafkaProperties(config: Configuration.Kafka): Properties {
+    private fun createCommonGcpKafkaProperties(config: EventReplayKafkaConfig.Kafka): Properties {
         return Properties().also {
             it[CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG] = config.brokers
             it[CommonClientConfigs.CLIENT_ID_CONFIG] = config.clientId

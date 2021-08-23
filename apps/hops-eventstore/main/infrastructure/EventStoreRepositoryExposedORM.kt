@@ -18,12 +18,7 @@ import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.statements.InsertStatement
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 
-class EventStoreRepositoryExposedORM(config: Config) : EventStoreRepository {
-    data class Config(
-        val url: String,
-        val username: String = "",
-        val password: String = ""
-    )
+class EventStoreRepositoryExposedORM(config: EventStoreConfig.Database) : EventStoreRepository {
 
     private val database =
         Database.connect(url = config.url, user = config.username, password = config.password)
