@@ -64,8 +64,26 @@ services:
       context: ..
       args:
         project: hops-fileshare
+    depends_on: [gcs-mock-filestore]
+    environment:
+      HOPS_FILESTORAGE_BASE_URL: http://gcs-mock-filestore:4443
     restart: on-failure
     ports: [ 8086:8080 ]
+
+  # Mock implementation of the GCS server
+  gcs-mock-filestore:
+    image: fsouza/fake-gcs-server
+    ports: [ 4443:4443 ]
+    command: "-scheme http"
+    volumes:
+      - fakestorage_volume:/data
+
+  # This container creates the bucket that is automatically created by the NAIS platform
+  gcs-mock-filestore-setup:
+    image: byrnedo/alpine-curl
+    depends_on: [gcs-mock-filestore]
+    restart: "no"
+    command: "--request POST 'http://gcs-mock-filestore:4443/storage/v1/b?project=helseopplysingner-dev' --header 'Content-Type: application/json' --data-raw '{\"name\": \"hops\"}'"
 
   # PostgreSQL is the database used by EventStore.
   postgres:
@@ -123,3 +141,4 @@ services:
 volumes:
   postgres_volume:
   pgadmin_volume:
+  fakestorage_volume:
