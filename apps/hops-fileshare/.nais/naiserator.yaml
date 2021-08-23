@@ -49,18 +49,13 @@ spec:
   env:
     - name: LOG_APPENDER
       value: json
-<<<<<<< Updated upstream
-=======
     - name: FILESTORE_BUCKET_NAME
       value: helse-hops-fileshare
     - name: FILESTORE_REQUIRES_AUTH
       value: "true"
-    - name: FILESTORE_BUCKET_NAME_UNSCANNED
-      value: helse-hops-fileshare-unscanned
     - name: FILESTORE_TOKEN_FETCH_URL
       value: "http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token"
   {{#each env}}
     - name: {{@key}}
       value: "{{this}}"
   {{/each}}
->>>>>>> Stashed changes
