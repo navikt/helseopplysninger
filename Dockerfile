@@ -1,4 +1,4 @@
-FROM gradle:7.1.1-jdk16 AS build
+FROM gradle:7.2.0-jdk16 AS build
 WORKDIR /home/gradle/src
 COPY --chown=gradle:gradle . .
 ARG project

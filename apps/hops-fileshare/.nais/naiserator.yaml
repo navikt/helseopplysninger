@@ -40,7 +40,7 @@ spec:
       tenant: nav.no
   gcp:
     buckets:
-      - name: helse.hops.fileshare
+      - name: helse-hops-fileshare
 
   ingresses:
   {{#each ingresses as |url|}}

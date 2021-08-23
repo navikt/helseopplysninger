@@ -3,6 +3,7 @@ package no.nav.helse.hops.hoplite
 import com.sksamuel.hoplite.ConfigLoader
 import com.sksamuel.hoplite.PropertySource
 import com.sksamuel.hoplite.parsers.PropsParser
+import io.ktor.application.Application
 import io.ktor.config.ApplicationConfig
 import io.ktor.config.MapApplicationConfig
 import org.koin.core.module.Module
@@ -23,6 +24,20 @@ inline fun <reified T : Any> Scope.loadConfigsOrThrow(vararg resources: String) 
         .build()
         .loadConfigOrThrow<T>(resources.toList())
 
+inline fun <reified T : Any> Application.loadConfigsOrThrow(vararg resources: String): T {
+    val appConfig = environment.config
+    val builder = ConfigLoader
+        .Builder()
+        .addFileExtensionMapping("properties", PropsParser()) // For some reason this is needed to work in Docker.
+
+    if (appConfig is MapApplicationConfig) {
+        builder.addPropertySources(listOf(appConfig.asPropertySource()))
+    }
+
+    return builder.build()
+        .loadConfigOrThrow(resources.toList())
+}
+
 /** Use this to register MapApplicationConfig as a Hops PropertySource in a Koin Module.
  * This simplifies configuration in Ktor unit-tests. **/
 fun ApplicationConfig.asHoplitePropertySourceModule(): Module {
@@ -30,7 +45,7 @@ fun ApplicationConfig.asHoplitePropertySourceModule(): Module {
     return module { if (appConfig is MapApplicationConfig) single { appConfig.asPropertySource() } }
 }
 
-private fun MapApplicationConfig.asPropertySource(): PropertySource {
+fun MapApplicationConfig.asPropertySource(): PropertySource {
     val props = Properties()
 
     val map: Map<String, String> = getPrivateProperty("map")
