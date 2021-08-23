@@ -8,15 +8,20 @@ import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.request.get
 import io.ktor.client.request.headers
-import kotlinx.serialization.Serializable
+import io.ktor.client.request.post
+import io.ktor.client.statement.HttpResponse
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
+import io.ktor.utils.io.ByteReadChannel
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 class GCPHttpTransport(private val config: FileShareConfig.FileStore) {
     val httpClient: HttpClient
 
     init {
         httpClient = HttpClient() {
-            if (config.requireAuth) {
+            if (config.requiresAuth) {
                 val tokenClient = HttpClient() {
                     install(JsonFeature) {
                         serializer = KotlinxSerializer()
@@ -52,6 +57,17 @@ class GCPHttpTransport(private val config: FileShareConfig.FileStore) {
             accessToken = tokenInfo.accessToken,
             refreshToken = ""
         )
+    }
+
+    suspend fun upload(bucketName: String, contentType: ContentType, scannedFile: ByteReadChannel, fileName: String): HttpResponse {
+        return httpClient.post("${config.baseUrl}/upload/storage/v1/b/$bucketName/o?uploadType=media&name=$fileName") {
+            body = scannedFile
+            contentType(contentType)
+        }
+    }
+
+    suspend fun download(bucketName: String, fileName: String): HttpResponse {
+        return httpClient.get("${config.baseUrl}/storage/v1/b/$bucketName/o/$fileName?alt=media")
     }
 }
 

@@ -8,8 +8,10 @@ data class FileShareConfig(
     data class FileStore(
         val baseUrl: URL,
         val bucketName: String,
-        val requireAuth: Boolean,
-        val tokenFetchUrl: URL
+        val requiresAuth: Boolean,
+        val tokenFetchUrl: URL,
+        val virusScanningEnabled: Boolean,
+        val virusScannerUrl: URL,
+        val unScannedBucketName: String
     )
 }
-
