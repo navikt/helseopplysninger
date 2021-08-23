@@ -1,5 +1,5 @@
-import infrastructure.EventStoreHttp
-import infrastructure.ApiConfig
+import api.infrastructure.EventStoreHttp
+import api.infrastructure.ApiConfig
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.MockRequestHandleScope
