@@ -27,5 +27,4 @@ class VirusScanner(
 
         return transport.download(unScannedBucket, tempFileName).content
     }
-
 }

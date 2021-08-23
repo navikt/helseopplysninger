@@ -17,7 +17,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 class GCPHttpTransport(private val config: FileShareConfig.FileStore) {
-    val httpClient: HttpClient
+    private val httpClient: HttpClient
 
     init {
         httpClient = HttpClient() {
