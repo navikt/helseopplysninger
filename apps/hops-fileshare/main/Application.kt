@@ -1,5 +1,5 @@
 import infrastructure.ApplicationServices
-import infrastructure.Configuration
+import infrastructure.FileShareConfig
 import io.ktor.application.Application
 import io.ktor.application.install
 import io.ktor.auth.Authentication
@@ -18,7 +18,7 @@ import routes.swaggerRoutes
 @Suppress("unused") // Referenced in application.conf
 fun Application.module() {
     val prometheusMeterRegistry = PrometheusMeterRegistry(DEFAULT)
-    val applicationConfig = loadConfigsOrThrow<Configuration>("/application.conf", "/application.properties")
+    val applicationConfig = loadConfigsOrThrow<FileShareConfig>("/application.conf", "/application.properties")
     val applicationServices = ApplicationServices(applicationConfig)
 
     install(Webjars)

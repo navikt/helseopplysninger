@@ -2,13 +2,13 @@ package infrastructure
 
 import domain.StorageClient
 
-class ApplicationServices(applicationConfig: Configuration) {
+class ApplicationServices(applicationConfig: FileShareConfig) {
     val storageClient: StorageClient
 
     init {
         storageClient = GCPHttpStorageClient(
-            GCPHttpTransport(applicationConfig.fileStoreConfig).httpClient,
-            applicationConfig.fileStoreConfig
+            GCPHttpTransport(applicationConfig.fileStore).httpClient,
+            applicationConfig.fileStore
         )
     }
 }

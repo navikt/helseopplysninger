@@ -12,7 +12,7 @@ import java.util.UUID
 
 class GCPHttpStorageClient(
     private val httpClient: HttpClient,
-    private val gcpConfig: FileStoreConfig
+    private val gcpConfig: FileShareConfig.FileStore
 ) : StorageClient {
 
     override suspend fun save(file: ByteReadChannel, contentType: ContentType): String {

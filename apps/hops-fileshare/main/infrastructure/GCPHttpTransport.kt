@@ -11,12 +11,12 @@ import io.ktor.client.request.headers
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
 
-class GCPHttpTransport(private val gcsConfig: FileStoreConfig) {
+class GCPHttpTransport(private val config: FileShareConfig.FileStore) {
     val httpClient: HttpClient
 
     init {
         httpClient = HttpClient() {
-            if (gcsConfig.requireAuth) {
+            if (config.requireAuth) {
                 val tokenClient = HttpClient() {
                     install(JsonFeature) {
                         serializer = KotlinxSerializer()
@@ -42,7 +42,7 @@ class GCPHttpTransport(private val gcsConfig: FileStoreConfig) {
         workload identity:
         https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity#gke_mds
          */
-        val tokenInfo = httpClient.get<TokenInfo>(gcsConfig.tokenFetchUrl) {
+        val tokenInfo = httpClient.get<TokenInfo>(config.tokenFetchUrl) {
             headers {
                 append("Metadata-Flavor", "Google")
             }
