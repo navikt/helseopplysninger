@@ -15,6 +15,8 @@ import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.route
 import io.ktor.utils.io.copyAndClose
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 import no.nav.helse.hops.routing.fullUrl
 
 fun Routing.storageRoutes(service: FileSharingService) {
@@ -23,7 +25,7 @@ fun Routing.storageRoutes(service: FileSharingService) {
             post {
                 val fileInfo = service.uploadFile(call.request.receiveChannel(), call.request.contentType())
 
-                val fileUrl = "${call.request.origin.fullUrl()}/${fileInfo.name}"
+                val fileUrl = "${call.request.origin.fullUrl()}/${URLEncoder.encode(fileInfo.name, StandardCharsets.UTF_8)}"
                 call.response.headers.append(HttpHeaders.Location, fileUrl)
                 call.respond(HttpStatusCode.Created)
             }
@@ -32,8 +34,11 @@ fun Routing.storageRoutes(service: FileSharingService) {
                 val fileName = call.parameters["fileName"]!!
 
                 val response = service.downloadFile(fileName, call.request.headers[HttpHeaders.Range])
-                response.headers.forEach { key, values ->
-                    values.forEach { v -> call.response.headers.append(key, v) }
+                response.headers[HttpHeaders.AcceptRanges]?.let {
+                    call.response.headers.append(HttpHeaders.AcceptRanges, it)
+                }
+                response.headers[HttpHeaders.LastModified]?.let {
+                    call.response.headers.append(HttpHeaders.LastModified, it)
                 }
                 call.respondBytesWriter(response.contentType(), response.status) {
                     response.content.copyAndClose(this)
