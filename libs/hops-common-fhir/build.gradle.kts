@@ -16,7 +16,7 @@ tasks {
 }
 
 dependencies {
-    val hapiVersion = "5.4.2"
+    val hapiVersion = "5.5.0"
     val junitVersion = "5.7.2"
 
     api("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:$hapiVersion")
