@@ -55,6 +55,8 @@ spec:
       value: helse-hops-fileshare
     - name: FILESTORE_BUCKET_NAME_UNSCANNED
       value: helse-hops-fileshare-unscanned
+    - name: FILESTORE_VIRUS_SCAN_ENABLED
+      value: "true"
     - name: FILESTORE_REQUIRES_AUTH
       value: "true"
     - name: FILESTORE_TOKEN_FETCH_URL
