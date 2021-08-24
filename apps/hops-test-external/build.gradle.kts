@@ -24,7 +24,7 @@ dependencies {
     val ktorVersion = "1.6.2"
 
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.4")
-    implementation("com.nimbusds:nimbus-jose-jwt:9.12.1")
+    implementation("com.nimbusds:nimbus-jose-jwt:9.13")
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
     implementation("io.ktor:ktor-webjars:$ktorVersion")
     implementation(project(":libs:hops-common-ktor"))
