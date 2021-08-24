@@ -19,6 +19,7 @@ import io.ktor.http.formUrlEncode
 import io.ktor.utils.io.ByteReadChannel
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 
 class GCPHttpTransport(private val config: FileShareConfig.FileStore) {
     private val httpClient: HttpClient
@@ -28,7 +29,7 @@ class GCPHttpTransport(private val config: FileShareConfig.FileStore) {
             if (config.requiresAuth) {
                 val tokenClient = HttpClient() {
                     install(JsonFeature) {
-                        serializer = KotlinxSerializer()
+                        serializer = KotlinxSerializer(Json { ignoreUnknownKeys = true })
                     }
                 }
                 install(Auth) {
@@ -40,7 +41,7 @@ class GCPHttpTransport(private val config: FileShareConfig.FileStore) {
             }
 
             install(JsonFeature) {
-                serializer = KotlinxSerializer()
+                serializer = KotlinxSerializer(Json { ignoreUnknownKeys = true })
             }
         }
     }

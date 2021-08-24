@@ -3,14 +3,11 @@ package domain
 import infrastructure.HttpVirusScanner
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
-import io.kotest.matchers.shouldBe
 import io.ktor.http.ContentType
 import io.ktor.utils.io.ByteReadChannel
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.mockk
 import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 
 class FileSharingServiceTest : StringSpec({
 
@@ -32,5 +29,4 @@ class FileSharingServiceTest : StringSpec({
             service.uploadFile(ByteReadChannel("Malicious content"), ContentType.parse("text/plain"))
         }
     }
-
 })

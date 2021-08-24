@@ -3,7 +3,7 @@ package domain
 import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
 
-@Serializable
+@Serializable()
 data class FileInfo(
     val name: String,
     val contentType: String,
