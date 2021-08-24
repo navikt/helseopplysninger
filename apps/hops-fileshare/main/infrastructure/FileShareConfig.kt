@@ -12,4 +12,3 @@ data class FileShareConfig(
         val tokenFetchUrl: URL
     )
 }
-

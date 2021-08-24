@@ -3,7 +3,9 @@ name: hops-api
 on:
   push:
     branches: [main]
-    paths: [apps/hops-api/**]
+    paths:
+      - 'apps/hops-api/**'
+      - 'libs/**'
   workflow_dispatch:
     inputs:
       deploy-prod:
@@ -17,7 +19,7 @@ env:
 # The following jobs and steps can be moved to a common composite-action
 # once github support 'uses' in composite-actions: https://github.com/actions/runner/issues/646
 jobs:
-  build:
+  build-api:
     runs-on: ubuntu-latest
     env:
       BUILDX_CACHE_PATH: /tmp/.buildx-cache
@@ -56,9 +58,9 @@ jobs:
           rm -rf ${{ env.BUILDX_CACHE_PATH }}
           mv ${{ env.BUILDX_CACHE_PATH }}-new ${{ env.BUILDX_CACHE_PATH }}
 
-  deploy:
+  deploy-api:
     runs-on: ubuntu-latest
-    needs: build
+    needs: build-api
     env: # Used by nais/deploy/actions/deploy. https://doc.nais.io/deployment/#action-configuration
       APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
       RESOURCE: apps/${{ github.workflow }}/.nais/naiserator.yaml
