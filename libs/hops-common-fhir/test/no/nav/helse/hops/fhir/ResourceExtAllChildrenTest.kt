@@ -1,13 +1,12 @@
 package no.nav.helse.hops.fhir
 
+import io.kotest.core.spec.style.StringSpec
+import io.kotest.matchers.shouldBe
 import org.hl7.fhir.r4.model.Patient
 import org.hl7.fhir.r4.model.Reference
-import kotlin.test.Test
-import kotlin.test.assertEquals
 
-class ResourceExtAllChildrenTest {
-    @Test
-    fun `allChildren should return all child elements of type`() {
+class ResourceExtAllChildrenTest : StringSpec({
+    "allChildren should return all child elements of type" {
         val resource = Patient().apply {
             generalPractitioner = listOf(
                 Reference("Practitioner/hello1"),
@@ -21,6 +20,6 @@ class ResourceExtAllChildrenTest {
         }
 
         val refs = resource.allChildren<Reference>().toList()
-        assertEquals(3, refs.count())
+        refs.count() shouldBe 3
     }
-}
+})

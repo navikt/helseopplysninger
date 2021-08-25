@@ -10,25 +10,23 @@ tasks {
     withType<KotlinCompile> {
         kotlinOptions.jvmTarget = "16"
     }
-    test {
+    withType<Test> {
         useJUnitPlatform()
+        testLogging {
+            showCauses = true
+            showExceptions = true
+            events("passed", "failed")
+        }
     }
 }
 
 dependencies {
-    val hapiVersion = "5.5.0"
-    val junitVersion = "5.7.2"
-
-    api("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:$hapiVersion")
     api(project(":libs:hops-common-core"))
+    api("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:5.5.0")
     implementation("com.google.auth:google-auth-library-oauth2-http:1.1.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.5.1")
-    runtimeOnly("ca.uhn.hapi.fhir:hapi-fhir-client:$hapiVersion")
-    testImplementation("io.mockk:mockk:1.12.0")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
-    testImplementation(kotlin("test-junit5"))
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
+    runtimeOnly("ca.uhn.hapi.fhir:hapi-fhir-client:5.5.0")
+    testImplementation(project(":libs:hops-common-test"))
 }
 
 kotlin.sourceSets["main"].kotlin.srcDirs("main")
