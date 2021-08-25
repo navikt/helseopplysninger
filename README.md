@@ -36,7 +36,7 @@ docker-compose -f .docker/docker-compose.yml -p hops up -d
 
 Stop the whole shebang:
 ```sh
-docker-compose -f .docker/docker-compose.yml down
+docker-compose -f .docker/docker-compose.yml -p hops down
 ```
 
 Start a single app:
