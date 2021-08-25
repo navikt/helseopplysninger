@@ -1,9 +1,0 @@
-{
-  "ingresses":  ["https://hops-oppslag.dev.intern.nav.no"],
-  "fkr_host": "hint-inet.utv.helsedir.no",
-  "helseid_host": "helseid-sts.test.nhn.no",
-  "env": {
-    "FKR_BASE_URL": "https://hint-inet.utv.helsedir.no/kontaktregister/ekstern",
-    "HELSE_ID_DISCOVERY_URL": "https://helseid-sts.test.nhn.no/.well-known/openid-configuration"
-  }
-}
