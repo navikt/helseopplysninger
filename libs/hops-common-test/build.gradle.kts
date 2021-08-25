@@ -40,13 +40,12 @@ open class DependentsTask : DefaultTask() {
                         val dependents = subSubProj.configurations
                             .testRuntimeClasspath.get()
                             .resolvedConfiguration
-                            .files
-//                            .resolvedArtifacts
-//                            .stream()
-//                            .map { it.id.componentIdentifier }
-//                            .map { it as? ProjectComponentIdentifier }
-//                            .filter { it != null }
-//                            .toList()
+                            .resolvedArtifacts // todo: fix dependency clashes
+                            .stream()
+                            .map { it.id.componentIdentifier }
+                            .map { it as? ProjectComponentIdentifier }
+                            .filter { it != null }
+                            .toList()
                         logger.warn("dependents: $dependents")
                     }
                 }
