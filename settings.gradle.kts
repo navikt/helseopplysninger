@@ -6,7 +6,6 @@ include("apps:hops-eventreplaykafka")
 include("apps:hops-eventsinkkafka")
 include("apps:hops-eventstore")
 include("apps:hops-fileshare")
-include("apps:hops-oppslag")
 include("apps:hops-test-external")
 
 include("libs:hops-common-core")
