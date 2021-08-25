@@ -10,8 +10,6 @@ tasks {
     withType<KotlinCompile> {
         kotlinOptions.jvmTarget = "16"
     }
-
-    register<DependentsTask>("dependents")
 }
 
 dependencies {
@@ -31,32 +29,3 @@ dependencies {
 }
 
 kotlin.sourceSets["main"].kotlin.srcDirs("main")
-
-open class DependentsTask : DefaultTask() {
-
-    @Input
-    val libName: String = "hops-common-test"
-
-    @TaskAction
-    fun dependents() {
-        project.parent?.parent?.subprojects?.forEach { subProj ->
-            subProj.subprojects.forEach { subSubProj ->
-                when (subSubProj.name) {
-                    libName -> logger.debug("ignore self")
-                    else -> {
-                        val dependents = subSubProj.configurations
-                            .testRuntimeClasspath.get()
-                            .resolvedConfiguration
-                            .resolvedArtifacts // todo: fix dependency clashes
-                            .stream()
-                            .map { it.id.componentIdentifier }
-                            .map { it as? ProjectComponentIdentifier }
-                            .filter { it != null }
-                            .toList()
-                        logger.warn("dependents: $dependents")
-                    }
-                }
-            }
-        } ?: logger.error("something was null")
-    }
-}
