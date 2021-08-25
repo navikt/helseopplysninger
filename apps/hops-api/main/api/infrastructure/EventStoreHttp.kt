@@ -17,7 +17,7 @@ import java.net.URL
 
 class EventStoreHttp(
     private val httpClient: HttpClient,
-    private val config: ApiConfig.EventStore
+    private val config: Config.EventStore
 ) : EventStore {
     override suspend fun search(
         downstreamUrl: URL,

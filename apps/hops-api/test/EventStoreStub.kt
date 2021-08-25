@@ -1,5 +1,5 @@
 import api.infrastructure.EventStoreHttp
-import api.infrastructure.ApiConfig
+import api.infrastructure.Config
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.MockRequestHandleScope
@@ -14,7 +14,7 @@ import io.ktor.http.withCharset
 import no.nav.helse.hops.convert.ContentTypes
 import no.nav.helse.hops.hoplite.loadConfigsOrThrow
 
-fun eventStoreMock() = EventStoreHttp(httpClientMock, loadConfigsOrThrow<ApiConfig>().eventStore)
+fun eventStoreMock() = EventStoreHttp(httpClientMock, loadConfigsOrThrow<Config>().eventStore)
 
 private var httpClientMock =
     HttpClient(MockEngine) {

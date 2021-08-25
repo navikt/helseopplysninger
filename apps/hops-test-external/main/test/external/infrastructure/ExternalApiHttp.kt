@@ -9,7 +9,7 @@ import io.ktor.http.ContentType
 
 class ExternalApiHttp(
     private val httpClient: HttpClient,
-    private val config: TestExternalConfig.ExternalApi
+    private val config: Config.ExternalApi
 ) : ExternalApiFacade {
     override suspend fun get() =
         httpClient.get<HttpResponse>("${config.baseUrl}/fhir/4.0/Bundle?_count=1") {

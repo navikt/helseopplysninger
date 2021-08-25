@@ -1,6 +1,6 @@
 package api
 
-import api.infrastructure.ApiConfig
+import api.infrastructure.Config
 import api.infrastructure.EventStoreHttp
 import api.infrastructure.HttpClientFactory
 import api.infrastructure.useNaviktTokenSupport
@@ -29,7 +29,7 @@ import no.nav.helse.hops.statuspages.useFhirErrorStatusPage
 
 @Suppress("unused") // Referenced in application.conf
 fun Application.main() {
-    val hopsApiConfig = loadConfigsOrThrow<ApiConfig>()
+    val hopsApiConfig = loadConfigsOrThrow<Config>()
     val httpClient = HttpClientFactory.create(hopsApiConfig.eventStore)
     val eventStoreClient = EventStoreHttp(httpClient, hopsApiConfig.eventStore)
 

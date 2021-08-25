@@ -2,7 +2,7 @@ package test.external
 
 import test.external.infrastructure.ExternalApiHttp
 import test.external.infrastructure.HttpClientFactory
-import test.external.infrastructure.TestExternalConfig
+import test.external.infrastructure.Config
 import io.ktor.application.Application
 import io.ktor.application.install
 import io.ktor.features.CallLogging
@@ -18,7 +18,7 @@ fun Application.main() {
     install(CallLogging)
     install(Webjars)
 
-    val config = loadConfigsOrThrow<TestExternalConfig>()
+    val config = loadConfigsOrThrow<Config>()
     val externalApi = ExternalApiHttp(HttpClientFactory.create(config.externalApi), config.externalApi)
 
     routing {
