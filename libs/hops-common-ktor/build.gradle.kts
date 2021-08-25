@@ -10,29 +10,23 @@ tasks {
     withType<KotlinCompile> {
         kotlinOptions.jvmTarget = "16"
     }
-    test {
+    withType<Test> {
         useJUnitPlatform()
+        testLogging {
+            showCauses = true
+            showExceptions = true
+            events("passed", "failed")
+        }
     }
 }
 
 dependencies {
-    val junitVersion = "5.7.2"
-    val koinVersion = "3.1.2"
-    val ktorVersion = "1.6.2"
-
-    api("io.insert-koin:koin-ktor:$koinVersion")
-    api("io.insert-koin:koin-logger-slf4j:$koinVersion")
-    api("io.ktor:ktor-client-auth:$ktorVersion")
     api(project(":libs:hops-common-core"))
+    api("io.ktor:ktor-client-auth:1.6.2")
+    api("io.ktor:ktor-server-core:1.6.2")
     implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:5.5.0")
     implementation("com.sksamuel.hoplite:hoplite-hocon:1.4.7")
-    testImplementation("io.kotest:kotest-assertions-shared:4.6.1")
-    testImplementation("io.ktor:ktor-server-netty:$ktorVersion")
-    testImplementation("io.ktor:ktor-server-test-host:$ktorVersion") { exclude("org.jetbrains.kotlin", "kotlin-test-junit") }
-    testImplementation("io.mockk:mockk:1.12.0")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
-    testImplementation(kotlin("test-junit5"))
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
+    testImplementation(project(":libs:hops-common-test"))
 }
 
 kotlin.sourceSets["main"].kotlin.srcDirs("main")

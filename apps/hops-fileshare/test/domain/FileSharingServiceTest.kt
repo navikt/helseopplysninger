@@ -1,6 +1,10 @@
 package domain
 
-import infrastructure.HttpVirusScanner
+import fileshare.domain.FileInfo
+import fileshare.domain.FileSharingService
+import fileshare.domain.FileStore
+import fileshare.domain.VirusScanner
+import fileshare.infrastructure.HttpVirusScanner
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.ktor.http.ContentType
