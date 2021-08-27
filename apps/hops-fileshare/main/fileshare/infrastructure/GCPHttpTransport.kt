@@ -68,7 +68,6 @@ class GCPHttpTransport(private val config: Config.FileStore) {
         val params = Parameters.build {
             append("uploadType", "media")
             append("name", fileName)
-            append("ifGenerationMatch", "0")
         }.formUrlEncode()
 
         return httpClient.post("${config.baseUrl}/upload/storage/v1/b/$bucketName/o?$params") {
