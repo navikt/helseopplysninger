@@ -16,4 +16,8 @@ class GCPHttpFileStore(
 
     override suspend fun download(fileName: String, range: String?): HttpResponse =
         transport.download(config.bucketName, fileName, range)
+
+    override suspend fun findFile(fileName: String): FileInfo? =
+        transport.findFile(config.bucketName, fileName)
+
 }

@@ -85,6 +85,17 @@ class GCPHttpTransport(private val config: Config.FileStore) {
                 }
             }
         }
+
+    suspend fun findFile(bucketName: String, fileName: String): FileInfo? {
+        try {
+            return httpClient.get("${config.baseUrl}/storage/v1/b/$bucketName/o/$fileName?alt=json")
+        } catch (ex: Exception) {
+            if (ex is ClientRequestException && ex.response.status == HttpStatusCode.NotFound) {
+                return null
+            }
+            throw ex
+        }
+    }
 }
 
 @Serializable

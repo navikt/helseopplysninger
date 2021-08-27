@@ -10,7 +10,9 @@ class FileSharingService(
 ) {
     suspend fun uploadFile(content: ByteReadChannel, contentType: ContentType): FileInfo {
         val fileInfoForScan = virusScanner.prepareForScan(content, contentType)
-        // TODO verify if file exists in fileStore using fileInfo.md5Hash
+        fileStore.findFile(fileInfoForScan.md5Hash)?.let {
+            return it
+        }
         val scannedContent = virusScanner.scan(fileInfoForScan.name)
 
         // TODO update metadata to allow uploader to download?
