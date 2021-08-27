@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     application
     kotlin("jvm")
-    kotlin("plugin.serialization") version "1.5.21"
+    kotlin("plugin.serialization") version "1.5.30"
     id("com.github.johnrengelman.shadow")
     id("org.jlleitschuh.gradle.ktlint")
 }
@@ -29,7 +29,7 @@ tasks {
 dependencies {
     implementation(project(":libs:hops-common-ktor"))
     implementation("io.ktor:ktor-metrics-micrometer:1.6.2")
-    implementation("io.ktor:ktor-webjars:1.6.2")
+    implementation("io.ktor:ktor-webjars:1.6.3")
     implementation("io.ktor:ktor-auth:1.6.2")
     implementation("io.ktor:ktor-client-auth:1.6.2")
     implementation("io.ktor:ktor-client-serialization:1.6.2")
