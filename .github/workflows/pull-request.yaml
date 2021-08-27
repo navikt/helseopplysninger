@@ -91,6 +91,7 @@ jobs:
         with:
           java-version: 16
           distribution: 'adopt'
+          cache: 'gradle'
 
       # Must login to gain access to docker.pkg.github.com/navikt/* images required by some integration-tests.
       - uses: docker/login-action@v1

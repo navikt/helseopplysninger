@@ -59,7 +59,7 @@ jobs:
             -f=checkstyle
             -diff="git diff"
             -name=ktlint
-            -reporter=github-pr-check   # github-pr-review is unsupported in workflow_run
+            -reporter=github-check   # github-pr-review is unsupported in workflow_run
             -filter-mode=nofilter       # Fully supported by github-pr-check
           )
           cat ktlint-results/ktlint-report-in-checkstyle-format.xml | reviewdog "${args[@]}"

@@ -12,7 +12,7 @@ services:
       SERVER_PORT: 8081
       JSON_CONFIG_PATH: /etc/oauth-mock-config.json
     volumes:
-      - ../../docker-compose/config/oauth-mock-config.json:/etc/oauth-mock-config.json
+      - ../../.docker/config/oauth-mock-config.json:/etc/oauth-mock-config.json
     env_file:
       - autotest.env
 
@@ -21,16 +21,6 @@ services:
     image: ghcr.io/navikt/hops-api
     ports:
       - 8082:8080
-    env_file:
-      - autotest.env
-
-
-  # hops-oppslag provides a facade with a common REST API and security-mechanism towards external dependencies.
-  hops-oppslag:
-    image: ghcr.io/navikt/hops-oppslag
-    restart: unless-stopped
-    ports:
-      - 8083:8080
     env_file:
       - autotest.env
 
