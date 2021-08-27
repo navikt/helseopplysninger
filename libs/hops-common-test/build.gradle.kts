@@ -21,7 +21,7 @@ dependencies {
     api("io.kotest:kotest-property:4.6.2") // Kotest - property testing
     api("io.kotest:kotest-assertions-ktor:4.4.3") // Kotest - ktor matchers
     api("io.kotest:kotest-assertions-shared:4.6.2")
-    api("io.ktor:ktor-jackson:1.6.2")
+    api("io.ktor:ktor-jackson:1.6.3")
     api("io.ktor:ktor-server-netty:1.6.3")
     api("no.nav.security:mock-oauth2-server:0.3.4")
     api("no.nav.security:token-validation-ktor:1.3.8")
