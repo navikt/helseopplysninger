@@ -12,7 +12,7 @@ on:
         default: 'false'
 
 jobs:
-  deploy:
+  deploy-topics:
     name: Deploy kafka
     runs-on: ubuntu-latest
     steps:

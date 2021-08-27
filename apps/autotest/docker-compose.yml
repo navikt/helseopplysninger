@@ -12,7 +12,7 @@ services:
       SERVER_PORT: 8081
       JSON_CONFIG_PATH: /etc/oauth-mock-config.json
     volumes:
-      - ../../docker-compose/config/oauth-mock-config.json:/etc/oauth-mock-config.json
+      - ../../.docker/config/oauth-mock-config.json:/etc/oauth-mock-config.json
     env_file:
       - autotest.env
 

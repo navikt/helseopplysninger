@@ -25,24 +25,44 @@ To modify the /etc/hosts file
 * Enter your admin password
 * Add this new mapping: `127.0.0.1 mock-oauth2-service`
 
-### 🐳 To start up with docker-compose
-In a terminal, go to the docker-compose catalog.
+### 🐳 Docker
+To run docker-compose from root, use the file flag: `-f .docker/docker-compose.yml` <br/>
+Add the flag `-p hops` for naming the composed project.
 
-You can start all the applications in this mono repo by running:
+Start the whole shebang:
+```sh
+docker-compose -f .docker/docker-compose.yml -p hops up -d
+``` 
 
-`docker-compose up -d` 
+Stop the whole shebang:
+```sh
+docker-compose -f .docker/docker-compose.yml -p hops down
+```
 
-To run one of the applications in the mono repo, in this example hops-eventstore, 
-in a terminal run: `docker-compose up eventstore`
+Start a single app:
+```sh
+docker-compose -f .docker/docker-compose.yml up eventstore 
+```
 
-NOTE: All apps needs to have `mock-oauth2-service` and `postgres` 
-running (`docker-compose up mock-oauth2-service`), see [docker-compose.yml](./docker-compose/docker-compose.yml)
+NOTE: All apps are dependent on `mock-oauth2-service` and `postgres` see [docker-compose.yml](.docker/docker-compose.yml)
 
+### 🐘 Gradle
+Recipe for this monorepo:
+```sh 
+./gradlew apps:${project}:${task}
+```
 
-You can see all your containers running in Docker Desktop 
-(has to be installed https://www.docker.com/products/docker-desktop )
+Start a single app:
+```sh
+./gradlew apps:hops-api:run
+```
+
+Build a libraries dependent apps:
+```sh
+./gradlew libs:hops-common-core:buildDependents
+```
  
-### 🚀 To run applications in IntelliJ, edit the configurations:
+### 🚀 IntelliJ IDEA
 For each app:
 * Run -> Edit Configurations
 * in the Configuration window click the + button and select Gradle
@@ -50,46 +70,10 @@ Set these values:
 * Gradle project: `helseopplysninger:apps:hops-eventsinkkafka` (or one of the other apps)
 * Tasks: `run`
 
-### 🌈 Test the endpoints in API
-If API is started from IntelliJ: Go to localhost:8080
-
-If you started from Docker-Compose: Go to localhost:8085 (or, from Docker Desktop click the "View in browser" button)
-
-Try the unsecured /isAlive or /isReady.
-You should then get at `200 OK`
-
-### 🔒 To try the secured endpoints 
-For trying the /fhir/4.0/Bundle {GET} or /fhir/4.0/$prosess-message {POST}
-you will need to use Postman, Insomnia or something equivalent.
-
-In Postman: ![screen dump](docs/images/PostmanDump.png)
-
-* Make a `get` request to `http://localhost:8085/fhir/4.0/Bundle`
-* Click the `Authorization` tab
-* In the `Type` dropdown, select `OAuth 2.0`
-* In the `Add authorization data to` dropdown, select `Request Headers`
-* In the `Header Prefix` field, write `Bearer`
-* In the `Token name` field, write `anything`
-* In the `Grant type` dropdown, select `Client Credentials`
-* In the `Access Token URL` field, write `http://mock-oauth2-service:8081/maskinporten/token`
-* In the `Client ID` field, write `anything`
-* In the `Client Secret` field, write `anything`
-* In the `Client Scope` field, write `hops`
-* In the `Client Authentication` dropdown, select `Send as Basic Auth header`
-* Click the `Get New Access Token` button
-* Click `Send`
-
-You should then get at `200 OK` and a response JSON
-
-Note: You can limit the access by setting `Scope= hops:sub` to only be able to use the `get` endpoint
-and `Scope= hops:pub` to only use the `post` endpoint
-
-If you are testing the EventStore directly 
-(or other apps that are not reachable externally) you have to use the "internal token":
-`http://mock-oauth2-service:8081/default/token` with `Scope = eventstore`
-
 ### 🎨 Starting Kafka administration GUI Kafdrop, and Postgres administration GUI pgAdmin
-`docker-compose up -d pgadmin kafdrop`
+```sh
+docker-compose -f .docker/docker-compose.yml up -d pgadmin kafdrop
+```
 
 ### 👓 View Kafdrop
 After starting the Kafka with docker-compose, go to `localhost:9000`
@@ -100,4 +84,3 @@ After starting the Postgres with docker-compose, go to `localhost:5050`
 Log on to pgAdmin with user: `admin@admin.com admin`
 
 Log on to postgres db with user: `Welcome01`
-
