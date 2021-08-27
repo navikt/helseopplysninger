@@ -27,7 +27,7 @@ tasks {
 
 dependencies {
     implementation(project(":libs:hops-common-ktor"))
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.4")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.5")
     implementation("com.nimbusds:nimbus-jose-jwt:9.13")
     implementation("io.ktor:ktor-server-netty:1.6.2")
     implementation("io.ktor:ktor-webjars:1.6.3")
