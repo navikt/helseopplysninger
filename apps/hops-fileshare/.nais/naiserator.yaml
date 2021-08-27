@@ -41,6 +41,8 @@ spec:
   gcp:
     buckets:
       - name: helse-hops-fileshare
+      - name: helse-hops-fileshare-unscanned
+        retentionPeriodDays: 1
 
   ingresses:
   {{#each ingresses as |url|}}
@@ -51,6 +53,10 @@ spec:
       value: json
     - name: FILESTORE_BUCKET_NAME
       value: helse-hops-fileshare
+    - name: FILESTORE_BUCKET_NAME_UNSCANNED
+      value: helse-hops-fileshare-unscanned
+    - name: FILESTORE_VIRUS_SCAN_ENABLED
+      value: "true"
     - name: FILESTORE_REQUIRES_AUTH
       value: "true"
     - name: FILESTORE_TOKEN_FETCH_URL

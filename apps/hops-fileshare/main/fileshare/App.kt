@@ -31,6 +31,6 @@ fun Application.main() {
     routing {
         naisRoutes(prometheusMeterRegistry)
         swaggerRoutes()
-        storageRoutes(applicationServices.storageClient)
+        storageRoutes(applicationServices.fileSharingService)
     }
 }

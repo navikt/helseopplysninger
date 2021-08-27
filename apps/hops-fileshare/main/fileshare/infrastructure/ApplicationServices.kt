@@ -1,14 +1,22 @@
 package fileshare.infrastructure
 
-import fileshare.domain.StorageClient
+import fileshare.domain.FileSharingService
+import io.ktor.client.HttpClient
 
 class ApplicationServices(applicationConfig: Config) {
-    val storageClient: StorageClient
+    val fileSharingService: FileSharingService
 
     init {
-        storageClient = GCPHttpStorageClient(
-            GCPHttpTransport(applicationConfig.fileStore).httpClient,
+        val gcpHttpTransport = GCPHttpTransport(HttpClient(), applicationConfig.fileStore)
+        val virusScanner = HttpVirusScanner(
+            gcpHttpTransport,
+            HttpClient(),
             applicationConfig.fileStore
         )
+        val fileStore = GCPHttpFileStore(
+            gcpHttpTransport,
+            applicationConfig.fileStore
+        )
+        fileSharingService = FileSharingService(virusScanner, fileStore)
     }
 }

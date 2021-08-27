@@ -85,6 +85,13 @@ services:
     restart: "no"
     command: "--request POST 'http://gcs-mock-filestore:4443/storage/v1/b?project=helseopplysingner-dev' --header 'Content-Type: application/json' --data-raw '{\"name\": \"hops\"}'"
 
+  gcs-mock-filestore-setup-unscanned:
+    image: byrnedo/alpine-curl
+    depends_on: [gcs-mock-filestore]
+    restart: "no"
+    command: "--request POST 'http://gcs-mock-filestore:4443/storage/v1/b?project=helseopplysingner-dev' --header 'Content-Type: application/json' --data-raw '{\"name\": \"hops-unscanned\"}'"
+
+
   # PostgreSQL is the database used by EventStore.
   postgres:
     image: postgres

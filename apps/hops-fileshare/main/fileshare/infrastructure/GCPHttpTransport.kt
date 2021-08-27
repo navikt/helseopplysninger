@@ -1,5 +1,6 @@
 package fileshare.infrastructure
 
+import fileshare.domain.FileInfo
 import io.ktor.client.HttpClient
 import io.ktor.client.features.auth.Auth
 import io.ktor.client.features.auth.providers.BearerTokens
@@ -8,18 +9,28 @@ import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.request.get
 import io.ktor.client.request.headers
-import kotlinx.serialization.Serializable
+import io.ktor.client.request.post
+import io.ktor.client.statement.HttpResponse
+import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
+import io.ktor.http.Parameters
+import io.ktor.http.contentType
+import io.ktor.http.formUrlEncode
+import io.ktor.utils.io.ByteReadChannel
+import java.util.Base64
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 
-class GCPHttpTransport(private val config: Config.FileStore) {
-    val httpClient: HttpClient
+class GCPHttpTransport(private val baseHttpClient: HttpClient, private val config: Config.FileStore) {
+    private val httpClient: HttpClient
 
     init {
-        httpClient = HttpClient() {
-            if (config.requireAuth) {
-                val tokenClient = HttpClient() {
+        httpClient = baseHttpClient.config {
+            if (config.requiresAuth) {
+                val tokenClient = baseHttpClient.config {
                     install(JsonFeature) {
-                        serializer = KotlinxSerializer()
+                        serializer = KotlinxSerializer(Json { ignoreUnknownKeys = true })
                     }
                 }
                 install(Auth) {
@@ -31,7 +42,7 @@ class GCPHttpTransport(private val config: Config.FileStore) {
             }
 
             install(JsonFeature) {
-                serializer = KotlinxSerializer()
+                serializer = KotlinxSerializer(Json { ignoreUnknownKeys = true })
             }
         }
     }
@@ -53,6 +64,31 @@ class GCPHttpTransport(private val config: Config.FileStore) {
             refreshToken = ""
         )
     }
+
+    suspend fun upload(bucketName: String, contentType: ContentType, scannedFile: ByteReadChannel, fileName: String): FileInfo {
+        val params = Parameters.build {
+            append("uploadType", "media")
+            append("name", fileName)
+        }.formUrlEncode()
+
+        val fileInfo = httpClient.post<FileInfo>("${config.baseUrl}/upload/storage/v1/b/$bucketName/o?$params") {
+            body = scannedFile
+            contentType(contentType)
+        }
+        fun ByteArray.toHex() = joinToString(separator = "") { byte -> "%02x".format(byte) }
+        return fileInfo.copy(
+            md5Hash = Base64.getDecoder().decode(fileInfo.md5Hash).toHex()
+        )
+    }
+
+    suspend fun download(bucketName: String, fileName: String, range: String? = null): HttpResponse =
+        httpClient.get("${config.baseUrl}/storage/v1/b/$bucketName/o/$fileName?alt=media") {
+            if (range != null) {
+                headers {
+                    append(HttpHeaders.Range, range)
+                }
+            }
+        }
 }
 
 @Serializable
