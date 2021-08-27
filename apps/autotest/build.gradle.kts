@@ -13,7 +13,7 @@ tasks {
 
 dependencies {
     val junitVersion = "5.7.2"
-    val ktorVersion = "1.6.2"
+    val ktorVersion = "1.6.3"
 
     api(project(":libs:hops-common-fhir"))
     implementation("io.github.cdimascio:dotenv-kotlin:6.2.2")
