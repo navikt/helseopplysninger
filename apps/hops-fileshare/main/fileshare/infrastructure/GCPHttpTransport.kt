@@ -21,7 +21,6 @@ import java.util.Base64
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import org.apache.commons.codec.binary.Hex
 
 class GCPHttpTransport(private val baseHttpClient: HttpClient, private val config: Config.FileStore) {
     private val httpClient: HttpClient
@@ -76,8 +75,9 @@ class GCPHttpTransport(private val baseHttpClient: HttpClient, private val confi
             body = scannedFile
             contentType(contentType)
         }
+        fun ByteArray.toHex() = joinToString(separator = "") { byte -> "%02x".format(byte) }
         return fileInfo.copy(
-            md5Hash = Hex.encodeHexString(Base64.getDecoder().decode(fileInfo.md5Hash))
+            md5Hash = Base64.getDecoder().decode(fileInfo.md5Hash).toHex()
         )
     }
 
