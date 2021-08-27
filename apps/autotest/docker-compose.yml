@@ -24,16 +24,6 @@ services:
     env_file:
       - autotest.env
 
-
-  # hops-oppslag provides a facade with a common REST API and security-mechanism towards external dependencies.
-  hops-oppslag:
-    image: ghcr.io/navikt/hops-oppslag
-    restart: unless-stopped
-    ports:
-      - 8083:8080
-    env_file:
-      - autotest.env
-
   # HAPI FHIR Server is a generic FHIR Server for storing and retrieving FHIR resources through a REST API.
   hops-hapi:
     image: ghcr.io/navikt/hops-hapi-fhir-server
