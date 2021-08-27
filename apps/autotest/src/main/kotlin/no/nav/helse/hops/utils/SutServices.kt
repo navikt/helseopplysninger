@@ -15,7 +15,6 @@ data class SutSystem(
 fun getSutServices(): Array<SutSystem> {
     return arrayOf(
         // Dette burde jeg hentet inn dynamic fra naiserator.yaml-filene.
-        SutSystem("hops-oppslag", 8083, "/isReady"),
         SutSystem("hops-hapi-fhir-server", 8084, "/actuator/health/readiness"),
         SutSystem("hops-bestilling", 8085, "/isReady"),
         SutSystem("hops-api", 8082, "/isReady"),
