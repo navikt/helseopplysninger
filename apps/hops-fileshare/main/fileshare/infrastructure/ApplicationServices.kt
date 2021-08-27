@@ -7,7 +7,7 @@ class ApplicationServices(applicationConfig: Config) {
     val fileSharingService: FileSharingService
 
     init {
-        val gcpHttpTransport = GCPHttpTransport(applicationConfig.fileStore)
+        val gcpHttpTransport = GCPHttpTransport(HttpClient(), applicationConfig.fileStore)
         val virusScanner = HttpVirusScanner(
             gcpHttpTransport,
             HttpClient(),

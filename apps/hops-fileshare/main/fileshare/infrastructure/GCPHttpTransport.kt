@@ -17,17 +17,19 @@ import io.ktor.http.Parameters
 import io.ktor.http.contentType
 import io.ktor.http.formUrlEncode
 import io.ktor.utils.io.ByteReadChannel
+import java.util.Base64
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import org.apache.commons.codec.binary.Hex
 
-class GCPHttpTransport(private val config: Config.FileStore) {
+class GCPHttpTransport(private val baseHttpClient: HttpClient, private val config: Config.FileStore) {
     private val httpClient: HttpClient
 
     init {
-        httpClient = HttpClient() {
+        httpClient = baseHttpClient.config {
             if (config.requiresAuth) {
-                val tokenClient = HttpClient() {
+                val tokenClient = baseHttpClient.config {
                     install(JsonFeature) {
                         serializer = KotlinxSerializer(Json { ignoreUnknownKeys = true })
                     }
@@ -70,10 +72,13 @@ class GCPHttpTransport(private val config: Config.FileStore) {
             append("name", fileName)
         }.formUrlEncode()
 
-        return httpClient.post("${config.baseUrl}/upload/storage/v1/b/$bucketName/o?$params") {
+        val fileInfo = httpClient.post<FileInfo>("${config.baseUrl}/upload/storage/v1/b/$bucketName/o?$params") {
             body = scannedFile
             contentType(contentType)
         }
+        return fileInfo.copy(
+            md5Hash = Hex.encodeHexString(Base64.getDecoder().decode(fileInfo.md5Hash))
+        )
     }
 
     suspend fun download(bucketName: String, fileName: String, range: String? = null): HttpResponse =
