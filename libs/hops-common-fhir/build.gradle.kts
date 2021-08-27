@@ -18,7 +18,6 @@ tasks {
             events("passed", "failed")
         }
     }
-    register<DependentsTask>("dependents")
 }
 
 dependencies {
@@ -33,32 +32,3 @@ dependencies {
 kotlin.sourceSets["main"].kotlin.srcDirs("main")
 kotlin.sourceSets["test"].kotlin.srcDirs("test")
 sourceSets["test"].resources.srcDir("test/.config")
-
-open class DependentsTask : DefaultTask() {
-
-    @Input
-    val libName: String = "hops-common-test"
-
-    @TaskAction
-    fun dependents() {
-        project.parent?.parent?.subprojects?.forEach { subProj ->
-            subProj.subprojects.forEach { subSubProj ->
-                when (subSubProj.name) {
-                    libName -> logger.debug("ignore self")
-                    else -> {
-                        val isDependent = subSubProj.configurations.testRuntimeClasspath.get()
-                            .resolvedConfiguration
-                            .resolvedArtifacts
-                            .asSequence()
-                            .map { it.id.componentIdentifier }
-                            .filterIsInstance<ProjectComponentIdentifier>()
-                            .map { it.projectName }
-                            .any { it == libName }
-
-                        if (isDependent) logger.warn(subSubProj.name)
-                    }
-                }
-            }
-        } ?: logger.error("something was null")
-    }
-}
