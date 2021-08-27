@@ -19,5 +19,4 @@ class GCPHttpFileStore(
 
     override suspend fun findFile(fileName: String): FileInfo? =
         transport.findFile(config.bucketName, fileName)
-
 }

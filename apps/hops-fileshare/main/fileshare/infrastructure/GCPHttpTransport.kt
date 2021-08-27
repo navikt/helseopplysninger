@@ -2,6 +2,7 @@ package fileshare.infrastructure
 
 import fileshare.domain.FileInfo
 import io.ktor.client.HttpClient
+import io.ktor.client.features.ClientRequestException
 import io.ktor.client.features.auth.Auth
 import io.ktor.client.features.auth.providers.BearerTokens
 import io.ktor.client.features.auth.providers.bearer
@@ -13,21 +14,23 @@ import io.ktor.client.request.post
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpStatusCode
 import io.ktor.http.Parameters
 import io.ktor.http.contentType
 import io.ktor.http.formUrlEncode
 import io.ktor.utils.io.ByteReadChannel
+import java.util.Base64
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
-class GCPHttpTransport(private val config: Config.FileStore) {
+class GCPHttpTransport(private val baseHttpClient: HttpClient, private val config: Config.FileStore) {
     private val httpClient: HttpClient
 
     init {
-        httpClient = HttpClient() {
+        httpClient = baseHttpClient.config {
             if (config.requiresAuth) {
-                val tokenClient = HttpClient() {
+                val tokenClient = baseHttpClient.config {
                     install(JsonFeature) {
                         serializer = KotlinxSerializer(Json { ignoreUnknownKeys = true })
                     }
@@ -71,10 +74,14 @@ class GCPHttpTransport(private val config: Config.FileStore) {
             append("ifGenerationMatch", "0")
         }.formUrlEncode()
 
-        return httpClient.post("${config.baseUrl}/upload/storage/v1/b/$bucketName/o?$params") {
+        val fileInfo = httpClient.post<FileInfo>("${config.baseUrl}/upload/storage/v1/b/$bucketName/o?$params") {
             body = scannedFile
             contentType(contentType)
         }
+        fun ByteArray.toHex() = joinToString(separator = "") { byte -> "%02x".format(byte) }
+        return fileInfo.copy(
+            md5Hash = Base64.getDecoder().decode(fileInfo.md5Hash).toHex()
+        )
     }
 
     suspend fun download(bucketName: String, fileName: String, range: String? = null): HttpResponse =

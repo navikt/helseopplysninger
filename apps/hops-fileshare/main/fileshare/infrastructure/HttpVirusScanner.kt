@@ -41,9 +41,9 @@ class HttpVirusScanner(
     class FileVirusException(fileName: String) : BadRequestException("Malicious content detected in the uploaded file! ref: $fileName")
 
     @Serializable
-    data class ScanResult(val result: ScanResultStatus)
+    private data class ScanResult(val result: ScanResultStatus)
 
-    enum class ScanResultStatus {
+    private enum class ScanResultStatus {
         OK,
         FOUND,
         ERROR
