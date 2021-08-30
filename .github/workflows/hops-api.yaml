@@ -41,6 +41,16 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Cache current image version
+        run: |
+          docker inspect ghcr.io/navikt/hops-api:latest \
+            | jq .[0].Id -r \
+            | awk '{print "fallback_image="$1}' \
+            >> $GITHUB_ENV
+
+      # debug
+      - run: echo ${{ env.fallback_image }}
+
       - uses: docker/build-push-action@v2.7.0
         id: docker_build
         with:
@@ -70,6 +80,43 @@ jobs:
       - name: Deploy to Dev
         uses: nais/deploy/actions/deploy@master
         env:
+          CLUSTER: dev-gcp
+          ENVIRONMENT: dev-gcp:${{ github.workflow }}
+          VARS: apps/${{ github.workflow }}/.nais/dev.json
+
+      # debug
+      - run: echo ${{ env.fallback_image }}
+      # debug
+      - run: docker inspect ghcr.io/navikt/hops-api:latest | jq .[0].Id -r
+
+      - name: Run e2e tests
+        id: e2e
+        run: |
+          cat <<EOF >> e2e/hops-api.xml
+          <?xml version="1.0" encoding="UTF-8"?>
+          <testsuite name="e2e.api" tests="1" skipped="0" failures="0" errors="0" timestamp="2021-08-30T13:39:11" hostname="dev" time="0.542">
+          <testcase name="use case 1" classname="e2e.api" time="0.121"/>
+          </testsuite>
+          EOF
+          exit 1
+        continue-on-error: true
+        timeout-minutes: 1 # fail fast
+
+      - name: Publish results (e2e )
+        if: steps.e2e.outcome == 'failure' && steps.e2e.conclusion == 'success'
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        with:
+          check_name: e2e
+          commit: ${{ github.event.workflow_run.head_sha }}
+          files: "e2e/hops-*.xml"
+
+      # can we undo rollout on k8s or something?
+      - name: Rollback if tests failed
+        if: steps.e2e.outcome == 'failure' && steps.e2e.conclusion == 'success'
+        run: "deploy previous version"
+        uses: nais/deploy/actions/deploly@master
+        env:
+          IMAGE: ghcr.io/navikt/${{ github.workflow }}:${{ env.fallback_image }}
           CLUSTER: dev-gcp
           ENVIRONMENT: dev-gcp:${{ github.workflow }}
           VARS: apps/${{ github.workflow }}/.nais/dev.json
