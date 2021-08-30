@@ -27,6 +27,7 @@ class FileSharingServiceTest : StringSpec({
             "hashHash",
             Clock.System.now()
         )
+        coEvery { fileStore.findFile("hashHash") } returns null
         coEvery { scanner.scan(fileName) } throws HttpVirusScanner.FileVirusException(fileName)
 
         shouldThrow<HttpVirusScanner.FileVirusException> {
