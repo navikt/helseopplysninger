@@ -21,9 +21,9 @@ fun Routing.storageRoutes(service: FileSharingService) {
     authenticate {
         route("files") {
             post {
-                val fileInfo = service.uploadFile(call.request.receiveChannel(), call.request.contentType())
+                val fileName = service.uploadFile(call.request.receiveChannel(), call.request.contentType())
 
-                val fileUrl = "${call.request.origin.fullUrl()}/${fileInfo.name}"
+                val fileUrl = "${call.request.origin.fullUrl()}/$fileName"
                 call.response.headers.append(HttpHeaders.Location, fileUrl)
                 call.respond(HttpStatusCode.Created)
             }

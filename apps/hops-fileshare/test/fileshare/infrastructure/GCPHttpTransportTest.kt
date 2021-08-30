@@ -1,5 +1,7 @@
 package fileshare.infrastructure
 
+import fileshare.domain.FileStore
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.ktor.client.HttpClient
@@ -8,6 +10,7 @@ import io.ktor.client.engine.mock.respond
 import io.ktor.http.ContentType
 import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpStatusCode
 import io.ktor.http.fullPath
 import io.ktor.http.headersOf
 import io.ktor.utils.io.ByteReadChannel
@@ -96,6 +99,24 @@ class GCPHttpTransportTest : StringSpec({
         )
 
         md5Hash shouldBe "a8a60378d728a68d4115263278a8e46f"
+    }
+
+    "Should throw exception when file already exists" {
+        val client = HttpClient(MockEngine) {
+            engine {
+                addHandler {
+                    respond(
+                        content = "{}",
+                        headers = headersOf(HttpHeaders.ContentType to listOf(ContentType.Application.Json.toString())),
+                        status = HttpStatusCode.PreconditionFailed
+                    )
+                }
+            }
+        }
+        val transport = GCPHttpTransport(client, baseConfig)
+        shouldThrow<FileStore.DuplicatedFileException> {
+            transport.upload("bucket", ContentType.parse("plain/txt"), ByteReadChannel("test"), "file-name")
+        }
     }
 
     "Should send Google meta-data header to obtain tokens" {

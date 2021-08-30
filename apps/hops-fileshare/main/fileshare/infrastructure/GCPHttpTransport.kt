@@ -1,6 +1,7 @@
 package fileshare.infrastructure
 
 import fileshare.domain.FileInfo
+import fileshare.domain.FileStore
 import io.ktor.client.HttpClient
 import io.ktor.client.features.ClientRequestException
 import io.ktor.client.features.auth.Auth
@@ -74,14 +75,22 @@ class GCPHttpTransport(private val baseHttpClient: HttpClient, private val confi
             append("ifGenerationMatch", "0")
         }.formUrlEncode()
 
-        val fileInfo = httpClient.post<FileInfo>("${config.baseUrl}/upload/storage/v1/b/$bucketName/o?$params") {
-            body = scannedFile
-            contentType(contentType)
+        try {
+            val fileInfo = httpClient.post<FileInfo>("${config.baseUrl}/upload/storage/v1/b/$bucketName/o?$params") {
+                body = scannedFile
+                contentType(contentType)
+            }
+
+            fun ByteArray.toHex() = joinToString(separator = "") { byte -> "%02x".format(byte) }
+            return fileInfo.copy(
+                md5Hash = Base64.getDecoder().decode(fileInfo.md5Hash).toHex()
+            )
+        } catch (ex: Exception) {
+            if (ex is ClientRequestException && ex.response.status == HttpStatusCode.PreconditionFailed) {
+                throw FileStore.DuplicatedFileException(ex, bucketName, fileName)
+            }
+            throw ex
         }
-        fun ByteArray.toHex() = joinToString(separator = "") { byte -> "%02x".format(byte) }
-        return fileInfo.copy(
-            md5Hash = Base64.getDecoder().decode(fileInfo.md5Hash).toHex()
-        )
     }
 
     suspend fun download(bucketName: String, fileName: String, range: String? = null): HttpResponse =
