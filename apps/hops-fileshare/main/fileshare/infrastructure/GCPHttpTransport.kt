@@ -85,8 +85,8 @@ class GCPHttpTransport(private val baseHttpClient: HttpClient, private val confi
             return fileInfo.copy(
                 md5Hash = Base64.getDecoder().decode(fileInfo.md5Hash).toHex()
             )
-        } catch (ex: Exception) {
-            if (ex is ClientRequestException && ex.response.status == HttpStatusCode.PreconditionFailed) {
+        } catch (ex: ClientRequestException) {
+            if (ex.response.status == HttpStatusCode.PreconditionFailed) {
                 throw FileStore.DuplicatedFileException(ex, bucketName, fileName)
             }
             throw ex
@@ -105,8 +105,8 @@ class GCPHttpTransport(private val baseHttpClient: HttpClient, private val confi
     suspend fun findFile(bucketName: String, fileName: String): FileInfo? {
         try {
             return httpClient.get("${config.baseUrl}/storage/v1/b/$bucketName/o/$fileName?alt=json")
-        } catch (ex: Exception) {
-            if (ex is ClientRequestException && ex.response.status == HttpStatusCode.NotFound) {
+        } catch (ex: ClientRequestException) {
+            if (ex.response.status == HttpStatusCode.NotFound) {
                 return null
             }
             throw ex
