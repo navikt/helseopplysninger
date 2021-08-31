@@ -15,14 +15,13 @@ import io.ktor.routing.routing
 import io.ktor.webjars.Webjars
 import io.micrometer.prometheus.PrometheusConfig.DEFAULT
 import io.micrometer.prometheus.PrometheusMeterRegistry
-import no.nav.helse.hops.hoplite.loadConfigsOrThrow
 import no.nav.security.token.support.ktor.tokenValidationSupport
 
 @Suppress("unused") // Referenced in application.conf
 fun Application.main(httpClient: HttpClient = HttpClient()) {
     val prometheusMeterRegistry = PrometheusMeterRegistry(DEFAULT)
-    val applicationConfig = loadConfigsOrThrow<Config>()
-    val applicationServices = ApplicationServices(httpClient, applicationConfig)
+//    val applicationConfig = loadConfigsOrThrow<Config>()
+    val applicationServices = ApplicationServices(environment.config)
 
     install(Webjars)
     install(CallLogging)
