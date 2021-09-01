@@ -1,6 +1,7 @@
 name: hops-api poc
 
 on:
+  pull_request:
   push:
     paths:
       - 'apps/hops-api/**'
