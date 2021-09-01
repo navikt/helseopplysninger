@@ -69,7 +69,7 @@ jobs:
       - uses: docker/build-push-action@v2.7.0
         with:
           file: Dockerfile.poc
-          push: true
-          tags: ${{ env.IMAGE }},ghcr.io/navikt/hops-api:latest
+          push: false
+          tags: ${{ env.IMAGE }},ghcr.io/navikt/hops-api:test
           cache-from: type=local,src=${{ env.BUILDX_CACHE_PATH }}
           cache-to: type=local,dest=${{ env.BUILDX_CACHE_PATH }}-new
