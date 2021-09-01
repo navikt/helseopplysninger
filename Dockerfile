@@ -15,7 +15,7 @@ COPY apps/hops-eventstore/*.kts ./apps/hops-eventstore/
 COPY apps/hops-fileshare/*.kts ./apps/hops-fileshare/
 COPY apps/hops-test-external/*.kts ./apps/hops-test-external/
 
-RUN gradle --no-daemon assemble --stacktrace
+RUN gradle --no-daemon dependencies --stacktrace
 
 # DOCKER_BUILDKIT=1 docker build --target cache -t ghcr.io/navikt/hops-dependency-cache:latest .
 
