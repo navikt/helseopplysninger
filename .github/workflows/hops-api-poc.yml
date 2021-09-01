@@ -7,8 +7,7 @@ on:
       - 'apps/hops-api/**'
       - 'libs/**'
 env:
-  PROJECT: hops-api
-  IMAGE: ghcr.io/navikt/${{ env.PROJECT }}:${{ github.sha }}
+  IMAGE: ghcr.io/navikt/hops-api:${{ github.sha }}
 
 jobs:
   build-api:
@@ -43,6 +42,6 @@ jobs:
           file: Dockerfile
           target: app
           push: false
-          build-args: project=${{ env.PROJECT }},BUILDKIT_INLINE_CACHE=1
-          tags: ${{ env.IMAGE }},ghcr.io/navikt/${{ env.PROJECT }}:latest
+          build-args: project=hops-api,BUILDKIT_INLINE_CACHE=1
+          tags: ${{ env.IMAGE }},ghcr.io/navikt/hops-api:latest
           cache-from: type=registry,ref=ghcr.io/navikt/hops-dependency-cache:latest
