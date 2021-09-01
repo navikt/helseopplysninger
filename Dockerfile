@@ -1,29 +1,33 @@
-FROM gradle:7.2.0-jdk16 AS builder
+FROM gradle:7.2.0-jdk16 AS cache
 WORKDIR /home
 ENV GRADLE_USER_HOME /cache
-ARG project
-
-# cache dependencies
 COPY build.gradle.kts gradle.properties settings.gradle.kts ./
-COPY apps/${project}/build.gradle.kts ./apps/${project}/
-COPY libs/hops-common-core/build.gradle.kts ./libs/hops-common-core/
-COPY libs/hops-common-fhir/build.gradle.kts ./libs/hops-common-fhir/
-COPY libs/hops-common-ktor/build.gradle.kts ./libs/hops-common-ktor/
-COPY libs/hops-common-test/build.gradle.kts ./libs/hops-common-test/
-RUN gradle --no-daemon dependencies --stacktrace
 
-# cache libs
-COPY libs/ libs/
-RUN gradle --no-daemon libs:hops-common-core:assemble --stacktrace
-RUN gradle --no-daemon libs:hops-common-fhir:assemble --stacktrace
-RUN gradle --no-daemon libs:hops-common-ktor:assemble --stacktrace
-RUN gradle --no-daemon libs:hops-common-test:assemble --stacktrace
+COPY libs/hops-common-core/*.kts ./libs/hops-common-core/
+COPY libs/hops-common-fhir/*.kts ./libs/hops-common-fhir/
+COPY libs/hops-common-ktor/*.kts ./libs/hops-common-ktor/
+COPY libs/hops-common-test/*.kts ./libs/hops-common-test/
 
-COPY apps/${project} apps/${project}
-RUN gradle --no-daemon apps:${project}:shadowJar --stacktrace
+COPY apps/hops-api/*.kts ./apps/hops-api/
+COPY apps/hops-eventreplaykafka/*.kts ./apps/hops-eventreplaykafka/
+COPY apps/hops-eventsinkkafka/*.kts ./apps/hops-eventsinkkafka/
+COPY apps/hops-eventstore/*.kts ./apps/hops-eventstore/
+COPY apps/hops-fileshare/*.kts ./apps/hops-fileshare/
+COPY apps/hops-test-external/*.kts ./apps/hops-test-external/
 
-FROM navikt/java:16
-COPY --from=builder /home/apps/*/build/libs/*.jar app.jar
+RUN gradle --no-daemon assemble --stacktrace
 
-# HOWTO RUN (local development):
-# DOCKER_BUILDKIT=1 docker build --build-arg project=hops-api -t hops/api:local .
+# DOCKER_BUILDKIT=1 docker build --target cache -t ghcr.io/navikt/hops-dependency-cache:latest .
+
+FROM gradle:7.2.0-jdk16 AS build
+WORKDIR /home
+ENV GRADLE_USER_HOME /cache
+COPY --from=cache /cache /cache
+COPY . .
+ARG project
+RUN gradle apps:${project}:shadowJar --no-daemon --stacktrace
+
+FROM navikt/java:16 AS app
+COPY --from=build /home/apps/*/build/libs/*.jar app.jar
+
+# DOCKER_BUILDKIT=1 docker build --target app --build-arg project=hops-api --cache-from=ghcr.io/navikt/hops-dependency-cache:latest -t local/hops-api:latest .
