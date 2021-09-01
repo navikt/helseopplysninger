@@ -64,7 +64,7 @@ jobs:
           gradle --no-daemon libs:hops-common-ktor:assemble --stacktrace
           gradle --no-daemon libs:hops-common-test:assemble --stacktrace
           gradle --no-daemon apps:hops-api:shadowJar --stacktrace
-          mv /home/apps/hops-api/build/libs/hops-api.jar app.jar
+          mv apps/hops-api/build/libs/hops-api.jar app.jar
 
       - uses: docker/build-push-action@v2.7.0
         with:
