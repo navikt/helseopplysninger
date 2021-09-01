@@ -1,9 +1,2 @@
-*
-!apps
-!libs
-!build.gradle.kts
-!gradle.properties
-!settings.gradle.kts
-**/.nais
-**/build
-**/out
+modules-2.lock
+gc.properties
