@@ -22,7 +22,7 @@ tasks {
 
 dependencies {
     api(project(":libs:hops-common-core"))
-    api("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:5.5.0")
+    api("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:5.5.1")
     implementation("com.google.auth:google-auth-library-oauth2-http:1.1.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.5.1")
     runtimeOnly("ca.uhn.hapi.fhir:hapi-fhir-client:5.5.0")

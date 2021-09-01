@@ -24,7 +24,7 @@ dependencies {
     api(project(":libs:hops-common-core"))
     api("io.ktor:ktor-client-auth:1.6.3")
     api("io.ktor:ktor-server-core:1.6.3")
-    implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:5.5.0")
+    implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:5.5.1")
     implementation("com.sksamuel.hoplite:hoplite-hocon:1.4.7")
     testImplementation(project(":libs:hops-common-test"))
 }
