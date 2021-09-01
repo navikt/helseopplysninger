@@ -42,6 +42,8 @@ jobs:
           file: Dockerfile
           target: app
           push: false
-          build-args: project=hops-api,BUILDKIT_INLINE_CACHE=1
+          build-args: |
+            project=hops-api
+            BUILDKIT_INLINE_CACHE=1
           tags: ${{ env.IMAGE }},ghcr.io/navikt/hops-api:latest
           cache-from: type=registry,ref=ghcr.io/navikt/hops-dependency-cache:latest
