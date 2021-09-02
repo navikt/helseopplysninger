@@ -1,4 +1,4 @@
-FROM ghcr.io/navikt/hops-build:latest AS build
+FROM ghcr.io/navikt/hops-build AS build
 COPY . .
 ARG project
 RUN gradle apps:${project}:shadowJar --no-daemon
