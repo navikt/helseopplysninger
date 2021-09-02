@@ -9,6 +9,8 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.should
 import io.ktor.client.features.ClientRequestException
+import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.testing.handleRequest
@@ -33,15 +35,14 @@ class DownloadFileTest : FeatureSpec({
         }
 
         scenario("with non existing file returns 404 NOT FONUD") {
-            Helpers.gcsMockServer.matchRequest(
-                { request -> request.path?.contains("nonexistentfile") ?: false },
-                {
-                    MockResponse()
-                        .setResponseCode(HttpStatusCode.NotFound.value)
-                }
-            )
-
             withFileshareTestApp {
+                Helpers.gcsMockServer.matchRequest(
+                    { request -> request.path?.contains("nonexistentfile") ?: false },
+                    {
+                        MockResponse()
+                            .setResponseCode(HttpStatusCode.NotFound.value)
+                    }
+                )
                 with(
                     shouldThrow<ClientRequestException> {
                         handleRequest(HttpMethod.Get, "/files/nonexistentfile") {
@@ -71,6 +72,44 @@ class UploadFileTest : FeatureSpec({
                 ) {
                     response shouldHaveStatus HttpStatusCode.Created
                     response should haveHeader("Location", "http://localhost/files/file-name")
+                }
+            }
+        }
+
+        scenario("Uploading a file that contains malicious content it should give back an error") {
+            withFileshareTestApp {
+                Helpers.gcsMockServer.matchRequest(
+                    { request -> request.body.readUtf8() == "malicious content" },
+                    {
+                        MockResponse()
+                            .setHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                            .setBody(Helpers.fileInfoResponse.replace("file-name", "malicious-file-name"))
+                    }
+                )
+                Helpers.gcsMockServer.matchRequest(
+                    { request -> request.path?.contains("malicious-file-name") ?: false },
+                    {
+                        MockResponse()
+                            .setBody("malicious content")
+                    }
+                )
+                Helpers.virusScannerMockServer.matchRequest(
+                    { request -> request.body.readUtf8() == "malicious content" },
+                    {
+                        MockResponse()
+                            .setHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                            .setBody("""[{"result":"FOUND"}]""")
+                    }
+                )
+                with(
+                    handleRequest(HttpMethod.Post, "/files") {
+                        val token = Helpers.oAuthMock.issueToken()
+                        addHeader("Authorization", "Bearer ${token.serialize()}")
+                        addHeader("Content-Type", "plain/txt")
+                        setBody("malicious content")
+                    }
+                ) {
+                    response shouldHaveStatus HttpStatusCode.BadRequest
                 }
             }
         }

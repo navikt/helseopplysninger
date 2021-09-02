@@ -18,14 +18,7 @@ import okhttp3.mockwebserver.RecordedRequest
 
 object Helpers {
     val oAuthMock = MockOAuth2Server()
-    val gcsMockServer = MockServer().apply {
-        matchRequest(
-            { request -> request.method == "POST" && request.path?.startsWith("/upload/storage/v1/b") ?: false },
-            {
-                MockResponse()
-                    .setHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-                    .setBody(
-                        """
+    val fileInfoResponse = """
                     {
                         "bucket": "hops",
                         "name": "file-name",
@@ -47,7 +40,15 @@ object Helpers {
                         "updated": "2021-08-24T07:57:10.912632Z",
                         "deleted": "0001-01-01T00:00:00Z"
                     }
-                        """.trimIndent()
+                        """
+    val gcsMockServer = MockServer().apply {
+        matchRequest(
+            { request -> request.method == "POST" && request.path?.startsWith("/upload/storage/v1/b") ?: false },
+            {
+                MockResponse()
+                    .setHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                    .setBody(
+                        fileInfoResponse.trimIndent()
                     )
             }
         )
