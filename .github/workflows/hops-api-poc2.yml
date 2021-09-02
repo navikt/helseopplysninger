@@ -1,0 +1,49 @@
+name: hops-api-poc2
+
+on:
+  pull_request:
+  push:
+    paths:
+      - 'apps/hops-api/**'
+      - 'libs/**'
+env:
+  IMAGE: ghcr.io/navikt/hops-api:${{ github.sha }}
+  CACHE_IMG: ghcr.io/navikt/hops-dependency-cache:latest
+
+jobs:
+  build-api:
+    runs-on: ubuntu-latest
+    env:
+      GRADLE_USER_HOME: /cache
+    steps:
+      - uses: actions/checkout@v2.3.4
+      - uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Fetch cache
+        run: |
+          docker pull ${{ env.CACHE_IMG }}
+          docker cp ${{ env.CACHE_IMG }}:/cache
+          gradle apps:hops-api:shadowJar --no-daemon --stacktrace
+
+          ls ./cache
+          ls /cache
+          ls .
+          ls /
+
+      - name: Update cache
+        uses: docker/build-push-action@v2.7.0
+        with:
+          file: Dockerfile.cache
+          push: true
+          tags: ${{ env.CACHE_IMG }}
+
+      - name: Update app
+        uses: docker/build-push-action@v2.7.0
+        with:
+          file: Dockerfile
+          push: false
+          tags: ${{ env.IMAGE }},ghcr.io/navikt/hops-api:latest
