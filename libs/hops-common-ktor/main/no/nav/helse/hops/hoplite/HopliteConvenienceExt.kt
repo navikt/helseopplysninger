@@ -3,11 +3,10 @@ package no.nav.helse.hops.hoplite
 import com.sksamuel.hoplite.ConfigLoader
 import com.sksamuel.hoplite.PropertySource
 import com.sksamuel.hoplite.parsers.PropsParser
-import io.ktor.config.ApplicationConfig
-import io.ktor.config.MapApplicationConfig
-import java.util.Properties
 import io.ktor.application.Application
+import io.ktor.config.MapApplicationConfig
 import java.io.ByteArrayOutputStream
+import java.util.Properties
 
 inline fun <reified T : Any> loadConfigsOrThrow(vararg resources: String = arrayOf("/application.conf")) =
     ConfigLoader.Builder()
