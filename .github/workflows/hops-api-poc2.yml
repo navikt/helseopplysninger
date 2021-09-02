@@ -26,13 +26,9 @@ jobs:
       - name: Fetch cache
         run: |
           docker pull ${{ env.CACHE_IMG }}
-          docker cp ${{ env.CACHE_IMG }}:/cache /cache
+          id=$(docker inspect ghcr.io/navikt/hops-dependency-cache --format="{{.Id}}" | sed -e "s/^sha256://")
+          docker cp $id:/cache /cache
           gradle apps:hops-api:shadowJar --no-daemon --stacktrace
-
-          ls ./cache
-          ls /cache
-          ls .
-          ls /
 
       - name: Update cache
         uses: docker/build-push-action@v2.7.0
@@ -44,6 +40,6 @@ jobs:
       - name: Update app
         uses: docker/build-push-action@v2.7.0
         with:
-          file: Dockerfile
+          file: Dockerfile.app
           push: false
           tags: ${{ env.IMAGE }},ghcr.io/navikt/hops-api:latest
