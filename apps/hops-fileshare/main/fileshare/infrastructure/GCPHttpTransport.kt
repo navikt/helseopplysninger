@@ -22,7 +22,7 @@ import java.util.Base64
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-class GCPHttpTransport(private val baseHttpClient: HttpClient, private val config: Config.FileStore) {
+class GCPHttpTransport(baseHttpClient: HttpClient, private val config: Config.FileStore) {
     private val httpClient: HttpClient
 
     init {
@@ -30,15 +30,15 @@ class GCPHttpTransport(private val baseHttpClient: HttpClient, private val confi
             if (config.requiresAuth) {
                 install(Auth) {
                     bearer {
-                        loadTokens { fetchToken(baseHttpClient) }
-                        refreshTokens { fetchToken(baseHttpClient) }
+                        loadTokens { fetchToken() }
+                        refreshTokens { fetchToken() }
                     }
                 }
             }
         }
     }
 
-    private suspend fun fetchToken(httpClient: HttpClient): BearerTokens {
+    private suspend fun fetchToken(): BearerTokens {
         /*
         Vi får token av metadata server som kjøres sammen med poden, den token er knyttet til
         workload identity:
