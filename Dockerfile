@@ -1,10 +1,4 @@
-FROM gradle:7.2.0-jdk16 AS gradle-files
-COPY . .
-RUN find . ! -name "*.kts" ! -name "gradle.properties" -delete; echo 0
-
-FROM gradle:7.2.0-jdk16 AS build
-COPY --from=gradle-files /home/gradle .
-RUN gradle assemble --no-daemon
+FROM ghcr.io/navikt/hops-build:latest AS build
 COPY . .
 ARG project
 RUN gradle apps:${project}:shadowJar --no-daemon
