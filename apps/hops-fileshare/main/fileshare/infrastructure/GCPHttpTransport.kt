@@ -7,8 +7,6 @@ import io.ktor.client.features.ClientRequestException
 import io.ktor.client.features.auth.Auth
 import io.ktor.client.features.auth.providers.BearerTokens
 import io.ktor.client.features.auth.providers.bearer
-import io.ktor.client.features.json.JsonFeature
-import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.request.get
 import io.ktor.client.request.headers
 import io.ktor.client.request.post
@@ -23,34 +21,24 @@ import io.ktor.utils.io.ByteReadChannel
 import java.util.Base64
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
 
-class GCPHttpTransport(private val baseHttpClient: HttpClient, private val config: Config.FileStore) {
+class GCPHttpTransport(baseHttpClient: HttpClient, private val config: Config.FileStore) {
     private val httpClient: HttpClient
 
     init {
         httpClient = baseHttpClient.config {
             if (config.requiresAuth) {
-                val tokenClient = baseHttpClient.config {
-                    install(JsonFeature) {
-                        serializer = KotlinxSerializer(Json { ignoreUnknownKeys = true })
-                    }
-                }
                 install(Auth) {
                     bearer {
-                        loadTokens { fetchToken(tokenClient) }
-                        refreshTokens { fetchToken(tokenClient) }
+                        loadTokens { fetchToken() }
+                        refreshTokens { fetchToken() }
                     }
                 }
-            }
-
-            install(JsonFeature) {
-                serializer = KotlinxSerializer(Json { ignoreUnknownKeys = true })
             }
         }
     }
 
-    private suspend fun fetchToken(httpClient: HttpClient): BearerTokens {
+    private suspend fun fetchToken(): BearerTokens {
         /*
         Vi får token av metadata server som kjøres sammen med poden, den token er knyttet til
         workload identity:

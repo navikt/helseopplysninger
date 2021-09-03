@@ -38,6 +38,18 @@ spec:
     application:
       enabled: true
       tenant: nav.no
+  maskinporten:
+    enabled: true
+    scopes:
+      exposes:
+        - name: "some.scope.read"
+          enabled: true
+          product: "arbeid"
+          allowedIntegrations:
+            - maskinporten
+          atMaxAge: 120
+          consumers:
+            - orgno: "123456789"
   gcp:
     buckets:
       - name: helse-hops-fileshare
