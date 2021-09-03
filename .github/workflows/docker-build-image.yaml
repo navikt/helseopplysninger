@@ -20,4 +20,4 @@ jobs:
         with:
           file: .docker/builder/Dockerfile
           push: true
-          tags: ghcr.io/navikt/hops-build
+          tags: ghcr.io/navikt/hops-build,ghcr.io/navikt/hops-build:latest
