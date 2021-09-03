@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     application
     kotlin("jvm")
+    kotlin("plugin.serialization") version "1.5.30"
     id("com.github.johnrengelman.shadow")
     id("org.jlleitschuh.gradle.ktlint")
 }
@@ -40,11 +41,13 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-jdbc:0.34.1")
     runtimeOnly("ca.uhn.hapi.fhir:hapi-fhir-validation-resources-r4:5.5.1")
     runtimeOnly("ch.qos.logback:logback-classic:1.2.5")
-    runtimeOnly("com.h2database:h2:1.4.200")
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
     runtimeOnly("org.postgresql:postgresql:42.2.23")
     runtimeOnly("org.webjars:swagger-ui:3.51.2")
     testImplementation(project(":libs:hops-common-test"))
+    testRuntimeOnly("com.h2database:h2:1.4.200")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
+    testImplementation("io.ktor:ktor-serialization:1.6.3")
 }
 
 kotlin.sourceSets["main"].kotlin.srcDirs("main")

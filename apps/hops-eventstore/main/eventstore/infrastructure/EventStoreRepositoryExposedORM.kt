@@ -4,78 +4,87 @@ import eventstore.domain.EventDto
 import eventstore.domain.EventStoreReadOnlyRepository
 import eventstore.domain.EventStoreRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.flywaydb.core.Flyway
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.JoinType
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.SortOrder
+import org.jetbrains.exposed.sql.StdOutSqlLogger
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.`java-time`.datetime
+import org.jetbrains.exposed.sql.addLogger
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.andWhere
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.statements.InsertStatement
-import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
+import org.jetbrains.exposed.sql.transactions.transaction
 
-class EventStoreRepositoryExposedORM(config: Config.Database) : EventStoreRepository {
-
-    private val database =
-        Database.connect(url = config.url, user = config.username, password = config.password)
+class EventStoreRepositoryExposedORM(db: Config.Database) : EventStoreRepository {
 
     init {
-        Flyway
-            .configure()
-            .dataSource(config.url, config.username, config.password)
-            .load()
-            .migrate()
-    }
-
-    override suspend fun add(event: EventDto) {
-        newSuspendedTransaction(Dispatchers.IO, database) {
-            val rowId = EventTable.insert { it.setValues(event) }[EventTable.id]
-
-            event.destinations.forEach { dest ->
-                DestinationTable.insert {
-                    it[eventId] = rowId
-                    it[endpoint] = dest
-                }
+        when (db) {
+            is Config.Database.Postgres -> {
+                Database.connect(url = db.url, user = db.username, password = db.password)
+                Flyway.configure().dataSource(db.url, db.username, db.password).load().migrate()
+            }
+            is Config.Database.H2 -> {
+                Database.connect(url = db.url, user = "root", password = "")
+                Flyway.configure().dataSource(db.url, "root", "").load().migrate()
             }
         }
     }
 
-    override suspend fun search(query: EventStoreReadOnlyRepository.Query) =
-        newSuspendedTransaction(Dispatchers.IO, database) {
-            val exposedQuery =
-                if (query.destinationUri == null) EventTable.selectAll()
-                else EventTable
-                    .join(
-                        DestinationTable,
-                        JoinType.INNER,
-                        additionalConstraint = {
-                            EventTable.id eq DestinationTable.eventId and (DestinationTable.endpoint eq query.destinationUri)
-                        }
-                    )
-                    .selectAll()
+    private suspend fun <T> suspendedTransaction(block: () -> T): T = withContext(Dispatchers.IO) {
+        transaction {
+            addLogger(StdOutSqlLogger)
+            block()
+        }
+    }
 
-            query.messageId?.let {
-                exposedQuery.andWhere { EventTable.messageId eq it }
-            }
+    override suspend fun add(event: EventDto) = suspendedTransaction {
+        val rowId = EventTable.insert { it.setValues(event) }[EventTable.id]
 
-            if (query.destinationUri == null && query.messageId == null) {
-                // Offset using primary-key sequence number, prevents performance issues for large offset values.
-                exposedQuery
-                    .andWhere { EventTable.id greater query.offset }
-                    .orderBy(EventTable.id to SortOrder.ASC)
-                    .limit(query.count)
-                    .map(::toEventDto)
-            } else {
-                exposedQuery
-                    .orderBy(EventTable.id to SortOrder.ASC)
-                    .limit(query.count, query.offset)
-                    .map(::toEventDto)
+        event.destinations.forEach { dest ->
+            DestinationTable.insert {
+                it[eventId] = rowId
+                it[endpoint] = dest
             }
         }
+    }
+
+    override suspend fun search(query: EventStoreReadOnlyRepository.Query) = suspendedTransaction {
+        val exposedQuery =
+            if (query.destinationUri == null) EventTable.selectAll()
+            else EventTable
+                .join(
+                    DestinationTable,
+                    JoinType.INNER,
+                    additionalConstraint = {
+                        EventTable.id eq DestinationTable.eventId and (DestinationTable.endpoint eq query.destinationUri)
+                    }
+                )
+                .selectAll()
+
+        query.messageId?.let {
+            exposedQuery.andWhere { EventTable.messageId eq it }
+        }
+
+        if (query.destinationUri == null && query.messageId == null) {
+            // Offset using primary-key sequence number, prevents performance issues for large offset values.
+            exposedQuery
+                .andWhere { EventTable.id greater query.offset }
+                .orderBy(EventTable.id to SortOrder.ASC)
+                .limit(query.count)
+                .map(::toEventDto)
+        } else {
+            exposedQuery
+                .orderBy(EventTable.id to SortOrder.ASC)
+                .limit(query.count, query.offset)
+                .map(::toEventDto)
+        }
+    }
 }
 
 private object EventTable : Table() {
