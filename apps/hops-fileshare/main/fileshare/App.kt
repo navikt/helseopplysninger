@@ -1,6 +1,7 @@
 package fileshare
 
 import fileshare.infrastructure.ApplicationServices
+import fileshare.infrastructure.useNaviktTokenSupport
 import fileshare.routes.naisRoutes
 import fileshare.routes.storageRoutes
 import fileshare.routes.swaggerRoutes
@@ -24,7 +25,7 @@ fun Application.main() {
     install(Webjars)
     install(CallLogging)
     install(MicrometerMetrics) { registry = prometheusMeterRegistry }
-    install(Authentication) { tokenValidationSupport(config = environment.config) }
+    install(Authentication) { useNaviktTokenSupport(config = environment.config) }
 
     routing {
         naisRoutes(prometheusMeterRegistry)

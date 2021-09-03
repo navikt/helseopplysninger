@@ -2,10 +2,15 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import no.nav.security.mock.oauth2.MockOAuth2Server
+import no.nav.security.mock.oauth2.OAuth2Config
 import okhttp3.mockwebserver.MockResponse
 
 object MockServers {
-    val oAuth = MockOAuth2Server()
+    val oAuth = MockOAuth2Server(
+//        OAuth2Config(
+//
+//        )
+    )
     const val gcsFileInfoResponse = """
                     {
                         "bucket": "hops",
