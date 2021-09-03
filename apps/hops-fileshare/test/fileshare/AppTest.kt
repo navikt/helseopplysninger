@@ -1,6 +1,6 @@
 package fileshare
 
-import Helpers
+import MockServers
 import io.kotest.assertions.ktor.client.shouldHaveStatus
 import io.kotest.assertions.ktor.haveHeader
 import io.kotest.assertions.ktor.shouldHaveContent
@@ -24,7 +24,7 @@ class DownloadFileTest : FeatureSpec({
             withFileshareTestApp {
                 with(
                     handleRequest(HttpMethod.Get, "/files/testfile") {
-                        val token = Helpers.oAuthMock.issueToken()
+                        val token = MockServers.oAuth.issueToken()
                         addHeader("Authorization", "Bearer ${token.serialize()}")
                     }
                 ) {
@@ -36,7 +36,7 @@ class DownloadFileTest : FeatureSpec({
 
         scenario("with non existing file returns 404 NOT FONUD") {
             withFileshareTestApp {
-                Helpers.gcsMockServer.matchRequest(
+                MockServers.gcs.matchRequest(
                     { request -> request.path?.contains("nonexistentfile") ?: false },
                     {
                         MockResponse()
@@ -46,7 +46,7 @@ class DownloadFileTest : FeatureSpec({
                 with(
                     shouldThrow<ClientRequestException> {
                         handleRequest(HttpMethod.Get, "/files/nonexistentfile") {
-                            val token = Helpers.oAuthMock.issueToken()
+                            val token = MockServers.oAuth.issueToken()
                             addHeader("Authorization", "Bearer ${token.serialize()}")
                         }
                     }
@@ -64,7 +64,7 @@ class UploadFileTest : FeatureSpec({
             withFileshareTestApp {
                 with(
                     handleRequest(HttpMethod.Post, "/files") {
-                        val token = Helpers.oAuthMock.issueToken()
+                        val token = MockServers.oAuth.issueToken()
                         addHeader("Authorization", "Bearer ${token.serialize()}")
                         addHeader("Content-Type", "plain/txt")
                         setBody("new fantastic content")
@@ -78,22 +78,22 @@ class UploadFileTest : FeatureSpec({
 
         scenario("Uploading a file that contains malicious content it should give back an error") {
             withFileshareTestApp {
-                Helpers.gcsMockServer.matchRequest(
+                MockServers.gcs.matchRequest(
                     { request -> request.body.readUtf8() == "malicious content" },
                     {
                         MockResponse()
                             .setHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-                            .setBody(Helpers.fileInfoResponse.replace("file-name", "malicious-file-name"))
+                            .setBody(MockServers.gcsFileInfoResponse.replace("file-name", "malicious-file-name"))
                     }
                 )
-                Helpers.gcsMockServer.matchRequest(
+                MockServers.gcs.matchRequest(
                     { request -> request.path?.contains("malicious-file-name") ?: false },
                     {
                         MockResponse()
                             .setBody("malicious content")
                     }
                 )
-                Helpers.virusScannerMockServer.matchRequest(
+                MockServers.virusScanner.matchRequest(
                     { request -> request.body.readUtf8() == "malicious content" },
                     {
                         MockResponse()
@@ -103,7 +103,7 @@ class UploadFileTest : FeatureSpec({
                 )
                 with(
                     handleRequest(HttpMethod.Post, "/files") {
-                        val token = Helpers.oAuthMock.issueToken()
+                        val token = MockServers.oAuth.issueToken()
                         addHeader("Authorization", "Bearer ${token.serialize()}")
                         addHeader("Content-Type", "plain/txt")
                         setBody("malicious content")

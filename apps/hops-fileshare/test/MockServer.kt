@@ -5,8 +5,8 @@ import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 
-class MockServer() {
-    val mockWebServer = MockWebServer()
+class MockServer {
+    private val mockWebServer = MockWebServer()
     private val dispatchChain = LinkedList<MatchAndDispatch>()
 
     init {
