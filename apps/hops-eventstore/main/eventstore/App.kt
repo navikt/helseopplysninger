@@ -4,6 +4,9 @@ import eventstore.domain.FhirMessageProcessService
 import eventstore.domain.FhirMessageSearchService
 import eventstore.infrastructure.Config
 import eventstore.infrastructure.EventStoreRepositoryExposedORM
+import eventstore.routes.fhirRoutes
+import eventstore.routes.naisRoutes
+import eventstore.routes.swaggerRoutes
 import io.ktor.application.Application
 import io.ktor.application.install
 import io.ktor.auth.Authentication
@@ -23,9 +26,6 @@ import no.nav.helse.hops.diagnostics.useRequestIdHeader
 import no.nav.helse.hops.hoplite.loadConfigsOrThrow
 import no.nav.helse.hops.statuspages.useFhirErrorStatusPage
 import no.nav.security.token.support.ktor.tokenValidationSupport
-import eventstore.routes.fhirRoutes
-import eventstore.routes.naisRoutes
-import eventstore.routes.swaggerRoutes
 
 @Suppress("unused") // Referenced in application.conf
 fun Application.main() {
@@ -40,7 +40,7 @@ fun Application.main() {
     install(Webjars)
     install(XForwardedHeaderSupport)
 
-    val config = loadConfigsOrThrow<Config>("/application.conf", "/application.properties")
+    val config = loadConfigsOrThrow<Config>()
     val repo = EventStoreRepositoryExposedORM(config.db)
     val processService = FhirMessageProcessService(repo)
     val searchService = FhirMessageSearchService(repo)
