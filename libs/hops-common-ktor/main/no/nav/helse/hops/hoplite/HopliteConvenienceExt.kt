@@ -22,12 +22,12 @@ inline fun <reified T : Any> Application.loadConfigsOrThrow(vararg resources: St
 
 /** Used to add the Ktor's MapApplicationConfig as a PropertySource.
  * This allows the MapApplicationConfig to be used to override config values in tests. */
-fun ConfigLoader.Builder.addKtorConfig(ktorConfig: ApplicationConfig) = apply {
-    if (ktorConfig is MapApplicationConfig) {
+fun ConfigLoader.Builder.addKtorConfig(config: ApplicationConfig) = apply {
+    if (config is MapApplicationConfig) {
         // Workaround to access the private property 'map'.
-        val map = javaClass.getDeclaredField("map").let {
+        val map = config.javaClass.getDeclaredField("map").let {
             it.isAccessible = true
-            it.get(this) as Map<String, String>
+            it.get(config) as Map<String, String>
         }
 
         addPropertySource(MapPropertySource(map))
