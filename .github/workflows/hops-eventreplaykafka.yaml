@@ -35,8 +35,7 @@ jobs:
           build-args: project=${{ github.workflow }}
           push: true
           tags: ${{ env.IMAGE }},ghcr.io/navikt/${{ github.workflow }}:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=app
 
   deploy-eventreplay:
     runs-on: ubuntu-latest
