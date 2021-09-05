@@ -27,7 +27,7 @@ import no.nav.helse.hops.diagnostics.useRequestIdHeader
 import no.nav.helse.hops.hoplite.loadConfigsOrThrow
 import no.nav.helse.hops.statuspages.useFhirErrorStatusPage
 
-@Suppress("unused") // Referenced in application.conf.
+@Suppress("unused") // Referenced in application.conf
 fun Application.main() {
     val hopsApiConfig = loadConfigsOrThrow<Config>()
     val httpClient = HttpClientFactory.create(hopsApiConfig.eventStore)
