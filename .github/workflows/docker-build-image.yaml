@@ -1,9 +1,9 @@
 # Creates and publishes a Docker image containing a Gradle cache with all the required Maven dependencies.
+name: Publish Docker build-image
 on:
   schedule:
     - cron: '0 0 * * MON'
   workflow_dispatch:
-
 jobs:
   build-docker-image:
     runs-on: ubuntu-latest

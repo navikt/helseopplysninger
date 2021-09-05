@@ -7,6 +7,6 @@ jobs:
   remove-package-versions:
     runs-on: ubuntu-latest
     steps:
-      - uses: navikt/remove-package-versions
+      - uses: navikt/remove-package-versions@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
