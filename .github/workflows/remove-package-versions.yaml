@@ -1,0 +1,12 @@
+name: Remove package versions
+on:
+  schedule:
+    - cron:  '0 4 * * *'
+  workflow_dispatch:
+jobs:
+  remove-package-versions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: navikt/remove-package-versions
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
