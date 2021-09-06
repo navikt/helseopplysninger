@@ -48,8 +48,7 @@ spec:
           allowedIntegrations:
             - maskinporten
           atMaxAge: 120
-          consumers:
-            - orgno: "123456789"
+          consumers: []
   gcp:
     buckets:
       - name: helse-hops-fileshare
