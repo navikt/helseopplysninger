@@ -11,7 +11,7 @@ services:
       - ./config/oauth-mock-config.json:/etc/oauth-mock-config.json
 
   # EventStore provides a REST API to store and retrieve Events (FHIR Messages).
-  eventstore:
+  hops-eventstore:
     build:
       context: ..
       args:
@@ -23,43 +23,43 @@ services:
       DB_HOST: postgres
 
   # EventSink consumes FHIR-messages on Kafka from NAV services and publishes them to EventStore.
-  eventsink:
+  hops-eventsinkkafka:
     build:
       context: ..
       args:
         project: hops-eventsinkkafka
-    depends_on: [kafka, eventstore]
+    depends_on: [kafka, hops-eventstore]
     ports: [8083:8080]
     environment:
       KAFKA_BROKERS: kafka:9093
-      HOPS_EVENTSTORE_BASE_URL: http://eventstore:8080
+      HOPS_EVENTSTORE_BASE_URL: http://hops-eventstore:8080
 
   # EventReplay polls FHIR-messages from EventStore and publishes them on Kafka.
-  eventreplay:
+  hops-eventreplaykafka:
     build:
       context: ..
       args:
         project: hops-eventreplaykafka
-    depends_on: [kafka, eventstore]
+    depends_on: [kafka, hops-eventstore]
     ports: [8084:8080]
     environment:
       KAFKA_BROKERS: kafka:9093
-      HOPS_EVENTSTORE_BASE_URL: http://eventstore:8080
+      HOPS_EVENTSTORE_BASE_URL: http://hops-eventstore:8080
 
   # The FHIR REST API exposed to external consumers, e.g. EHRs.
-  api:
+  hops-api:
     build:
       context: ..
       args:
         project: hops-api
-    depends_on: [eventstore]
+    depends_on: [hops-eventstore]
     restart: on-failure
     ports: [8085:8080]
     environment:
-      HOPS_EVENTSTORE_BASE_URL: http://eventstore:8080
+      HOPS_EVENTSTORE_BASE_URL: http://hops-eventstore:8080
 
   # FileShare provides an API to upload and download binary files. These files can be referenced in FHIR-messages.
-  fileshare:
+  hops-fileshare:
     build:
       context: ..
       args:
