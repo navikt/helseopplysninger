@@ -30,6 +30,7 @@ dependencies {
     implementation(project(":libs:hops-common-ktor"))
     implementation("io.ktor:ktor-metrics-micrometer:1.6.3")
     implementation("io.ktor:ktor-webjars:1.6.3")
+    implementation("io.ktor:ktor-server-netty:1.6.3")
     implementation("io.ktor:ktor-auth:1.6.3")
     implementation("io.ktor:ktor-client-auth:1.6.3")
     implementation("io.ktor:ktor-client-serialization:1.6.3")
