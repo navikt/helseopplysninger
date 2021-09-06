@@ -38,6 +38,22 @@ spec:
     application:
       enabled: true
       tenant: nav.no
+  maskinporten:
+    enabled: true
+    scopes:
+      exposes:
+        - name: "helseopplysninger.read"
+          enabled: true
+          product: "helse"
+          consumers:
+            - name: "NAV"
+              orgno: "889640782"
+        - name: "helseopplysninger.write"
+          enabled: true
+          product: "helse"
+          consumers:
+            - name: "NAV"
+              orgno: "889640782"
   gcp:
     buckets:
       - name: helse-hops-fileshare

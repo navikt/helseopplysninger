@@ -1,10 +1,7 @@
-FROM gradle:7.2.0-jdk16 AS build
-WORKDIR /home/gradle/src
-COPY --chown=gradle:gradle . .
+FROM ghcr.io/navikt/hops-build AS build
+COPY . .
 ARG project
-ARG task=shadowJar
-RUN gradle apps:${project}:${task} --no-daemon
+RUN gradle apps:${project}:shadowJar --no-daemon --no-build-cache
 
 FROM navikt/java:16
-ARG project
-COPY --from=build /home/gradle/src/apps/${project}/build/libs/*.jar app.jar
+COPY --from=build /home/gradle/apps/*/build/libs/*.jar app.jar

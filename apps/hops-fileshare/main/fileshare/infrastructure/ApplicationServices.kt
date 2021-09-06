@@ -2,20 +2,32 @@ package fileshare.infrastructure
 
 import fileshare.domain.FileSharingService
 import io.ktor.client.HttpClient
+import io.ktor.client.features.json.JsonFeature
+import io.ktor.client.features.json.serializer.KotlinxSerializer
+import kotlinx.serialization.json.Json
 
-class ApplicationServices(applicationConfig: Config) {
+class ApplicationServices(
+    applicationConfig: Config,
+) {
     val fileSharingService: FileSharingService
 
+    private val baseHttpClient = HttpClient() {
+        install(JsonFeature) {
+            serializer = KotlinxSerializer(Json { ignoreUnknownKeys = true })
+        }
+    }
+
     init {
-        val gcpHttpTransport = GCPHttpTransport(HttpClient(), applicationConfig.fileStore)
+        val config = applicationConfig.fileStore
+        val gcpHttpTransport = GCPHttpTransport(baseHttpClient, config)
         val virusScanner = HttpVirusScanner(
             gcpHttpTransport,
-            HttpClient(),
-            applicationConfig.fileStore
+            baseHttpClient,
+            config
         )
         val fileStore = GCPHttpFileStore(
             gcpHttpTransport,
-            applicationConfig.fileStore
+            config
         )
         fileSharingService = FileSharingService(virusScanner, fileStore)
     }

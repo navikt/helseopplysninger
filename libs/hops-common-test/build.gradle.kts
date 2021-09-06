@@ -25,6 +25,7 @@ dependencies {
     api("io.ktor:ktor-server-netty:1.6.3")
     api("no.nav.security:mock-oauth2-server:0.3.4")
     api("no.nav.security:token-validation-ktor:1.3.8")
+    api("io.mockk:mockk:1.12.0")
     // todo : exclude junit/jupiter
 }
 

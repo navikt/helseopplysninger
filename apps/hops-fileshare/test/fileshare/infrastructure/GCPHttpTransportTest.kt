@@ -5,8 +5,12 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.ktor.client.HttpClient
+import io.ktor.client.HttpClientConfig
 import io.ktor.client.engine.mock.MockEngine
+import io.ktor.client.engine.mock.MockEngineConfig
 import io.ktor.client.engine.mock.respond
+import io.ktor.client.features.json.JsonFeature
+import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.http.ContentType
 import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
@@ -16,6 +20,7 @@ import io.ktor.http.headersOf
 import io.ktor.utils.io.ByteReadChannel
 import java.net.URL
 import kotlinx.datetime.Instant
+import kotlinx.serialization.json.Json
 
 class GCPHttpTransportTest : StringSpec({
 
@@ -52,9 +57,15 @@ class GCPHttpTransportTest : StringSpec({
             "deleted": "0001-01-01T00:00:00Z"
         }
     """.trimIndent()
+    fun jsonMockClient(block: HttpClientConfig<MockEngineConfig>.() -> Unit) = HttpClient(MockEngine) {
+        install(JsonFeature) {
+            serializer = KotlinxSerializer(Json { ignoreUnknownKeys = true })
+        }
+        block()
+    }
 
     "Can deserialize response" {
-        val client = HttpClient(MockEngine) {
+        val client = jsonMockClient {
             engine {
                 addHandler {
                     respond(
@@ -79,7 +90,7 @@ class GCPHttpTransportTest : StringSpec({
     }
 
     "Should decode md5 hash to hex" {
-        val client = HttpClient(MockEngine) {
+        val client = jsonMockClient {
             engine {
                 addHandler {
                     respond(
@@ -102,7 +113,7 @@ class GCPHttpTransportTest : StringSpec({
     }
 
     "Should throw exception when file already exists" {
-        val client = HttpClient(MockEngine) {
+        val client = jsonMockClient {
             engine {
                 addHandler {
                     respond(
@@ -122,7 +133,7 @@ class GCPHttpTransportTest : StringSpec({
     "Should send Google meta-data header to obtain tokens" {
 
         var receivedHeaders = Headers.Empty
-        val client = HttpClient(MockEngine) {
+        val client = jsonMockClient {
             engine {
                 addHandler { request ->
                     val validResponse = respond(
@@ -148,7 +159,7 @@ class GCPHttpTransportTest : StringSpec({
 
     "!Can retrieve access token" {
 
-        val client = HttpClient(MockEngine) {
+        val client = jsonMockClient {
             engine {
                 addHandler {
                     respond(

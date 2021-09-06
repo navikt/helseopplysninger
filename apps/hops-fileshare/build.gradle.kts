@@ -41,7 +41,6 @@ dependencies {
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
     runtimeOnly("org.webjars:swagger-ui:3.51.2")
     testImplementation(project(":libs:hops-common-test"))
-    testImplementation("io.mockk:mockk:1.12.0")
 }
 
 kotlin.sourceSets["main"].kotlin.srcDirs("main")

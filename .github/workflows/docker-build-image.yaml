@@ -1,0 +1,23 @@
+# Creates and publishes a Docker image containing a Gradle cache with all the required Maven dependencies.
+name: Publish Docker build-image
+on:
+  schedule:
+    - cron: '0 0 * * MON'
+  workflow_dispatch:
+jobs:
+  build-docker-image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2.3.4
+
+      - uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: docker/build-push-action@v2.7.0
+        with:
+          file: .docker/builder/Dockerfile
+          push: true
+          tags: ghcr.io/navikt/hops-build:latest
