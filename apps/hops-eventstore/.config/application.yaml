@@ -1,8 +1,8 @@
 # See https://github.com/navikt/token-support#required-properties-yaml-or-properties
 oauth-issuers:
   - name: azure
-    discoveryUrl: ${?AZURE_APP_WELL_KNOWN_URL:-http://mock-oauth2-service:8081/default/.well-known/openid-configuration}
-    audience: = ${?AZURE_APP_CLIENT_ID:-eventstore-audience}
+    discoveryUrl: ${AZURE_APP_WELL_KNOWN_URL:-http://mock-oauth2-service:8081/default/.well-known/openid-configuration}
+    audience: = ${AZURE_APP_CLIENT_ID:-eventstore-audience}
 
 # See https://doc.nais.io/persistence/postgres/#configuration
 db:

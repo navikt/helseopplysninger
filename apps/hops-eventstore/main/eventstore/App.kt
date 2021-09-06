@@ -25,32 +25,35 @@ import no.nav.security.token.support.ktor.tokenValidationSupport
 import eventstore.routes.fhirRoutes
 import eventstore.routes.naisRoutes
 import eventstore.routes.swaggerRoutes
+import io.ktor.application.Application
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import no.nav.helse.hops.hoplite.asApplicationConfig
 
 fun main() {
-    embeddedServer(Netty, 8080) {
-        val config = loadConfigsOrThrow<Config>("/application.yaml")
-        val meterRegistry = PrometheusMeterRegistry(DEFAULT)
+    embeddedServer(Netty, port = 8080, module = Application::module).start(wait = true)
+}
 
-        install(Authentication) { tokenValidationSupport(config = config.oauthIssuers.asApplicationConfig()) }
-        install(CallId) { useRequestIdHeader() }
-        install(CallLogging)
-        install(ContentNegotiation) { register(ContentTypes.fhirJson, FhirR4JsonContentConverter()) }
-        install(MicrometerMetrics) { registry = meterRegistry }
-        install(StatusPages) { useFhirErrorStatusPage() }
-        install(Webjars)
-        install(XForwardedHeaderSupport)
+fun Application.module() {
+    val config = loadConfigsOrThrow<Config>("/application.yaml")
+    val meterRegistry = PrometheusMeterRegistry(DEFAULT)
 
-        val repo = EventStoreRepositoryExposedORM(config.db)
-        val processService = FhirMessageProcessService(repo)
-        val searchService = FhirMessageSearchService(repo)
+    install(Authentication) { tokenValidationSupport(config = config.oauthIssuers.asApplicationConfig()) }
+    install(CallId) { useRequestIdHeader() }
+    install(CallLogging)
+    install(ContentNegotiation) { register(ContentTypes.fhirJson, FhirR4JsonContentConverter()) }
+    install(MicrometerMetrics) { registry = meterRegistry }
+    install(StatusPages) { useFhirErrorStatusPage() }
+    install(Webjars)
+    install(XForwardedHeaderSupport)
 
-        routing {
-            swaggerRoutes()
-            naisRoutes(searchService, meterRegistry)
-            fhirRoutes(searchService, processService)
-        }
-    }.start(true)
+    val repo = EventStoreRepositoryExposedORM(config.db)
+    val processService = FhirMessageProcessService(repo)
+    val searchService = FhirMessageSearchService(repo)
+
+    routing {
+        swaggerRoutes()
+        naisRoutes(searchService, meterRegistry)
+        fhirRoutes(searchService, processService)
+    }
 }
