@@ -3,19 +3,20 @@ package no.nav.helse.hops.hoplite
 import com.sksamuel.hoplite.ConfigLoader
 import com.sksamuel.hoplite.MapPropertySource
 import com.sksamuel.hoplite.parsers.PropsParser
+import com.sksamuel.hoplite.yaml.YamlParser
 import io.ktor.application.Application
 import io.ktor.config.ApplicationConfig
 import io.ktor.config.MapApplicationConfig
 
 inline fun <reified T : Any> loadConfigsOrThrow(vararg resources: String = arrayOf("/application.conf")) =
     ConfigLoader.Builder()
-        .addFileExtensionMapping("properties", PropsParser()) // For some reason this is needed to work in Docker.
+        .addShadowJarWorkaround()
         .build()
         .loadConfigOrThrow<T>(*resources)
 
 inline fun <reified T : Any> Application.loadConfigsOrThrow(vararg resources: String = arrayOf("/application.conf")) =
     ConfigLoader.Builder()
-        .addFileExtensionMapping("properties", PropsParser()) // For some reason this is needed to work in Docker.
+        .addShadowJarWorkaround()
         .addKtorConfig(environment.config)
         .build()
         .loadConfigOrThrow<T>(*resources)
@@ -32,4 +33,10 @@ fun ConfigLoader.Builder.addKtorConfig(config: ApplicationConfig) = apply {
 
         addPropertySource(MapPropertySource(map))
     }
+}
+
+/** For some reason the Parsers needs to be explicitly mapped to file-extensions to work with ShadowJar. */
+fun ConfigLoader.Builder.addShadowJarWorkaround() = apply {
+    addFileExtensionMapping("properties", PropsParser())
+    addFileExtensionMapping("yaml", YamlParser())
 }
