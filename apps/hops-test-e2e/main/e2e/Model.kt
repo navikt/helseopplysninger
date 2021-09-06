@@ -1,4 +1,4 @@
-package e2e.dsl
+package e2e
 
 import kotlinx.serialization.Serializable
 
@@ -11,13 +11,13 @@ data class Report(val testResults: MutableList<TestResult> = mutableListOf()) {
 }
 
 @Serializable
-enum class Status {
-    SUCCESS,
-    FAILED
+sealed class Status {
+    object Success : Status()
+    object Failed : Status()
 }
 
 @Serializable
 data class TestResult(
     var name: String? = null,
-    var status: Status? = null,
+    val status: Status = Status.Success,
 )

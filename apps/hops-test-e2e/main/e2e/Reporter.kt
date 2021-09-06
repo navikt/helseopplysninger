@@ -1,6 +1,5 @@
 package e2e
 
-import e2e.dsl.Report
 import io.ktor.client.HttpClient
 import io.ktor.client.request.header
 import io.ktor.client.request.post

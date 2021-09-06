@@ -1,6 +1,6 @@
 package e2e.tests
 
-import e2e.dsl.Status
+import e2e.Status
 
 interface Test {
     val name: String
