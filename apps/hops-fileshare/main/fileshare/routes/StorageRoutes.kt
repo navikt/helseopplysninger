@@ -1,6 +1,7 @@
 package fileshare.routes
 
 import fileshare.domain.FileSharingService
+import fileshare.infrastructure.Constants
 import io.ktor.application.call
 import io.ktor.auth.authenticate
 import io.ktor.features.origin
@@ -18,8 +19,8 @@ import io.ktor.utils.io.copyAndClose
 import no.nav.helse.hops.routing.fullUrl
 
 fun Routing.storageRoutes(service: FileSharingService) {
-    authenticate {
-        route("files") {
+    route("files") {
+        authenticate(Constants.EXTERNAL_PROVIDER_UPLOAD, Constants.INTERNAL_PROVIDER) {
             post {
                 val fileName = service.uploadFile(call.request.receiveChannel(), call.request.contentType())
 
@@ -27,7 +28,8 @@ fun Routing.storageRoutes(service: FileSharingService) {
                 call.response.headers.append(HttpHeaders.Location, fileUrl)
                 call.respond(HttpStatusCode.Created)
             }
-
+        }
+        authenticate(Constants.EXTERNAL_PROVIDER_DOWNLOAD, Constants.INTERNAL_PROVIDER) {
             get("/{fileName}") {
                 val fileName = call.parameters["fileName"]!!
 

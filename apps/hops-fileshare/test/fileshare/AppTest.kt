@@ -19,6 +19,49 @@ import okhttp3.mockwebserver.MockResponse
 import withFileshareTestApp
 
 class DownloadFileTest : FeatureSpec({
+    feature("Download authorization") {
+        scenario("Token by issuer that requires scope claims has scopes") {
+            withFileshareTestApp {
+                with(
+                    handleRequest(HttpMethod.Get, "/files/testfile") {
+                        val token = MockServers.oAuth.issueToken(issuerId = "with-scopes", claims = mapOf("scope" to "nav:helse:helseopplysninger.read"))
+                        addHeader("Authorization", "Bearer ${token.serialize()}")
+                    }
+                ) {
+                    response shouldHaveStatus HttpStatusCode.OK
+                }
+            }
+        }
+
+        scenario("Issuer that requires scope claims does not have the required scope") {
+            withFileshareTestApp {
+                with(
+                    handleRequest(HttpMethod.Post, "/files") {
+                        val token = MockServers.oAuth.issueToken(issuerId = "with-scopes")
+                        addHeader("Authorization", "Bearer ${token.serialize()}")
+                        addHeader("Content-Type", "plain/txt")
+                        setBody("new fantastic content")
+                    }
+                ) {
+                    response shouldHaveStatus HttpStatusCode.Unauthorized
+                }
+            }
+        }
+
+        scenario("Issuer that does not require scope claims can download") {
+            withFileshareTestApp {
+                with(
+                    handleRequest(HttpMethod.Get, "/files/testfile") {
+                        val token = MockServers.oAuth.issueToken()
+                        addHeader("Authorization", "Bearer ${token.serialize()}")
+                    }
+                ) {
+                    response shouldHaveStatus HttpStatusCode.OK
+                }
+            }
+        }
+    }
+
     feature("GET /files/{filename}") {
         scenario("with existing file returns the file") {
             withFileshareTestApp {
@@ -59,6 +102,53 @@ class DownloadFileTest : FeatureSpec({
 })
 
 class UploadFileTest : FeatureSpec({
+    feature("Upload authorization") {
+        scenario("Token by issuer that requires scope claims has scopes") {
+            withFileshareTestApp {
+                with(
+                    handleRequest(HttpMethod.Post, "/files") {
+                        val token = MockServers.oAuth.issueToken(issuerId = "with-scopes", claims = mapOf("scope" to "nav:helse:helseopplysninger.write"))
+                        addHeader("Authorization", "Bearer ${token.serialize()}")
+                        addHeader("Content-Type", "plain/txt")
+                        setBody("new fantastic content")
+                    }
+                ) {
+                    response shouldHaveStatus HttpStatusCode.Created
+                }
+            }
+        }
+
+        scenario("Token by issuer that requires scope claims does not have the required scope") {
+            withFileshareTestApp {
+                with(
+                    handleRequest(HttpMethod.Post, "/files") {
+                        val token = MockServers.oAuth.issueToken(issuerId = "with-scopes")
+                        addHeader("Authorization", "Bearer ${token.serialize()}")
+                        addHeader("Content-Type", "plain/txt")
+                        setBody("new fantastic content")
+                    }
+                ) {
+                    response shouldHaveStatus HttpStatusCode.Unauthorized
+                }
+            }
+        }
+
+        scenario("Token by issuer that does not require scope claims can upload") {
+            withFileshareTestApp {
+                with(
+                    handleRequest(HttpMethod.Post, "/files") {
+                        val token = MockServers.oAuth.issueToken()
+                        addHeader("Authorization", "Bearer ${token.serialize()}")
+                        addHeader("Content-Type", "plain/txt")
+                        setBody("new fantastic content")
+                    }
+                ) {
+                    response shouldHaveStatus HttpStatusCode.Created
+                }
+            }
+        }
+    }
+
     feature("POST /files") {
         scenario("happy path") {
             withFileshareTestApp {

@@ -42,14 +42,18 @@ spec:
     enabled: true
     scopes:
       exposes:
-        - name: "some.scope.read"
+        - name: "helseopplysninger.read"
           enabled: true
-          product: "arbeid"
-          allowedIntegrations:
-            - maskinporten
-          atMaxAge: 120
+          product: "helse"
           consumers:
-            - orgno: "123456789"
+            - name: "NAV"
+              orgno: "889640782"
+        - name: "helseopplysninger.write"
+          enabled: true
+          product: "helse"
+          consumers:
+            - name: "NAV"
+              orgno: "889640782"
   gcp:
     buckets:
       - name: helse-hops-fileshare
