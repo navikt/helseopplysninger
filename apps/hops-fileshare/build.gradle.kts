@@ -9,7 +9,7 @@ plugins {
 }
 
 application {
-    mainClass.set("io.ktor.server.netty.EngineMain")
+    mainClass.set("fileshare.AppKt")
 }
 
 tasks {
