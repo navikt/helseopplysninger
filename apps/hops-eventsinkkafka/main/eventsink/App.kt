@@ -22,7 +22,6 @@ import io.micrometer.prometheus.PrometheusConfig.DEFAULT
 import io.micrometer.prometheus.PrometheusMeterRegistry
 import no.nav.helse.hops.hoplite.loadConfigsOrThrow
 
-
 fun main() {
     embeddedServer(Netty, port = 8080, module = Application::module).start(wait = true)
 }
