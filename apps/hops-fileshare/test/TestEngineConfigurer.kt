@@ -1,4 +1,5 @@
-import fileshare.main
+
+import fileshare.module
 import io.kotest.core.config.AbstractProjectConfig
 import io.kotest.core.listeners.Listener
 import io.kotest.core.listeners.ProjectListener
@@ -14,7 +15,7 @@ fun <R> withFileshareTestApp(
     return withTestApplication(
         {
             config()
-            main()
+            module()
         },
         test
     )
@@ -44,18 +45,16 @@ internal fun startOAuth() = with(MockServers.oAuth, MockOAuth2Server::start)
 internal fun stopOAuth() = with(MockServers.oAuth, MockOAuth2Server::shutdown)
 
 private fun Application.config() = (environment.config as MapApplicationConfig).apply {
-    put("no.nav.security.jwt.issuers.size", "2")
-    put("no.nav.security.jwt.issuers.0.issuer_name", "default")
-    put("no.nav.security.jwt.issuers.0.discoveryurl", "${MockServers.oAuth.wellKnownUrl("default")}")
-    put("no.nav.security.jwt.issuers.0.accepted_audience", "default")
+    put("oauth.azure.name", "default")
+    put("oauth.azure.discoveryUrl", "${MockServers.oAuth.wellKnownUrl("default")}")
+    put("oauth.azure.audience", "default")
 
-    put("no.nav.security.jwt.issuers.1.issuer_name", "with-scopes")
-    put("no.nav.security.jwt.issuers.1.requires_scope_claims", "true")
-    put("no.nav.security.jwt.issuers.1.discoveryurl", "${MockServers.oAuth.wellKnownUrl("with-scopes")}")
-    put("no.nav.security.jwt.issuers.1.accepted_audience", "default")
+    put("oauth.maskinporten.issuer.name", "with-scopes")
+    put("oauth.maskinporten.issuer.discoveryUrl", "${MockServers.oAuth.wellKnownUrl("with-scopes")}")
+    put("oauth.maskinporten.issuer.audience", "default")
+    put("oauth.maskinporten.uploadScope", "nav:helse:helseopplysninger.write")
+    put("oauth.maskinporten.downloadScope", "nav:helse:helseopplysninger.read")
 
-    put("security.scopes.upload", "nav:helse:helseopplysninger.write")
-    put("security.scopes.download", "nav:helse:helseopplysninger.read")
     put("fileStore.baseUrl", MockServers.gcs.getBaseUrl())
     put("fileStore.requiresAuth", "true")
     put("fileStore.virusScanningEnabled", "true")
