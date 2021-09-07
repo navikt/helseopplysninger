@@ -1,7 +1,7 @@
 package api.infrastructure
 
 import io.ktor.auth.Authentication
-import io.ktor.config.ApplicationConfig
+import no.nav.helse.hops.hoplite.asApplicationConfig
 import no.nav.security.token.support.ktor.RequiredClaims
 import no.nav.security.token.support.ktor.tokenValidationSupport
 
@@ -10,23 +10,21 @@ object Constants {
     const val SUBSCRIBE = "subscribe"
 }
 
-fun Authentication.Configuration.useNaviktTokenSupport(config: ApplicationConfig) {
-    val pubScope = config.property("security.scopes.publish").getString()
-    val subScope = config.property("security.scopes.subscribe").getString()
+fun Authentication.Configuration.useNaviktTokenSupport(config: Config.ModuleOAuth) {
+    val pubScope = config.publishScope
+    val subScope = config.subscribeScope
 
     // Workaround because Token-Support does not handle scope-claim with multiple values.
     val unionClaims = arrayOf("scope=$pubScope $subScope", "scope=$subScope $pubScope")
     val pubClaims = unionClaims + "scope=$pubScope"
     val subClaims = unionClaims + "scope=$subScope"
 
-    val issuer = config
-        .configList("no.nav.security.jwt.issuers")[0]
-        .property("issuer_name")
-        .getString()
+    val issuer = config.issuers[0].name
 
     val pubReq = RequiredClaims(issuer, pubClaims, true)
     val subReq = RequiredClaims(issuer, subClaims, true)
 
-    tokenValidationSupport(Constants.PUBLISH, config, pubReq)
-    tokenValidationSupport(Constants.SUBSCRIBE, config, subReq)
+    val ktorConfig = config.issuers.asApplicationConfig()
+    tokenValidationSupport(Constants.PUBLISH, ktorConfig, pubReq)
+    tokenValidationSupport(Constants.SUBSCRIBE, ktorConfig, subReq)
 }

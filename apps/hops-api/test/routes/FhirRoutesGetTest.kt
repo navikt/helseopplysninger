@@ -6,7 +6,6 @@ import io.ktor.http.HttpMethod.Companion.Get
 import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.http.HttpStatusCode.Companion.Unauthorized
 import io.ktor.server.testing.handleRequest
-import oAuthMock
 import withHopsTestApplication
 
 internal class FhirRoutesGetTest : FeatureSpec({
@@ -23,7 +22,7 @@ internal class FhirRoutesGetTest : FeatureSpec({
             withHopsTestApplication {
                 with(
                     handleRequest(Get, "/fhir/4.0/Bundle") {
-                        val token = oAuthMock.issueToken(claims = mapOf("scope" to "/test-publish"))
+                        val token = MockServers.oAuth.issueToken(claims = mapOf("scope" to "/test-publish"))
                         addHeader("Authorization", "Bearer ${token.serialize()}")
                     }
                 ) {
@@ -36,7 +35,7 @@ internal class FhirRoutesGetTest : FeatureSpec({
             withHopsTestApplication {
                 with(
                     handleRequest(Get, "/fhir/4.0/Bundle") {
-                        val token = oAuthMock.issueToken()
+                        val token = MockServers.oAuth.issueToken()
                         addHeader("Authorization", "Bearer ${token.serialize()}")
                     }
                 ) {
@@ -49,7 +48,7 @@ internal class FhirRoutesGetTest : FeatureSpec({
             withHopsTestApplication {
                 with(
                     handleRequest(Get, "/fhir/4.0/Bundle") {
-                        val token = oAuthMock.issueToken(claims = mapOf("scope" to "/test-subscribe"))
+                        val token = MockServers.oAuth.issueToken(claims = mapOf("scope" to "/test-subscribe"))
                         addHeader("Authorization", "Bearer ${token.serialize()}")
                     }
                 ) {

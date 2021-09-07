@@ -2,11 +2,14 @@ package no.nav.helse.hops.hoplite
 
 import com.sksamuel.hoplite.ConfigLoader
 import com.sksamuel.hoplite.MapPropertySource
+import com.sksamuel.hoplite.PropertySource
 import com.sksamuel.hoplite.parsers.PropsParser
 import com.sksamuel.hoplite.yaml.YamlParser
 import io.ktor.application.Application
 import io.ktor.config.ApplicationConfig
 import io.ktor.config.MapApplicationConfig
+import java.io.ByteArrayOutputStream
+import java.util.Properties
 
 inline fun <reified T : Any> loadConfigsOrThrow(vararg resources: String = arrayOf("/application.conf")) =
     ConfigLoader.Builder()
@@ -31,9 +34,28 @@ fun ConfigLoader.Builder.addKtorConfig(config: ApplicationConfig) = apply {
             it.get(config) as Map<String, String>
         }
 
-        addPropertySource(MapPropertySource(map))
+//        addPropertySource(MapPropertySource(map))
+        addPropertySource(config.asPropertySource())
     }
 }
+
+fun MapApplicationConfig.asPropertySource(): PropertySource {
+    val props = Properties()
+
+    val map: Map<String, String> = getPrivateProperty("map")
+    map.forEach { props.setProperty(it.key, it.value) }
+
+    ByteArrayOutputStream().use { output ->
+        props.store(output, "")
+        return PropertySource.string(output.toString(), "properties")
+    }
+}
+
+private inline fun <T : Any, reified R : Any> T.getPrivateProperty(variableName: String): R =
+    javaClass.getDeclaredField(variableName).let {
+        it.isAccessible = true
+        it.get(this) as R
+    }
 
 /** For some reason the Parsers needs to be explicitly mapped to file-extensions to work with ShadowJar. */
 fun ConfigLoader.Builder.addShadowJarWorkaround() = apply {

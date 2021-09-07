@@ -1,0 +1,15 @@
+oauth:
+  issuers:
+    - name: maskinporten
+      discoveryUrl: ${MASKINPORTEN_WELL_KNOWN_URL:-http://mock-oauth2-service:8081/makinporten/.well-known/openid-configuration}
+      audience: "https://hops.nav.no"
+      optionalClaims: "sub,nbf"
+  publishScope: "nav:helse:helseopplysninger.write"
+  subscribeScope: "nav:helse:helseopplysninger.read"
+
+eventStore:
+  baseUrl: ${HOPS_EVENTSTORE_BASE_URL:-http://localhost:8082}
+  discoveryUrl: ${AZURE_APP_WELL_KNOWN_URL:-http://mock-oauth2-service:8081/default/.well-known/openid-configuration}
+  clientId: ${AZURE_APP_CLIENT_ID:-api-test-client-id}
+  clientSecret: ${AZURE_APP_CLIENT_SECRET:-api-test-secret}
+  scope: ${HOPS_EVENTSTORE_SCOPE:-eventstore}
