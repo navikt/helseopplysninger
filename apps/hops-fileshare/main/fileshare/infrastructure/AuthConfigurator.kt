@@ -11,18 +11,18 @@ object Constants {
     const val INTERNAL_PROVIDER = "internal"
 }
 
-fun Authentication.Configuration.useNaviktTokenSupport(config: Config) {
-    val uploadScope = config.oauth.maskinporten.uploadScope
-    val downloadScope = config.oauth.maskinporten.downloadScope
+fun Authentication.Configuration.useNaviktTokenSupport(config: Config.ModuleOAuth) {
+    val uploadScope = config.maskinporten.uploadScope
+    val downloadScope = config.maskinporten.downloadScope
     val unionClaims = arrayOf("scope=$uploadScope $downloadScope", "scope=$downloadScope $uploadScope")
     val downloadClaims = unionClaims + "scope=$downloadScope"
     val uploadClaims = unionClaims + "scope=$uploadScope"
 
-    val downReqClaims = RequiredClaims(config.oauth.maskinporten.issuer.name, downloadClaims, true)
-    val upReqClaims = RequiredClaims(config.oauth.maskinporten.issuer.name, uploadClaims, true)
-    val internalReqClaims = RequiredClaims(config.oauth.azure.name, emptyArray(), true)
+    val downReqClaims = RequiredClaims(config.maskinporten.issuer.name, downloadClaims, true)
+    val upReqClaims = RequiredClaims(config.maskinporten.issuer.name, uploadClaims, true)
+    val internalReqClaims = RequiredClaims(config.azure.name, emptyArray(), true)
 
-    val applicationConfig = listOf(config.oauth.azure, config.oauth.maskinporten.issuer).asApplicationConfig()
+    val applicationConfig = listOf(config.azure, config.maskinporten.issuer).asApplicationConfig()
     tokenValidationSupport(Constants.EXTERNAL_PROVIDER_UPLOAD, applicationConfig, upReqClaims)
     tokenValidationSupport(Constants.EXTERNAL_PROVIDER_DOWNLOAD, applicationConfig, downReqClaims)
     tokenValidationSupport(Constants.INTERNAL_PROVIDER, applicationConfig, internalReqClaims)
