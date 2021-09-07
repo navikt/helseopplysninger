@@ -3,21 +3,16 @@ package e2e
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Report(val testResults: MutableList<TestResult> = mutableListOf()) {
-    fun test(init: TestResult.() -> Unit) = TestResult().also {
+class Results(private val failedTests: MutableList<FailedTest> = mutableListOf()) {
+    fun test(init: FailedTest.() -> Unit) = FailedTest().also {
         it.init()
-        testResults.add(it)
+        failedTests.add(it)
     }
 }
 
 @Serializable
-sealed class Status {
-    object Success : Status()
-    object Failed : Status()
-}
-
-@Serializable
-data class TestResult(
-    var name: String? = null,
-    val status: Status = Status.Success,
+class FailedTest(
+    var name: String = "test",
+    var description: String = "description",
+    var stacktrace: String? = null,
 )

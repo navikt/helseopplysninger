@@ -1,13 +1,18 @@
 package e2e
 
-import e2e.extensions.getRequired
+import e2e.extensions.GithubJson
+import e2e.extensions.runTests
+import e2e.extensions.sendDispatchEvent
 import io.ktor.application.Application
-import io.ktor.application.application
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.client.HttpClient
+import io.ktor.client.features.json.JsonFeature
+import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.features.CallLogging
 import io.ktor.features.ContentNegotiation
+import io.ktor.features.DefaultHeaders
+import io.ktor.http.HttpStatusCode
 import io.ktor.metrics.micrometer.MicrometerMetrics
 import io.ktor.response.respond
 import io.ktor.response.respondText
@@ -19,17 +24,25 @@ import io.ktor.serialization.json
 import io.micrometer.prometheus.PrometheusConfig
 import io.micrometer.prometheus.PrometheusMeterRegistry
 import kotlinx.serialization.json.Json
+import no.nav.helse.hops.hoplite.loadConfigsOrThrow
+
+data class Config(val api: Api) {
+    data class Api(val github: Github, val internal: Internal)
+    data class Github(val baseUrl: String)
+    data class Internal(val domain: String)
+}
 
 fun Application.main() {
     val prometheus = PrometheusMeterRegistry(PrometheusConfig.DEFAULT)
 
     install(MicrometerMetrics) { registry = prometheus }
-    install(ContentNegotiation) { json(Json { prettyPrint = true }) }
+    install(DefaultHeaders)
+    install(ContentNegotiation) { json(Json { prettyPrint = true }) } // kotlinx.serialization
     install(CallLogging)
 
     routing {
         actuators(prometheus)
-        trigger()
+        e2eTrigger()
     }
 }
 
@@ -39,19 +52,22 @@ private fun Routing.actuators(prometheus: PrometheusMeterRegistry) {
     get("/prometheus") { call.respond(prometheus.scrape()) }
 }
 
-private fun Routing.trigger() {
-    post("/test") { application.runTests(HttpClient()) }
-
-    get("/test") {
-        val testExecutor = TestExecutor(HttpClient())
-        testExecutor.runTests()
-        call.respond(testExecutor.report)
+private fun Routing.e2eTrigger() {
+    val config = application.loadConfigsOrThrow<Config>()
+    val internalHttp = HttpClient()
+    val githubHttp = HttpClient {
+        install(JsonFeature) {
+            serializer = KotlinxSerializer()
+            accept(GithubJson)
+        }
     }
-}
 
-private suspend fun Application.runTests(httpClient: HttpClient) {
-    val testExecutor = TestExecutor(httpClient)
-    testExecutor.runTests()
-    val report = testExecutor.report
-    httpClient.sendResultsToWorkflow(environment.getRequired("api.github.base-url"), report)
+    post("/runTests") {
+        val internalDomain = config.api.internal.domain
+        val githubBaseUrl = config.api.github.baseUrl
+        val results = internalHttp.runTests(internalDomain)
+        githubHttp.sendDispatchEvent(githubBaseUrl, results)
+
+        call.respondText("Tests are now running..", status = HttpStatusCode.Accepted)
+    }
 }

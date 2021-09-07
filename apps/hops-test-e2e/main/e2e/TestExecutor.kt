@@ -1,41 +1,39 @@
 package e2e
 
-import e2e.tests.AlivenessTest
+import e2e.tests.LivenessTest
 import e2e.tests.Test
 import io.ktor.client.HttpClient
 import kotlinx.coroutines.withTimeout
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 class TestExecutor(
     val httpClient: HttpClient,
-    val report: Report = Report()
+    internalDomain: String,
+    private val results: Results = Results(),
 ) {
+    private val log: Logger = LoggerFactory.getLogger(TestExecutor::class.java)
+    private val tests = LivenessTest.createAllTests(this, internalDomain)
+
     inline fun <T> http(http: HttpClient.() -> T) = http(httpClient)
+    fun getResults() = results
 
-    suspend fun runTests() = tests.forEach {
-        withTimeout(10_000L) { // 10s
-            runTest(it)
-        }
-    }
-
-    private suspend fun runTest(test: Test) = when (test.run()) {
-        Status.Success -> println("${test.name} passed")
-        Status.Failed -> report.addFailedTest(test.name)
-    }
-
-    private fun Report.addFailedTest(testName: String) {
-        apply {
-            test {
-                name = testName
+    suspend fun runTests() = tests.forEach { test ->
+        withTimeout(5_000L) { // 5s timeout per test
+            when (test.run()) {
+                true -> log.info("${test.name} passed")
+                false -> results.addFailedTest(test)
             }
         }
     }
 
-    private val tests = listOf<Test>(
-        AlivenessTest("hops-api liveness", "hops-api.local.gl:8080", this),
-        AlivenessTest("hops-eventreplaykafka liveness", "hops-eventreplaykafka.local.gl:8080", this),
-        AlivenessTest("hops-eventsinkkafka liveness", "hops-eventsinkkafka.local.gl:8080", this),
-        AlivenessTest("hops-eventstore liveness", "hops-eventstore.local.gl:8080", this),
-        AlivenessTest("hops-fileshare liveness", "hops-fileshare.local.gl:8080", this),
-        AlivenessTest("hops-test-external liveness", "hops-test-external.local.gl:8080", this),
-    )
+    private fun Results.addFailedTest(test: Test) {
+        apply {
+            test {
+                name = test.name
+                description = test.description
+                stacktrace = test.stacktrace
+            }
+        }
+    }
 }

@@ -17,11 +17,14 @@ dependencies {
     implementation("io.micrometer:micrometer-registry-prometheus:1.7.3")
     implementation("io.ktor:ktor-metrics-micrometer:1.6.3")
     implementation("io.ktor:ktor-client-cio:1.6.3")
+    implementation("io.ktor:ktor-client-serialization:1.6.3")
     runtimeOnly("io.ktor:ktor-server-netty:1.6.3")
     runtimeOnly("ch.qos.logback:logback-classic:1.2.5")
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
+
     implementation("io.ktor:ktor-serialization:1.6.3")
+    testImplementation(project(":libs:hops-common-test"))
 }
 
 tasks {
@@ -31,4 +34,5 @@ tasks {
 }
 
 kotlin.sourceSets["main"].kotlin.srcDirs("main")
+kotlin.sourceSets["test"].kotlin.srcDirs("test")
 sourceSets["main"].resources.srcDir(".config")
