@@ -1,0 +1,22 @@
+oauth:
+  azure:
+    name: ${AZURE_OPENID_CONFIG_ISSUER:-azure-ad}
+    discoveryUrl: ${AZURE_APP_WELL_KNOWN_URL:-http://mock-oauth2-service:8081/azure-ad/.well-known/openid-configuration}
+    audience: = ${AZURE_APP_CLIENT_ID:-helseopplysninger-audience}
+  maskinporten:
+    issuer:
+      name: maskinporten
+      discoveryUrl: ${MASKINPORTEN_WELL_KNOWN_URL:-http://mock-oauth2-service:8081/makinporten/.well-known/openid-configuration}
+      audience: "https://hops-fileshare.nav.no"
+      optionalClaims: "sub,nbf"
+    uploadScope: "nav:helse:helseopplysninger.write"
+    downloadScope: "nav:helse:helseopplysninger.read"
+
+fileStore:
+  baseUrl: ${FILESTORE_BASEURL:-http://localhost:4443}
+  bucketName: ${FILESTORE_BUCKET_NAME:-hops}
+  requiresAuth: ${FILESTORE_REQUIRES_AUTH:-true}
+  tokenFetchUrl: ${FILESTORE_TOKEN_FETCH_URL:-http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token}
+  virusScanningEnabled: ${FILESTORE_VIRUS_SCAN_ENABLED:-true}
+  virusScannerUrl: ${FILESTORE_VIRUS_SCANNER_URL:-http://clamav.clamav.svc.cluster.local/scan}
+  unScannedBucketName: ${FILESTORE_BUCKET_NAME_UNSCANNED:-hops-unscanned}
