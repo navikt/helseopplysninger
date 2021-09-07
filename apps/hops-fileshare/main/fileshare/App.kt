@@ -31,7 +31,7 @@ fun Application.module() {
     install(Webjars)
     install(CallLogging)
     install(MicrometerMetrics) { registry = prometheusMeterRegistry }
-    install(Authentication) { useNaviktTokenSupport(config) }
+    install(Authentication) { useNaviktTokenSupport(config.oauth) }
 
     routing {
         naisRoutes(prometheusMeterRegistry)
