@@ -22,10 +22,12 @@ internal fun Application.config(): MapApplicationConfig {
 }
 
 internal fun <R> withHopsTestApplication(test: TestApplicationEngine.() -> R): R =
-    withEnvironment(mapOf(
-        "HOPS_EVENTSTORE_BASE_URL" to MockServers.eventStore.getBaseUrl(),
-        "AZURE_APP_WELL_KNOWN_URL" to MockServers.oAuth.wellKnownUrl("azure").toString()
-    )) {
+    withEnvironment(
+        mapOf(
+            "HOPS_EVENTSTORE_BASE_URL" to MockServers.eventStore.getBaseUrl(),
+            "AZURE_APP_WELL_KNOWN_URL" to MockServers.oAuth.wellKnownUrl("azure").toString()
+        )
+    ) {
         withTestApplication(
             {
                 config()
@@ -44,10 +46,12 @@ internal class KotestListener : ProjectListener {
         startOAuth()
         MockServers.eventStore.start()
     }
+
     override suspend fun afterProject() {
         stopOAuth()
         MockServers.eventStore.shutdown()
     }
 }
+
 internal fun startOAuth() = with(MockServers.oAuth, MockOAuth2Server::start)
 internal fun stopOAuth() = with(MockServers.oAuth, MockOAuth2Server::shutdown)
