@@ -9,17 +9,19 @@ import org.slf4j.LoggerFactory
 
 class TestExecutor(
     val httpClient: HttpClient,
-    internalDomain: String,
-    private val results: Results = Results(),
+    config: Config.Hops,
+    workflowId: String,
+    appName: String,
 ) {
     private val log: Logger = LoggerFactory.getLogger(TestExecutor::class.java)
-    private val tests = LivenessTest.createAllTests(this, internalDomain)
+    private val tests = LivenessTest.createAllTests(this, config)
+    private val results: Results = Results("e2e", ClientPayload(workflowId, appName))
 
     inline fun <T> http(http: HttpClient.() -> T) = http(httpClient)
     fun getResults() = results
 
     suspend fun runTests() = tests.forEach { test ->
-        withTimeout(5_000L) { // 5s timeout per test
+        withTimeout(1_000L) { // 1s timeout per test
             when (test.run()) {
                 true -> log.info("${test.name} passed")
                 false -> results.addFailedTest(test)

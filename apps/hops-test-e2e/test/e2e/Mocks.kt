@@ -1,6 +1,14 @@
 package e2e
 
+import e2e.extensions.GithubJson
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.shouldBe
+import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import no.nav.helse.hops.test.MockServer
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.RecordedRequest
@@ -9,7 +17,7 @@ object Mocks {
     val github = MockServer().apply {
         matchRequest(Github::matcher, Github::dispatcher)
     }
-    val internal = MockServer().apply {
+    val hops = MockServer().apply {
         matchRequest(Internal::livenessMatcher, Internal::livenessDispatcher)
     }
 
@@ -19,24 +27,26 @@ object Mocks {
             else -> false.also { error("Unhandled github request") }
         }
 
-        fun dispatcher(req: RecordedRequest): MockResponse = MockResponse()
-            .setResponseCode(HttpStatusCode.NoContent.value)
-            .setBody("")
+        @OptIn(ExperimentalSerializationApi::class)
+        fun dispatcher(req: RecordedRequest): MockResponse {
+            req.headers[HttpHeaders.Accept] shouldBe GithubJson.toString()
+            req.headers[HttpHeaders.ContentType] shouldBe ContentType.Application.Json.toString()
+            Json.decodeFromString<Results>(req.body.readUtf8()).let { results ->
+                results.eventType shouldBe "e2e"
+                results.clientPayload.failedTests shouldHaveSize 0
+            }
+
+            return MockResponse()
+                .setResponseCode(HttpStatusCode.NoContent.value)
+                .addHeader("Content-Type", "text/plain")
+                .setBody("")
+        }
     }
 
     object Internal {
-        private val livenessProbes = listOf(
-            "http://hops-api/isAlive",
-            "http://hops-eventreplaykafka/isAlive",
-            "http://hops-eventsinkkafka/isAlive",
-            "http://hops-eventstore/isAlive",
-            "http://hops-fileshare/isAlive",
-            "http://hops-test-external/isAlive",
-        )
-
-        fun livenessMatcher(req: RecordedRequest): Boolean = when (req.requestUrl?.encodedPath) {
-            in livenessProbes -> req.method == "GET"
-            else -> false.also { error("Unhandled internal liveness probe") }
+        fun livenessMatcher(req: RecordedRequest): Boolean = when (req.path) {
+            "/isAlive" -> req.method == "GET"
+            else -> false.also { error("Unhandled hops liveness request") }
         }
 
         fun livenessDispatcher(req: RecordedRequest): MockResponse = MockResponse()

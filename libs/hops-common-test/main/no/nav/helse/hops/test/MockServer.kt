@@ -28,17 +28,8 @@ class MockServer {
         MockResponse().setResponseCode(HttpStatusCode.NotFound.value)
     }
 
-    private var isRunning = false
-
-    fun start() = when (isRunning) {
-        false -> mockWebServer.start().also { isRunning = true }
-        else -> println("Mock is already running..")
-    }
-
-    fun shutdown() = when (isRunning) {
-        true -> mockWebServer.shutdown()
-        else -> println("Mock is already shutdown..")
-    }
+    fun start() = mockWebServer.start()
+    fun shutdown() = mockWebServer.shutdown()
 
     private class MatchAndDispatch(
         val matcher: (RecordedRequest) -> Boolean,

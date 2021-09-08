@@ -10,7 +10,6 @@ import io.ktor.client.HttpClient
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.features.CallLogging
-import io.ktor.features.ContentNegotiation
 import io.ktor.features.DefaultHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.metrics.micrometer.MicrometerMetrics
@@ -20,29 +19,28 @@ import io.ktor.routing.Routing
 import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.routing
-import io.ktor.serialization.json
+import io.ktor.server.engine.embeddedServer
+import io.ktor.server.netty.Netty
 import io.micrometer.prometheus.PrometheusConfig
 import io.micrometer.prometheus.PrometheusMeterRegistry
-import kotlinx.serialization.json.Json
 import no.nav.helse.hops.hoplite.loadConfigsOrThrow
 
-data class Config(val api: Api) {
-    data class Api(val github: Github, val internal: Internal)
-    data class Github(val baseUrl: String)
-    data class Internal(val domain: String)
+fun main() {
+    embeddedServer(Netty, port = 8080, module = Application::main).start(wait = true)
 }
 
 fun Application.main() {
     val prometheus = PrometheusMeterRegistry(PrometheusConfig.DEFAULT)
 
+    val config = loadConfigsOrThrow<Config>("/application.yml")
+
     install(MicrometerMetrics) { registry = prometheus }
     install(DefaultHeaders)
-    install(ContentNegotiation) { json(Json { prettyPrint = true }) } // kotlinx.serialization
     install(CallLogging)
 
     routing {
         actuators(prometheus)
-        e2eTrigger()
+        e2eTrigger(config)
     }
 }
 
@@ -52,21 +50,19 @@ private fun Routing.actuators(prometheus: PrometheusMeterRegistry) {
     get("/prometheus") { call.respond(prometheus.scrape()) }
 }
 
-private fun Routing.e2eTrigger() {
-    val config = application.loadConfigsOrThrow<Config>()
-    val internalHttp = HttpClient()
-    val githubHttp = HttpClient {
+private fun Routing.e2eTrigger(config: Config) {
+    val hops = HttpClient()
+    val github = HttpClient {
         install(JsonFeature) {
+            acceptContentTypes = listOf(GithubJson)
             serializer = KotlinxSerializer()
-            accept(GithubJson)
         }
     }
 
     post("/runTests") {
-        val internalDomain = config.api.internal.domain
         val githubBaseUrl = config.api.github.baseUrl
-        val results = internalHttp.runTests(internalDomain)
-        githubHttp.sendDispatchEvent(githubBaseUrl, results)
+        val results = hops.runTests(config.api.hops)
+        github.sendDispatchEvent(githubBaseUrl, results)
 
         call.respondText("Tests are now running..", status = HttpStatusCode.Accepted)
     }

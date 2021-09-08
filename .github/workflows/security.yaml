@@ -23,7 +23,7 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Run vulnerability scan
-        uses: snyk/actions/gradle-jdk16@master
+        uses: snyk/actions/gradle-jdk11@master
         continue-on-error: true # enable for SARIF to upload properly
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}

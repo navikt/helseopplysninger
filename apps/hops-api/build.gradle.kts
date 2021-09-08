@@ -1,5 +1,4 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jlleitschuh.gradle.ktlint.tasks.KtLintFormatTask
 
 plugins {
     application
@@ -14,7 +13,7 @@ application {
 
 tasks {
     withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = "16"
+        kotlinOptions.jvmTarget = "11"
     }
     withType<Test> {
         useJUnitPlatform()

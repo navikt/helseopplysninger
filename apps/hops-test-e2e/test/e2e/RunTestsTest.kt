@@ -7,19 +7,9 @@ import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.testing.handleRequest
 
-class TestTest : FeatureSpec({
-    beforeSpec {
-        Mocks.github.start()
-        Mocks.internal.start()
-    }
-
-    afterSpec {
-        Mocks.github.shutdown()
-        Mocks.internal.shutdown()
-    }
-
+class RunTestsTest : FeatureSpec({
     feature("POST /runTests") {
-        scenario("will run all tests and trigger a github repository dispatch event with the results") {
+        scenario("run all tests and report with a repository dispatch event") {
             withTestApp {
                 with(handleRequest(HttpMethod.Post, "/runTests")) {
                     response shouldHaveStatus HttpStatusCode.Accepted
@@ -27,6 +17,5 @@ class TestTest : FeatureSpec({
                 }
             }
         }
-
     }
 })
