@@ -6,6 +6,7 @@ import io.ktor.application.ApplicationCall
 import io.ktor.application.call
 import io.ktor.auth.authenticate
 import io.ktor.client.statement.HttpResponse
+import io.ktor.features.BadRequestException
 import io.ktor.features.callId
 import io.ktor.features.origin
 import io.ktor.http.ContentType
@@ -38,6 +39,9 @@ fun Routing.fhirRoutes(eventStore: EventStore) {
 
         authenticate(Constants.PUBLISH) {
             post("/\$process-message") {
+                if (call.request.receiveChannel().isClosedForRead) {
+                    throw BadRequestException("Request body must not be empty!")
+                }
                 val response = eventStore.publish(
                     call.request.origin.fullUrl(),
                     call.request.receiveChannel(),
