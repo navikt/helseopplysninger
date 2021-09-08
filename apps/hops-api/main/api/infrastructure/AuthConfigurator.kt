@@ -19,12 +19,11 @@ fun Authentication.Configuration.useNaviktTokenSupport(config: Config.ModuleOAut
     val pubClaims = unionClaims + "scope=$pubScope"
     val subClaims = unionClaims + "scope=$subScope"
 
-    val issuer = config.issuers[0].name
-
+    val issuer = config.maskinporten.name
     val pubReq = RequiredClaims(issuer, pubClaims, true)
     val subReq = RequiredClaims(issuer, subClaims, true)
 
-    val ktorConfig = config.issuers.asApplicationConfig()
+    val ktorConfig = listOf(config.maskinporten).asApplicationConfig()
     tokenValidationSupport(Constants.PUBLISH, ktorConfig, pubReq)
     tokenValidationSupport(Constants.SUBSCRIBE, ktorConfig, subReq)
 }

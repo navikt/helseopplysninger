@@ -8,7 +8,7 @@ data class Config(
     val eventStore: EventStore
 ) {
     data class ModuleOAuth(
-        val issuers: List<OauthIssuerConfig>,
+        val maskinporten: OauthIssuerConfig,
         val publishScope: String,
         val subscribeScope: String
     )

@@ -5,6 +5,7 @@ import io.kotest.matchers.shouldBe
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.testing.handleRequest
+import io.ktor.server.testing.setBody
 import withHopsTestApplication
 
 internal class FhirRoutesPostTest : FeatureSpec({
@@ -49,6 +50,7 @@ internal class FhirRoutesPostTest : FeatureSpec({
                     handleRequest(HttpMethod.Post, "/fhir/4.0/\$process-message") {
                         val token = MockServers.oAuth.issueToken(claims = mapOf("scope" to "/test-publish"))
                         addHeader("Authorization", "Bearer ${token.serialize()}")
+                        setBody("""{}""")
                     }
                 ) {
                     response.status() shouldBe HttpStatusCode.OK
