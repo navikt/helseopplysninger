@@ -34,7 +34,7 @@ jobs:
       RESOURCE: apps/${{ github.workflow }}/.config/nais.yml
     steps:
       - uses: actions/checkout@v2.3.4
-      - name: nais/deploy/actions/deploy@master
+      - uses: nais/deploy/actions/deploy@master
         env:
           CLUSTER: dev-gcp
           ENVIRONMENT: dev-gcp:${{ github.workflow }}
