@@ -10,7 +10,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 
 suspend fun HttpClient.runTests(config: Config.Hops): Results =
-    TestExecutor(this, config).let {
+    TestExecutor(this, config, "dummy", "dummy").let {
         it.runTests()
         it.getResults()
     }

@@ -26,12 +26,17 @@ dependencies {
 
 tasks {
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        kotlinOptions.jvmTarget = "11"
+        kotlinOptions.jvmTarget = "16"
         kotlinOptions.freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
     }
 
     withType<Test> {
         useJUnitPlatform()
+        testLogging {
+            showCauses = true
+            showExceptions = true
+            events("passed", "failed")
+        }
     }
 }
 
