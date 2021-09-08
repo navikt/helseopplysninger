@@ -1,4 +1,4 @@
-name: hops-api
+name: hops-test-e2e
 
 on:
   push:
