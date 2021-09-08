@@ -38,6 +38,8 @@ spec:
     outbound:
       external:
         - host: https://api.github.com/repos/navikt/helseopplysninger
+  ingresses:
+    - https://hops-test-e2e.ekstern.dev.nav.no
   env:
     - name: LOG_APPENDER
       value: json
