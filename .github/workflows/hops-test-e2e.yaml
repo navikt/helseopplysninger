@@ -1,4 +1,4 @@
-name: hops-api
+name: hops-test-e2e
 
 on:
   push:
@@ -6,6 +6,8 @@ on:
     paths:
       - 'apps/hops-test-e2e/**'
       - 'libs/**'
+  workflow_dispatch:
+
 env:
   IMAGE: ghcr.io/navikt/${{ github.workflow }}:${{ github.sha }}
 
