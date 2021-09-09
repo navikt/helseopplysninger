@@ -35,6 +35,7 @@ class TestExecutor(
     }
 
     private fun Results.addFailedTest(test: Test) {
+        log.info("${test.name} failed")
         apply {
             test {
                 name = test.name

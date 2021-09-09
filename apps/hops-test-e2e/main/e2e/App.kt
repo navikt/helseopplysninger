@@ -56,6 +56,10 @@ private fun Routing.actuators(prometheus: PrometheusMeterRegistry) {
 private fun Routing.e2eTrigger(config: Config) {
     install(ContentNegotiation) { json(Json { prettyPrint = true }) }
 
+    val hops = HttpClient {
+        install(JsonFeature)
+    }
+
     val github = HttpClient {
         install(JsonFeature) {
             acceptContentTypes = listOf(GithubJson)
@@ -67,7 +71,7 @@ private fun Routing.e2eTrigger(config: Config) {
         val request = call.receive<TestRequest>()
 
         val e2e = TestExecutor(
-            client = HttpClient(),
+            client = hops,
             config = config.api.hops,
             workflowId = request.workflowId,
             appName = request.appName,
