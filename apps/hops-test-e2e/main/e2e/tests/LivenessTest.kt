@@ -14,20 +14,21 @@ internal class LivenessTest(
 ) : Test {
     override val name: String = "GET $url$livenessPath"
     override val description: String = "Checks the liveness probe"
-    override var stacktrace: String? = null
+    override var stacktrace: Throwable? = null
 
-    override suspend fun run(): Boolean = runCatching {
-        executor.http {
-            val response = get<HttpResponse>(url + livenessPath)
-            when (response.status) {
-                HttpStatusCode.OK -> true
-                else -> false
+    override suspend fun run(): Boolean =
+        runCatching {
+            executor.http {
+                val response = get<HttpResponse>(url + livenessPath)
+                return when (response.status) {
+                    HttpStatusCode.OK -> true
+                    else -> false
+                }
             }
+        }.getOrElse {
+            stacktrace = it
+            false
         }
-    }.getOrElse {
-        stacktrace = it.stackTraceToString()
-        false
-    }
 
     companion object {
         fun createAllTests(exec: TestExecutor, hopsConfig: Config.Hops) = listOf<Test>(

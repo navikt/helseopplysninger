@@ -3,7 +3,6 @@ package e2e
 import e2e.tests.LivenessTest
 import e2e.tests.Test
 import io.ktor.client.HttpClient
-import kotlinx.coroutines.withTimeout
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -23,11 +22,9 @@ class TestExecutor(
     suspend fun runTests(): Results {
         log.info("Running $testScope tests...")
         tests.forEach { test ->
-            withTimeout(1_000L) { // 1s timeout per test
-                when (test.run()) {
-                    true -> log.info("${test.name} passed")
-                    false -> results.addFailedTest(test)
-                }
+            when (test.run()) {
+                true -> log.info("${test.name} passed")
+                false -> results.addFailedTest(test)
             }
         }
         log.info("Tests completed!")
@@ -35,12 +32,12 @@ class TestExecutor(
     }
 
     private fun Results.addFailedTest(test: Test) {
-        log.info("${test.name} failed")
+        log.info("${test.name} failed", test.stacktrace)
         apply {
             test {
                 name = test.name
                 description = test.description
-                stacktrace = test.stacktrace
+                stacktrace = test.stacktrace?.stackTraceToString()
             }
         }
     }
