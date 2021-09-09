@@ -37,7 +37,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2.3.4
 
-      - name: 🔎 Check if docker image exists
+      - name: 🔎 Check if docker image already exists
         id: check_image
         run: |
           if [[ $(docker manifest inspect ${{ env.IMAGE }}) ]]; then
@@ -47,7 +47,7 @@ jobs:
           fi
 
       - name: 🔎 Check if changes are relevant
-        id: diff
+        id: check_changes
         uses: tj-actions/changed-files@v1.1.2
         with:
           files: |
@@ -56,7 +56,7 @@ jobs:
 
       - name: 🔎 Check if app should be deployed
         run: |
-          echo "DEPLOY=${{ (steps.diff.outputs.any_changed == 'true' && github.event_name == 'push')
+          echo "DEPLOY=${{ (steps.check_changes.outputs.any_changed == 'true' && github.event_name == 'push')
           || github.event.inputs.app == matrix.app }}" >> $GITHUB_ENV
 
       - name: 🔑 Login to GitHub container registry
