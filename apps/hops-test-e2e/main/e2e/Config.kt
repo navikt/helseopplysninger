@@ -1,20 +1,13 @@
 package e2e
 
 data class Config(val api: Api) {
-    data class Api(
-        val github: BaseUrl,
-        val hops: Hops,
-    )
-
+    data class Api(val hops: Hops)
+    data class App(val host: String)
     data class Hops(
-        val api: HopsService,
-        val eventreplaykafka: HopsService,
-        val eventsinkkafka: HopsService,
-        val eventstore: HopsService,
-        val fileshare: HopsService,
-        val testExternal: HopsService,
+        val api: App,
+        val eventreplaykafka: App,
+        val eventsinkkafka: App,
+        val eventstore: App,
+        val fileshare: App,
     )
-
-    data class BaseUrl(val baseUrl: String)
-    data class HopsService(val host: String)
 }

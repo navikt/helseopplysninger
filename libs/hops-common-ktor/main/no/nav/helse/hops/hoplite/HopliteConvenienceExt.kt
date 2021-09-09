@@ -39,5 +39,4 @@ fun ConfigLoader.Builder.addKtorConfig(config: ApplicationConfig) = apply {
 fun ConfigLoader.Builder.addShadowJarWorkaround() = apply {
     addFileExtensionMapping("properties", PropsParser())
     addFileExtensionMapping("yaml", YamlParser())
-    addFileExtensionMapping("yml", YamlParser())
 }

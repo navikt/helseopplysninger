@@ -33,7 +33,7 @@ jobs:
     name: Deploy e2e to dev
     env:
       APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-      RESOURCE: apps/${{ github.workflow }}/.config/nais.yml
+      RESOURCE: apps/${{ github.workflow }}/.config/nais.yaml
     steps:
       - uses: actions/checkout@v2.3.4
       - uses: nais/deploy/actions/deploy@master

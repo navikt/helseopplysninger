@@ -1,0 +1,22 @@
+ktor:
+  deployment:
+    port: ${PORT:-8080}
+    watch:
+      - classes
+      - resources
+  application:
+    modules:
+      - e2e.AppKt.main
+
+api:
+  hops:
+    api:
+      host: ${API_HOST}
+    eventreplaykafka:
+      host: ${EVENTREPLAYKAFKA_HOST}
+    eventsinkkafka:
+      host: ${EVENTSINKKAFKA_HOST}
+    eventstore:
+      host: ${EVENTSTORE_HOST}
+    fileshare:
+      host: ${FILESHARE_HOST}

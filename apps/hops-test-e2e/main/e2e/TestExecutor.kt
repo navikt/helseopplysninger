@@ -2,37 +2,37 @@ package e2e
 
 import e2e.tests.LivenessTest
 import e2e.tests.Test
-import io.ktor.client.HttpClient
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-class TestExecutor(
-    val client: HttpClient,
-    config: Config.Hops,
-    val workflowId: String,
-    val appName: String,
-    val testScope: TestScope,
-) {
+class TestExecutor(config: Config.Hops) {
     private val log: Logger = LoggerFactory.getLogger(TestExecutor::class.java)
-    private val tests = LivenessTest.createAllTests(this, config)
-    private val results: Results = Results("e2e", ClientPayload(workflowId, appName))
-
-    inline fun <T> http(http: HttpClient.() -> T) = http(client)
+    private val livenessTests = LivenessTest.createAllTests(config)
 
     suspend fun runTests(): Results {
-        log.info("Running $testScope tests...")
-        tests.forEach { test ->
-            when (test.run()) {
-                true -> log.info("${test.name} passed")
-                false -> results.addFailedTest(test)
-            }
-        }
+        val results = Results()
+
+        log.info("Running all tests...")
+        livenessTests.forEach { test -> results.verify(test) }
         log.info("Tests completed!")
+
         return results
     }
 
-    private fun Results.addFailedTest(test: Test) {
-        log.info("${test.name} failed", test.stacktrace)
+    private suspend fun Results.verify(test: Test) {
+        when (test.run()) {
+            true -> passed(test)
+            false -> failed(test)
+        }
+    }
+
+    private fun passed(test: Test) {
+        log.info("${test.name} passed")
+    }
+
+    private fun Results.failed(test: Test) {
+        log.warn("${test.name} failed", test.stacktrace)
+
         apply {
             test {
                 name = test.name

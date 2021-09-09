@@ -36,10 +36,24 @@ spec:
     cpuThresholdPercentage: 90
   accessPolicy:
     outbound:
-      external:
-        - host: https://api.github.com/repos/navikt/helseopplysninger
+      rules:
+        - application: hops-api
+        - application: hops-eventreplaykafka
+        - application: hops-eventsinkkafka
+        - application: hops-eventstore
+        - application: hops-fileshare
   ingresses:
     - https://hops-test-e2e.ekstern.dev.nav.no
   env:
     - name: LOG_APPENDER
       value: json
+    - name: API_HOST
+      value: http://hops-api
+    - name: EVENTREPLAYKAFKA_HOST
+      value: http://hops-eventreplaykafka
+    - name: EVENTSINKKAFKA_HOST
+      value: http://hops-eventsinkkafka
+    - name: EVENTSTORE_HOST
+      value: http://hops-eventstore
+    - name: FILESHARE_HOST
+      value: http://hops-fileshare

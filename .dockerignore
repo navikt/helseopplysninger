@@ -4,7 +4,7 @@
 !build.gradle.kts
 !gradle.properties
 !settings.gradle.kts
-!nais.yml
+!nais.yaml
 **/.nais
 **/build
 **/out

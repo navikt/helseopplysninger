@@ -1,7 +1,7 @@
 package e2e.tests
 
 import e2e.Config
-import e2e.TestExecutor
+import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.HttpStatusCode
@@ -9,35 +9,30 @@ import io.ktor.http.HttpStatusCode
 const val livenessPath = "/isAlive"
 
 internal class LivenessTest(
-    private val executor: TestExecutor,
     private val url: String,
+    private val client: HttpClient = HttpClient(), // { install(JsonFeature) }
 ) : Test {
     override val name: String = "GET $url$livenessPath"
     override val description: String = "Checks the liveness probe"
     override var stacktrace: Throwable? = null
 
-    override suspend fun run(): Boolean =
-        runCatching {
-            executor.http {
-                val response = get<HttpResponse>(url + livenessPath)
-                return when (response.status) {
-                    HttpStatusCode.OK -> true
-                    else -> false
-                }
-            }
-        }.getOrElse {
-            stacktrace = it
-            false
+    override suspend fun run(): Boolean = runCatching {
+        when (client.get<HttpResponse>(url + livenessPath).status) {
+            HttpStatusCode.OK -> true
+            else -> false
         }
+    }.getOrElse {
+        stacktrace = it
+        false
+    }
 
     companion object {
-        fun createAllTests(exec: TestExecutor, hopsConfig: Config.Hops) = listOf<Test>(
-            LivenessTest(exec, hopsConfig.api.host),
-            LivenessTest(exec, hopsConfig.eventreplaykafka.host),
-            LivenessTest(exec, hopsConfig.eventsinkkafka.host),
-            LivenessTest(exec, hopsConfig.eventstore.host),
-            LivenessTest(exec, hopsConfig.fileshare.host),
-            LivenessTest(exec, hopsConfig.testExternal.host),
+        fun createAllTests(hopsConfig: Config.Hops) = listOf<Test>(
+            LivenessTest(hopsConfig.api.host),
+            LivenessTest(hopsConfig.eventreplaykafka.host),
+            LivenessTest(hopsConfig.eventsinkkafka.host),
+            LivenessTest(hopsConfig.eventstore.host),
+            LivenessTest(hopsConfig.fileshare.host),
         )
     }
 }
