@@ -1,0 +1,92 @@
+name: Build and deploy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/**'
+      - 'libs/**'
+  workflow_dispatch:
+    inputs:
+      app:
+        description: 'Name of app to deploy, e.g. hops-api'
+        required: true
+      deploy-prod:
+        description: 'If the build should also be deployed to production (must be main branch)'
+        required: false
+        default: 'false'
+
+jobs:
+  build-and-deploy:
+    strategy:
+      fail-fast: false
+      matrix:
+        app:
+          - hops-api
+          - hops-eventreplaykafka
+          - hops-eventsinkkafka
+          - hops-eventstore
+          - hops-fileshare
+          - hops-test-external
+    env:
+      # Used by nais/deploy/actions/deploy, even though the documentation doesn't specify it.
+      APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+      IMAGE: ghcr.io/navikt/${{ matrix.app }}:${{ github.sha }}
+      RESOURCE: apps/${{ github.workflow }}/.nais/naiserator.yaml
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2.3.4
+
+      - name: 🔎 Check if docker image exists
+        id: check_image
+        run: |
+          if [[ $(docker manifest inspect ${{ env.IMAGE }}) ]]; then
+            echo "::set-output name=exists::true"
+          else
+            echo "::set-output name=exists::false"
+          fi
+
+      - name: 🔎 Check if changes are relevant
+        id: diff
+        uses: tj-actions/changed-files@v1.1.2
+        with:
+          files: |
+            apps/${{ matrix.app }}/*
+            libs/*
+
+      - name: 🔎 Check if app should be deployed
+        run: |
+          echo "DEPLOY=${{ (steps.diff.outputs.any_changed == 'true' && github.event_name == 'push')
+          || github.event.inputs.app == matrix.app }}" >> $GITHUB_ENV
+
+      - name: 🔑 Login to GitHub container registry
+        uses: docker/login-action@v1
+        if: ${{ steps.check_image.outputs.exists == 'false' && env.DEPLOY == 'true' }}
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🐋 Build and publish docker image
+        uses: docker/build-push-action@v2.7.0
+        if: ${{ steps.check_image.outputs.exists == 'false' && env.DEPLOY == 'true' }}
+        with:
+          build-args: project=${{ matrix.app }}
+          push: true
+          tags: ${{ env.IMAGE }},ghcr.io/navikt/${{ matrix.app }}:latest
+
+      - name: 👷 Deploy to Dev
+        uses: nais/deploy/actions/deploy@master
+        if: ${{ env.DEPLOY == 'true' }}
+        env:
+          CLUSTER: dev-gcp
+          ENVIRONMENT: dev-gcp:${{ matrix.app }}
+          VARS: apps/${{ matrix.app }}/.nais/dev.json
+
+      - name: 👨‍⚕ Deploy to Prod
+        uses: nais/deploy/actions/deploy@master
+        if: ${{ github.ref == 'refs/heads/main' && github.event.inputs.deploy-prod == 'true' && env.DEPLOY == 'true'}}
+        env:
+          CLUSTER: prod-gcp
+          ENVIRONMENT: prod-gcp:${{ matrix.app }}
+          VARS: apps/${{ matrix.app }}/.nais/prod.json
