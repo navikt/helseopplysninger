@@ -33,3 +33,15 @@ data class ClientPayload(
         failedTests.add(failedTest)
     }
 }
+
+@Serializable
+data class TestRequest(
+    val appName: String,
+    val workflowId: String,
+    val testScope: TestScope = TestScope.ALL,
+)
+
+@Serializable
+enum class TestScope {
+    ALL
+}
