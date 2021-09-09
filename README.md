@@ -44,6 +44,21 @@ Start a single app:
 docker-compose -f .docker/docker-compose.yml up eventstore 
 ```
 
+When using docker-compose, the services are configured to use a proxy, and will therefore be available on `http://<app name>.local.gl:8080` e.g:
+> http://hops-api.local.gl:8080 <br>
+> http://hops-eventstore.local.gl:8080 <br>
+> http://hops-fileshare.local.gl:8080 <br>
+
+You can set up a proxy for any service in docker-compose with the following config:
+```yaml
+services:
+  some-service:
+    expose: [8080]
+    environment:
+      VIRTUAL_HOST: some-service.local.gl
+      VIRTUAL_PORT: 8080
+```
+
 NOTE: All apps are dependent on `mock-oauth2-service` and `postgres` see [docker-compose.yml](.docker/docker-compose.yml)
 
 ### 🐘 Gradle

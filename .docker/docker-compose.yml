@@ -16,11 +16,13 @@ services:
       context: ..
       args:
         project: hops-eventstore
-    depends_on: [mock-oauth2-service, postgres]
+    depends_on: [mock-oauth2-service, postgres, local-proxy]
     restart: on-failure
-    ports: [8082:8080]
+    expose: [8080]
     environment:
       DB_HOST: postgres
+      VIRTUAL_HOST: hops-eventstore.local.gl
+      VIRTUAL_PORT: 8080
 
   # EventSink consumes FHIR-messages on Kafka from NAV services and publishes them to EventStore.
   hops-eventsinkkafka:
@@ -28,11 +30,13 @@ services:
       context: ..
       args:
         project: hops-eventsinkkafka
-    depends_on: [kafka, hops-eventstore]
-    ports: [8083:8080]
+    depends_on: [kafka, hops-eventstore, local-proxy]
+    expose: [8080]
     environment:
       KAFKA_BROKERS: kafka:9093
       HOPS_EVENTSTORE_BASE_URL: http://hops-eventstore:8080
+      VIRTUAL_HOST: hops-eventsinkkafka.local.gl
+      VIRTUAL_PORT: 8080
 
   # EventReplay polls FHIR-messages from EventStore and publishes them on Kafka.
   hops-eventreplaykafka:
@@ -40,11 +44,13 @@ services:
       context: ..
       args:
         project: hops-eventreplaykafka
-    depends_on: [kafka, hops-eventstore]
-    ports: [8084:8080]
+    depends_on: [kafka, hops-eventstore, local-proxy]
+    expose: [8080]
     environment:
       KAFKA_BROKERS: kafka:9093
       HOPS_EVENTSTORE_BASE_URL: http://hops-eventstore:8080
+      VIRTUAL_HOST: hops-eventstore.local.gl
+      VIRTUAL_PORT: 8080
 
   # The FHIR REST API exposed to external consumers, e.g. EHRs.
   hops-api:
@@ -52,11 +58,13 @@ services:
       context: ..
       args:
         project: hops-api
-    depends_on: [hops-eventstore]
+    depends_on: [hops-eventstore, local-proxy]
     restart: on-failure
-    ports: [8085:8080]
+    expose: [8080]
     environment:
       HOPS_EVENTSTORE_BASE_URL: http://hops-eventstore:8080
+      VIRTUAL_HOST: hops-api.local.gl
+      VIRTUAL_PORT: 8080
 
   # FileShare provides an API to upload and download binary files. These files can be referenced in FHIR-messages.
   hops-fileshare:
@@ -64,11 +72,13 @@ services:
       context: ..
       args:
         project: hops-fileshare
-    depends_on: [gcs-mock-filestore]
+    depends_on: [gcs-mock-filestore, local-proxy]
+    restart: on-failure
+    expose: [8080]
     environment:
       HOPS_FILESTORAGE_BASE_URL: http://gcs-mock-filestore:4443
-    restart: on-failure
-    ports: [ 8086:8080 ]
+      VIRTUAL_HOST: hops-fileshare.local.gl
+      VIRTUAL_PORT: 8080
 
   # Mock implementation of the GCS server
   gcs-mock-filestore:
@@ -144,6 +154,14 @@ services:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: admin
       PGADMIN_SERVER_JSON_FILE: /etc/hopsconfig/pgadmin.json
+
+  local-proxy:
+    image: nginxproxy/nginx-proxy:alpine
+    ports: [8080:80]
+    environment:
+      DHPARAM_GENERATION: 'false'
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
 
 volumes:
   postgres_volume:
