@@ -42,9 +42,6 @@ spec:
     outbound:
       rules:
         - application: hops-event-store
-    inbound:
-      rules:
-        - application: hops-test-e2e
   kafka:
     pool: {{ kafka_pool }}
   ingresses:

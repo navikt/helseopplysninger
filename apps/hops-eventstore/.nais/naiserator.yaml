@@ -47,7 +47,6 @@ spec:
         - application: hops-api
         - application: hops-event-replay-kafka
         - application: hops-event-sink-kafka
-        - application: hops-test-e2e
   env:
     - name: LOG_APPENDER
       value: json

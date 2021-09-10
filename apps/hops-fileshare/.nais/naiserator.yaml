@@ -59,10 +59,6 @@ spec:
       - name: helse-hops-fileshare
       - name: helse-hops-fileshare-unscanned
         retentionPeriodDays: 1
-  accessPolicy:
-    inbound:
-      rules:
-        - application: hops-test-e2e
   ingresses:
   {{#each ingresses as |url|}}
     - {{url}}
