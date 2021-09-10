@@ -1,13 +1,3 @@
-ktor:
-  deployment:
-    port: ${PORT:-8080}
-    watch:
-      - classes
-      - resources
-  application:
-    modules:
-      - e2e.AppKt.main
-
 api:
   hops:
     api:

@@ -8,9 +8,9 @@ import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.testing.handleRequest
 
-internal class ActuatorTest : FeatureSpec({
+internal class ActuatorsTest : FeatureSpec({
     feature("actuators") {
-        scenario("GET isAlive = 200 OK") {
+        scenario("GET /actuator/live = 200 OK") {
             withTestApp {
                 with(handleRequest(HttpMethod.Get, "/actuator/live")) {
                     response shouldHaveStatus HttpStatusCode.OK
@@ -19,7 +19,7 @@ internal class ActuatorTest : FeatureSpec({
             }
         }
 
-        scenario("GET isReady = 200 OK") {
+        scenario("GET /actuator/ready = 200 OK") {
             withTestApp {
                 with(handleRequest(HttpMethod.Get, "/actuator/ready")) {
                     response shouldHaveStatus HttpStatusCode.OK
@@ -28,7 +28,7 @@ internal class ActuatorTest : FeatureSpec({
             }
         }
 
-        scenario("GET prometheus = 200 OK") {
+        scenario("GET /metrics = 200 OK") {
             withTestApp {
                 with(handleRequest(HttpMethod.Get, "/metrics")) {
                     response shouldHaveStatus HttpStatusCode.OK

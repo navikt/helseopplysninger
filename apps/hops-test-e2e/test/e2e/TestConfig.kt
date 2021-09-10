@@ -14,28 +14,28 @@ fun <R> withTestApp(test: TestApplicationEngine.() -> R): R =
 
 private val config = mapOf(
     "HOPS_DOMAIN" to "",
-    "API_HOST" to Mocks.api.getBaseUrl(),
-    "EVENTREPLAYKAFKA_HOST" to Mocks.eventreplay.getBaseUrl(),
-    "EVENTSINKKAFKA_HOST" to Mocks.eventsink.getBaseUrl(),
-    "EVENTSTORE_HOST" to Mocks.eventstore.getBaseUrl(),
-    "FILESHARE_HOST" to Mocks.fileshare.getBaseUrl(),
+    "API_HOST" to HopsMocks.api.getBaseUrl(),
+    "EVENTREPLAYKAFKA_HOST" to HopsMocks.eventreplay.getBaseUrl(),
+    "EVENTSINKKAFKA_HOST" to HopsMocks.eventsink.getBaseUrl(),
+    "EVENTSTORE_HOST" to HopsMocks.eventstore.getBaseUrl(),
+    "FILESHARE_HOST" to HopsMocks.fileshare.getBaseUrl(),
 )
 
 class KotestSetup : ProjectListener, AbstractProjectConfig() {
     override fun listeners() = listOf(KotestSetup())
     override suspend fun beforeProject() {
-        Mocks.api.start()
-        Mocks.eventreplay.start()
-        Mocks.eventsink.start()
-        Mocks.eventstore.start()
-        Mocks.fileshare.start()
+        HopsMocks.api.start()
+        HopsMocks.eventreplay.start()
+        HopsMocks.eventsink.start()
+        HopsMocks.eventstore.start()
+        HopsMocks.fileshare.start()
     }
 
     override suspend fun afterProject() {
-        Mocks.api.shutdown()
-        Mocks.eventreplay.shutdown()
-        Mocks.eventsink.shutdown()
-        Mocks.eventstore.shutdown()
-        Mocks.fileshare.shutdown()
+        HopsMocks.api.shutdown()
+        HopsMocks.eventreplay.shutdown()
+        HopsMocks.eventsink.shutdown()
+        HopsMocks.eventstore.shutdown()
+        HopsMocks.fileshare.shutdown()
     }
 }
