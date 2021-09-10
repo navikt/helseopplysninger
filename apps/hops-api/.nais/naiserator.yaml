@@ -58,6 +58,9 @@ spec:
     outbound:
       rules:
         - application: hops-event-store
+    inbound:
+      rules:
+        - application: hops-test-e2e
   ingresses:
   {{#each ingresses as |url|}}
     - {{url}}
