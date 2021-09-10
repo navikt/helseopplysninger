@@ -29,7 +29,7 @@ jobs:
           - hops-fileshare
           - hops-test-external
     env:
-      # Used by nais/deploy/actions/deploy, even though the documentation doesn't specify it.
+      # APIKEY and RESOURCE are used by nais/deploy/actions/deploy, IMAGE is used in naiserator.yaml
       APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
       IMAGE: ghcr.io/navikt/${{ matrix.app }}:${{ github.sha }}
       RESOURCE: apps/${{ github.workflow }}/.nais/naiserator.yaml
