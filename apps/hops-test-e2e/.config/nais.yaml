@@ -29,6 +29,8 @@ spec:
     requests:
       cpu: 500m
       memory: 1Gi
+  replicas:
+    min: 1
   accessPolicy:
     outbound:
       rules:
