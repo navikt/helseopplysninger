@@ -4,7 +4,7 @@
   "tokenCallbacks": [
     {
       "issuerId": "maskinporten",
-      "tokenExpiry": 120,
+      "tokenExpiry": 1200,
       "requestMappings": [
         {
           "requestParam": "scope",
@@ -43,7 +43,23 @@
     },
     {
       "issuerId": "default",
-      "tokenExpiry": 120,
+      "tokenExpiry": 1200,
+      "requestMappings": [
+        {
+          "requestParam": "scope",
+          "match": "eventstore",
+          "claims": {
+            "sub": "eventstore-subject",
+            "aud": [
+              "eventstore-audience"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "issuerId": "azure",
+      "tokenExpiry": 1200,
       "requestMappings": [
         {
           "requestParam": "scope",

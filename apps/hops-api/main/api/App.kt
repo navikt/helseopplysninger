@@ -18,6 +18,8 @@ import io.ktor.features.StatusPages
 import io.ktor.features.XForwardedHeaderSupport
 import io.ktor.metrics.micrometer.MicrometerMetrics
 import io.ktor.routing.routing
+import io.ktor.server.engine.embeddedServer
+import io.ktor.server.netty.Netty
 import io.ktor.webjars.Webjars
 import io.micrometer.prometheus.PrometheusConfig.DEFAULT
 import io.micrometer.prometheus.PrometheusMeterRegistry
@@ -27,19 +29,17 @@ import no.nav.helse.hops.diagnostics.useRequestIdHeader
 import no.nav.helse.hops.hoplite.loadConfigsOrThrow
 import no.nav.helse.hops.statuspages.useFhirErrorStatusPage
 
-@Suppress("unused") // Referenced in application.conf
-fun Application.main() {
-    val hopsApiConfig = loadConfigsOrThrow<Config>()
-    val httpClient = HttpClientFactory.create(hopsApiConfig.eventStore)
-    val eventStoreClient = EventStoreHttp(httpClient, hopsApiConfig.eventStore)
-
-    mainWith(eventStoreClient)
+fun main() {
+    embeddedServer(Netty, port = 8080, module = Application::module).start(wait = true)
 }
 
-fun Application.mainWith(eventStoreClient: EventStoreHttp) {
+fun Application.module() {
+    val config = loadConfigsOrThrow<Config>("/application.yaml")
+    val httpClient = HttpClientFactory.create(config.eventStore)
+    val eventStoreClient = EventStoreHttp(httpClient, config.eventStore)
     val prometheusMeterRegistry = PrometheusMeterRegistry(DEFAULT)
 
-    install(Authentication) { useNaviktTokenSupport(environment.config) }
+    install(Authentication) { useNaviktTokenSupport(config.oauth) }
     install(CallId) { useRequestIdHeader() }
     install(CallLogging)
     install(ContentNegotiation) { register(ContentTypes.fhirJson, FhirR4JsonContentConverter()) }

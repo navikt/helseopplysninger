@@ -1,3 +1,5 @@
+package no.nav.helse.hops.mocks
+
 import io.ktor.http.HttpStatusCode
 import java.util.LinkedList
 import okhttp3.mockwebserver.Dispatcher

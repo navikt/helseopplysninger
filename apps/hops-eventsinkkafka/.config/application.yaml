@@ -1,0 +1,17 @@
+# https://doc.nais.io/addons/kafka/#application-config
+kafka:
+  brokers: ${KAFKA_BROKERS:-localhost:9092}
+  security: ${KAFKA_SECURITY_ENABLED:-false}
+  truststorePath: ${KAFKA_TRUSTSTORE_PATH:-}
+  keystorePath: ${KAFKA_KEYSTORE_PATH:-}
+  credstorePsw: ${KAFKA_CREDSTORE_PASSWORD:-}
+  clientId: hops-eventsink
+  groupId: hops-eventsink-group
+  topic: ${KAFKA_TOPIC:-helseopplysninger.rapid}
+
+eventStore:
+  baseUrl: ${HOPS_EVENTSTORE_BASE_URL:-http://localhost:8082}
+  discoveryUrl: ${AZURE_APP_WELL_KNOWN_URL:-http://mock-oauth2-service:8081/default/.well-known/openid-configuration}
+  clientId: ${AZURE_APP_CLIENT_ID:-sink-kafka-test-client-id}
+  clientSecret: ${AZURE_APP_CLIENT_SECRET:-sink-kafka-test-secret}
+  scope: ${HOPS_EVENTSTORE_SCOPE:-eventstore}
