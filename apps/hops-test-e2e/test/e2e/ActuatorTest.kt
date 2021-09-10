@@ -12,7 +12,7 @@ internal class ActuatorTest : FeatureSpec({
     feature("actuators") {
         scenario("GET isAlive = 200 OK") {
             withTestApp {
-                with(handleRequest(HttpMethod.Get, "/isAlive")) {
+                with(handleRequest(HttpMethod.Get, "/actuator/live")) {
                     response shouldHaveStatus HttpStatusCode.OK
                     response shouldHaveContent "live"
                 }
@@ -21,7 +21,7 @@ internal class ActuatorTest : FeatureSpec({
 
         scenario("GET isReady = 200 OK") {
             withTestApp {
-                with(handleRequest(HttpMethod.Get, "/isReady")) {
+                with(handleRequest(HttpMethod.Get, "/actuator/ready")) {
                     response shouldHaveStatus HttpStatusCode.OK
                     response shouldHaveContent "ready"
                 }
@@ -30,7 +30,7 @@ internal class ActuatorTest : FeatureSpec({
 
         scenario("GET prometheus = 200 OK") {
             withTestApp {
-                with(handleRequest(HttpMethod.Get, "/prometheus")) {
+                with(handleRequest(HttpMethod.Get, "/metrics")) {
                     response shouldHaveStatus HttpStatusCode.OK
                     response.content shouldNotBe null
                     response.content shouldNotBe ""

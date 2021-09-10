@@ -40,9 +40,9 @@ fun Application.main() {
 }
 
 private fun Routing.actuators(prometheus: PrometheusMeterRegistry) {
-    get("/isReady") { call.respondText("ready") }
-    get("/isAlive") { call.respondText("live") }
-    get("/prometheus") { call.respond(prometheus.scrape()) }
+    get("/actuator/ready") { call.respondText("ready") }
+    get("/actuator/live") { call.respondText("live") }
+    get("/metrics") { call.respond(prometheus.scrape()) }
 }
 
 private fun Routing.e2eTrigger(config: Config) {
