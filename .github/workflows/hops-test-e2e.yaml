@@ -2,10 +2,9 @@ name: hops-test-e2e
 
 on:
   push:
-    branches: [main, e2e]
+    branches: [ e2e]
     paths:
       - 'apps/hops-test-e2e/**'
-      - 'libs/**'
   workflow_dispatch:
 
 env:
@@ -33,7 +32,7 @@ jobs:
     name: Deploy e2e to dev
     env:
       APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-      RESOURCE: apps/${{ github.workflow }}/.config/nais.yaml
+      RESOURCE: apps/${{ github.workflow }}/.nais/naiserator.yaml
     steps:
       - uses: actions/checkout@v2.3.4
       - uses: nais/deploy/actions/deploy@master

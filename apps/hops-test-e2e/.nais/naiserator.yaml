@@ -25,7 +25,7 @@ spec:
   resources:
     limits:
       cpu: 1000m
-      memory: 3Gi
+      memory: 2Gi
     requests:
       cpu: 500m
       memory: 1Gi
@@ -35,9 +35,9 @@ spec:
     outbound:
       rules:
         - application: hops-api
-        - application: hops-eventreplaykafka
-        - application: hops-eventsinkkafka
-        - application: hops-eventstore
+        - application: hops-event-replay-kafka
+        - application: hops-event-sink-kafka
+        - application: hops-event-store
         - application: hops-fileshare
   ingresses:
     - https://hops-test-e2e.ekstern.dev.nav.no/runTests
