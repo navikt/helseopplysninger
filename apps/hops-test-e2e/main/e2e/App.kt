@@ -56,7 +56,7 @@ private fun Routing.e2eTrigger(config: Config) {
         val e2e = TestExecutor(config.api.hops)
         log.info("Running all tests...")
         val results = e2e.runTests()
-        log.info("Tests completed in ${results.totalDurationInMillis}")
+        log.info("Tests completed in ${results.totalDurationMs}")
         call.respond(results)
     }
 }
