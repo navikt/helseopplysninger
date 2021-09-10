@@ -22,17 +22,16 @@ class AppTest : FeatureSpec({
                     response shouldHaveStatus HttpStatusCode.OK
                     val content = Json.decodeFromString<Results>(response.content!!)
                     content.failedTests shouldHaveSize 0
-                    content.totalDurationMs shouldNotBe "0md"
+                    content.totalDurationMs shouldNotBe "0ms"
                 }
             }
         }
 
         scenario("one service is not live") {
             withTestApp {
-                HopsMocks.fileshare.matchRequest(
-                    matcher = HopsMocks.matchActuatorLive(),
-                    dispatcher = { MockResponse().setResponseCode(HttpStatusCode.NotFound.value) }
-                )
+                HopsMocks.fileshare.matchRequest(HopsMocks.isAlive()) {
+                    MockResponse().setResponseCode(503)
+                }
                 with(handleRequest(HttpMethod.Get, "/runTests")) {
                     response shouldHaveStatus HttpStatusCode.OK
                     val content = Json.decodeFromString<Results>(response.content!!)
