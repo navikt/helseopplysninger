@@ -47,10 +47,10 @@ spec:
     - name: API_HOST
       value: http://hops-api
     - name: EVENTREPLAYKAFKA_HOST
-      value: http://hops-eventreplaykafka
+      value: http://hops-event-replay-kafka
     - name: EVENTSINKKAFKA_HOST
-      value: http://hops-eventsinkkafka
+      value: http://hops-event-sink-kafka
     - name: EVENTSTORE_HOST
-      value: http://hops-eventstore
+      value: http://hops-event-store
     - name: FILESHARE_HOST
       value: http://hops-fileshare
