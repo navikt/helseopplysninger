@@ -29,10 +29,8 @@ jobs:
           - hops-fileshare
           - hops-test-external
     env:
-      # APIKEY and RESOURCE are used by nais/deploy/actions/deploy, IMAGE is used in naiserator.yaml
-      APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+      # IMAGE is used in naiserator.yaml
       IMAGE: ghcr.io/navikt/${{ matrix.app }}:${{ github.sha }}
-      RESOURCE: apps/${{ github.workflow }}/.nais/naiserator.yaml
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.3.4
@@ -81,6 +79,8 @@ jobs:
         uses: nais/deploy/actions/deploy@master
         if: ${{ env.DEPLOY == 'true' }}
         env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          RESOURCE: apps/${{ github.workflow }}/.nais/naiserator.yaml
           CLUSTER: dev-gcp
           ENVIRONMENT: dev-gcp:${{ matrix.app }}
           VARS: apps/${{ matrix.app }}/.nais/dev.json
@@ -89,6 +89,8 @@ jobs:
         uses: nais/deploy/actions/deploy@master
         if: ${{ github.ref == 'refs/heads/main' && github.event.inputs.deploy-prod == 'true' && env.DEPLOY == 'true'}}
         env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          RESOURCE: apps/${{ github.workflow }}/.nais/naiserator.yaml
           CLUSTER: prod-gcp
           ENVIRONMENT: prod-gcp:${{ matrix.app }}
           VARS: apps/${{ matrix.app }}/.nais/prod.json
