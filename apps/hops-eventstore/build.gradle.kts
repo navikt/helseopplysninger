@@ -43,7 +43,7 @@ dependencies {
     runtimeOnly("com.h2database:h2:1.4.200")
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
     runtimeOnly("org.postgresql:postgresql:42.2.23")
-    runtimeOnly("org.webjars:swagger-ui:3.51.2")
+    runtimeOnly("org.webjars:swagger-ui:3.52.1")
     testImplementation(project(":libs:hops-common-test"))
 }
 
