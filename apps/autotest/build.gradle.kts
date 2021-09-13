@@ -25,7 +25,7 @@ dependencies {
     runtimeOnly("io.ktor:ktor-server-netty:$ktorVersion")
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion") { exclude("org.jetbrains.kotlin", "kotlin-test-junit") }
-    testImplementation("no.nav.security:mock-oauth2-server:0.3.4")
+    testImplementation("no.nav.security:mock-oauth2-server:0.3.5")
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
     testImplementation(kotlin("test-junit5"))
