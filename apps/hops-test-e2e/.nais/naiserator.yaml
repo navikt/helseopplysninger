@@ -1,0 +1,56 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  name: hops-test-e2e
+  namespace: helseopplysninger
+  labels:
+    team: helseopplysninger
+spec:
+  image: {{ image }}
+  team: helseopplysninger
+  liveness:
+    path: /actuator/live
+    initialDelay: 10
+    timeout: 5
+    periodSeconds: 5
+    failureThreshold: 30
+  readiness:
+    path: /actuator/ready
+    initialDelay: 10
+    periodSeconds: 5
+    timeout: 5
+  prometheus:
+    enabled: true
+    path: /metrics
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 2Gi
+    requests:
+      cpu: 500m
+      memory: 1Gi
+  replicas:
+    min: 1
+  accessPolicy:
+    outbound:
+      rules:
+        - application: hops-api
+        - application: hops-event-replay-kafka
+        - application: hops-event-sink-kafka
+        - application: hops-event-store
+        - application: hops-fileshare
+  ingresses:
+    - https://hops-test-e2e.ekstern.dev.nav.no/runTests
+  env:
+    - name: LOG_APPENDER
+      value: json
+    - name: API_HOST
+      value: http://hops-api
+    - name: EVENTREPLAYKAFKA_HOST
+      value: http://hops-event-replay-kafka
+    - name: EVENTSINKKAFKA_HOST
+      value: http://hops-event-sink-kafka
+    - name: EVENTSTORE_HOST
+      value: http://hops-event-store
+    - name: FILESHARE_HOST
+      value: http://hops-fileshare

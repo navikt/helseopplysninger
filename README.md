@@ -41,7 +41,7 @@ docker-compose -f .docker/docker-compose.yml -p hops down
 
 Start a single app:
 ```sh
-docker-compose -f .docker/docker-compose.yml up eventstore 
+docker-compose -f .docker/docker-compose.yml up hops-eventstore 
 ```
 
 When using docker-compose, the services are configured to use a proxy, and will therefore be available on `http://<app name>.local.gl:8080` e.g:
