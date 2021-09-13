@@ -33,7 +33,7 @@ dependencies {
     implementation("io.ktor:ktor-webjars:1.6.3")
     runtimeOnly("ch.qos.logback:logback-classic:1.2.6")
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
-    runtimeOnly("org.webjars:swagger-ui:3.51.2")
+    runtimeOnly("org.webjars:swagger-ui:3.52.1")
 }
 
 kotlin.sourceSets["main"].kotlin.srcDirs("main")
