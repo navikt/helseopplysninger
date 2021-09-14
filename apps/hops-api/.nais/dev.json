@@ -1,4 +1,5 @@
 {
+  "app": "hops-api",
   "ingresses": [
     "https://hops.dev.nav.no"
   ],
