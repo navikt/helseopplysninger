@@ -1,12 +1,14 @@
-package routes
+package api.routes
 
+import api.MockServers
+import api.withHopsTestApplication
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.testing.handleRequest
 import io.ktor.server.testing.setBody
-import withHopsTestApplication
+import no.nav.helse.hops.test.HopsOAuthMock.MaskinportenScopes
 
 internal class FhirRoutesPostTest : FeatureSpec({
     feature("POST /fhir/4.0/\$process-message") {
@@ -22,7 +24,7 @@ internal class FhirRoutesPostTest : FeatureSpec({
             withHopsTestApplication {
                 with(
                     handleRequest(HttpMethod.Post, "/fhir/4.0/\$process-message") {
-                        val token = MockServers.oAuth.issueToken(claims = mapOf("scope" to "/test-subscribe"))
+                        val token = MockServers.oAuth.issueMaskinportenToken(scopes = setOf(MaskinportenScopes.READ))
                         addHeader("Authorization", "Bearer ${token.serialize()}")
                     }
                 ) {
@@ -35,7 +37,7 @@ internal class FhirRoutesPostTest : FeatureSpec({
             withHopsTestApplication {
                 with(
                     handleRequest(HttpMethod.Post, "/fhir/4.0/\$process-message") {
-                        val token = MockServers.oAuth.issueToken()
+                        val token = MockServers.oAuth.issueMaskinportenToken(scopes = setOf())
                         addHeader("Authorization", "Bearer ${token.serialize()}")
                     }
                 ) {
@@ -48,7 +50,7 @@ internal class FhirRoutesPostTest : FeatureSpec({
             withHopsTestApplication {
                 with(
                     handleRequest(HttpMethod.Post, "/fhir/4.0/\$process-message") {
-                        val token = MockServers.oAuth.issueToken(claims = mapOf("scope" to "/test-publish"))
+                        val token = MockServers.oAuth.issueMaskinportenToken(scopes = setOf(MaskinportenScopes.WRITE))
                         addHeader("Authorization", "Bearer ${token.serialize()}")
                         setBody("""{}""")
                     }
