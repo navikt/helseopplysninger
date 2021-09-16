@@ -16,7 +16,6 @@ public class HopsOAuthMock {
     enum class MaskinportenScopes(val value: String) {
         READ("nav:helse:helseopplysninger.read"),
         WRITE("nav:helse:helseopplysninger.write")
-
     }
 
     private val server = MockOAuth2Server()
@@ -40,8 +39,8 @@ public class HopsOAuthMock {
             )
         )
 
+    // Add claims as required: https://doc.nais.io/security/auth/azure-ad/configuration/#claims
     fun issueAzureToken(): SignedJWT = server.issueToken(issuerId = AZURE_ISSUER_NAME)
     fun start() = server.start()
     fun shutdown() = server.shutdown()
-
 }
