@@ -37,7 +37,7 @@ class AppTest : FeatureSpec({
             withTestApp {
                 Mocks.api.matchRequest(
                     get("/isAlive"),
-                    respond("", 503)
+                    respond(503)
                 )
                 with(handleRequest(HttpMethod.Get, "/trigger")) {
                     response shouldHaveStatus HttpStatusCode.OK

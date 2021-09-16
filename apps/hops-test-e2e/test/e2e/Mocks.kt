@@ -51,25 +51,32 @@ object Mocks {
     }
 
     object Matcher {
-        fun get(path: String, header: Pair<String, String>? = null) = { req: RecordedRequest ->
+        fun get(path: String) = { req: RecordedRequest ->
+            req.method == "GET" && req.hasPath(path)
+        }
+
+        fun get(path: String, header: Pair<String, String>) = { req: RecordedRequest ->
             req.method == "GET" && req.hasPath(path) && req.hasHeader(header)
         }
 
-        fun post(path: String, header: Pair<String, String>? = null, body: String? = null) = { req: RecordedRequest ->
+        fun post(path: String) = { req: RecordedRequest ->
+            req.method == "POST" && req.hasPath(path)
+        }
+
+        fun post(path: String, header: Pair<String, String>, body: String) = { req: RecordedRequest ->
             req.method == "POST" && req.hasPath(path) && req.hasHeader(header) && req.containsBody(body)
         }
 
-        private fun RecordedRequest.hasPath(path: String) =
-            this.path?.startsWith(path) ?: false
-
-        private fun RecordedRequest.containsBody(body: String?) =
-            body?.let { this.body.readUtf8().startsWith(it) } ?: true
-
-        private fun RecordedRequest.hasHeader(header: Pair<String, String>?) =
-            header?.let { (key, value) -> this.getHeader(key) == value } ?: true
+        private fun RecordedRequest.hasPath(pathString: String) = path!!.startsWith(pathString)
+        private fun RecordedRequest.containsBody(content: String) = body.readUtf8().startsWith(content)
+        private fun RecordedRequest.hasHeader(header: Pair<String, String>) = getHeader(header.first) == header.second
     }
 
     object Dispatcher {
+        fun respond(code: Int = 200) = { _: RecordedRequest ->
+            MockResponse().setResponseCode(code)
+        }
+
         fun respond(body: String = "", code: Int = 200) = { _: RecordedRequest ->
             MockResponse().setResponseCode(code).setBody(body)
         }
