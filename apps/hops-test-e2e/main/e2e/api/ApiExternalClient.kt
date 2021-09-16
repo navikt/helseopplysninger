@@ -7,6 +7,7 @@ import io.ktor.client.features.auth.AuthProvider
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.accept
 import io.ktor.client.request.get
+import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.HttpHeaders
@@ -15,6 +16,7 @@ import io.ktor.http.contentType
 import no.nav.helse.hops.convert.ContentTypes.fhirJsonR4
 import no.nav.helse.hops.maskinporten.MaskinportClient
 import no.nav.helse.hops.maskinporten.MaskinportConfig
+import java.util.UUID
 
 private const val subscribePath = "/fhir/4.0/Bundle"
 private const val publishPath = "/fhir/4.0/\$process-message"
@@ -29,8 +31,9 @@ internal class ApiExternalClient(
     private val config: ApiConfig,
 ) : ExternalApiFacade {
     override suspend fun get(): HttpResponse =
-        httpClient.get("${config.api.hostExternal}$subscribePath?_count=1") {
+        httpClient.get("${config.api.hostExternal}$subscribePath?_count=1&_offset=0") {
             accept(fhirJsonR4)
+            header("X-Request-ID", "e2e-${UUID.randomUUID()}")
         }
 
     override suspend fun post(): HttpResponse =
@@ -52,7 +55,7 @@ private class MaskinportAuthenticator(config: ApiConfig.Maskinporten) : AuthProv
     override val sendWithoutRequest = true
     override fun isApplicable(auth: HttpAuthHeader) = true
     override suspend fun addRequestHeaders(request: HttpRequestBuilder) {
-        request.headers[HttpHeaders.Authorization] = "Bearer ${maskinporten.token.parsedString}"
+        request.header(HttpHeaders.Authorization, "Bearer ${maskinporten.token.parsedString}")
     }
 
     private val maskinporten = MaskinportClient(

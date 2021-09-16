@@ -1,15 +1,15 @@
 package e2e.replay
 
-import e2e._common.E2eTest
-import e2e._common.LivenessTest
+import e2e._common.Liveness
+import e2e._common.Test
 import io.ktor.application.Application
 import no.nav.helse.hops.hoplite.loadConfigsOrThrow
 
-internal fun Application.replayTests(): List<E2eTest> {
+internal fun Application.replayTests(): List<Test> {
     val config = loadConfigsOrThrow<ReplayConfig>("/application.yaml")
 
     return listOf(
-        E2eTest { LivenessTest("event-replay liveness", config.replay.host) }
+        Liveness("event-replay liveness", config.replay.host)
     )
 }
 

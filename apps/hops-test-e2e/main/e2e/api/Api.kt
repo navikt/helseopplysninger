@@ -1,20 +1,20 @@
 package e2e.api
 
-import e2e._common.E2eTest
-import e2e._common.LivenessTest
-import e2e.api.tests.ApiPublishTest
-import e2e.api.tests.ApiSubscribeTest
+import e2e._common.Liveness
+import e2e._common.Test
+import e2e.api.tests.ApiPublish
+import e2e.api.tests.ApiSubscribe
 import io.ktor.application.Application
 import no.nav.helse.hops.hoplite.loadConfigsOrThrow
 
-internal fun Application.apiTests(): List<E2eTest> {
+internal fun Application.apiTests(): List<Test> {
     val config = loadConfigsOrThrow<ApiConfig>("/application.yaml")
     val externalClient = ApiExternalClient(HttpClientFactory.create(config.api.maskinporten), config)
 
     return listOf(
-        E2eTest { LivenessTest("api liveness", config.api.host) },
-        E2eTest { ApiPublishTest(externalClient) },
-        E2eTest { ApiSubscribeTest(externalClient) }
+        Liveness("api liveness", config.api.host),
+        ApiPublish("publish external", externalClient),
+        ApiSubscribe("subscribe external", externalClient)
     )
 }
 

@@ -58,7 +58,7 @@ fun Application.main() {
 
 @OptIn(ExperimentalTime::class)
 private fun Routing.trigger(e2e: E2eExecutor) {
-    get("/trigger") {
+    get("/runTests") {
         log.info("Running all tests...")
 
         val result = e2e.exec()

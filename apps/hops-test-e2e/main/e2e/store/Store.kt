@@ -1,15 +1,15 @@
 package e2e.store
 
-import e2e._common.E2eTest
-import e2e._common.LivenessTest
+import e2e._common.Liveness
+import e2e._common.Test
 import io.ktor.application.Application
 import no.nav.helse.hops.hoplite.loadConfigsOrThrow
 
-internal fun Application.storeTests(): List<E2eTest> {
+internal fun Application.storeTests(): List<Test> {
     val config = loadConfigsOrThrow<StoreConfig>("/application.yaml")
 
     return listOf(
-        E2eTest { LivenessTest("event-store liveness", config.store.host) }
+        Liveness("event-store liveness", config.store.host)
     )
 }
 

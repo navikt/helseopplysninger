@@ -21,10 +21,10 @@ import kotlin.time.ExperimentalTime
 @ExperimentalTime
 @ExperimentalSerializationApi
 class AppTest : FeatureSpec({
-    feature("GET /trigger") {
-        scenario("happy path") {
+    feature("GET /runTests") {
+        scenario("happy path for all e2e tests") {
             withTestApp {
-                with(handleRequest(HttpMethod.Get, "/trigger")) {
+                with(handleRequest(HttpMethod.Get, "/runTests")) {
                     response shouldHaveStatus HttpStatusCode.OK
                     val content = Json.decodeFromString<Results>(response.content!!)
                     content.failedTests shouldHaveSize 0
@@ -33,13 +33,13 @@ class AppTest : FeatureSpec({
             }
         }
 
-        scenario("one service unavailable") {
+        scenario("one test fails") {
             withTestApp {
                 Mocks.api.matchRequest(
                     get("/isAlive"),
                     respond(503)
                 )
-                with(handleRequest(HttpMethod.Get, "/trigger")) {
+                with(handleRequest(HttpMethod.Get, "/runTests")) {
                     response shouldHaveStatus HttpStatusCode.OK
                     val content = Json.decodeFromString<Results>(response.content!!)
                     content.failedTests shouldHaveSize 1

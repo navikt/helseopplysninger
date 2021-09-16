@@ -8,7 +8,7 @@ import io.ktor.http.HttpStatusCode
 
 private const val livenessPath = "/isAlive"
 
-internal class LivenessTest(
+internal class Liveness(
     override val name: String,
     private val url: String,
 ) : Test {

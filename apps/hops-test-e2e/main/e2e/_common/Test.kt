@@ -6,7 +6,3 @@ interface Test {
     var stacktrace: Throwable?
     suspend fun run(): Boolean
 }
-
-internal fun interface E2eTest {
-    fun get(): Test
-}

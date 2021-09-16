@@ -1,15 +1,15 @@
 package e2e.sink
 
-import e2e._common.E2eTest
-import e2e._common.LivenessTest
+import e2e._common.Liveness
+import e2e._common.Test
 import io.ktor.application.Application
 import no.nav.helse.hops.hoplite.loadConfigsOrThrow
 
-internal fun Application.sinkTests(): List<E2eTest> {
+internal fun Application.sinkTests(): List<Test> {
     val config = loadConfigsOrThrow<SinkConfig>("/application.yaml")
 
     return listOf(
-        E2eTest { LivenessTest("event-sink liveness", config.sink.host) }
+        Liveness("event-sink liveness", config.sink.host)
     )
 }
 

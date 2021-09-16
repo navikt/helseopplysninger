@@ -21,7 +21,7 @@ internal class E2eExecutor {
         return results.copy(totalDurationMs = duration.toString(TimeUnit.MILLISECONDS))
     }
 
-    fun add(tests: List<E2eTest>) = allTests.addAll(tests.map(E2eTest::get))
+    fun add(tests: List<Test>) = allTests.addAll(tests)
     val size: Int get() = allTests.size
 
     private suspend fun Test.run(results: Results) {
