@@ -1,7 +1,6 @@
 package fileshare.routes
 
 import fileshare.domain.FileSharingService
-import fileshare.infrastructure.Constants
 import io.ktor.application.call
 import io.ktor.auth.authenticate
 import io.ktor.features.origin
@@ -17,10 +16,12 @@ import io.ktor.routing.post
 import io.ktor.routing.route
 import io.ktor.utils.io.copyAndClose
 import no.nav.helse.hops.routing.fullUrl
+import no.nav.helse.hops.security.HopsAuth
+import no.nav.helse.hops.security.authIdentity
 
 fun Routing.storageRoutes(service: FileSharingService) {
     route("files") {
-        authenticate(Constants.EXTERNAL_PROVIDER_UPLOAD, Constants.INTERNAL_PROVIDER) {
+        authenticate(HopsAuth.Realms.maskinportenWrite.name, HopsAuth.Realms.azureAd.name) {
             post {
                 val fileName = service.uploadFile(call.request.receiveChannel(), call.request.contentType())
 
@@ -29,9 +30,11 @@ fun Routing.storageRoutes(service: FileSharingService) {
                 call.respond(HttpStatusCode.Created)
             }
         }
-        authenticate(Constants.EXTERNAL_PROVIDER_DOWNLOAD, Constants.INTERNAL_PROVIDER) {
+        authenticate(HopsAuth.Realms.maskinportenRead.name, HopsAuth.Realms.azureAd.name) {
             get("/{fileName}") {
                 val fileName = call.parameters["fileName"]!!
+                val identity = call.authIdentity()
+                println(identity)
 
                 val response = service.downloadFile(fileName, call.request.headers[HttpHeaders.Range])
                 response.headers[HttpHeaders.AcceptRanges]?.let {

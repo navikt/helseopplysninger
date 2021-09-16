@@ -6,11 +6,11 @@ oauth:
   maskinporten:
     issuer:
       name: maskinporten
-      discoveryUrl: ${MASKINPORTEN_WELL_KNOWN_URL:-http://mock-oauth2-service:8081/makinporten/.well-known/openid-configuration}
+      discoveryUrl: ${MASKINPORTEN_WELL_KNOWN_URL:-http://mock-oauth2-service:8081/maskinporten/.well-known/openid-configuration}
       audience: "https://hops-fileshare.nav.no"
       optionalClaims: "sub,nbf"
-    uploadScope: "nav:helse:helseopplysninger.write"
-    downloadScope: "nav:helse:helseopplysninger.read"
+    writeScope: "nav:helse:helseopplysninger.write"
+    readScope: "nav:helse:helseopplysninger.read"
 
 fileStore:
   baseUrl: ${FILESTORE_BASEURL:-http://localhost:4443}

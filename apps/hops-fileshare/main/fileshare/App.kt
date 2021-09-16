@@ -2,13 +2,11 @@ package fileshare
 
 import fileshare.infrastructure.ApplicationServices
 import fileshare.infrastructure.Config
-import fileshare.infrastructure.useNaviktTokenSupport
 import fileshare.routes.naisRoutes
 import fileshare.routes.storageRoutes
 import fileshare.routes.swaggerRoutes
 import io.ktor.application.Application
 import io.ktor.application.install
-import io.ktor.auth.Authentication
 import io.ktor.features.CallLogging
 import io.ktor.metrics.micrometer.MicrometerMetrics
 import io.ktor.routing.routing
@@ -18,6 +16,7 @@ import io.ktor.webjars.Webjars
 import io.micrometer.prometheus.PrometheusConfig.DEFAULT
 import io.micrometer.prometheus.PrometheusMeterRegistry
 import no.nav.helse.hops.hoplite.loadConfigsOrThrow
+import no.nav.helse.hops.security.HopsAuth
 import org.slf4j.event.Level
 
 fun main() {
@@ -34,7 +33,10 @@ fun Application.module() {
         level = Level.DEBUG
     }
     install(MicrometerMetrics) { registry = prometheusMeterRegistry }
-    install(Authentication) { useNaviktTokenSupport(config.oauth) }
+    install(HopsAuth) {
+        azureAD = config.oauth.azure
+        maskinporten = config.oauth.maskinporten
+    }
 
     routing {
         naisRoutes(prometheusMeterRegistry)
