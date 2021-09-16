@@ -15,11 +15,11 @@ internal fun Application.config(): MapApplicationConfig {
 
     return (environment.config as MapApplicationConfig).apply {
 
-        put("oauth.maskinporten.name", HopsOAuthMock.MASKINPORTEN_ISSUER_NAME)
-        put("oauth.maskinporten.discoveryUrl", "${MockServers.oAuth.maskinportenWellKnownUrl()}")
-        put("oauth.maskinporten.audience", "default")
-        put("oauth.publishScope", MaskinportenScopes.WRITE.value)
-        put("oauth.subscribeScope", MaskinportenScopes.READ.value)
+        put("oauth.maskinporten.issuer.name", HopsOAuthMock.MASKINPORTEN_ISSUER_NAME)
+        put("oauth.maskinporten.issuer.discoveryUrl", "${MockServers.oAuth.maskinportenWellKnownUrl()}")
+        put("oauth.maskinporten.issuer.audience", "default")
+        put("oauth.maskinporten.writeScope", MaskinportenScopes.WRITE.value)
+        put("oauth.maskinporten.readScope", MaskinportenScopes.READ.value)
     }
 }
 
