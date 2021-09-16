@@ -1,5 +1,7 @@
 package e2e
 
+import e2e.Mocks.Dispatcher.respond
+import e2e.Mocks.Matcher.get
 import e2e._common.Results
 import io.kotest.assertions.ktor.shouldHaveStatus
 import io.kotest.core.spec.style.FeatureSpec
@@ -34,8 +36,8 @@ class AppTest : FeatureSpec({
         scenario("one service unavailable") {
             withTestApp {
                 Mocks.api.matchRequest(
-                    Mocks.GET("/isAlive"),
-                    Mocks.RESPOND("", 503)
+                    get("/isAlive"),
+                    respond("", 503)
                 )
                 with(handleRequest(HttpMethod.Get, "/trigger")) {
                     response shouldHaveStatus HttpStatusCode.OK
