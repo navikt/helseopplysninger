@@ -1,5 +1,5 @@
+package fileshare
 
-import fileshare.module
 import io.kotest.core.config.AbstractProjectConfig
 import io.kotest.core.listeners.Listener
 import io.kotest.core.listeners.ProjectListener
@@ -7,7 +7,8 @@ import io.ktor.application.Application
 import io.ktor.config.MapApplicationConfig
 import io.ktor.server.testing.TestApplicationEngine
 import io.ktor.server.testing.withTestApplication
-import no.nav.security.mock.oauth2.MockOAuth2Server
+import no.nav.helse.hops.test.HopsOAuthMock
+import no.nav.helse.hops.test.HopsOAuthMock.MaskinportenScopes
 
 fun <R> withFileshareTestApp(
     test: TestApplicationEngine.() -> R
@@ -31,29 +32,26 @@ internal class KotestListener : ProjectListener {
         MockServers.gcs.start()
         MockServers.gcpMetadata.start()
         MockServers.virusScanner.start()
-        startOAuth()
+        MockServers.oAuth.start()
     }
     override suspend fun afterProject() {
-        stopOAuth()
+        MockServers.oAuth.shutdown()
         MockServers.gcs.shutdown()
         MockServers.gcpMetadata.shutdown()
         MockServers.virusScanner.shutdown()
     }
 }
 
-internal fun startOAuth() = with(MockServers.oAuth, MockOAuth2Server::start)
-internal fun stopOAuth() = with(MockServers.oAuth, MockOAuth2Server::shutdown)
-
 private fun Application.config() = (environment.config as MapApplicationConfig).apply {
-    put("oauth.azure.name", "default")
-    put("oauth.azure.discoveryUrl", "${MockServers.oAuth.wellKnownUrl("default")}")
+    put("oauth.azure.name", HopsOAuthMock.AZURE_ISSUER_NAME)
+    put("oauth.azure.discoveryUrl", "${MockServers.oAuth.azureWellKnownUrl()}")
     put("oauth.azure.audience", "default")
 
-    put("oauth.maskinporten.issuer.name", "with-scopes")
-    put("oauth.maskinporten.issuer.discoveryUrl", "${MockServers.oAuth.wellKnownUrl("with-scopes")}")
+    put("oauth.maskinporten.issuer.name", HopsOAuthMock.MASKINPORTEN_ISSUER_NAME)
+    put("oauth.maskinporten.issuer.discoveryUrl", "${MockServers.oAuth.maskinportenWellKnownUrl()}")
     put("oauth.maskinporten.issuer.audience", "default")
-    put("oauth.maskinporten.uploadScope", "nav:helse:helseopplysninger.write")
-    put("oauth.maskinporten.downloadScope", "nav:helse:helseopplysninger.read")
+    put("oauth.maskinporten.uploadScope", MaskinportenScopes.WRITE.value)
+    put("oauth.maskinporten.downloadScope", MaskinportenScopes.READ.value)
 
     put("fileStore.baseUrl", MockServers.gcs.getBaseUrl())
     put("fileStore.requiresAuth", "true")
