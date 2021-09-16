@@ -1,12 +1,18 @@
 api:
-  hops:
-    api:
-      host: ${API_HOST}
-    eventreplaykafka:
-      host: ${EVENTREPLAYKAFKA_HOST}
-    eventsinkkafka:
-      host: ${EVENTSINKKAFKA_HOST}
-    eventstore:
-      host: ${EVENTSTORE_HOST}
-    fileshare:
-      host: ${FILESHARE_HOST}
+  host: ${API_HOST}
+  host-external: ${API_HOST_EXTERNAL}
+  maskinporten:
+    discovery-url: ${MASKINPORTEN_WELL_KNOWN_URL}
+    client-id: ${MASKINPORTEN_CLIENT_ID}
+    client-jwk: ${MASKINPORTEN_CLIENT_JWK}
+    scope: ${MASKINPORTEN_SCOPES}
+    audience: hops-test-e2e
+
+replay:
+  host: ${EVENT_REPLAY_KAFKA_HOST}
+
+sink:
+  host: ${EVENT_SINK_KAFKA_HOST}
+
+store:
+  host: ${EVENT_STORE_HOST}

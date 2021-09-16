@@ -23,10 +23,8 @@ dependencies {
     api("io.kotest:kotest-assertions-shared:4.6.2")
     api("io.ktor:ktor-jackson:1.6.3")
     api("io.ktor:ktor-server-netty:1.6.3")
-    api("no.nav.security:mock-oauth2-server:0.3.5")
     api("no.nav.security:token-validation-ktor:1.3.8")
     api("io.mockk:mockk:1.12.0")
-    // todo : exclude junit/jupiter
 }
 
 kotlin.sourceSets["main"].kotlin.srcDirs("main")

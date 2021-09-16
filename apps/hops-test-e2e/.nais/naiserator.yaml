@@ -6,7 +6,7 @@ metadata:
   labels:
     team: helseopplysninger
 spec:
-  image: {{ image }}
+  image: { { image } }
   team: helseopplysninger
   liveness:
     path: /actuator/live
@@ -31,6 +31,16 @@ spec:
       memory: 1Gi
   replicas:
     min: 1
+  maskinporten:
+    enabled: true
+    scopes:
+      consumes:
+        - name: "nav:helse:helseopplysninger.read"
+        - name: "nav:helse:helseopplysninger.write"
+  azure:
+    application:
+      enabled: true
+      tenant: nav.no
   accessPolicy:
     outbound:
       rules:
@@ -38,7 +48,6 @@ spec:
         - application: hops-event-replay-kafka
         - application: hops-event-sink-kafka
         - application: hops-event-store
-        - application: hops-fileshare
   ingresses:
     - https://hops-test-e2e.ekstern.dev.nav.no/runTests
   env:
@@ -46,11 +55,11 @@ spec:
       value: json
     - name: API_HOST
       value: http://hops-api
-    - name: EVENTREPLAYKAFKA_HOST
+    - name: API_HOST_EXTERNAL
+      value: https://hops.dev.nav.no
+    - name: EVENT_REPLAY_KAFKA_HOST
       value: http://hops-event-replay-kafka
-    - name: EVENTSINKKAFKA_HOST
+    - name: EVENT_SINK_KAFKA_HOST
       value: http://hops-event-sink-kafka
-    - name: EVENTSTORE_HOST
+    - name: EVENT_STORE_HOST
       value: http://hops-event-store
-    - name: FILESHARE_HOST
-      value: http://hops-fileshare
