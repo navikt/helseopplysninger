@@ -53,7 +53,7 @@ jobs:
           VARS: apps/${{ github.workflow }}/.nais/dev.json
 
       - name: Run e2e tests
-        run: bash run-e2e
+        run: bash .scripts/run-e2e
 
       - name: Deploy to Prod
         uses: nais/deploy/actions/deploy@master
