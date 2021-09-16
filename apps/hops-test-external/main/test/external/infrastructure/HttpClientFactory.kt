@@ -9,7 +9,6 @@ import io.ktor.client.features.auth.AuthProvider
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.http.HttpHeaders
 import io.ktor.http.auth.HttpAuthHeader
-import mu.KotlinLogging
 
 object HttpClientFactory {
     fun create(config: Config.ExternalApi) =
@@ -28,7 +27,7 @@ object HttpClientFactory {
             }
         }
 }
-private val log = KotlinLogging.logger {}
+
 private class MaskinportenOAuth2Provider(
     private val client: MaskinportenClient
 ) : AuthProvider {
@@ -37,6 +36,5 @@ private class MaskinportenOAuth2Provider(
 
     override suspend fun addRequestHeaders(request: HttpRequestBuilder) {
         request.headers[HttpHeaders.Authorization] = "Bearer ${client.maskinportenTokenString}"
-        log.info { "token: ${client.maskinportenTokenString}" }
     }
 }
