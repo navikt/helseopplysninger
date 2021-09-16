@@ -1,12 +1,14 @@
+package api
+
 import io.ktor.http.HttpHeaders
 import io.ktor.http.withCharset
 import no.nav.helse.hops.convert.ContentTypes
-import no.nav.helse.hops.mocks.MockServer
-import no.nav.security.mock.oauth2.MockOAuth2Server
+import no.nav.helse.hops.test.HopsOAuthMock
+import no.nav.helse.hops.test.MockServer
 import okhttp3.mockwebserver.MockResponse
 
 object MockServers {
-    val oAuth = MockOAuth2Server()
+    val oAuth = HopsOAuthMock()
 
     val eventStore = MockServer().apply {
         matchRequest(

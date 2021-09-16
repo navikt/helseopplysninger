@@ -14,7 +14,7 @@
     </appender>
 
     <!-- logLevel and logAppender are configured as environment variables. -->
-    <root level="${LOG_LEVEL:-INFO}">
+    <root level="${LOG_LEVEL:-DEBUG}">
         <appender-ref ref="${LOG_APPENDER:-pretty}"/>
     </root>
 
