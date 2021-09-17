@@ -6,7 +6,7 @@ api:
     client-id: ${MASKINPORTEN_CLIENT_ID}
     client-jwk: ${MASKINPORTEN_CLIENT_JWK}
     scope: ${MASKINPORTEN_SCOPES}
-    audience: https://hops.nav.no
+    audience: helseopplysninger-audience
 
 replay:
   host: ${EVENT_REPLAY_KAFKA_HOST}
