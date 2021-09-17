@@ -47,8 +47,8 @@ private class TokenCache(private var token: Token? = null) {
         return getToken() ?: error("new token has expired")
     }
 
-    private val SignedJWT.hasExpired: Boolean get() = jwtClaimsSet?.expirationTime?.willExpireIn20Sec ?: false
-    private val Date.willExpireIn20Sec: Boolean get() = time < (Date() plusSeconds 20).time
+    private val SignedJWT.hasExpired: Boolean get() = jwtClaimsSet?.expirationTime?.willExpireIn2Min ?: false
+    private val Date.willExpireIn2Min: Boolean get() = time < (Date() plusSeconds 120).time
 }
 
 class JwtGrantFactory(private val config: MaskinportConfig) {
