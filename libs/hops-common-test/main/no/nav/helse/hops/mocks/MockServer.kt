@@ -38,7 +38,6 @@ class MockServer {
     )
 
     fun getBaseUrl(): String = mockWebServer.url("/").toString().removeSuffix("/")
-    fun getUrl(): String = mockWebServer.url("/").toString()
 
     fun matchRequest(
         matcher: (RecordedRequest) -> Boolean,

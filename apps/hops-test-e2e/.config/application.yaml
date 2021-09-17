@@ -7,6 +7,7 @@ api:
     client-jwk: ${MASKINPORTEN_CLIENT_JWK}
     scope: ${MASKINPORTEN_SCOPES}
     audience: https://hops.dev.nav.no
+    issuer: https://ver2.maskinporten.no/
 
 replay:
   host: ${EVENT_REPLAY_KAFKA_HOST}

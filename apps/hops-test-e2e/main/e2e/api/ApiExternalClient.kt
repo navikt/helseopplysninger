@@ -66,6 +66,7 @@ private class MaskinportAuthenticator(config: ApiConfig.Maskinporten) : AuthProv
             privateKey = RSAKey.parse(config.clientJwk),
             scope = config.scope,
             resource = config.audience,
+            issuer = config.issuer,
         )
     )
 

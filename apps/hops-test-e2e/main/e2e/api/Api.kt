@@ -31,5 +31,6 @@ internal data class ApiConfig(val api: Api) {
         val clientJwk: String,
         val scope: String,
         val audience: String,
+        val issuer: String,
     )
 }
