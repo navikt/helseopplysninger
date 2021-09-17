@@ -115,7 +115,7 @@ class HopsAuthTest : FreeSpec({
             ),
             row(
                 "/azure",
-                MockServers.oAuth.issueMaskinportenToken(), //both scopes
+                MockServers.oAuth.issueMaskinportenToken(), // both scopes
                 HttpStatusCode.Unauthorized
             ),
             row(
@@ -130,7 +130,7 @@ class HopsAuthTest : FreeSpec({
             ),
             row(
                 "/read-or-write",
-                MockServers.oAuth.issueMaskinportenToken(), //both scopes
+                MockServers.oAuth.issueMaskinportenToken(), // both scopes
                 HttpStatusCode.OK
             ),
             row(
@@ -150,7 +150,7 @@ class HopsAuthTest : FreeSpec({
             ),
             row(
                 "/read-or-write-or-azure",
-                MockServers.oAuth.issueMaskinportenToken(), //both scopes
+                MockServers.oAuth.issueMaskinportenToken(), // both scopes
                 HttpStatusCode.OK
             ),
             row(
