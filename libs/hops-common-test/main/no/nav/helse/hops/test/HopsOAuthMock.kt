@@ -1,6 +1,7 @@
 package no.nav.helse.hops.test
 
 import com.nimbusds.jwt.SignedJWT
+import no.nav.helse.hops.security.HopsAuth
 import no.nav.security.mock.oauth2.MockOAuth2Server
 
 public class HopsOAuthMock {
@@ -43,4 +44,22 @@ public class HopsOAuthMock {
     fun issueAzureToken(): SignedJWT = server.issueToken(issuerId = AZURE_ISSUER_NAME)
     fun start() = server.start()
     fun shutdown() = server.shutdown()
+
+    fun buildMaskinportenConfig() = HopsAuth.Configuration.Maskinporten(
+        issuer = HopsAuth.Configuration.IssuerConfig(
+            name = MASKINPORTEN_ISSUER_NAME,
+            discoveryUrl = maskinportenWellKnownUrl().toUrl(),
+            audience = "default",
+            optionalClaims = null
+        ),
+        readScope = MaskinportenScopes.READ.value,
+        writeScope = MaskinportenScopes.WRITE.value
+    )
+
+    fun buildAzureConfig() = HopsAuth.Configuration.IssuerConfig(
+        name = AZURE_ISSUER_NAME,
+        discoveryUrl = azureWellKnownUrl().toUrl(),
+        audience = "default",
+        optionalClaims = null
+    )
 }
