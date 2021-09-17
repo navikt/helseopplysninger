@@ -21,9 +21,9 @@ private val config by lazy {
         "EVENT_SINK_KAFKA_HOST" to Mocks.eventsink.getBaseUrl(),
         "EVENT_STORE_HOST" to Mocks.eventstore.getBaseUrl(),
         "MASKINPORTEN_WELL_KNOWN_URL" to Mocks.maskinporten.getBaseUrl(),
-        "MASKINPORTEN_CLIENT_ID" to "test-client-id",
+        "MASKINPORTEN_CLIENT_ID" to "e2e-test-id",
         "MASKINPORTEN_CLIENT_JWK" to jwk,
-        "MASKINPORTEN_SCOPES" to "test",
+        "MASKINPORTEN_SCOPES" to "nav:helse:helseopplysninger.read nav:helse:helseopplysninger.write",
     )
 }
 

@@ -1,7 +1,7 @@
 plugins {
     application
     kotlin("jvm")
-    kotlin("plugin.serialization") version "1.5.30"
+    kotlin("plugin.serialization")
     id("com.github.johnrengelman.shadow")
     id("org.jlleitschuh.gradle.ktlint")
 }

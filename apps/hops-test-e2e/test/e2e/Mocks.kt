@@ -2,23 +2,23 @@ package e2e
 
 import com.nimbusds.jose.JWSAlgorithm
 import com.nimbusds.jose.JWSHeader
-import com.nimbusds.jose.JWSSigner
 import com.nimbusds.jose.crypto.RSASSASigner
-import com.nimbusds.jose.jwk.RSAKey
 import com.nimbusds.jose.jwk.gen.RSAKeyGenerator
 import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.SignedJWT
 import e2e.Mocks.Dispatcher.respond
 import e2e.Mocks.Matcher.get
 import e2e.Mocks.Matcher.post
+import e2e.Mocks.Testdata.maskinportResponse
 import no.nav.helse.hops.convert.ContentTypes.fhirJsonR4
+import no.nav.helse.hops.maskinporten.GRANT_TYPE
 import no.nav.helse.hops.mocks.MockServer
+import okhttp3.Headers
+import okhttp3.Headers.Companion.headersOf
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.RecordedRequest
 import org.intellij.lang.annotations.Language
 import java.util.Date
-
-internal const val GRANT_TYPE = "urn:ietf:params:oauth:grant-type:jwt-bearer"
 
 object Mocks {
     val maskinporten = MockServer().apply {
@@ -26,9 +26,9 @@ object Mocks {
             post(
                 path = "/token",
                 header = "Content-Type" to "application/x-www-form-urlencoded",
-                body = "grant_type=$GRANT_TYPE&assertion="
+                containsBody = "grant_type=$GRANT_TYPE&assertion="
             ),
-            respond(Testdata.maskinportResponse)
+            respond(maskinportResponse, headersOf("Content-Type", "application/json"))
         )
     }
 
@@ -63,8 +63,8 @@ object Mocks {
             req.method == "POST" && req.hasPath(path)
         }
 
-        fun post(path: String, header: Pair<String, String>, body: String) = { req: RecordedRequest ->
-            req.method == "POST" && req.hasPath(path) && req.hasHeader(header) && req.containsBody(body)
+        fun post(path: String, header: Pair<String, String>, containsBody: String) = { req: RecordedRequest ->
+            req.method == "POST" && req.hasPath(path) && req.hasHeader(header) && req.containsBody(containsBody)
         }
 
         private fun RecordedRequest.hasPath(pathString: String) = path!!.startsWith(pathString)
@@ -78,7 +78,11 @@ object Mocks {
         }
 
         fun respond(body: String = "", code: Int = 200) = { _: RecordedRequest ->
-            MockResponse().setResponseCode(code).setBody(body)
+            MockResponse().setBody(body).setResponseCode(code)
+        }
+
+        fun respond(body: String = "", headers: Headers, code: Int = 200) = { _: RecordedRequest ->
+            MockResponse().setHeaders(headers).setBody(body).setResponseCode(code)
         }
     }
 
@@ -87,26 +91,18 @@ object Mocks {
         val maskinportResponse =
             """
             {
-              "access_token" : "${maskinportenToken()}",
-              "token_type" : "Bearer",
-              "expires_in" : 599,
-              "scope" : "nav:helse:helseopplysninger.read"
+              "access_token" : "$maskinportenToken",
+              "expires_in" : 120,
+              "scope" : "nav:helse:helseopplysninger.read nav:helse:helseopplysninger.write"
             }
             """.trimIndent()
 
-        private fun maskinportenToken(): String {
-            val privateKey: RSAKey = RSAKeyGenerator(2048).keyID("123").generate()
-
-            val claimsSet = JWTClaimsSet.Builder()
-                .subject("alice")
-                .issuer("https://c2id.com")
-                .expirationTime(Date(Date().time + (60 * 1000)))
-                .build()
-
-            val signedJWT = SignedJWT(JWSHeader.Builder(JWSAlgorithm.RS256).keyID(privateKey.keyID).build(), claimsSet)
-            val signer: JWSSigner = RSASSASigner(privateKey)
-            signedJWT.sign(signer)
-            return signedJWT.serialize()
-        }
+        private val maskinportenToken: String
+            get() = RSAKeyGenerator(2048).keyID("123").generate().let { privateKey ->
+                val header = JWSHeader.Builder(JWSAlgorithm.RS256).keyID(privateKey.keyID).build()
+                val exp = Date(Date().time + (60 * 1000))
+                val claims = JWTClaimsSet.Builder().subject("test").issuer("e2e").expirationTime(exp).build()
+                SignedJWT(header, claims).apply { sign(RSASSASigner(privateKey)) }.serialize()
+            }
     }
 }

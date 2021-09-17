@@ -55,7 +55,7 @@ private class MaskinportAuthenticator(config: ApiConfig.Maskinporten) : AuthProv
     override val sendWithoutRequest = true
     override fun isApplicable(auth: HttpAuthHeader) = true
     override suspend fun addRequestHeaders(request: HttpRequestBuilder) {
-        request.header(HttpHeaders.Authorization, "Bearer ${maskinporten.token.parsedString}")
+        request.header(HttpHeaders.Authorization, "Bearer ${maskinporten.jwt.parsedString}")
     }
 
     private val maskinporten = MaskinportClient(
