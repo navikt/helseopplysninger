@@ -13,6 +13,8 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.util.Date
 
 class MaskinportClient(private val config: MaskinportConfig) {
@@ -37,14 +39,17 @@ data class MaskinportConfig(
     internal val issuer: String = baseUrl.suffix("/")
 )
 
-private class TokenCache(private var token: String? = null) {
-    fun getToken(): SignedJWT? = token
+private class TokenCache(private var token: Token? = null) {
+    private val log: Logger = LoggerFactory.getLogger("hops.libs.client.maskinport")
+    fun getToken(): SignedJWT? = token?.access_token
         ?.let(SignedJWT::parse)
         ?.takeUnless { it.hasExpired }
 
     fun update(tokenResponse: Token): SignedJWT {
-        token = tokenResponse.access_token
-        return getToken() ?: error("new token has expired")
+        token = tokenResponse
+        return getToken().also {
+            log.info("token: ${it?.parsedString}")
+        } ?: error("new token has expired")
     }
 
     private val SignedJWT.hasExpired: Boolean get() = jwtClaimsSet?.expirationTime?.willExpireIn20Sec ?: false
