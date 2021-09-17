@@ -32,7 +32,7 @@ data class MaskinportConfig(
     internal val clientId: String,
     internal val privateKey: RSAKey,
     internal val scope: String,
-    internal val validInSeconds: Int = 120,
+    internal val validInSeconds: Int = 60 * 15, // 15 min
     internal val resource: String,
     internal val issuer: String
 )
@@ -71,4 +71,3 @@ private data class Token(val access_token: String, val expires_in: Int, val scop
 
 const val GRANT_TYPE = "urn:ietf:params:oauth:grant-type:jwt-bearer"
 private infix fun Date.plusSeconds(seconds: Int): Date = Date(time + seconds * 1_000L)
-private fun String.suffix(s: String) = if (endsWith(s)) this else plus(s)
