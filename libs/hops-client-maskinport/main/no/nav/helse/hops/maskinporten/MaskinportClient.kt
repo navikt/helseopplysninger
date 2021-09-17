@@ -32,7 +32,7 @@ data class MaskinportConfig(
     internal val clientId: String,
     internal val privateKey: RSAKey,
     internal val scope: String,
-    internal val validInSeconds: Int = 60 * 15, // 15 min
+    internal val validInSeconds: Int = 120,
     internal val resource: String,
     internal val issuer: String
 )
@@ -47,8 +47,8 @@ private class TokenCache(private var token: Token? = null) {
         return getToken() ?: error("new token has expired")
     }
 
-    private val SignedJWT.hasExpired: Boolean get() = jwtClaimsSet?.expirationTime?.willExpireIn2Min ?: false
-    private val Date.willExpireIn2Min: Boolean get() = time < (Date() plusSeconds 120).time
+    private val SignedJWT.hasExpired: Boolean get() = jwtClaimsSet?.expirationTime?.willExpireIn20Sec ?: false
+    private val Date.willExpireIn20Sec: Boolean get() = time < (Date() plusSeconds 20).time
 }
 
 class JwtGrantFactory(private val config: MaskinportConfig) {
