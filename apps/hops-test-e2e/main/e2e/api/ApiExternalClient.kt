@@ -11,6 +11,7 @@ import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.HttpHeaders
+import io.ktor.http.Url
 import io.ktor.http.auth.HttpAuthHeader
 import io.ktor.http.contentType
 import no.nav.helse.hops.convert.ContentTypes.fhirJsonR4
@@ -60,11 +61,13 @@ private class MaskinportAuthenticator(config: ApiConfig.Maskinporten) : AuthProv
 
     private val maskinporten = MaskinportClient(
         MaskinportConfig(
-            baseUrl = config.discoveryUrl,
+            baseUrl = config.discoveryUrl.withoutPath,
             clientId = config.clientId,
             privateKey = RSAKey.parse(config.clientJwk),
             scope = config.scope,
             resource = config.audience,
         )
     )
+
+    val String.withoutPath: String get() = removeSuffix(Url(this).encodedPath) // http:nice/path/x -> http:nice
 }
