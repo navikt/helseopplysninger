@@ -67,7 +67,7 @@ class JwtGrantFactory(private val config: MaskinportConfig) {
 }
 
 @Serializable
-private data class Token(val access_token: String, val expires_in: Int, val scope: String)
+private data class Token(val access_token: String, val expires_in: Int, val scope: String, val token_type: String?)
 
 const val GRANT_TYPE = "urn:ietf:params:oauth:grant-type:jwt-bearer"
 private infix fun Date.plusSeconds(seconds: Int): Date = Date(time + seconds * 1_000L)
