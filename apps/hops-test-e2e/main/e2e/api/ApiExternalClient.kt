@@ -17,8 +17,6 @@ import io.ktor.http.contentType
 import no.nav.helse.hops.convert.ContentTypes.fhirJsonR4
 import no.nav.helse.hops.maskinporten.MaskinportClient
 import no.nav.helse.hops.maskinporten.MaskinportConfig
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import java.util.UUID
 
 private const val subscribePath = "/fhir/4.0/Bundle"
@@ -59,7 +57,6 @@ private class MaskinportAuthenticator(config: ApiConfig.Maskinporten) : AuthProv
     override fun isApplicable(auth: HttpAuthHeader) = true
     override suspend fun addRequestHeaders(request: HttpRequestBuilder) {
         request.header(HttpHeaders.Authorization, "Bearer ${maskinporten.jwt.parsedString}")
-
     }
 
     private val maskinporten = MaskinportClient(
