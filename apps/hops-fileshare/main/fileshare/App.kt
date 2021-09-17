@@ -17,7 +17,6 @@ import io.micrometer.prometheus.PrometheusConfig.DEFAULT
 import io.micrometer.prometheus.PrometheusMeterRegistry
 import no.nav.helse.hops.hoplite.loadConfigsOrThrow
 import no.nav.helse.hops.security.HopsAuth
-import org.slf4j.event.Level
 
 fun main() {
     embeddedServer(Netty, port = 8080, module = Application::module).start(wait = true)
@@ -29,9 +28,7 @@ fun Application.module() {
     val applicationServices = ApplicationServices(config)
 
     install(Webjars)
-    install(CallLogging) {
-        level = Level.DEBUG
-    }
+    install(CallLogging)
     install(MicrometerMetrics) { registry = prometheusMeterRegistry }
     install(HopsAuth) {
         azureAD = config.oauth.azure

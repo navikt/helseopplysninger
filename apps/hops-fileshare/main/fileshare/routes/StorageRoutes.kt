@@ -17,7 +17,6 @@ import io.ktor.routing.route
 import io.ktor.utils.io.copyAndClose
 import no.nav.helse.hops.routing.fullUrl
 import no.nav.helse.hops.security.HopsAuth
-import no.nav.helse.hops.security.authIdentity
 
 fun Routing.storageRoutes(service: FileSharingService) {
     route("files") {
@@ -33,8 +32,6 @@ fun Routing.storageRoutes(service: FileSharingService) {
         authenticate(HopsAuth.Realms.maskinportenRead.name, HopsAuth.Realms.azureAd.name) {
             get("/{fileName}") {
                 val fileName = call.parameters["fileName"]!!
-                val identity = call.authIdentity()
-                println(identity)
 
                 val response = service.downloadFile(fileName, call.request.headers[HttpHeaders.Range])
                 response.headers[HttpHeaders.AcceptRanges]?.let {
