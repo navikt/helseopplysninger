@@ -19,7 +19,7 @@ dependencies {
     implementation("io.github.cdimascio:dotenv-kotlin:6.2.2")
     implementation("io.ktor:ktor-auth:1.6.3")
     implementation("no.nav.security:token-validation-ktor:1.3.8")
-    implementation("org.apache.kafka:kafka-clients:2.8.0")
+    implementation("org.apache.kafka:kafka-clients:2.8.1")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
     runtimeOnly("ch.qos.logback:logback-classic:1.2.6")
     runtimeOnly("io.ktor:ktor-server-netty:$ktorVersion")
