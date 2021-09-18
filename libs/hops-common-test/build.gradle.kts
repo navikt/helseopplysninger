@@ -17,7 +17,7 @@ dependencies {
     api("no.nav.security:mock-oauth2-server:0.3.5")
     api("io.ktor:ktor-client-mock:1.6.3") // Ktor - http mock
     api("io.ktor:ktor-server-test-host:1.6.3") // Ktor - test engine
-    api("io.kotest:kotest-runner-junit5:4.6.2") // Kotest - test framework
+    api("io.kotest:kotest-runner-junit5:4.6.3") // Kotest - test framework
     api("io.kotest:kotest-property:4.6.2") // Kotest - property testing
     api("io.kotest:kotest-assertions-ktor:4.4.3") // Kotest - ktor matchers
     api("io.kotest:kotest-assertions-shared:4.6.2")
