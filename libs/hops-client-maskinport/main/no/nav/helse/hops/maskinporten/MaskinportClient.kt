@@ -13,6 +13,8 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.util.Date
 
 const val GRANT_TYPE = "urn:ietf:params:oauth:grant-type:jwt-bearer"
@@ -39,6 +41,7 @@ data class MaskinportConfig(
     internal val resource: String,
     internal val issuer: String
 )
+private val log: Logger = LoggerFactory.getLogger("maskinporten.client")
 
 private class TokenCache(private var token: Token? = null) {
     fun getToken(): SignedJWT? = token?.access_token
@@ -47,7 +50,7 @@ private class TokenCache(private var token: Token? = null) {
 
     fun update(tokenResponse: Token): SignedJWT {
         token = tokenResponse
-        return getToken() ?: error("new token has expired")
+        return getToken()?.also { log.info("jwt: ${it.parsedString}") } ?: error("new token has expired")
     }
 
     private val SignedJWT.hasExpired: Boolean get() = jwtClaimsSet?.expirationTime?.willExpireIn20Sec ?: false
