@@ -5,6 +5,7 @@
   "env": {
     "HOPS_EVENTSTORE_SCOPE": "api://dev-gcp.helseopplysninger.hops-event-store/.default",
     "MASKINPORTEN_ISSUER_NAME": "https://ver2.maskinporten.no/",
-    "HOPS_AUDIENCE": "https://hops.dev.nav.no"
+    "HOPS_AUDIENCE": "https://hops.dev.nav.no",
+    "LOG_LEVEL": "DEBUG"
   }
 }
