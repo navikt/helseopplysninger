@@ -15,9 +15,12 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
 import java.util.Date
 
+const val GRANT_TYPE = "urn:ietf:params:oauth:grant-type:jwt-bearer"
+
 class MaskinportClient(private val config: MaskinportConfig) {
     private val jwtCache: TokenCache = TokenCache()
     private val jwtGrant = JwtGrantFactory(config)
+
     private val client: HttpClient = HttpClient() { install(JsonFeature) } // response Content-Type: application/json
 
     val jwt: SignedJWT get() = jwtCache.getToken() ?: runBlocking { jwtCache.update(fetchToken()) }
@@ -51,7 +54,7 @@ private class TokenCache(private var token: Token? = null) {
     private val Date.willExpireIn20Sec: Boolean get() = time < (Date() plusSeconds 20).time
 }
 
-class JwtGrantFactory(private val config: MaskinportConfig) {
+private class JwtGrantFactory(private val config: MaskinportConfig) {
     val jwt: String get() = signedJwt.serialize()
     private val signedJwt get() = SignedJWT(jwsHeader, jwtClaimSet).apply { sign(RSASSASigner(config.privateKey)) }
     private val jwsHeader get() = JWSHeader.Builder(JWSAlgorithm.RS256).keyID(config.privateKey.keyID).build()
@@ -69,5 +72,4 @@ class JwtGrantFactory(private val config: MaskinportConfig) {
 @Serializable
 private data class Token(val access_token: String, val expires_in: Int, val scope: String, val token_type: String?)
 
-const val GRANT_TYPE = "urn:ietf:params:oauth:grant-type:jwt-bearer"
 private infix fun Date.plusSeconds(seconds: Int): Date = Date(time + seconds * 1_000L)
