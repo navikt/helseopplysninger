@@ -57,7 +57,7 @@ jobs:
           VARS: apps/${{ github.workflow }}/.nais/dev.json
           VAR: app={{ github.workflow }},env=dev
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          RESOURCE: ${{ APP_MANIFEST }},${{ ALERT_MANIFEST }}
+          RESOURCE: ${{ env.APP_MANIFEST }},${{ env.ALERT_MANIFEST }}
 
       - name: Deploy to Prod
         uses: nais/deploy/actions/deploy@master
@@ -68,4 +68,4 @@ jobs:
           VARS: apps/${{ github.workflow }}/.nais/prod.json
           VAR: app={{ github.workflow }},env=prod
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          RESOURCE: ${{ APP_MANIFEST }},${{ ALERT_MANIFEST }}
+          RESOURCE: ${{ env.APP_MANIFEST }},${{ env.ALERT_MANIFEST }}
