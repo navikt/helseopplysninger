@@ -55,7 +55,7 @@ jobs:
           CLUSTER: dev-gcp
           ENVIRONMENT: dev-gcp:${{ github.workflow }}
           VARS: apps/${{ github.workflow }}/.nais/dev.json
-          VAR: app={{ github.workflow }},environment=dev
+          VAR: app=${{ github.workflow }},environment=dev
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           RESOURCE: ${{ env.APP_MANIFEST }},${{ env.ALERT_MANIFEST }}
 
@@ -66,6 +66,6 @@ jobs:
           CLUSTER: prod-gcp
           ENVIRONMENT: prod-gcp:${{ github.workflow }}
           VARS: apps/${{ github.workflow }}/.nais/prod.json
-          VAR: app={{ github.workflow }},environment=prod
+          VAR: app=${{ github.workflow }},environment=prod
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           RESOURCE: ${{ env.APP_MANIFEST }},${{ env.ALERT_MANIFEST }}
