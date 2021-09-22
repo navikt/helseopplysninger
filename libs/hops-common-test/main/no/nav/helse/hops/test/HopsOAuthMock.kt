@@ -42,5 +42,4 @@ public class HopsOAuthMock {
     fun shutdown() = server.shutdown()
     fun maskinportenIssuer(): String = MASKINPORTEN_ISSUER_NAME
     fun azureIssuer(): String = AZURE_ISSUER_NAME
-
 }

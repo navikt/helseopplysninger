@@ -22,6 +22,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.1
+        with:
+          access_token: ${{ github.token }}
       - uses: actions/checkout@v2.3.4
 
       - uses: docker/login-action@v1
@@ -51,6 +55,11 @@ jobs:
           CLUSTER: dev-gcp
           ENVIRONMENT: dev-gcp:${{ github.workflow }}
           VARS: apps/${{ github.workflow }}/.nais/dev.json
+
+      - name: Run e2e tests
+        run: bash .scripts/run-e2e
+        # remove when e2e is stable
+        continue-on-error: true
 
       - name: Deploy to Prod
         uses: nais/deploy/actions/deploy@master
