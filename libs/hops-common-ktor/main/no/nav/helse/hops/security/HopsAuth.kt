@@ -164,7 +164,7 @@ fun ApplicationCall.authIdentity(): HopsAuth.AuthIdentity {
         }
     }
 
-    throw IllegalStateException("No tokens found for neither AzureAD nor Maskinporten!")
+    error("No tokens found for neither AzureAD nor Maskinporten!")
 }
 
 fun ApplicationCall.authIdentityAzure(): HopsAuth.AuthIdentity.AzureAD = authIdentity() as HopsAuth.AuthIdentity.AzureAD
