@@ -12,7 +12,7 @@ import e2e.Mocks.Matcher.post
 import e2e.Mocks.Testdata.maskinportResponse
 import no.nav.helse.hops.convert.ContentTypes.fhirJsonR4
 import no.nav.helse.hops.maskinporten.GRANT_TYPE
-import no.nav.helse.hops.mocks.MockServer
+import no.nav.helse.hops.test.MockServer
 import okhttp3.Headers
 import okhttp3.Headers.Companion.headersOf
 import okhttp3.mockwebserver.MockResponse
