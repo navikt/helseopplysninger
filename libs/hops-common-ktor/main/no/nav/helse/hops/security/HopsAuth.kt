@@ -146,7 +146,7 @@ class HopsAuth(configuration: Configuration) {
 
 fun ApplicationCall.authIdentity(): HopsAuth.AuthIdentity {
     val principal = authentication.principal<TokenValidationContextPrincipal>()
-        ?: throw IllegalStateException("There is no Principal present, make sure you are in an authenticated route")
+        ?: error("There is no Principal present, make sure you are in an authenticated route")
 
     val feature = attributes[HopsAuth.key]
     feature.maskinporten?.let {
