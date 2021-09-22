@@ -5,9 +5,9 @@ oauth:
     audience: = ${AZURE_APP_CLIENT_ID:-helseopplysninger-audience}
   maskinporten:
     issuer:
-      name: maskinporten
+      name: ${MASKINPORTEN_ISSUER_NAME:-maskinporten}
       discoveryUrl: ${MASKINPORTEN_WELL_KNOWN_URL:-http://mock-oauth2-service:8081/maskinporten/.well-known/openid-configuration}
-      audience: "https://hops-fileshare.nav.no"
+      audience: ${HOPS_AUDIENCE:-helseopplysninger-audience}
       optionalClaims: "sub,nbf"
     writeScope: "nav:helse:helseopplysninger.write"
     readScope: "nav:helse:helseopplysninger.read"

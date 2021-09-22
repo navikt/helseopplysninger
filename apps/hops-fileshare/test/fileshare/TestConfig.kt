@@ -7,7 +7,6 @@ import io.ktor.application.Application
 import io.ktor.config.MapApplicationConfig
 import io.ktor.server.testing.TestApplicationEngine
 import io.ktor.server.testing.withTestApplication
-import no.nav.helse.hops.test.HopsOAuthMock
 import no.nav.helse.hops.test.HopsOAuthMock.MaskinportenScopes
 
 fun <R> withFileshareTestApp(
@@ -43,11 +42,11 @@ internal class KotestListener : ProjectListener {
 }
 
 private fun Application.config() = (environment.config as MapApplicationConfig).apply {
-    put("oauth.azure.name", HopsOAuthMock.AZURE_ISSUER_NAME)
+    put("oauth.azure.name", MockServers.oAuth.azureIssuer())
     put("oauth.azure.discoveryUrl", "${MockServers.oAuth.azureWellKnownUrl()}")
     put("oauth.azure.audience", "default")
 
-    put("oauth.maskinporten.issuer.name", HopsOAuthMock.MASKINPORTEN_ISSUER_NAME)
+    put("oauth.maskinporten.issuer.name", MockServers.oAuth.maskinportenIssuer())
     put("oauth.maskinporten.issuer.discoveryUrl", "${MockServers.oAuth.maskinportenWellKnownUrl()}")
     put("oauth.maskinporten.issuer.audience", "default")
     put("oauth.maskinporten.uploadScope", MaskinportenScopes.WRITE.value)

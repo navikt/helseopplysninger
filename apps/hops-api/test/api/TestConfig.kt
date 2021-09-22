@@ -8,14 +8,13 @@ import io.ktor.application.Application
 import io.ktor.config.MapApplicationConfig
 import io.ktor.server.testing.TestApplicationEngine
 import io.ktor.server.testing.withTestApplication
-import no.nav.helse.hops.test.HopsOAuthMock
 import no.nav.helse.hops.test.HopsOAuthMock.MaskinportenScopes
 
 internal fun Application.config(): MapApplicationConfig {
 
     return (environment.config as MapApplicationConfig).apply {
 
-        put("oauth.maskinporten.issuer.name", HopsOAuthMock.MASKINPORTEN_ISSUER_NAME)
+        put("oauth.maskinporten.issuer.name", MockServers.oAuth.maskinportenIssuer())
         put("oauth.maskinporten.issuer.discoveryUrl", "${MockServers.oAuth.maskinportenWellKnownUrl()}")
         put("oauth.maskinporten.issuer.audience", "default")
         put("oauth.maskinporten.writeScope", MaskinportenScopes.WRITE.value)

@@ -21,6 +21,7 @@ import io.ktor.server.netty.Netty
 import io.ktor.webjars.Webjars
 import io.micrometer.prometheus.PrometheusConfig.DEFAULT
 import io.micrometer.prometheus.PrometheusMeterRegistry
+import mu.KotlinLogging
 import no.nav.helse.hops.convert.ContentTypes
 import no.nav.helse.hops.convert.FhirR4JsonContentConverter
 import no.nav.helse.hops.diagnostics.useRequestIdHeader
@@ -28,12 +29,16 @@ import no.nav.helse.hops.hoplite.loadConfigsOrThrow
 import no.nav.helse.hops.security.HopsAuth
 import no.nav.helse.hops.statuspages.useFhirErrorStatusPage
 
+private val log = KotlinLogging.logger {}
+
 fun main() {
     embeddedServer(Netty, port = 8080, module = Application::module).start(wait = true)
 }
 
 fun Application.module() {
     val config = loadConfigsOrThrow<Config>("/application.yaml")
+    log.debug { "Running configuration: $config" }
+
     val httpClient = HttpClientFactory.create(config.eventStore)
     val eventStoreClient = EventStoreHttp(httpClient, config.eventStore)
     val prometheusMeterRegistry = PrometheusMeterRegistry(DEFAULT)
