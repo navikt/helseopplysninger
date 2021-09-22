@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# create build dir if missing
+if [ ! -d build/e2e/ ]; then
+  mkdir build/e2e/
+fi
+
+curl https://hops-test-e2e.ekstern.dev.nav.no/runTests >'build/e2e/result.json'
+
+# contains failedTests
+failed=$(jq <./build/e2e/result.json 'has("failedTests")')
+
+# print results
+jq <./build/e2e/result.json
+
+# send exit 1 (for github actions) on failing test(s)
+if [ "$failed" = "true" ]; then
+  echo exit 1
+fi

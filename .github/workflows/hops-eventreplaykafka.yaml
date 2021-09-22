@@ -56,6 +56,11 @@ jobs:
           ENVIRONMENT: dev-gcp:${{ github.workflow }}
           VARS: apps/${{ github.workflow }}/.nais/dev.json
 
+      - name: Run e2e tests
+        run: bash .scripts/run-e2e
+        # remove when e2e is stable
+        continue-on-error: true
+
       - name: Deploy to Prod
         uses: nais/deploy/actions/deploy@master
         if: ${{ github.ref == 'refs/heads/main' && github.event.inputs.deploy-prod == 'true'}}
