@@ -15,7 +15,7 @@ internal fun Application.config(): MapApplicationConfig {
 
     return (environment.config as MapApplicationConfig).apply {
 
-        put("oauth.maskinporten.name", HopsOAuthMock.MASKINPORTEN_ISSUER_NAME)
+        put("oauth.maskinporten.name", MockServers.oAuth.maskinportenIssuer())
         put("oauth.maskinporten.discoveryUrl", "${MockServers.oAuth.maskinportenWellKnownUrl()}")
         put("oauth.maskinporten.audience", "default")
         put("oauth.publishScope", MaskinportenScopes.WRITE.value)

@@ -6,11 +6,8 @@ import no.nav.security.mock.oauth2.MockOAuth2Server
 public class HopsOAuthMock {
 
     companion object {
-        const val MP_SCOPE_READ = "nav:helse:helseopplysninger.read"
-        const val MP_SCOPE_WRITE = "nav:helse:helseopplysninger.write"
-
-        const val MASKINPORTEN_ISSUER_NAME = "maskinporten"
-        const val AZURE_ISSUER_NAME = "azure"
+        private const val MASKINPORTEN_ISSUER_NAME = "maskinporten"
+        private const val AZURE_ISSUER_NAME = "azure"
     }
 
     enum class MaskinportenScopes(val value: String) {
@@ -43,4 +40,7 @@ public class HopsOAuthMock {
     fun issueAzureToken(): SignedJWT = server.issueToken(issuerId = AZURE_ISSUER_NAME)
     fun start() = server.start()
     fun shutdown() = server.shutdown()
+    fun maskinportenIssuer(): String = MASKINPORTEN_ISSUER_NAME
+    fun azureIssuer(): String = AZURE_ISSUER_NAME
+
 }
