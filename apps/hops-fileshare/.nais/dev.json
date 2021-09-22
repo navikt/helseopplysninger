@@ -1,5 +1,9 @@
 {
   "ingresses": [
     "https://hops-fileshare.dev.nav.no"
-  ]
+  ],
+  "env": {
+    "MASKINPORTEN_ISSUER_NAME": "https://ver2.maskinporten.no/",
+    "HOPS_AUDIENCE": "https://hops.dev.nav.no"
+  }
 }

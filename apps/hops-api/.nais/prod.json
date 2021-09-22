@@ -3,6 +3,8 @@
     "https://hops.nav.no"
   ],
   "env": {
-    "HOPS_EVENTSTORE_SCOPE": "api://prod-gcp.helseopplysninger.hops-event-store/.default"
+    "HOPS_EVENTSTORE_SCOPE": "api://prod-gcp.helseopplysninger.hops-event-store/.default",
+    "MASKINPORTEN_ISSUER_NAME": "https://maskinporten.no/",
+    "HOPS_AUDIENCE": "https://hops.nav.no"
   }
 }

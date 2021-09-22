@@ -5,8 +5,8 @@ import io.ktor.config.MapApplicationConfig
 import java.net.URL
 
 data class OauthIssuerConfig(
+    val name: String,
     val discoveryUrl: URL,
-    val name: String = discoveryUrl.toString().substringBefore(".well-known/"),
     val audience: String,
     val optionalClaims: String?
 )

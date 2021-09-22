@@ -1,0 +1,60 @@
+apiVersion: "nais.io/v1"
+kind: Alert
+metadata:
+  name: {{app}}-alerts
+  namespace: helseopplysninger
+  labels:
+    team: helseopplysninger
+spec:
+  receivers:
+    slack:
+      channel: 'team-helseopplysninger-alert'
+      prependText: '<!here> | '
+  alerts:
+    - alert: application down
+      expr: kube_deployment_status_replicas_available{deployment="{{app}}"} == 0
+      for: 2m
+      description: "App {{ $labels.app }} in {{ environment }} is down"
+      action: "Check <https://logs.adeo.no/app/dashboards#/view/a90e80c0-1536-11ec-8d59-d3ccfd14d3d8?_g=(filters%3A!(('%24state'%3A(store%3AglobalState)%2Cmeta%3A(alias%3A!n%2Cdisabled%3A!f%2Cindex%3A'96e648c0-980a-11e9-830a-e17bbd64b4db'%2Ckey%3Aapplication%2Cnegate%3A!f%2Cparams%3A(query%3A{{ labels.app }})%2Ctype%3Aphrase)%2Cquery%3A(match_phrase%3A(application%3A{{ labels.app }}))))%2CrefreshInterval%3A(pause%3A!t%2Cvalue%3A0)%2Ctime%3A(from%3Anow-1d%2Cto%3Anow)) | application logs> and k8s pod events:\n
+               ```kubectl describe po {{ $labels.kubernetes_pod_name }} -n {{ $labels.kubernetes_namespace }}```
+              "
+
+    - alert: errors in log
+      expr: (100 * sum by (log_app, log_namespace) (rate(logd_messages_total{log_app="{{app}}",log_level=~"Error"}[3m])) / sum by (log_app, log_namespace) (rate(logd_messages_total{log_app="{{app}}"}[3m]))) > 0
+      severity: danger
+      for: 3m
+      description: "Errors detected in logs for {{ $labels.app }} in {{ environment }}"
+      action: "Check <https://logs.adeo.no/app/dashboards#/view/a90e80c0-1536-11ec-8d59-d3ccfd14d3d8?_g=(filters%3A!(('%24state'%3A(store%3AglobalState)%2Cmeta%3A(alias%3A!n%2Cdisabled%3A!f%2Cindex%3A'96e648c0-980a-11e9-830a-e17bbd64b4db'%2Ckey%3Aapplication%2Cnegate%3A!f%2Cparams%3A(query%3A{{ $labels.app }})%2Ctype%3Aphrase)%2Cquery%3A(match_phrase%3A(application%3A{{ $labels.app }}))))%2CrefreshInterval%3A(pause%3A!t%2Cvalue%3A0)%2Ctime%3A(from%3Anow-1d%2Cto%3Anow)) | application logs>"
+
+    - alert: high warning rate in logs
+      expr: (100 * sum by (log_app, log_namespace) (rate(logd_messages_total{log_app="{{app}}",log_level=~"Warning"}[3m])) / sum by (log_app, log_namespace) (rate(logd_messages_total{log_app="{{app}}"}[3m]))) > 10
+      severity: warning
+      for: 3m
+      action: "Check <https://logs.adeo.no/app/dashboards#/view/a90e80c0-1536-11ec-8d59-d3ccfd14d3d8?_g=(filters%3A!(('%24state'%3A(store%3AglobalState)%2Cmeta%3A(alias%3A!n%2Cdisabled%3A!f%2Cindex%3A'96e648c0-980a-11e9-830a-e17bbd64b4db'%2Ckey%3Aapplication%2Cnegate%3A!f%2Cparams%3A(query%3A{{ $labels.app }})%2Ctype%3Aphrase)%2Cquery%3A(match_phrase%3A(application%3A{{ $labels.app }}))))%2CrefreshInterval%3A(pause%3A!t%2Cvalue%3A0)%2Ctime%3A(from%3Anow-1d%2Cto%3Anow)) | application logs>"
+
+    - alert: health check fails
+      expr: selftests_aggregate_result_status{app="{{app}}"} > 0
+      severity: warning
+      for: 1m
+      description: "kubernetes selftest failed for {{ $labels.app }} in {{ environment }}"
+      action: "Check <https://logs.adeo.no/app/dashboards#/view/a90e80c0-1536-11ec-8d59-d3ccfd14d3d8?_g=(filters%3A!(('%24state'%3A(store%3AglobalState)%2Cmeta%3A(alias%3A!n%2Cdisabled%3A!f%2Cindex%3A'96e648c0-980a-11e9-830a-e17bbd64b4db'%2Ckey%3Aapplication%2Cnegate%3A!f%2Cparams%3A(query%3A{{ $labels.app }})%2Ctype%3Aphrase)%2Cquery%3A(match_phrase%3A(application%3A{{ $labels.app }}))))%2CrefreshInterval%3A(pause%3A!t%2Cvalue%3A0)%2Ctime%3A(from%3Anow-1d%2Cto%3Anow)) | application logs> and k8s pod events:\n
+               ```kubectl describe po {{ $labels.kubernetes_pod_name }} -n {{ $labels.kubernetes_namespace }}```
+              "
+
+    - alert: high http server error rate (5xx)
+      severity: danger
+      expr: floor(increase(ktor_http_server_requests_seconds_count{result="failure", status=~"5.*", app="{{app}}"}[3m])) > 1
+      for: 1m
+      description: "Failed request for {{ $labels.app }} in {{ environment }} \n
+                    `Status {{ $labels.status }} - {{ $labels.method }} {{ $labels.route }}`.\n
+                    Reason:\n ```{{ $labels.problem_details }}```"
+      action: "Check <https://logs.adeo.no/app/dashboards#/view/a90e80c0-1536-11ec-8d59-d3ccfd14d3d8?_g=(filters%3A!(('%24state'%3A(store%3AglobalState)%2Cmeta%3A(alias%3A!n%2Cdisabled%3A!f%2Cindex%3A'96e648c0-980a-11e9-830a-e17bbd64b4db'%2Ckey%3Aapplication%2Cnegate%3A!f%2Cparams%3A(query%3A{{ $labels.app }})%2Ctype%3Aphrase)%2Cquery%3A(match_phrase%3A(application%3A{{ $labels.app }}))))%2CrefreshInterval%3A(pause%3A!t%2Cvalue%3A0)%2Ctime%3A(from%3Anow-1d%2Cto%3Anow)) | application logs>"
+
+    - alert: high http client error rate (4xx)
+      severity: danger
+      expr: floor(increase(ktor_http_server_requests_seconds_count{result="failure", status=~"4.*", status!~"404|401", app="{{app}}"}[3m])) > 0
+      for: 1m
+      description: "Failed request for {{ $labels.app }} in {{ environment }} \n
+                    `Status {{ $labels.status }} - {{ $labels.method }} {{ $labels.route }}`.\n
+                    Reason:\n ```{{ $labels.problem_details }}```"
+      action: "Check <https://logs.adeo.no/app/dashboards#/view/a90e80c0-1536-11ec-8d59-d3ccfd14d3d8?_g=(filters%3A!(('%24state'%3A(store%3AglobalState)%2Cmeta%3A(alias%3A!n%2Cdisabled%3A!f%2Cindex%3A'96e648c0-980a-11e9-830a-e17bbd64b4db'%2Ckey%3Aapplication%2Cnegate%3A!f%2Cparams%3A(query%3A{{ $labels.app }})%2Ctype%3Aphrase)%2Cquery%3A(match_phrase%3A(application%3A{{ $labels.app }}))))%2CrefreshInterval%3A(pause%3A!t%2Cvalue%3A0)%2Ctime%3A(from%3Anow-1d%2Cto%3Anow)) | application logs>"

@@ -1,6 +1,5 @@
 package fileshare
 
-import MockServers
 import io.kotest.assertions.ktor.client.shouldHaveStatus
 import io.kotest.assertions.ktor.haveHeader
 import io.kotest.assertions.ktor.shouldHaveContent
@@ -15,8 +14,8 @@ import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.testing.handleRequest
 import io.ktor.server.testing.setBody
+import no.nav.helse.hops.test.HopsOAuthMock.MaskinportenScopes
 import okhttp3.mockwebserver.MockResponse
-import withFileshareTestApp
 
 class DownloadFileTest : FeatureSpec({
     feature("Download authorization") {
@@ -24,7 +23,7 @@ class DownloadFileTest : FeatureSpec({
             withFileshareTestApp {
                 with(
                     handleRequest(HttpMethod.Get, "/files/testfile") {
-                        val token = MockServers.oAuth.issueToken(issuerId = "with-scopes", claims = mapOf("scope" to "nav:helse:helseopplysninger.read"))
+                        val token = MockServers.oAuth.issueMaskinportenToken(scopes = setOf(MaskinportenScopes.READ))
                         addHeader("Authorization", "Bearer ${token.serialize()}")
                     }
                 ) {
@@ -37,7 +36,7 @@ class DownloadFileTest : FeatureSpec({
             withFileshareTestApp {
                 with(
                     handleRequest(HttpMethod.Post, "/files") {
-                        val token = MockServers.oAuth.issueToken(issuerId = "with-scopes")
+                        val token = MockServers.oAuth.issueMaskinportenToken(scopes = setOf())
                         addHeader("Authorization", "Bearer ${token.serialize()}")
                         addHeader("Content-Type", "plain/txt")
                         setBody("new fantastic content")
@@ -52,7 +51,7 @@ class DownloadFileTest : FeatureSpec({
             withFileshareTestApp {
                 with(
                     handleRequest(HttpMethod.Get, "/files/testfile") {
-                        val token = MockServers.oAuth.issueToken()
+                        val token = MockServers.oAuth.issueAzureToken()
                         addHeader("Authorization", "Bearer ${token.serialize()}")
                     }
                 ) {
@@ -67,7 +66,7 @@ class DownloadFileTest : FeatureSpec({
             withFileshareTestApp {
                 with(
                     handleRequest(HttpMethod.Get, "/files/testfile") {
-                        val token = MockServers.oAuth.issueToken()
+                        val token = MockServers.oAuth.issueAzureToken()
                         addHeader("Authorization", "Bearer ${token.serialize()}")
                     }
                 ) {
@@ -89,7 +88,7 @@ class DownloadFileTest : FeatureSpec({
                 with(
                     shouldThrow<ClientRequestException> {
                         handleRequest(HttpMethod.Get, "/files/nonexistentfile") {
-                            val token = MockServers.oAuth.issueToken()
+                            val token = MockServers.oAuth.issueAzureToken()
                             addHeader("Authorization", "Bearer ${token.serialize()}")
                         }
                     }
@@ -107,7 +106,7 @@ class UploadFileTest : FeatureSpec({
             withFileshareTestApp {
                 with(
                     handleRequest(HttpMethod.Post, "/files") {
-                        val token = MockServers.oAuth.issueToken(issuerId = "with-scopes", claims = mapOf("scope" to "nav:helse:helseopplysninger.write"))
+                        val token = MockServers.oAuth.issueMaskinportenToken(scopes = setOf(MaskinportenScopes.WRITE))
                         addHeader("Authorization", "Bearer ${token.serialize()}")
                         addHeader("Content-Type", "plain/txt")
                         setBody("new fantastic content")
@@ -122,7 +121,7 @@ class UploadFileTest : FeatureSpec({
             withFileshareTestApp {
                 with(
                     handleRequest(HttpMethod.Post, "/files") {
-                        val token = MockServers.oAuth.issueToken(issuerId = "with-scopes")
+                        val token = MockServers.oAuth.issueMaskinportenToken(scopes = setOf(MaskinportenScopes.READ))
                         addHeader("Authorization", "Bearer ${token.serialize()}")
                         addHeader("Content-Type", "plain/txt")
                         setBody("new fantastic content")
@@ -137,7 +136,7 @@ class UploadFileTest : FeatureSpec({
             withFileshareTestApp {
                 with(
                     handleRequest(HttpMethod.Post, "/files") {
-                        val token = MockServers.oAuth.issueToken()
+                        val token = MockServers.oAuth.issueAzureToken()
                         addHeader("Authorization", "Bearer ${token.serialize()}")
                         addHeader("Content-Type", "plain/txt")
                         setBody("new fantastic content")
@@ -154,7 +153,7 @@ class UploadFileTest : FeatureSpec({
             withFileshareTestApp {
                 with(
                     handleRequest(HttpMethod.Post, "/files") {
-                        val token = MockServers.oAuth.issueToken()
+                        val token = MockServers.oAuth.issueAzureToken()
                         addHeader("Authorization", "Bearer ${token.serialize()}")
                         addHeader("Content-Type", "plain/txt")
                         setBody("new fantastic content")
@@ -193,7 +192,7 @@ class UploadFileTest : FeatureSpec({
                 )
                 with(
                     handleRequest(HttpMethod.Post, "/files") {
-                        val token = MockServers.oAuth.issueToken()
+                        val token = MockServers.oAuth.issueAzureToken()
                         addHeader("Authorization", "Bearer ${token.serialize()}")
                         addHeader("Content-Type", "plain/txt")
                         setBody("malicious content")
