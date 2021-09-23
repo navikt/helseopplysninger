@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# create build dir if missing
+# create directory 'build' or 'e2e' if missing
 if [ ! -d build/e2e/ ]; then
-  mkdir build/e2e/
+  mkdir -p build/e2e/
 fi
 
 curl https://hops-test-e2e.ekstern.dev.nav.no/runTests >'build/e2e/result.json'
