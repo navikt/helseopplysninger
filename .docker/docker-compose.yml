@@ -4,9 +4,12 @@ services:
   mock-oauth2-service:
     image: ghcr.io/navikt/mock-oauth2-server:0.3.4
     ports: [ 8081:8081 ]
+    expose: [ 8081 ]
     environment:
       SERVER_PORT: 8081
       JSON_CONFIG_PATH: /etc/oauth-mock-config.json
+      VIRTUAL_HOST: mock-oauth2.local.gl
+      VIRTUAL_PORT: 8081
     volumes:
       - ./config/oauth-mock-config.json:/etc/oauth-mock-config.json
 
@@ -49,7 +52,7 @@ services:
     environment:
       KAFKA_BROKERS: kafka:9093
       HOPS_EVENTSTORE_BASE_URL: http://hops-eventstore:8080
-      VIRTUAL_HOST: hops-eventstore.local.gl
+      VIRTUAL_HOST: hops-eventreplaykafka.local.gl
       VIRTUAL_PORT: 8080
 
   # The FHIR REST API exposed to external consumers, e.g. EHRs.
@@ -85,15 +88,19 @@ services:
       context: ..
       args:
         project: hops-test-e2e
-    depends_on: [ local-proxy ]
+    depends_on: [ local-proxy, mock-oauth2-service ]
     restart: on-failure
     expose: [ 8080 ]
     environment:
       API_HOST: http://hops-api.local.gl:8080
-      EVENTREPLAYKAFKA_HOST: http://hops-eventreplaykafka.local.gl:8080
-      EVENTSINKKAFKA_HOST: http://hops-eventsinkkafka.local.gl:8080
-      EVENTSTORE_HOST: http://hops-eventstore.local.gl:8080
-      FILESHARE_HOST: http://hops-fileshare.local.gl:8080
+      EVENT_REPLAY_KAFKA_HOST: http://hops-eventreplaykafka.local.gl:8080
+      EVENT_SINK_KAFKA_HOST: http://hops-eventsinkkafka.local.gl:8080
+      EVENT_STORE_HOST: http://hops-eventstore.local.gl:8080
+      MASKINPORTEN_WELL_KNOWN_URL: http://mock-oauth2.local.gl:8081/default/.well-known/openid-configuration
+      MASKINPORTEN_CLIENT_ID: test-client-id
+      MASKINPORTEN_CLIENT_SECRET: test-client-jwk
+      MASKINPORTEN_CLIENT_JWK: todo
+      MASKINPORTEN_SCOPES: test
       VIRTUAL_HOST: hops-test-e2e.local.gl
       VIRTUAL_PORT: 8080
 

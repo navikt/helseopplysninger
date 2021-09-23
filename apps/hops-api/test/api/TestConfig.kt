@@ -8,7 +8,6 @@ import io.ktor.application.Application
 import io.ktor.config.MapApplicationConfig
 import io.ktor.server.testing.TestApplicationEngine
 import io.ktor.server.testing.withTestApplication
-import no.nav.helse.hops.test.HopsOAuthMock
 import no.nav.helse.hops.test.HopsOAuthMock.MaskinportenScopes
 
 internal fun Application.config(): MapApplicationConfig {
