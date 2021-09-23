@@ -35,12 +35,13 @@ internal class ApiExternalClient(
     override suspend fun get(): HttpResponse =
         httpClient.get("${config.api.hostExternal}$subscribePath?_count=1&_offset=0") {
             accept(fhirJsonR4)
-            header("X-Request-ID", "e2e-${UUID.randomUUID()}")
+            header("X-Request-ID", "e2e")
         }
 
     override suspend fun post(): HttpResponse =
         httpClient.post("${config.api.hostExternal}$publishPath") {
             contentType(fhirJsonR4)
+            header("X-Request-ID", "e2e")
             body = fhirResourceContent
         }
 }
