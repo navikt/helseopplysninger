@@ -17,6 +17,7 @@ import io.ktor.http.contentType
 import no.nav.helse.hops.convert.ContentTypes.fhirJsonR4
 import no.nav.helse.hops.maskinporten.MaskinportClient
 import no.nav.helse.hops.maskinporten.MaskinportConfig
+import org.intellij.lang.annotations.Language
 import java.util.UUID
 
 private const val subscribePath = "/fhir/4.0/Bundle"
@@ -40,7 +41,7 @@ internal class ApiExternalClient(
     override suspend fun post(): HttpResponse =
         httpClient.post("${config.api.hostExternal}$publishPath") {
             contentType(fhirJsonR4)
-            body = "e2e"
+            body = fhirResourceContent
         }
 }
 
@@ -72,3 +73,53 @@ private class MaskinportAuthenticator(config: ApiConfig.Maskinporten) : AuthProv
 
     val String.withoutPath: String get() = removeSuffix(Url(this).encodedPath) // http:nice/path/x -> http:nice
 }
+
+@Language("json")
+private val fhirResourceContent = """
+    {
+      "resourceType": "Bundle",
+      "id": "10bb101f-a121-4264-a920-67be9cb82c74",
+      "type": "message",
+      "timestamp": "2015-07-14T11:15:33+10:00",
+      "entry": [
+        {
+          "fullUrl": "urn:uuid:267b18ce-3d37-4581-9baa-6fada338038b",
+          "resource": {
+            "resourceType": "MessageHeader",
+            "id": "267b18ce-3d37-4581-9baa-6fada338038b",
+            "eventCoding": {
+              "system": "http://example.org/fhir/message-events",
+              "code": "patient-link"
+            },
+            "source": {
+              "endpoint": "http://example.org/clients/ehr-lite"
+            },
+            "focus": [
+              {
+                "reference": "http://acme.com/ehr/fhir/Patient/pat1"
+              },
+              {
+                "reference": "http://acme.com/ehr/fhir/Patient/pat12"
+              }
+            ]
+          }
+        },
+        {
+          "fullUrl": "http://acme.com/ehr/fhir/Patient/pat1",
+          "resource": {
+            "resourceType": "Patient",
+            "id": "pat1",
+            "gender": "male"
+          }
+        },
+        {
+          "fullUrl": "http://acme.com/ehr/fhir/Patient/pat12",
+          "resource": {
+            "resourceType": "Patient",
+            "id": "pat2",
+            "gender": "other"
+          }
+        }
+      ]
+    }
+""".trimIndent()
