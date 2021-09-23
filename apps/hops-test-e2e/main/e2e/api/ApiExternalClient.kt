@@ -18,7 +18,6 @@ import no.nav.helse.hops.convert.ContentTypes.fhirJsonR4
 import no.nav.helse.hops.maskinporten.MaskinportClient
 import no.nav.helse.hops.maskinporten.MaskinportConfig
 import org.intellij.lang.annotations.Language
-import java.util.UUID
 
 private const val subscribePath = "/fhir/4.0/Bundle"
 private const val publishPath = "/fhir/4.0/\$process-message"

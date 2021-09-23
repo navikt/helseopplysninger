@@ -11,7 +11,7 @@ internal class ApiPublish(override val name: String, private val client: Externa
     override suspend fun run(): Boolean = runCatching {
         val response = client.post()
         when (response.status) {
-            HttpStatusCode.OK -> isOnKafka and isInEventstore
+            HttpStatusCode.Accepted -> isOnKafka and isInEventstore
             else -> false
         }
     }.getOrElse {
@@ -19,11 +19,9 @@ internal class ApiPublish(override val name: String, private val client: Externa
         false
     }
 
-    private val isOnKafka by lazy {
-        true // todo: implement
-    }
+    private val isOnKafka: Boolean
+        get() = true // todo: implement
 
-    private val isInEventstore by lazy {
-        true // todo: implement
-    }
+    private val isInEventstore: Boolean
+        get() = true // todo: implement
 }

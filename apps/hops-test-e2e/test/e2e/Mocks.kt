@@ -34,8 +34,8 @@ object Mocks {
 
     val api = MockServer().apply {
         matchRequest(get("/isAlive"), respond("live"))
-        matchRequest(post("/fhir/4.0/\$process-message"), respond())
-        matchRequest(get("/fhir/4.0/Bundle", "accept" to fhirJsonR4.toString()), respond("e2e"))
+        matchRequest(post("/fhir/4.0/\$process-message"), respond(202))
+        matchRequest(get("/fhir/4.0/Bundle", "accept" to fhirJsonR4.toString()), respond("{}"))
     }
 
     val eventreplay = MockServer().apply {
