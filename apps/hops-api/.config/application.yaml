@@ -4,7 +4,7 @@ oauth:
       name: ${MASKINPORTEN_ISSUER_NAME:-maskinporten}
       discoveryUrl: ${MASKINPORTEN_WELL_KNOWN_URL:-http://mock-oauth2-service:8081/maskinporten/.well-known/openid-configuration}
       audience: ${HOPS_AUDIENCE:-helseopplysninger-audience}
-#      optionalClaims: "sub,nbf"
+      optionalClaims: "sub,nbf"
     writeScope: "nav:helse:helseopplysninger.write"
     readScope: "nav:helse:helseopplysninger.read"
 

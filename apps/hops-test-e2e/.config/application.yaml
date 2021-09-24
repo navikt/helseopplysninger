@@ -1,12 +1,19 @@
 api:
-  hops:
-    api:
-      host: ${API_HOST}
-    eventreplaykafka:
-      host: ${EVENTREPLAYKAFKA_HOST}
-    eventsinkkafka:
-      host: ${EVENTSINKKAFKA_HOST}
-    eventstore:
-      host: ${EVENTSTORE_HOST}
-    fileshare:
-      host: ${FILESHARE_HOST}
+  host: ${API_HOST:-http://hops-api.local.gl:8080}
+  host-external: ${API_HOST_EXTERNAL:-http://hops-api.local.gl:8080}
+  maskinporten:
+    discovery-url: ${MASKINPORTEN_WELL_KNOWN_URL:-http://mock-oauth2.local.gl:8081/default/.well-known/openid-configuration}
+    client-id: ${MASKINPORTEN_CLIENT_ID:-test-client-id}
+    client-jwk: ${MASKINPORTEN_CLIENT_JWK:-test-client-jwk}
+    scope: ${MASKINPORTEN_SCOPES:-test}
+    audience: https://hops.dev.nav.no
+    issuer: https://ver2.maskinporten.no/
+
+replay:
+  host: ${EVENT_REPLAY_KAFKA_HOST:-http://hops-eventreplaykafka.local.gl:8080}
+
+sink:
+  host: ${EVENT_SINK_KAFKA_HOST:-http://hops-eventsinkkafka.local.gl:8080}
+
+store:
+  host: ${EVENT_STORE_HOST:-http://hops-eventstore.local.gl:8080}

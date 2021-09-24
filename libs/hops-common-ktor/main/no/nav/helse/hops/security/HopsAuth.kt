@@ -138,7 +138,7 @@ class HopsAuth(configuration: Configuration) {
                 put("$prefix.$i.discoveryurl", issuer.discoveryUrl.toString())
                 put("$prefix.$i.accepted_audience", issuer.audience)
                 issuer.optionalClaims?.let {
-                    put("$prefix.$i.validation.optional-claims", it)
+                    put("$prefix.$i.validation.optional_claims", it)
                 }
             }
         }

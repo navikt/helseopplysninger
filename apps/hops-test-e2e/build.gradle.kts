@@ -1,7 +1,7 @@
 plugins {
     application
     kotlin("jvm")
-    kotlin("plugin.serialization") version "1.5.30"
+    kotlin("plugin.serialization")
     id("com.github.johnrengelman.shadow")
     id("org.jlleitschuh.gradle.ktlint")
 }
@@ -12,6 +12,7 @@ application {
 
 dependencies {
     implementation(project(":libs:hops-common-ktor"))
+    implementation(project(":libs:hops-client-maskinport"))
     implementation("io.micrometer:micrometer-registry-prometheus:1.7.4")
     implementation("io.ktor:ktor-metrics-micrometer:1.6.3")
     implementation("io.ktor:ktor-client-cio:1.6.3")
