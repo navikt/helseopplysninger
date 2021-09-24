@@ -16,11 +16,12 @@ import io.ktor.routing.post
 import io.ktor.routing.route
 import io.ktor.utils.io.copyAndClose
 import no.nav.helse.hops.routing.fullUrl
-import no.nav.helse.hops.security.HopsAuth
+import no.nav.helse.hops.security.AzureADProvider
+import no.nav.helse.hops.security.MaskinportenProvider
 
 fun Routing.storageRoutes(service: FileSharingService) {
     route("files") {
-        authenticate(HopsAuth.Realms.maskinportenWrite.name, HopsAuth.Realms.azureAd.name) {
+        authenticate(MaskinportenProvider.WRITE_REALM, AzureADProvider.REALM) {
             post {
                 val fileName = service.uploadFile(call.request.receiveChannel(), call.request.contentType())
 
@@ -29,7 +30,7 @@ fun Routing.storageRoutes(service: FileSharingService) {
                 call.respond(HttpStatusCode.Created)
             }
         }
-        authenticate(HopsAuth.Realms.maskinportenRead.name, HopsAuth.Realms.azureAd.name) {
+        authenticate(MaskinportenProvider.READ_REALM, AzureADProvider.REALM) {
             get("/{fileName}") {
                 val fileName = call.parameters["fileName"]!!
 

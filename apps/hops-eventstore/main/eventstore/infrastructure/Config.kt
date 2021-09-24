@@ -1,13 +1,13 @@
 package eventstore.infrastructure
 
-import no.nav.helse.hops.security.HopsAuth
+import no.nav.helse.hops.security.IssuerConfig
 
 data class Config(
     val db: Database,
     val oauth: ModuleOAuth,
 ) {
     data class ModuleOAuth(
-        val azure: HopsAuth.Configuration.IssuerConfig,
+        val azure: IssuerConfig,
     )
     data class Database(
         val url: String,

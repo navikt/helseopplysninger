@@ -27,13 +27,10 @@ import no.nav.helse.hops.test.HopsOAuthMock
 class HopsAuthTest : FreeSpec({
 
     "It should fail when installing with incomplete config" {
-        val e = shouldThrow<IllegalArgumentException> {
+        val e = shouldThrow<IllegalStateException> {
             withTestApplication(
                 {
-                    install(HopsAuth) {
-                        azureAD = null
-                        maskinporten = null
-                    }
+                    install(HopsAuth)
                 },
                 {}
             )
@@ -253,7 +250,7 @@ class HopsAuthTest : FreeSpec({
 
 fun Application.azureOnly() {
     install(HopsAuth) {
-        azureAD = MockServers.oAuth.buildAzureConfig()
+        providers += AzureADProvider(MockServers.oAuth.buildAzureConfig())
     }
 
     routing {
@@ -266,7 +263,7 @@ fun Application.azureOnly() {
                 call.respondText("Extracted azure identity: $azure")
             }
         }
-        authenticate(HopsAuth.Realms.azureAd.name) {
+        authenticate(AzureADProvider.REALM) {
             get("/explicit") {
                 call.respondText("ok")
             }
@@ -280,21 +277,21 @@ fun Application.azureOnly() {
 
 fun Application.maskinportenOnly() {
     install(HopsAuth) {
-        maskinporten = MockServers.oAuth.buildMaskinportenConfig()
+        providers += MaskinportenProvider(MockServers.oAuth.buildMaskinportenConfig())
     }
 
     routing {
-        authenticate(HopsAuth.Realms.maskinportenRead.name) {
+        authenticate(MaskinportenProvider.READ_REALM) {
             get("/read") {
                 call.respondText("ok")
             }
         }
-        authenticate(HopsAuth.Realms.maskinportenWrite.name) {
+        authenticate(MaskinportenProvider.WRITE_REALM) {
             get("/write") {
                 call.respondText("ok")
             }
         }
-        authenticate(HopsAuth.Realms.maskinportenRead.name, HopsAuth.Realms.maskinportenWrite.name) {
+        authenticate(MaskinportenProvider.READ_REALM, MaskinportenProvider.WRITE_REALM) {
             get("/read-or-write") {
                 call.respondText("ok")
             }
@@ -312,53 +309,53 @@ fun Application.maskinportenOnly() {
 
 fun Application.maskinportenAndAzure() {
     install(HopsAuth) {
-        maskinporten = MockServers.oAuth.buildMaskinportenConfig()
-        azureAD = MockServers.oAuth.buildAzureConfig()
+        providers += MaskinportenProvider(MockServers.oAuth.buildMaskinportenConfig())
+        providers += AzureADProvider(MockServers.oAuth.buildAzureConfig())
     }
 
     routing {
-        authenticate(HopsAuth.Realms.azureAd.name) {
+        authenticate(AzureADProvider.REALM) {
             get("/azure") {
                 call.respondText("ok")
             }
         }
-        authenticate(HopsAuth.Realms.maskinportenRead.name) {
+        authenticate(MaskinportenProvider.READ_REALM) {
             get("/read") {
                 call.respondText("ok")
             }
         }
-        authenticate(HopsAuth.Realms.maskinportenRead.name, HopsAuth.Realms.azureAd.name) {
+        authenticate(MaskinportenProvider.READ_REALM, AzureADProvider.REALM) {
             get("/read-or-azure") {
                 call.respondText("ok")
             }
         }
-        authenticate(HopsAuth.Realms.maskinportenWrite.name) {
+        authenticate(MaskinportenProvider.WRITE_REALM) {
             get("/write") {
                 call.respondText("ok")
             }
         }
-        authenticate(HopsAuth.Realms.maskinportenWrite.name, HopsAuth.Realms.azureAd.name) {
+        authenticate(MaskinportenProvider.WRITE_REALM, AzureADProvider.REALM) {
             get("/write-or-azure") {
                 call.respondText("ok")
             }
         }
-        authenticate(HopsAuth.Realms.maskinportenRead.name, HopsAuth.Realms.maskinportenWrite.name) {
+        authenticate(MaskinportenProvider.READ_REALM, MaskinportenProvider.WRITE_REALM) {
             get("/read-or-write") {
                 call.respondText("ok")
             }
         }
         authenticate(
-            HopsAuth.Realms.maskinportenRead.name,
-            HopsAuth.Realms.maskinportenWrite.name,
-            HopsAuth.Realms.azureAd.name
+            MaskinportenProvider.READ_REALM,
+            MaskinportenProvider.WRITE_REALM,
+            AzureADProvider.REALM
         ) {
             get("/read-or-write-or-azure") {
                 call.respondText("ok")
             }
             get("/auth-identity") {
                 when (val identity = call.authIdentity()) {
-                    is HopsAuth.AuthIdentity.Maskinporten -> call.respondText(identity.orgNr)
-                    is HopsAuth.AuthIdentity.AzureAD -> call.respondText("azure")
+                    is MaskinportenProvider.MaskinportenIdentity -> call.respondText(identity.orgNr)
+                    is AzureADProvider.AzureADIdentity -> call.respondText("azure")
                 }
             }
         }

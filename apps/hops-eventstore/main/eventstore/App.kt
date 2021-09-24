@@ -25,6 +25,7 @@ import no.nav.helse.hops.convert.ContentTypes
 import no.nav.helse.hops.convert.FhirR4JsonContentConverter
 import no.nav.helse.hops.diagnostics.useRequestIdHeader
 import no.nav.helse.hops.hoplite.loadConfigsOrThrow
+import no.nav.helse.hops.security.AzureADProvider
 import no.nav.helse.hops.security.HopsAuth
 import no.nav.helse.hops.statuspages.useFhirErrorStatusPage
 
@@ -37,7 +38,7 @@ fun Application.module() {
     val meterRegistry = PrometheusMeterRegistry(DEFAULT)
 
     install(HopsAuth) {
-        azureAD = config.oauth.azure
+        providers += AzureADProvider(config.oauth.azure)
     }
     install(CallId) { useRequestIdHeader() }
     install(CallLogging)

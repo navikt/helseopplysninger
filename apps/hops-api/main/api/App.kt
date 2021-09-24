@@ -27,6 +27,7 @@ import no.nav.helse.hops.convert.FhirR4JsonContentConverter
 import no.nav.helse.hops.diagnostics.useRequestIdHeader
 import no.nav.helse.hops.hoplite.loadConfigsOrThrow
 import no.nav.helse.hops.security.HopsAuth
+import no.nav.helse.hops.security.MaskinportenProvider
 import no.nav.helse.hops.statuspages.useFhirErrorStatusPage
 
 private val log = KotlinLogging.logger {}
@@ -44,7 +45,7 @@ fun Application.module() {
     val prometheusMeterRegistry = PrometheusMeterRegistry(DEFAULT)
 
     install(HopsAuth) {
-        maskinporten = config.oauth.maskinporten
+        providers += MaskinportenProvider(config.oauth.maskinporten)
     }
     install(CallId) { useRequestIdHeader() }
     install(CallLogging)
