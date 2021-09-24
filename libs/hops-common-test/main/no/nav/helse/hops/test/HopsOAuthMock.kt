@@ -1,6 +1,8 @@
 package no.nav.helse.hops.test
 
 import com.nimbusds.jwt.SignedJWT
+import no.nav.helse.hops.security.IssuerConfig
+import no.nav.helse.hops.security.MaskinportenProvider
 import no.nav.security.mock.oauth2.MockOAuth2Server
 
 public class HopsOAuthMock {
@@ -42,4 +44,22 @@ public class HopsOAuthMock {
     fun shutdown() = server.shutdown()
     fun maskinportenIssuer(): String = MASKINPORTEN_ISSUER_NAME
     fun azureIssuer(): String = AZURE_ISSUER_NAME
+
+    fun buildMaskinportenConfig() = MaskinportenProvider.Configuration(
+        issuer = IssuerConfig(
+            name = MASKINPORTEN_ISSUER_NAME,
+            discoveryUrl = maskinportenWellKnownUrl().toUrl(),
+            audience = "default",
+            optionalClaims = null
+        ),
+        readScope = MaskinportenScopes.READ.value,
+        writeScope = MaskinportenScopes.WRITE.value
+    )
+
+    fun buildAzureConfig() = IssuerConfig(
+        name = AZURE_ISSUER_NAME,
+        discoveryUrl = azureWellKnownUrl().toUrl(),
+        audience = "default",
+        optionalClaims = null
+    )
 }

@@ -1,16 +1,14 @@
 package api.infrastructure
 
 import java.net.URL
-import no.nav.helse.hops.hoplite.OauthIssuerConfig
+import no.nav.helse.hops.security.MaskinportenProvider
 
 data class Config(
     val oauth: ModuleOAuth,
     val eventStore: EventStore
 ) {
     data class ModuleOAuth(
-        val maskinporten: OauthIssuerConfig,
-        val publishScope: String,
-        val subscribeScope: String
+        val maskinporten: MaskinportenProvider.Configuration,
     )
     data class EventStore(
         val baseUrl: URL,

@@ -1,11 +1,12 @@
 oauth:
   maskinporten:
-    name: ${MASKINPORTEN_ISSUER_NAME:-maskinporten}
-    discoveryUrl: ${MASKINPORTEN_WELL_KNOWN_URL:-http://mock-oauth2-service:8081/maskinporten/.well-known/openid-configuration}
-    audience: ${HOPS_AUDIENCE:-helseopplysninger-audience}
-    optionalClaims: "sub,nbf"
-  publishScope: "nav:helse:helseopplysninger.write"
-  subscribeScope: "nav:helse:helseopplysninger.read"
+    issuer:
+      name: ${MASKINPORTEN_ISSUER_NAME:-maskinporten}
+      discoveryUrl: ${MASKINPORTEN_WELL_KNOWN_URL:-http://mock-oauth2-service:8081/maskinporten/.well-known/openid-configuration}
+      audience: ${HOPS_AUDIENCE:-helseopplysninger-audience}
+      optionalClaims: "sub,nbf"
+    writeScope: "nav:helse:helseopplysninger.write"
+    readScope: "nav:helse:helseopplysninger.read"
 
 eventStore:
   baseUrl: ${HOPS_EVENTSTORE_BASE_URL:-http://localhost:8082}

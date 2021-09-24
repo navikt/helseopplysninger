@@ -1,7 +1,6 @@
 package api.routes
 
 import api.domain.EventStore
-import api.infrastructure.Constants
 import io.ktor.application.ApplicationCall
 import io.ktor.application.call
 import io.ktor.auth.authenticate
@@ -22,10 +21,11 @@ import io.ktor.routing.post
 import io.ktor.routing.route
 import io.ktor.utils.io.copyAndClose
 import no.nav.helse.hops.routing.fullUrl
+import no.nav.helse.hops.security.MaskinportenProvider
 
 fun Routing.fhirRoutes(eventStore: EventStore) {
     route("fhir/4.0") {
-        authenticate(Constants.SUBSCRIBE) {
+        authenticate(MaskinportenProvider.READ_REALM) {
             get("/Bundle") {
                 val response = eventStore.search(
                     call.request.origin.fullUrl(),
@@ -37,7 +37,7 @@ fun Routing.fhirRoutes(eventStore: EventStore) {
             }
         }
 
-        authenticate(Constants.PUBLISH) {
+        authenticate(MaskinportenProvider.WRITE_REALM) {
             post("/\$process-message") {
                 if (call.request.receiveChannel().isClosedForRead) {
                     throw BadRequestException("Request body must not be empty!")
