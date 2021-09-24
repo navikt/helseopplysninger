@@ -41,8 +41,7 @@ class HopsAuth(configuration: Configuration) {
         }
     }
 
-    interface AuthIdentity {
-    }
+    interface AuthIdentity
 
     companion object Feature : ApplicationFeature<Application, Configuration, HopsAuth> {
         override val key = AttributeKey<HopsAuth>("HopsAuth")
