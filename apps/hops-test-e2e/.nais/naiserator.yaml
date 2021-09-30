@@ -66,4 +66,4 @@ spec:
     - name: EVENT_STORE_HOST
       value: http://hops-event-store
     - name: KAFKA_SECURITY_ENABLED
-      value: true
+      value: "true"
