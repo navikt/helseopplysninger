@@ -44,3 +44,6 @@ jobs:
           ENVIRONMENT: dev-gcp:${{ github.workflow }}
           RESOURCE: apps/${{ github.workflow }}/.nais/naiserator.yaml
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+
+      - name: Run e2e tests
+        run: bash .scripts/run-e2e
