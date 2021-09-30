@@ -23,6 +23,6 @@ spec:
     - team: helseopplysninger
       application: hops-bestiller-backend
       access: read
-  - team: helseopplysninger
+    - team: helseopplysninger
       application: hops-test-e2e
       access: read
