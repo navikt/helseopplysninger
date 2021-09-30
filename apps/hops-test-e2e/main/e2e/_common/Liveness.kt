@@ -17,6 +17,7 @@ internal class Liveness(
 
     override suspend fun test(): Boolean = runSuspendCatching {
         val response = client.get<HttpResponse>(url + livenessPath)
+
         when (response.status) {
             HttpStatusCode.OK -> true
             else -> false
@@ -25,8 +26,8 @@ internal class Liveness(
 
     private val client: HttpClient = HttpClient {
         install(HttpTimeout) {
-            requestTimeoutMillis = 1_000L
-            connectTimeoutMillis = 1_000L
+            requestTimeoutMillis = 5_000L
+            connectTimeoutMillis = 5_000L
         }
     }
 }
