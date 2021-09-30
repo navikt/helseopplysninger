@@ -10,19 +10,16 @@ import org.slf4j.LoggerFactory
 
 internal class ApiSubscribe(override val name: String, private val client: ApiExternalClient) : Test {
     override val description: String = "get fhir resource from event-store"
-    override var stacktrace: Throwable? = null
+    override var message: String? = null
 
     private val log: Logger = LoggerFactory.getLogger("e2e.api.ApiSubscribe")
 
-    override suspend fun run(): Boolean = runCatching {
+    override suspend fun test(): Boolean = runSuspendCatching {
         val response = client.get()
         when (response.status) {
             HttpStatusCode.OK -> validateResponse(response.content)
             else -> false
         }
-    }.getOrElse {
-        stacktrace = it
-        false
     }
 
     private suspend fun validateResponse(bytes: ByteReadChannel): Boolean {

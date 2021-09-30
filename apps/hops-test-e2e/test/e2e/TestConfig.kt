@@ -24,6 +24,7 @@ private val config by lazy {
         "MASKINPORTEN_CLIENT_ID" to "e2e-test-id",
         "MASKINPORTEN_CLIENT_JWK" to jwk,
         "MASKINPORTEN_SCOPES" to "nav:helse:helseopplysninger.read nav:helse:helseopplysninger.write",
+        "KAFKA_BROKERS" to EmbeddedKafka.getHost(),
     )
 }
 
@@ -43,6 +44,7 @@ class KotestSetup : ProjectListener, AbstractProjectConfig() {
         Mocks.eventreplay.shutdown()
         Mocks.eventsink.shutdown()
         Mocks.eventstore.shutdown()
+        EmbeddedKafka.shutdown()
     }
 }
 

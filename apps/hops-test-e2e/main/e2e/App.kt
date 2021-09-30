@@ -2,8 +2,8 @@ package e2e
 
 import e2e._common.E2eExecutor
 import e2e._common.e2eExecutor
-import e2e.replay.replayTests
 import e2e.api.apiTests
+import e2e.replay.replayTests
 import e2e.sink.sinkTests
 import e2e.store.storeTests
 import io.ktor.application.Application

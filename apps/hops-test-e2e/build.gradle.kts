@@ -18,11 +18,15 @@ dependencies {
     implementation("io.ktor:ktor-client-cio:1.6.3")
     implementation("io.ktor:ktor-server-netty:1.6.3")
     implementation("io.ktor:ktor-client-serialization:1.6.3")
+    implementation("io.ktor:ktor-serialization:1.6.3")
+    implementation("org.apache.kafka:kafka-clients:2.8.1")
     runtimeOnly("io.ktor:ktor-server-netty:1.6.3")
     runtimeOnly("ch.qos.logback:logback-classic:1.2.5")
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
-    implementation("io.ktor:ktor-serialization:1.6.3")
     testImplementation(project(":libs:hops-common-test"))
+    testImplementation("no.nav:kafka-embedded-env:2.8.0") {
+        exclude("io.confluent", "kafka-schema-registry")
+    }
 }
 
 tasks {

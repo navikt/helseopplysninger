@@ -6,7 +6,7 @@ metadata:
   labels:
     team: helseopplysninger
 spec:
-  image: {{ image }}
+  image: { { image } }
   team: helseopplysninger
   liveness:
     path: /actuator/live
@@ -50,6 +50,8 @@ spec:
         - application: hops-event-store
   ingresses:
     - https://hops-test-e2e.ekstern.dev.nav.no/runTests
+  kafka:
+    pool: nav-dev
   env:
     - name: LOG_APPENDER
       value: json
@@ -63,3 +65,5 @@ spec:
       value: http://hops-event-sink-kafka
     - name: EVENT_STORE_HOST
       value: http://hops-event-store
+    - name: KAFKA_SECURITY_ENABLED
+      value: true

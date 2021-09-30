@@ -17,3 +17,14 @@ sink:
 
 store:
   host: ${EVENT_STORE_HOST:-http://hops-eventstore.local.gl:8080}
+
+kafka:
+  brokers: ${KAFKA_BROKERS:-localhost:9092}
+  security: ${KAFKA_SECURITY_ENABLED:-false}
+  truststorePath: ${KAFKA_TRUSTSTORE_PATH:-}
+  keystorePath: ${KAFKA_KEYSTORE_PATH:-}
+  credstorePsw: ${KAFKA_CREDSTORE_PASSWORD:-}
+  clientId: hops-test-e2e
+  groupId: hops-test-e2e-1
+  topic:
+    published: helseopplysninger.river

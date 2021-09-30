@@ -18,13 +18,16 @@ import no.nav.helse.hops.convert.ContentTypes.fhirJsonR4
 import no.nav.helse.hops.maskinporten.MaskinportClient
 import no.nav.helse.hops.maskinporten.MaskinportConfig
 import org.intellij.lang.annotations.Language
+import java.util.UUID
 
 private const val subscribePath = "/fhir/4.0/Bundle"
 private const val publishPath = "/fhir/4.0/\$process-message"
 
+typealias FhirResource = String
+
 interface ExternalApiFacade {
     suspend fun get(): HttpResponse
-    suspend fun post(): HttpResponse
+    suspend fun post(fhirResource: FhirResource): HttpResponse
 }
 
 internal class ApiExternalClient(
@@ -37,11 +40,11 @@ internal class ApiExternalClient(
             header("X-Request-ID", "e2e")
         }
 
-    override suspend fun post(): HttpResponse =
+    override suspend fun post(fhirResource: FhirResource): HttpResponse =
         httpClient.post("${config.api.hostExternal}$publishPath") {
             contentType(fhirJsonR4)
             header("X-Request-ID", "e2e")
-            body = fhirResourceContent
+            body = fhirResource
         }
 }
 
@@ -74,11 +77,12 @@ private class MaskinportAuthenticator(config: ApiConfig.Maskinporten) : AuthProv
     val String.withoutPath: String get() = removeSuffix(Url(this).encodedPath) // http:nice/path/x -> http:nice
 }
 
-@Language("json")
-private val fhirResourceContent = """
+object TestData {
+    @Language("json")
+    fun fhirResource(id: UUID): String = """
     {
       "resourceType": "Bundle",
-      "id": "10bb101f-a121-4264-a920-67be9cb82c74",
+      "id": "$id",
       "type": "message",
       "timestamp": "2015-07-14T11:15:33+10:00",
       "entry": [
@@ -122,4 +126,5 @@ private val fhirResourceContent = """
         }
       ]
     }
-""".trimIndent()
+    """.trimIndent()
+}
