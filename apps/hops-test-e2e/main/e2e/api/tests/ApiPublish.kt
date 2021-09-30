@@ -3,8 +3,8 @@ package e2e.api.tests
 import e2e._common.Test
 import e2e._common.TestUtils.retry
 import e2e.api.ExternalApiFacade
-import e2e.api.TestData
 import e2e.extension.hasContent
+import e2e.fhir.FhirResource
 import e2e.kafka.FhirKafkaListener
 import e2e.kafka.KafkaConfig
 import e2e.kafka.KafkaSubscription
@@ -21,11 +21,12 @@ internal class ApiPublish(
     override val description: String = "publish fhir resource to make it available on kafka and eventstore",
     override var message: String? = null,
 ) : Test {
-    private val fhirResource = TestData.fhirResource(UUID.fromString("87fe6364-1f9a-11ec-9621-0242ac130002"))
-
     override suspend fun test(): Boolean = runSuspendCatching {
         val subscription = kafka.subscribe(kafkaConfig.topic.published)
-        when (client.post(fhirResource).status) {
+
+        val resource = FhirResource.generate()
+
+        when (client.post(resource).status) {
             HttpStatusCode.Accepted -> isOnKafka(subscription) && isInEventstore()
             else -> false
         }
@@ -36,7 +37,7 @@ internal class ApiPublish(
             retry(100, 100L) {
                 kafka.getMessages(kafkaConfig.topic.published)
                     .hasContent(::toFhirMessage) {
-                        it.content == fhirResource && it.contentType == ContentTypes.fhirJsonR4.toString()
+                        it.content == FhirResource.resource && it.contentType == ContentTypes.fhirJsonR4.toString()
                     }
             }
         }

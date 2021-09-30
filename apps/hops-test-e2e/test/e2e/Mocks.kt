@@ -10,7 +10,7 @@ import e2e.Mocks.Dispatcher.respond
 import e2e.Mocks.Matcher.get
 import e2e.Mocks.Matcher.post
 import e2e.Mocks.Testdata.maskinportResponse
-import e2e.api.TestData
+import e2e.fhir.FhirResource
 import no.nav.helse.hops.convert.ContentTypes.fhirJsonR4
 import no.nav.helse.hops.maskinporten.GRANT_TYPE
 import no.nav.helse.hops.test.MockServer
@@ -21,7 +21,6 @@ import okhttp3.mockwebserver.RecordedRequest
 import org.apache.kafka.common.header.internals.RecordHeader
 import org.intellij.lang.annotations.Language
 import java.util.Date
-import java.util.UUID
 
 object Mocks {
     val maskinporten = MockServer().apply {
@@ -44,11 +43,10 @@ object Mocks {
         matchRequest(post("/fhir/4.0/\$process-message")) {
 
             // Simulate hops-event-replay-kafka and put the message on kafka.
-            val fhirId = UUID.fromString("87fe6364-1f9a-11ec-9621-0242ac130002")
             EmbeddedKafka.produce(
                 topic = HOPS_TOPIC,
-                key = fhirId,
-                value = TestData.fhirResource(fhirId).toByteArray(),
+                key = FhirResource.id,
+                value = FhirResource.resource.toByteArray(),
                 headers = listOf(RecordHeader("Content-Type", fhirJsonR4.toString().toByteArray()))
             )
 
