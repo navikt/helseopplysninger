@@ -16,7 +16,7 @@ import java.util.UUID
 internal class ApiPublish(
     override val name: String,
     private val kafkaConfig: KafkaConfig.Kafka,
-    private val client: ExternalApiFacade,
+    private val api: ExternalApiFacade,
     private val kafka: FhirKafkaListener,
     override val description: String = "publish fhir resource to make it available on kafka and eventstore",
     override var message: String? = null,
@@ -26,7 +26,7 @@ internal class ApiPublish(
 
         val resource = FhirResource.generate()
 
-        when (client.post(resource).status) {
+        when (api.post(resource).status) {
             HttpStatusCode.Accepted -> isOnKafka(subscription) && isInEventstore()
             else -> false
         }

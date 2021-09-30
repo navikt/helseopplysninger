@@ -28,11 +28,10 @@ internal class FhirKafkaListener(private val consumer: KafkaConsumer<UUID, ByteA
      */
     fun subscribe(vararg topics: String): KafkaSubscription {
         require(topics.isNotEmpty())
-
         subscribeAndWait(topics.toMutableSet())
-        val subscription = KafkaSubscription(consumer)
-        log.info("FhirKafkaListener started...")
-        return subscription
+        return KafkaSubscription(consumer).also {
+            log.info("FhirKafkaListener started...")
+        }
     }
 
     /**
@@ -100,17 +99,11 @@ class KafkaSubscription(private val consumer: KafkaConsumer<UUID, ByteArray>) : 
     var isHealthy = true
         private set
 
-    override fun close() = runBlocking {
-        job.cancel("test complete")
-    }
+    override fun close() = runBlocking { job.cancel("test complete") }
 
     fun getMessages(topic: String): List<ConsumerRecord<UUID, ByteArray>> =
-        ArrayList(consumedRecords).filter { record ->
-            record.topic() == topic
-        }
+        ArrayList(consumedRecords).filter { record -> record.topic() == topic }
 
     private fun deleteOneMinOldrecords() =
-        consumedRecords.removeIf { record ->
-            record.timestamp() < System.currentTimeMillis() - min1
-        }
+        consumedRecords.removeIf { record -> record.timestamp() < System.currentTimeMillis() - min1 }
 }

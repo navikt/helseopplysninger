@@ -25,7 +25,7 @@ typealias FhirResource = String
 
 interface ExternalApiFacade {
     suspend fun get(): HttpResponse
-    suspend fun post(fhirResource: FhirResource): HttpResponse
+    suspend fun post(resource: FhirResource): HttpResponse
 }
 
 internal class ApiExternalClient(
@@ -38,11 +38,11 @@ internal class ApiExternalClient(
             header("X-Request-ID", "e2e")
         }
 
-    override suspend fun post(fhirResource: FhirResource): HttpResponse =
+    override suspend fun post(resource: FhirResource): HttpResponse =
         httpClient.post("${config.api.hostExternal}$publishPath") {
             contentType(fhirJsonR4)
             header("X-Request-ID", "e2e")
-            body = fhirResource
+            body = resource
         }
 }
 

@@ -13,13 +13,13 @@ import no.nav.helse.hops.hoplite.loadConfigsOrThrow
 
 internal fun Application.apiTests(): List<Test> {
     val config = loadConfigsOrThrow<ApiConfig>("/application.yaml")
-    val externalApiClient = ApiExternalClient(HttpClientFactory.create(config.api.maskinporten), config)
-    val fhirKafkaConsumer = FhirKafkaListener(KafkaFactory.createConsumer(config.kafka))
+    val api = ApiExternalClient(HttpClientFactory.create(config.api.maskinporten), config)
+    val kafka = FhirKafkaListener(KafkaFactory.createConsumer(config.kafka))
 
     return listOf(
         Liveness("api liveness", config.api.host),
-        ApiPublish("publish external", config.kafka, externalApiClient, fhirKafkaConsumer),
-        ApiSubscribe("subscribe external", externalApiClient)
+        ApiPublish("publish external", config.kafka, api, kafka),
+        ApiSubscribe("subscribe external", api)
     )
 }
 
