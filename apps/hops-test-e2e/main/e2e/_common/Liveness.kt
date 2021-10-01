@@ -12,7 +12,7 @@ internal class Liveness(
     override val name: String,
     private val url: String,
     override val description: String = "Checks the liveness probe",
-    override var message: String? = null,
+    override var exception: Throwable? = null,
 ) : Test {
 
     override suspend fun test(): Boolean = runSuspendCatching {

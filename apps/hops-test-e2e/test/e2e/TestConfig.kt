@@ -13,8 +13,8 @@ fun <R> withTestApp(test: TestApplicationEngine.() -> R): R =
         withTestApplication(Application::main, test)
     }
 
-private val config by lazy {
-    mapOf(
+private val config: Map<String, String>
+    get() = mapOf(
         "API_HOST" to Mocks.api.getBaseUrl(),
         "API_HOST_EXTERNAL" to Mocks.api.getBaseUrl(),
         "EVENT_REPLAY_KAFKA_HOST" to Mocks.eventreplay.getBaseUrl(),
@@ -25,8 +25,14 @@ private val config by lazy {
         "MASKINPORTEN_CLIENT_JWK" to jwk,
         "MASKINPORTEN_SCOPES" to "nav:helse:helseopplysninger.read nav:helse:helseopplysninger.write",
         "KAFKA_BROKERS" to EmbeddedKafka.getHost(),
+        "KAFKA_CLIENT_ID" to "hops-test-e2e-$clientIdPostfix"
     )
-}
+
+/**
+ * Kotest will run tests asynchronously per suite, hence multiple kafka consumers will be instantiated simultaneously.
+ * To avoid bugs every kafka consumer is instantiated with unique client-ids.
+ */
+private val clientIdPostfix: Int get() = (0..100).random()
 
 class KotestSetup : ProjectListener, AbstractProjectConfig() {
     override fun listeners() = listOf(KotestSetup())

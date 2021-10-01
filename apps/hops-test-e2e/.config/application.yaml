@@ -24,7 +24,7 @@ kafka:
   truststorePath: ${KAFKA_TRUSTSTORE_PATH:-}
   keystorePath: ${KAFKA_KEYSTORE_PATH:-}
   credstorePsw: ${KAFKA_CREDSTORE_PASSWORD:-}
-  clientId: hops-test-e2e
-  groupId: hops-test-e2e-1
+  clientId: ${KAFKA_CLIENT_ID:-hops-test-e2e}
+  groupId: ${KAFKA_GROUP_ID:-hops-test-e2e-1}
   topic:
     published: helseopplysninger.river

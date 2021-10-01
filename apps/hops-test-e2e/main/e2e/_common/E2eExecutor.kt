@@ -48,12 +48,12 @@ data class Results(
     }
 
     fun addFailed(test: Test, duration: Duration) = apply {
-        log.warn("${test.name} [ FAILED ] in $duration", test.message)
+        log.warn("${test.name} [ FAILED ] in $duration", test.exception)
         test {
             name = test.name
             description = test.description
             durationMs = duration.toString(TimeUnit.MILLISECONDS)
-            message = test.message
+            message = test.exception?.localizedMessage
         }
     }
 

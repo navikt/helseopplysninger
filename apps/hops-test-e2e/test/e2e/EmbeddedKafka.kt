@@ -30,9 +30,15 @@ object EmbeddedKafka {
 
     fun produce(topic: String, key: UUID, value: ByteArray, headers: List<Header>) {
         val record = ProducerRecord(topic, null, key, value, headers)
-        log.info("Producing $value")
         producer.send(record).get().also {
-            log.info("Produced $it")
+            log.info(
+                """ Produced record.
+                topic: $it (-<partition>@<offset>)
+                key: $key
+                headers: ${headers.map { h -> h.key() to String(h.value()) }}
+                value: ${String(value)}
+                """.trimIndent()
+            )
         }
     }
 

@@ -3,7 +3,7 @@ package e2e._common
 interface Test {
     val name: String
     val description: String
-    var message: String?
+    var exception: Throwable?
 
     suspend fun test(): Boolean
 
@@ -11,7 +11,7 @@ interface Test {
         runCatching {
             test()
         }.getOrElse {
-            message = it.localizedMessage
+            exception = it
             false
         }
 }
