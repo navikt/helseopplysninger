@@ -33,7 +33,7 @@ internal class FhirKafkaListener(
                 .filterNotNull()
                 .map(FhirMessage::fromRecord)
                 .forEach {
-                    log.debug("Consumed record: $it")
+                    log.info("Consumed record: $it")
                     emit(it)
                 }
         }
