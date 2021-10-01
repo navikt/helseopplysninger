@@ -19,7 +19,7 @@ internal class ApiPublish(
     override val description: String = "publish fhir resource to make it available on kafka and eventstore",
     override var exception: Throwable? = null,
 ) : Test {
-    private val sec20 = 20_000L
+    private val sec5 = 5_000L
 
     override suspend fun test(): Boolean = runSuspendCatching {
         coroutineScope {
@@ -34,7 +34,7 @@ internal class ApiPublish(
     }
 
     @OptIn(FlowPreview::class)
-    private suspend fun kafkaListener() = withTimeoutOrNull(sec20) {
+    private suspend fun kafkaListener() = withTimeoutOrNull(sec5) {
         flow.poll().firstOrNull { record ->
             val expectedResource = FhirResource.resource
             val expectedType = ContentTypes.fhirJsonR4.toString()

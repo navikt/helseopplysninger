@@ -5,16 +5,18 @@ import java.util.UUID
 
 object FhirResource {
     var id: UUID = UUID.randomUUID()
-    var resource: String = generate(id)
+    var resourceId: UUID = UUID.randomUUID()
+    var resource: String = resource(id, resourceId)
 
     fun generate(): String {
         id = UUID.randomUUID()
-        resource = generate(id)
+        resourceId = UUID.randomUUID()
+        resource = resource(id, resourceId)
         return resource
     }
 
     @Language("json")
-    private fun generate(id: UUID): String = """
+    private fun resource(id: UUID, resourceId: UUID): String = """
     {
       "resourceType": "Bundle",
       "id": "$id",
@@ -22,10 +24,10 @@ object FhirResource {
       "timestamp": "2015-07-14T11:15:33+10:00",
       "entry": [
         {
-          "fullUrl": "urn:uuid:267b18ce-3d37-4581-9baa-6fada338038b",
+          "fullUrl": "urn:uuid:$resourceId",
           "resource": {
             "resourceType": "MessageHeader",
-            "id": "267b18ce-3d37-4581-9baa-6fada338038b",
+            "id": "$resourceId",
             "eventCoding": {
               "system": "http://example.org/fhir/message-events",
               "code": "patient-link"
