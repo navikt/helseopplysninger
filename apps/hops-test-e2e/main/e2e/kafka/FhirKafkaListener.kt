@@ -4,7 +4,8 @@ import io.ktor.http.HttpHeaders
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
+import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -29,20 +30,22 @@ internal class FhirKafkaListener(
         consumer.subscribe(listOf(topic))
 
         runCatching {
-            while (true) consumer.poll(sec1.duration)
-                .filterNotNull()
-                .map(FhirMessage::fromRecord)
-                .forEach {
-                    log.info("Consumed record: $it")
-                    emit(it)
-                }
+            while (currentCoroutineContext().isActive) {
+                consumer.poll(sec1.duration)
+                    .filterNotNull()
+                    .map(FhirMessage::fromRecord)
+                    .forEach {
+                        log.info("Consumed record: $it")
+                        emit(it)
+                    }
+            }
         }
 
         consumer.unsubscribe()
     }
 
     override fun close() = runBlocking {
-        keepUpToDate.cancel("test complete.")
+        keepUpToDate.cancelAndJoin()
     }
 
     private val sec1 = 1_000L

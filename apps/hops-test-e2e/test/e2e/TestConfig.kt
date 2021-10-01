@@ -25,14 +25,11 @@ private val config: Map<String, String>
         "MASKINPORTEN_CLIENT_JWK" to jwk,
         "MASKINPORTEN_SCOPES" to "nav:helse:helseopplysninger.read nav:helse:helseopplysninger.write",
         "KAFKA_BROKERS" to EmbeddedKafka.getHost(),
-        "KAFKA_CLIENT_ID" to "hops-test-e2e-$clientIdPostfix"
+        "KAFKA_CLIENT_ID" to "hops-test-e2e-$kafkaPrefix",
+        "KAFKA_GROUP_ID" to "hops-test-e2e-$kafkaPrefix"
     )
 
-/**
- * Kotest will run tests asynchronously per suite, hence multiple kafka consumers will be instantiated simultaneously.
- * To avoid bugs every kafka consumer is instantiated with unique client-ids.
- */
-private val clientIdPostfix: Int get() = (0..100).random()
+private val kafkaPrefix: Int get() = (0..100).random()
 
 class KotestSetup : ProjectListener, AbstractProjectConfig() {
     override fun listeners() = listOf(KotestSetup())

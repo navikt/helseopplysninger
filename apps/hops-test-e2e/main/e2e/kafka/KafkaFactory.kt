@@ -18,7 +18,7 @@ internal object KafkaFactory {
         ConsumerConfig.GROUP_ID_CONFIG to config.groupId,
         ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG to UUIDDeserializer::class.java,
         ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG to ByteArrayDeserializer::class.java,
-        ConsumerConfig.AUTO_OFFSET_RESET_CONFIG to "latest",
+        ConsumerConfig.AUTO_OFFSET_RESET_CONFIG to "earliest",
         CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG to config.brokers,
         CommonClientConfigs.CLIENT_ID_CONFIG to config.clientId,
     )
