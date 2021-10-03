@@ -5,8 +5,8 @@ import e2e.api.ExternalApiFacade
 import e2e.fhir.FhirResource
 import e2e.kafka.FhirKafkaListener
 import io.ktor.http.HttpStatusCode
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.async
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.withTimeoutOrNull
@@ -28,12 +28,11 @@ internal class ApiPublish(
 
             when (apiResponse.await().status) {
                 HttpStatusCode.Accepted -> kafkaResponse.await() != null
-                else -> false
+                else -> false.also { kafkaResponse.cancel("Failed to produce expected record (async)") }
             }
         }
     }
 
-    @OptIn(FlowPreview::class)
     private suspend fun kafkaListener() = withTimeoutOrNull(sec5) {
         flow.poll().firstOrNull { record ->
             val expectedResource = FhirResource.resource
