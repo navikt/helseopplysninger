@@ -20,7 +20,7 @@ import java.lang.invoke.MethodHandles
 import java.time.Duration
 import java.util.UUID
 
-internal class FhirKafkaListener(
+internal class KafkaFhirFlow(
     private val consumer: KafkaConsumer<UUID, ByteArray>,
     private val topic: String,
 ) : Closeable {
