@@ -73,7 +73,7 @@ class ArchiveJob(
             original = message.content
         )
 
-        archive.add(journalpost, forsoekFerdigstill = true)
+        archive.add(journalpost, header.id)
     }
 }
 
