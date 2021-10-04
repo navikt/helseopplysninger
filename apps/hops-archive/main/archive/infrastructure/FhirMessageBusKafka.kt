@@ -1,12 +1,10 @@
-package eventsink.infrastructure
+package archive.infrastructure
 
-import eventsink.domain.FhirMessage
-import eventsink.domain.FhirMessageBus
+import archive.domain.FhirMessage
+import archive.domain.FhirMessageBus
 import io.ktor.http.HttpHeaders
-import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.isActive
 import no.nav.helse.hops.convert.ContentTypes
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.ConsumerRecord
@@ -21,7 +19,7 @@ class FhirMessageBusKafka(
             try {
                 consumer.subscribe(listOf(config.topic))
 
-                while (currentCoroutineContext().isActive) {
+                while (true) { // Will be exited when the flow's CoroutineContext is cancelled.
                     val records = consumer.poll(Duration.ofSeconds(1))
 
                     records

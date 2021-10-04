@@ -1,0 +1,10 @@
+# https://doc.nais.io/addons/kafka/#application-config
+kafka:
+  brokers: ${KAFKA_BROKERS:-localhost:9092}
+  security: ${KAFKA_SECURITY_ENABLED:-false}
+  truststorePath: ${KAFKA_TRUSTSTORE_PATH:-}
+  keystorePath: ${KAFKA_KEYSTORE_PATH:-}
+  credstorePsw: ${KAFKA_CREDSTORE_PASSWORD:-}
+  clientId: hops-archive
+  groupId: hops-archive-group
+  topic: ${KAFKA_TOPIC:-helseopplysninger.rapid}

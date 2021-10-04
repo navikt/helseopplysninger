@@ -1,0 +1,4 @@
+{
+  "ingresses":  ["https://hops-archive.dev.intern.nav.no"],
+  "kafka_pool": "nav-dev"
+}

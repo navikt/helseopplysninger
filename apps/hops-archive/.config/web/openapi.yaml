@@ -1,0 +1,24 @@
+openapi: 3.0.1
+info:
+  version: 1.0.0
+  title: Archive
+  description: En bakgrunnsprosess som lytter på 'rapid' kafka-topic og arkiverer meldinger i Joark.
+paths:
+  /isReady:
+    get:
+      tags: [diagnostics]
+      responses:
+        '200':
+          description: Service is ready.
+  /isAlive:
+    get:
+      tags: [diagnostics]
+      responses:
+        '200':
+          description: Service is alive.
+  /prometheus:
+    get:
+      tags: [diagnostics]
+      responses:
+        '200':
+          description: Metrics.
