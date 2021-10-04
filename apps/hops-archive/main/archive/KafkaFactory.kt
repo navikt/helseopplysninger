@@ -1,4 +1,4 @@
-package archive.infrastructure
+package archive
 
 import org.apache.kafka.clients.CommonClientConfigs
 import org.apache.kafka.clients.consumer.Consumer

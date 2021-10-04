@@ -1,7 +1,5 @@
-package archive.infrastructure
+package archive
 
-import archive.domain.FhirMessage
-import archive.domain.FhirMessageBus
 import io.ktor.http.HttpHeaders
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -9,17 +7,26 @@ import no.nav.helse.hops.convert.ContentTypes
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import java.time.Duration
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.isActive
 
-class FhirMessageBusKafka(
+class FhirMessage(val content: ByteArray, val contentType: String) {
+    init {
+        require(content.isNotEmpty()) { "Content cannot be empty." }
+        require(contentType.isNotBlank()) { "ContentType cannot be blank." }
+    }
+}
+
+class FhirMessageStream(
     private val consumer: Consumer<Unit, ByteArray>,
     private val config: Config.Kafka,
-) : FhirMessageBus {
-    override fun poll(): Flow<FhirMessage> =
+) {
+    fun poll(): Flow<FhirMessage> =
         flow {
             try {
                 consumer.subscribe(listOf(config.topic))
 
-                while (true) { // Will be exited when the flow's CoroutineContext is cancelled.
+                while (currentCoroutineContext().isActive) {
                     val records = consumer.poll(Duration.ofSeconds(1))
 
                     records

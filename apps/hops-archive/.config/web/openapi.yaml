@@ -4,19 +4,19 @@ info:
   title: Archive
   description: En bakgrunnsprosess som lytter på 'rapid' kafka-topic og arkiverer meldinger i Joark.
 paths:
-  /isReady:
+  /internal/isReady:
     get:
       tags: [diagnostics]
       responses:
         '200':
           description: Service is ready.
-  /isAlive:
+  /internal/isAlive:
     get:
       tags: [diagnostics]
       responses:
         '200':
           description: Service is alive.
-  /prometheus:
+  /internal/prometheus:
     get:
       tags: [diagnostics]
       responses:

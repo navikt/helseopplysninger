@@ -1,4 +1,4 @@
-package archive.infrastructure
+package archive
 
 import io.ktor.client.HttpClient
 import io.ktor.client.features.auth.Auth
@@ -6,7 +6,7 @@ import no.nav.helse.hops.security.OAuth2Provider
 import no.nav.helse.hops.security.oauth.OAuth2ClientFactory
 
 object HttpClientFactory {
-    fun create(config: Config.EventStore) =
+    fun create(config: Config.Endpoint) =
         HttpClient {
             install(Auth) {
                 val oauth2Client = OAuth2ClientFactory.create(

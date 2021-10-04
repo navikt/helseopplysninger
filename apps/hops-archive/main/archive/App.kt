@@ -1,13 +1,6 @@
 package archive
 
-import archive.domain.EventSinkJob
-import archive.infrastructure.Config
-import archive.infrastructure.ArchiveHttp
-import archive.infrastructure.FhirMessageBusKafka
-import archive.infrastructure.HttpClientFactory
-import archive.infrastructure.KafkaFactory
 import archive.routes.naisRoutes
-import archive.routes.smokeTestRoutes
 import archive.routes.swaggerRoutes
 import io.ktor.application.Application
 import io.ktor.application.install
@@ -34,13 +27,14 @@ fun Application.module() {
     install(MicrometerMetrics) { registry = prometheusMeterRegistry }
 
     val config = loadConfigsOrThrow<Config>("/application.yaml")
-    val archive = ArchiveHttp(config.eventStore, HttpClientFactory.create(config.eventStore))
-    val kafkaConsumer = FhirMessageBusKafka(KafkaFactory.createFhirConsumer(config.kafka), config.kafka)
-    val fhirSink = EventSinkJob(kafkaConsumer, log, archive)
+    val archive = Dokarkiv(config.dokarkiv, HttpClientFactory.create(config.dokarkiv))
+    val pdfConverter = FhirJsonToPdfConverter(config.fhirJsonToPdfConverter, HttpClientFactory.create(config.fhirJsonToPdfConverter))
+    val kafkaConsumer = FhirMessageStream(KafkaFactory.createFhirConsumer(config.kafka), config.kafka)
+
+    val job = ArchiveJob(kafkaConsumer, log, archive, pdfConverter)
 
     routing {
-        naisRoutes(fhirSink, prometheusMeterRegistry)
-        smokeTestRoutes(archive)
+        naisRoutes(job, prometheusMeterRegistry)
         swaggerRoutes()
     }
 }

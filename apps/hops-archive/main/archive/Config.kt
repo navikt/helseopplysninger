@@ -1,8 +1,12 @@
-package archive.infrastructure
+package archive
 
 import java.net.URL
 
-data class Config(val kafka: Kafka, val eventStore: EventStore) {
+data class Config(
+    val kafka: Kafka,
+    val dokarkiv: Endpoint,
+    val fhirJsonToPdfConverter: Endpoint
+) {
     data class Kafka(
         val brokers: String,
         val groupId: String,
@@ -14,7 +18,7 @@ data class Config(val kafka: Kafka, val eventStore: EventStore) {
         val credstorePsw: String
     )
 
-    data class EventStore(
+    data class Endpoint(
         val baseUrl: URL,
         val discoveryUrl: URL,
         val clientId: String,

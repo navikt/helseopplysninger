@@ -26,6 +26,7 @@ tasks {
 }
 
 dependencies {
+    implementation(project(":libs:hops-common-fhir"))
     implementation(project(":libs:hops-common-ktor"))
     implementation("io.ktor:ktor-metrics-micrometer:1.6.3")
     implementation("io.ktor:ktor-webjars:1.6.3")

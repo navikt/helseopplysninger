@@ -1,4 +1,8 @@
 {
   "ingresses":  ["https://hops-archive.intern.nav.no"],
-  "kafka_pool": "nav-prod"
+  "kafka_pool": "nav-prod",
+  "env": {
+    "DOKARKIV_BASE_URL": "dokarkiv.prod-fss-pub.nais.io",
+    "DOKARKIV_SCOPE": "api://162b3255-2f72-4399-8f7a-244add9ffaac/.default"
+  }
 }
