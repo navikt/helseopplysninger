@@ -20,6 +20,8 @@ import okhttp3.mockwebserver.RecordedRequest
 import org.intellij.lang.annotations.Language
 import java.util.Date
 
+const val LIVENESS_PATH = "/actuator/live"
+
 object Mocks {
     val maskinporten = MockServer().apply {
         matchRequest(
@@ -33,21 +35,21 @@ object Mocks {
     }
 
     val api = MockServer().apply {
-        matchRequest(get("/isAlive"), respond("live"))
+        matchRequest(get(LIVENESS_PATH), respond("live"))
         matchRequest(post("/fhir/4.0/\$process-message"), respond(202))
         matchRequest(get("/fhir/4.0/Bundle", "accept" to fhirJsonR4.toString()), respond("{}"))
     }
 
     val eventreplay = MockServer().apply {
-        matchRequest(get("/isAlive"), respond("live"))
+        matchRequest(get(LIVENESS_PATH), respond("live"))
     }
 
     val eventsink = MockServer().apply {
-        matchRequest(get("/isAlive"), respond("live"))
+        matchRequest(get(LIVENESS_PATH), respond("live"))
     }
 
     val eventstore = MockServer().apply {
-        matchRequest(get("/isAlive"), respond("live"))
+        matchRequest(get(LIVENESS_PATH), respond("live"))
     }
 
     object Matcher {

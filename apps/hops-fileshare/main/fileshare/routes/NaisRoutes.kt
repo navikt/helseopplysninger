@@ -10,18 +10,18 @@ import io.micrometer.prometheus.PrometheusMeterRegistry
 
 fun Routing.naisRoutes(prometheusMeterRegistry: PrometheusMeterRegistry) {
 
-    get("/isReady") {
+    get("/actuator/ready") {
         try {
             call.respondText("FileShare")
         } catch (ex: Throwable) {
-            call.application.environment.log.warn("/isReady error.", ex)
+            call.application.environment.log.warn("/actuator/ready error.", ex)
             call.respond(HttpStatusCode.InternalServerError, ex.message ?: "No exception message.")
         }
     }
-    get("/isAlive") {
+    get("/actuator/live") {
         call.respondText("FileShare")
     }
-    get("/prometheus") {
+    get("/metrics") {
         call.respond(prometheusMeterRegistry.scrape())
     }
 }

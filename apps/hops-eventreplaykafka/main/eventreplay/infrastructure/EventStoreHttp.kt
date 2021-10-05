@@ -33,7 +33,6 @@ class EventStoreHttp(
 
             do {
                 val httpResponse = httpTask.await()
-                val contentType = httpResponse.contentType().toString()
                 val body: String = httpResponse.receive()
                 val result = JsonConverter.parse<Bundle>(body)
 
@@ -42,10 +41,13 @@ class EventStoreHttp(
 
                 fun toFhirMessage(entry: Bundle.BundleEntryComponent): FhirMessage {
                     val bundle = entry.resource as Bundle
-                    val id = bundle.entry[0].resource.idAsUUID()
-                    val ts = bundle.timestamp.toLocalDateTime()
-                    val content = bundle.toJsonByteArray()
-                    return FhirMessage(id, ts, content, contentType, offset++)
+                    return FhirMessage(
+                        id = bundle.entry[0].resource.idAsUUID(),
+                        timestamp = bundle.timestamp.toLocalDateTime(),
+                        content = bundle.toJsonByteArray(),
+                        contentType = httpResponse.contentType().toString(),
+                        sourceOffset = offset++
+                    )
                 }
 
                 if (result.hasEntry()) result.entry.map(::toFhirMessage).forEach { emit(it) }

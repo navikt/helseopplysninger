@@ -13,19 +13,19 @@ fun Routing.naisRoutes(
     searchService: FhirMessageSearchService,
     meterRegistry: PrometheusMeterRegistry,
 ) {
-    get("/isReady") {
+    get("/actuator/ready") {
         try {
             searchService.search(0, 0)
             call.respondText("EventStore")
         } catch (ex: Throwable) {
-            call.application.environment.log.warn("/isReady error.", ex)
+            call.application.environment.log.warn("/actuator/ready error.", ex)
             call.respond(HttpStatusCode.InternalServerError, ex.message ?: "No exception message.")
         }
     }
-    get("/isAlive") {
+    get("/actuator/live") {
         call.respondText("EventStore")
     }
-    get("/prometheus") {
+    get("/metrics") {
         call.respond(meterRegistry.scrape())
     }
 }
