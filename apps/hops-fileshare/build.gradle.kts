@@ -36,7 +36,7 @@ dependencies {
     implementation("io.ktor:ktor-client-serialization:1.6.3")
     implementation("no.nav.security:token-validation-ktor:1.3.8")
     implementation("io.micrometer:micrometer-registry-prometheus:1.7.4")
-    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.2.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.3.0")
     runtimeOnly("ch.qos.logback:logback-classic:1.2.6")
     runtimeOnly("io.ktor:ktor-server-netty:1.6.3")
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
