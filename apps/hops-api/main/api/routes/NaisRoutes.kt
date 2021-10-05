@@ -8,13 +8,13 @@ import io.ktor.routing.get
 import io.micrometer.prometheus.PrometheusMeterRegistry
 
 fun Routing.naisRoutes(prometheusMeterRegistry: PrometheusMeterRegistry) {
-    get("/isReady") {
+    get("/actuator/ready") {
         call.respondText("API")
     }
-    get("/isAlive") {
+    get("/actuator/live") {
         call.respondText("API")
     }
-    get("/prometheus") {
+    get("/metrics") {
         call.respond(prometheusMeterRegistry.scrape())
     }
 }

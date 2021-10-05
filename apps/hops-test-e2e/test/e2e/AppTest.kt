@@ -36,7 +36,7 @@ class AppTest : FeatureSpec({
         scenario("one test fails") {
             withTestApp {
                 Mocks.api.matchRequest(
-                    get("/isAlive"),
+                    get("/actuator/live"),
                     respond(503)
                 )
                 with(handleRequest(HttpMethod.Get, "/runTests")) {

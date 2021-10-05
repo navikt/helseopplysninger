@@ -4,19 +4,19 @@ info:
   title: FileShare
   description: Et api for å laste opp og ned binærfiler (bilder, video, pdf etc.) som inngår i FHIR meldinger som linker.
 paths:
-  /isReady:
+  /actuator/ready:
     get:
       tags: [diagnostics]
       responses:
         '200':
           description: Service is ready.
-  /isAlive:
+  /actuator/live:
     get:
       tags: [diagnostics]
       responses:
         '200':
           description: Service is alive.
-  /prometheus:
+  /metrics:
     get:
       tags: [diagnostics]
       responses:

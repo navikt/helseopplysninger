@@ -9,9 +9,9 @@ If the ports doesn't work, check out [docker-compose.yml](../../.docker/docker-c
 
 ### 👐 Unsecured endpoints
 Expected `200 OK`:
-- /isAlive 
-- /isReady
-- /prometheus
+- /actuator/live 
+- /actuator/ready
+- /metrics
 
 ### 🤝 Secured endpoints
 - GET /fhir/4.0/Bundle
