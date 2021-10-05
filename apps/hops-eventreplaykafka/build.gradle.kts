@@ -27,12 +27,12 @@ tasks {
 
 dependencies {
     implementation(project(":libs:hops-common-fhir"))
+    implementation(project(":libs:hops-common-kafka"))
     implementation(project(":libs:hops-common-ktor"))
     implementation("io.ktor:ktor-metrics-micrometer:1.6.3")
     implementation("io.ktor:ktor-webjars:1.6.3")
     implementation("io.ktor:ktor-server-netty:1.6.3")
     implementation("io.micrometer:micrometer-registry-prometheus:1.7.4")
-    implementation("org.apache.kafka:kafka-clients:2.8.1")
     runtimeOnly("ch.qos.logback:logback-classic:1.2.6")
     runtimeOnly("io.ktor:ktor-server-netty:1.6.3")
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")

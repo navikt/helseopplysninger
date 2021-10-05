@@ -4,19 +4,19 @@ info:
   title: EventSinkKafka
   description: En bakgrunnsprosess som lytter på 'rapid' kafka-topic og publiserer meldinger til EventStore.
 paths:
-  /isReady:
+  /actuator/ready:
     get:
       tags: [diagnostics]
       responses:
         '200':
           description: Service is ready.
-  /isAlive:
+  /actuator/live:
     get:
       tags: [diagnostics]
       responses:
         '200':
           description: Service is alive.
-  /prometheus:
+  /metrics:
     get:
       tags: [diagnostics]
       responses:

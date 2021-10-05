@@ -6,7 +6,7 @@ import io.ktor.client.request.get
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.HttpStatusCode
 
-private const val livenessPath = "/isAlive"
+private const val livenessPath = "/actuator/live"
 
 internal class Liveness(
     override val name: String,

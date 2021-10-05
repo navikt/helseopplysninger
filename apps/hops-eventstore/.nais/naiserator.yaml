@@ -14,19 +14,19 @@ spec:
           - name: hops-events-db
             envVarPrefix: DB
   liveness:
-    path: /isAlive
+    path: /actuator/live
     initialDelay: 10
     timeout: 5
     periodSeconds: 5
     failureThreshold: 30
   readiness:
-    path: /isReady
+    path: /actuator/ready
     initialDelay: 10
     periodSeconds: 5
     timeout: 5
   prometheus:
     enabled: true
-    path: /prometheus
+    path: /metrics
   resources:
     limits:
       cpu: 1000m

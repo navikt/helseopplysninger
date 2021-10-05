@@ -13,14 +13,14 @@ fun Routing.naisRoutes(
     sinkJob: EventSinkJob,
     prometheusMeterRegistry: PrometheusMeterRegistry,
 ) {
-    get("/isReady") {
+    get("/actuator/ready") {
         val statusCode = if (sinkJob.isRunning) HttpStatusCode.OK else HttpStatusCode.InternalServerError
         call.respond(statusCode, "EventSinkKafka")
     }
-    get("/isAlive") {
+    get("/actuator/live") {
         call.respondText("EventSinkKafka")
     }
-    get("/prometheus") {
+    get("/metrics") {
         call.respond(prometheusMeterRegistry.scrape())
     }
 }
