@@ -31,7 +31,7 @@ dependencies {
     implementation("ca.uhn.hapi.fhir:hapi-fhir-validation:5.5.1")
     implementation("io.ktor:ktor-auth:1.6.3")
     implementation("io.ktor:ktor-metrics-micrometer:1.6.3")
-    implementation("io.ktor:ktor-server-netty:1.6.3")
+    implementation("io.ktor:ktor-server-netty:1.6.4")
     implementation("io.ktor:ktor-webjars:1.6.3")
     implementation("io.micrometer:micrometer-registry-prometheus:1.7.4")
     implementation("no.nav.security:token-validation-ktor:1.3.8")
