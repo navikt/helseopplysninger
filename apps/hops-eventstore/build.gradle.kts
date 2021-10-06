@@ -36,7 +36,7 @@ dependencies {
     implementation("io.micrometer:micrometer-registry-prometheus:1.7.4")
     implementation("no.nav.security:token-validation-ktor:1.3.8")
     implementation("org.flywaydb:flyway-core:7.15.0")
-    implementation("org.jetbrains.exposed:exposed-java-time:0.34.2")
+    implementation("org.jetbrains.exposed:exposed-java-time:0.35.1")
     implementation("org.jetbrains.exposed:exposed-jdbc:0.35.1")
     runtimeOnly("ca.uhn.hapi.fhir:hapi-fhir-validation-resources-r4:5.5.1")
     runtimeOnly("ch.qos.logback:logback-classic:1.2.6")
