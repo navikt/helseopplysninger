@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import no.nav.helse.hops.plugin.logConsumed
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.slf4j.LoggerFactory
@@ -33,11 +34,9 @@ internal class KafkaFhirFlow(
             while (currentCoroutineContext().isActive) {
                 consumer.poll(sec1.duration)
                     .filterNotNull()
+                    .logConsumed(log)
                     .map(FhirMessage::fromRecord)
-                    .forEach {
-                        log.info("Consumed record: $it")
-                        emit(it)
-                    }
+                    .forEach { emit(it) }
             }
         }
 

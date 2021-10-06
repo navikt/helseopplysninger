@@ -11,7 +11,7 @@
         <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
     </appender>
 
-    <logger name="fileshare" level="DEBUG" additive="false">
+    <logger name="fileshare" level="TRACE" additive="false">
         <appender-ref ref="${LOG_APPENDER:-pretty}"/>
     </logger>
 
