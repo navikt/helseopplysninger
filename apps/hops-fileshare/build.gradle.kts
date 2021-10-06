@@ -30,7 +30,7 @@ dependencies {
     implementation(project(":libs:hops-common-ktor"))
     implementation("io.ktor:ktor-metrics-micrometer:1.6.3")
     implementation("io.ktor:ktor-webjars:1.6.3")
-    implementation("io.ktor:ktor-server-netty:1.6.3")
+    implementation("io.ktor:ktor-server-netty:1.6.4")
     implementation("io.ktor:ktor-auth:1.6.3")
     implementation("io.ktor:ktor-client-auth:1.6.3")
     implementation("io.ktor:ktor-client-serialization:1.6.3")
@@ -40,7 +40,7 @@ dependencies {
     runtimeOnly("ch.qos.logback:logback-classic:1.2.6")
     runtimeOnly("io.ktor:ktor-server-netty:1.6.3")
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
-    runtimeOnly("org.webjars:swagger-ui:3.52.1")
+    runtimeOnly("org.webjars:swagger-ui:3.52.3")
     testImplementation(project(":libs:hops-common-test"))
 }
 
