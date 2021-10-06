@@ -17,7 +17,7 @@ dependencies {
     implementation("io.ktor:ktor-metrics-micrometer:1.6.3")
     implementation("io.ktor:ktor-client-cio:1.6.4")
     implementation("io.ktor:ktor-server-netty:1.6.4")
-    implementation("io.ktor:ktor-client-serialization:1.6.3")
+    implementation("io.ktor:ktor-client-serialization:1.6.4")
     runtimeOnly("io.ktor:ktor-server-netty:1.6.3")
     runtimeOnly("ch.qos.logback:logback-classic:1.2.5")
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
