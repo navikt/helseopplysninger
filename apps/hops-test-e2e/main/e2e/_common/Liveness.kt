@@ -28,8 +28,8 @@ internal class Liveness(
 
     private val client: HttpClient = HttpClient {
         install(HttpTimeout) {
-            requestTimeoutMillis = 1_000L
-            connectTimeoutMillis = 1_000L
+            requestTimeoutMillis = 5_000L
+            connectTimeoutMillis = 5_000L
         }
     }
 }
