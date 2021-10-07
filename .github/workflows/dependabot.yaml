@@ -1,0 +1,23 @@
+name: Dependabot's Auto Merge
+
+on:
+  workflow_run:
+    workflows: [ 'Pull request' ]
+    types: [ completed ]
+
+jobs:
+  auto-merge:
+    name: Auto merge
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ridedott/merge-me-action@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PRESET: DEPENDABOT_MINOR
+          # default: dependabot
+          GITHUB_LOGIN: dependabot
+          # default: SQUASH
+          MERGE_METHOD: SQUASH
+          # default: 3
+          MAXIMUM_RETRIES: 3

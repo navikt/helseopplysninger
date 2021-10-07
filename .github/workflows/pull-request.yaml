@@ -56,9 +56,8 @@ jobs:
           )
           cat build/ktlint-report-in-checkstyle-format.xml | reviewdog "${args[@]}"
 
-  test-unit:
-    name: Test (unit test)
-    if: github.actor != 'dependabot[bot]'
+  test:
+    name: Test and publish results
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -69,17 +68,11 @@ jobs:
           distribution: 'adopt'
           cache: 'gradle'
 
-      # Must login to gain access to docker.pkg.github.com/navikt/* images required by some integration-tests.
-      - uses: docker/login-action@v1
-        with:
-          registry: docker.pkg.github.com
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
       - run: ./gradlew test --continue --no-daemon
         continue-on-error: true
 
-      - name: Publish results (unit test)
+      - name: Publish test results
+        if: github.actor != 'dependabot[bot]'
         uses: EnricoMi/publish-unit-test-result-action@v1
         with:
           commit: ${{ github.event.workflow_run.head_sha }}
