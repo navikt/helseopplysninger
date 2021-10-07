@@ -57,7 +57,7 @@ jobs:
           cat build/ktlint-report-in-checkstyle-format.xml | reviewdog "${args[@]}"
 
   test:
-    name: Test and publish results
+    name: Test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -71,7 +71,7 @@ jobs:
       - run: ./gradlew test --continue --no-daemon
         continue-on-error: true
 
-      - name: Publish test results
+      - name: Publish results
         if: github.actor != 'dependabot[bot]'
         uses: EnricoMi/publish-unit-test-result-action@v1
         with:
