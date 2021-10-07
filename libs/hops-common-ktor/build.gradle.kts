@@ -22,7 +22,7 @@ tasks {
 
 dependencies {
     api(project(":libs:hops-common-core"))
-    api("io.ktor:ktor-client-auth:1.6.3")
+    api("io.ktor:ktor-client-auth:1.6.4")
     api("io.ktor:ktor-auth:1.6.3")
     api("io.ktor:ktor-server-core:1.6.4")
     implementation("no.nav.security:token-validation-ktor:1.3.8")
