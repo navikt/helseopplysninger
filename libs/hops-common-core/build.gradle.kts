@@ -8,7 +8,7 @@ plugins {
 
 tasks {
     withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = "16"
+        kotlinOptions.jvmTarget = "11"
     }
     withType<Test> {
         useJUnitPlatform()
