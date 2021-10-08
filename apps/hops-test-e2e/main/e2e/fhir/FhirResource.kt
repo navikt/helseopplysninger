@@ -17,13 +17,13 @@ object FhirResource {
         val id = UUID.randomUUID()
         val resource = Resource(id, content(id, UUID.randomUUID()), LocalDateTime.now())
         cache.add(resource)
-        log.info("created resource for id $id")
+        log.debug("created and cached resource with id $id")
         return resource
     }
 
     fun get(predicate: (Resource) -> Boolean) = cache
         .filter(predicate)
-        .also { log.info("retrieved resources with ids: ${it.map { r -> r.id }.toList()}") }
+        .also { log.debug("returned cached resources with ids: ${it.map { r -> r.id }.toList()}") }
 
     @Language("json")
     private fun content(id: UUID, resourceId: UUID): String = """

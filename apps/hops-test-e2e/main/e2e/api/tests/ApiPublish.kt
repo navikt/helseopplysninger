@@ -46,7 +46,7 @@ internal class ApiPublish(
 
     private fun CoroutineScope.postResourceAsync(resource: FhirResource.Resource) = async(Dispatchers.IO) {
         api.post(resource.content).also {
-            log.trace("Post resource with ID ${resource.id} to API.")
+            log.trace("Posted resource to API: $resource")
         }
     }
 
