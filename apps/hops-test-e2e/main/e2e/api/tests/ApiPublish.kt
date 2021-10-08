@@ -30,7 +30,7 @@ internal class ApiPublish(
     override suspend fun test(): Boolean = runSuspendCatching {
         coroutineScope {
             val asyncKafkaResponse = async {
-                readTopic(sec30)
+                readTopic(sec90)
             }
 
             val asyncApiResponse = async {
@@ -57,7 +57,7 @@ internal class ApiPublish(
     @OptIn(ExperimentalTime::class)
     private fun hasExpected(fhirMessage: FhirMessage?) =
         when (fhirMessage) {
-            null -> error("Message not available on kafka. Polled for ${sec30.toDuration(DurationUnit.MILLISECONDS)}")
+            null -> error("Message not available on kafka. Polled for ${sec90.toDuration(DurationUnit.MILLISECONDS)}")
             else -> true
         }
 
@@ -67,5 +67,5 @@ internal class ApiPublish(
     }
 
     private val log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass())
-    private val sec30: Long = 30_000L
+    private val sec90: Long = 90_000L
 }
