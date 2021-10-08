@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.withTimeoutOrNull
 import mu.KotlinLogging
 import no.nav.helse.hops.convert.ContentTypes
+import java.util.UUID
 import kotlin.time.DurationUnit
 import kotlin.time.ExperimentalTime
 import kotlin.time.toDuration
@@ -30,14 +31,15 @@ internal class ApiPublish(
 
     override suspend fun test(): Boolean = runSuspendCatching {
         coroutineScope {
+            val (id, resource) = FhirResource.generate()
+
             val asyncKafkaResponse = async {
-                readTopic(sec25)
+                readTopic(sec25, id)
             }
 
             val asyncApiResponse = async {
-                api.post(FhirResource.generate()).also {
-                    log.trace("Sent record with key ${FhirResource.id} to API.")
-                }
+                log.trace("Sent record with key $id to API.")
+                api.post(resource)
             }
 
             when (asyncApiResponse.await().status) {
@@ -47,9 +49,9 @@ internal class ApiPublish(
         }
     }
 
-    private suspend fun readTopic(timeout: Long) = withTimeoutOrNull(timeout) {
+    private suspend fun readTopic(timeout: Long, id: UUID) = withTimeoutOrNull(timeout) {
         fhirFlow.poll().firstOrNull { record ->
-            val expectedResource = FhirResource.resource
+            val expectedResource = FhirResource.getAndRemove(id)
             val expectedType = ContentTypes.fhirJsonR4.toString()
             record.content == expectedResource && record.contentType == expectedType
         }

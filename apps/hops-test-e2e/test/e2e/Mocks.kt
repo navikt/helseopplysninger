@@ -44,11 +44,14 @@ object Mocks {
         matchRequest(get("/fhir/4.0/Bundle", "accept" to fhirJsonR4.toString()), respond("{}"))
         matchRequest(post("/fhir/4.0/\$process-message")) {
 
+            require(FhirResource.cache.size == 1)
+            val (id, resource) = FhirResource.cache.entries.first()
+
             // Simulate hops-event-replay-kafka and put the message on kafka.
             EmbeddedKafka.produce(
                 topic = HOPS_TOPIC,
-                key = FhirResource.id,
-                value = FhirResource.resource.toByteArray(),
+                key = id,
+                value = resource.toByteArray(),
                 headers = listOf(RecordHeader("Content-Type", fhirJsonR4.toString().toByteArray()))
             )
 

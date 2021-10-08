@@ -1,18 +1,25 @@
 package e2e.fhir
 
+import mu.KotlinLogging
 import org.intellij.lang.annotations.Language
 import java.util.UUID
 
-object FhirResource {
-    private var resourceId: UUID = UUID.randomUUID()
-    var id: UUID = UUID.randomUUID()
-    var resource: String = resource(id, resourceId)
+private val log = KotlinLogging.logger {}
 
-    fun generate(): String {
-        id = UUID.randomUUID()
-        resourceId = UUID.randomUUID()
-        resource = resource(id, resourceId)
-        return resource
+object FhirResource {
+    val cache = mutableMapOf<UUID, String>()
+
+    fun generate(): Pair<UUID, String> {
+        val id = UUID.randomUUID()
+        val resourceId = UUID.randomUUID()
+        val resource = resource(id, resourceId)
+        cache[id] = resource
+        log.info("created resource for id $id")
+        return id to resource
+    }
+
+    fun getAndRemove(id: UUID) = cache.remove(id).also {
+        log.info("removed resoruce for id $id")
     }
 
     @Language("json")
