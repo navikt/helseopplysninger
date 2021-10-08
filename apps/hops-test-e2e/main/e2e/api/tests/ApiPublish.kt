@@ -12,12 +12,13 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.withTimeoutOrNull
+import mu.KotlinLogging
 import no.nav.helse.hops.convert.ContentTypes
-import org.slf4j.LoggerFactory
-import java.lang.invoke.MethodHandles
 import kotlin.time.DurationUnit
 import kotlin.time.ExperimentalTime
 import kotlin.time.toDuration
+
+private val log = KotlinLogging.logger {}
 
 internal class ApiPublish(
     override val name: String,
@@ -66,6 +67,5 @@ internal class ApiPublish(
         error("Failed to asynchronically produce expected record")
     }
 
-    private val log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass())
     private val sec25: Long = 25_000L
 }

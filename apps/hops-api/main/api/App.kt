@@ -48,7 +48,7 @@ fun Application.module() {
         providers += MaskinportenProvider(config.oauth.maskinporten)
     }
     install(CallId) { useRequestIdHeader() }
-    install(CallLogging)
+    install(CallLogging) { logger = log }
     install(ContentNegotiation) { register(ContentTypes.fhirJson, FhirR4JsonContentConverter()) }
     install(MicrometerMetrics) { registry = prometheusMeterRegistry }
     install(StatusPages) { useFhirErrorStatusPage() }

@@ -7,11 +7,8 @@ import e2e.replay.replayTests
 import e2e.sink.sinkTests
 import e2e.store.storeTests
 import io.ktor.application.Application
-import io.ktor.application.ApplicationCall
-import io.ktor.application.application
 import io.ktor.application.call
 import io.ktor.application.install
-import io.ktor.application.log
 import io.ktor.features.CallLogging
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.DefaultHeaders
@@ -24,12 +21,15 @@ import io.ktor.routing.routing
 import io.ktor.serialization.json
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
-import io.ktor.util.pipeline.PipelineContext
 import io.micrometer.prometheus.PrometheusConfig
 import io.micrometer.prometheus.PrometheusMeterRegistry
 import kotlinx.serialization.json.Json
-import org.slf4j.Logger
+import mu.KotlinLogging
+import org.slf4j.MDC
+import java.util.UUID
 import kotlin.time.ExperimentalTime
+
+private val log = KotlinLogging.logger {}
 
 fun main() {
     embeddedServer(Netty, port = 8080, module = Application::main).start(wait = true)
@@ -41,7 +41,7 @@ fun Application.main() {
     install(ContentNegotiation) { json(Json { prettyPrint = true }) }
     install(MicrometerMetrics) { registry = prometheus }
     install(DefaultHeaders)
-    install(CallLogging)
+    install(CallLogging) { logger = log }
 
     val e2e = e2eExecutor {
         add(apiTests())
@@ -59,17 +59,14 @@ fun Application.main() {
 @OptIn(ExperimentalTime::class)
 private fun Routing.trigger(e2e: E2eExecutor) {
     get("/runTests") {
+        MDC.put("checksum", UUID.randomUUID().toString())
         log.info("Running all tests...")
-
         val result = e2e.exec()
-
         log.info("${e2e.size} tests completed in ${result.totalDurationMs}")
-
+        MDC.remove("checksum")
         call.respond(result)
     }
 }
-
-inline val PipelineContext<*, ApplicationCall>.log: Logger get() = application.log
 
 private fun Routing.actuators(prometheus: PrometheusMeterRegistry) {
     get("/actuator/ready") { call.respondText("ready") }

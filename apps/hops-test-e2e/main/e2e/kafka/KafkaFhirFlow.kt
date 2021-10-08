@@ -12,21 +12,20 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import mu.KotlinLogging
 import no.nav.helse.hops.plugin.logConsumed
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.clients.consumer.KafkaConsumer
-import org.slf4j.LoggerFactory
 import java.io.Closeable
-import java.lang.invoke.MethodHandles
 import java.time.Duration
 import java.util.UUID
+
+private val log = KotlinLogging.logger {}
 
 internal class KafkaFhirFlow(
     private val consumer: KafkaConsumer<UUID, ByteArray>,
     private val topic: String,
 ) : Closeable {
-    private val log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass())
-
     suspend fun poll(): Flow<FhirMessage> = flow {
         consumer.subscribe(listOf(topic))
 
