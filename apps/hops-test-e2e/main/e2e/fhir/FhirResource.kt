@@ -4,8 +4,8 @@ import org.intellij.lang.annotations.Language
 import java.util.UUID
 
 object FhirResource {
+    private var resourceId: UUID = UUID.randomUUID()
     var id: UUID = UUID.randomUUID()
-    var resourceId: UUID = UUID.randomUUID()
     var resource: String = resource(id, resourceId)
 
     fun generate(): String {

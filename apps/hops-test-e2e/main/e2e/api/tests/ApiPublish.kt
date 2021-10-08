@@ -13,6 +13,8 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.withTimeoutOrNull
 import no.nav.helse.hops.convert.ContentTypes
+import org.slf4j.LoggerFactory
+import java.lang.invoke.MethodHandles
 import kotlin.time.DurationUnit
 import kotlin.time.ExperimentalTime
 import kotlin.time.toDuration
@@ -21,19 +23,25 @@ internal class ApiPublish(
     override val name: String,
     private val api: ExternalApiFacade,
     private val fhirFlow: KafkaFhirFlow,
-    override val description: String = "publish fhir resource to make it available on kafka and eventstore",
-    override var exception: Throwable? = null,
 ) : Test {
-    private val sec5: Long = 5_000L
+    override val description: String = "publish fhir resource to make it available on kafka and eventstore"
+    override var exception: Throwable? = null
 
     override suspend fun test(): Boolean = runSuspendCatching {
         coroutineScope {
-            val kafkaResponse = async { readTopic(sec5) }
-            val apiResponse = async { api.post(FhirResource.generate()) }
+            val asyncKafkaResponse = async {
+                readTopic(sec10)
+            }
 
-            when (apiResponse.await().status) {
-                HttpStatusCode.Accepted -> hasExpected(kafkaResponse)
-                else -> cancelFlow(kafkaResponse)
+            val asyncApiResponse = async {
+                api.post(FhirResource.generate()).also {
+                    log.trace("Sent record with key ${FhirResource.id} to API.")
+                }
+            }
+
+            when (asyncApiResponse.await().status) {
+                HttpStatusCode.Accepted -> hasExpected(asyncKafkaResponse.await())
+                else -> cancelFlow(asyncKafkaResponse)
             }
         }
     }
@@ -47,9 +55,9 @@ internal class ApiPublish(
     }
 
     @OptIn(ExperimentalTime::class)
-    private suspend fun hasExpected(kafkaResponse: Deferred<FhirMessage?>) =
-        when (kafkaResponse.await()) {
-            null -> error("Message not available on kafka. Polled for ${sec5.toDuration(DurationUnit.MILLISECONDS)}")
+    private fun hasExpected(fhirMessage: FhirMessage?) =
+        when (fhirMessage) {
+            null -> error("Message not available on kafka. Polled for ${sec10.toDuration(DurationUnit.MILLISECONDS)}")
             else -> true
         }
 
@@ -57,4 +65,7 @@ internal class ApiPublish(
         kafkaResponse.cancel("No need to wait any further")
         error("Failed to asynchronically produce expected record")
     }
+
+    private val log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass())
+    private val sec10: Long = 10_000L
 }
