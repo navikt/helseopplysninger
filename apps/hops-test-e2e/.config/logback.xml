@@ -11,6 +11,9 @@
         <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
     </appender>
 
+    <!--  Used in test  -->
+    <logger name="kafka.server.KafkaConfig" level="OFF"/>
+
     <logger name="org.apache.kafka" level="WARN" additivity="false">
         <appender-ref ref="${LOG_APPENDER:-pretty}"/>
     </logger>

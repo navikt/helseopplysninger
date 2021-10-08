@@ -112,7 +112,8 @@ object Mocks {
             {
               "access_token" : "$maskinportenToken",
               "expires_in" : 120,
-              "scope" : "nav:helse:helseopplysninger.read nav:helse:helseopplysninger.write"
+              "scope" : "nav:helse:helseopplysninger.read nav:helse:helseopplysninger.write",
+              "token_type": "jwt"
             }
             """.trimIndent()
 
