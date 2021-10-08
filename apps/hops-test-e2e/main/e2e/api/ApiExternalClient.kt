@@ -14,11 +14,9 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.Url
 import io.ktor.http.auth.HttpAuthHeader
 import io.ktor.http.contentType
-import mu.KotlinLogging
 import no.nav.helse.hops.convert.ContentTypes.fhirJsonR4
 import no.nav.helse.hops.maskinporten.MaskinportClient
 import no.nav.helse.hops.maskinporten.MaskinportConfig
-import java.util.UUID
 
 private const val subscribePath = "/fhir/4.0/Bundle"
 private const val publishPath = "/fhir/4.0/\$process-message"
@@ -27,10 +25,8 @@ typealias FhirResource = String
 
 interface ExternalApiFacade {
     suspend fun get(): HttpResponse
-    suspend fun post(id: UUID, resource: FhirResource): HttpResponse
+    suspend fun post(resource: FhirResource): HttpResponse
 }
-
-private val log = KotlinLogging.logger {}
 
 internal class ApiExternalClient(
     private val httpClient: HttpClient,
@@ -42,13 +38,11 @@ internal class ApiExternalClient(
             header("X-Request-ID", "e2e")
         }
 
-    override suspend fun post(id: UUID, resource: FhirResource): HttpResponse =
-        httpClient.post<HttpResponse>("${config.api.hostExternal}$publishPath") {
+    override suspend fun post(resource: FhirResource): HttpResponse =
+        httpClient.post("${config.api.hostExternal}$publishPath") {
             contentType(fhirJsonR4)
             header("X-Request-ID", "e2e")
             body = resource
-        }.also {
-            log.trace("Post resource with ID $id to API.")
         }
 }
 

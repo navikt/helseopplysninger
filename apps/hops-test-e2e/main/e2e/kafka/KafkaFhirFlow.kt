@@ -1,10 +1,15 @@
 package e2e.kafka
 
 import io.ktor.http.HttpHeaders
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import mu.KotlinLogging
 import no.nav.helse.hops.plugin.logConsumed
 import org.apache.kafka.clients.consumer.ConsumerRecord
@@ -12,14 +17,34 @@ import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.common.TopicPartition
 import java.time.Duration
 import java.util.UUID
+import kotlin.coroutines.CoroutineContext
 import kotlin.math.max
 
 private val log = KotlinLogging.logger {}
+private const val sec1 = 1_000L
 
 internal class KafkaFhirFlow(
     private val consumer: KafkaConsumer<UUID, ByteArray>,
     private val topic: String,
-) {
+) : CoroutineScope {
+    override val coroutineContext: CoroutineContext get() = Dispatchers.Main + job
+
+    private val job = CoroutineScope(Dispatchers.Default).launch {
+        seekToLatestOffset()
+
+        while (isActive) runCatching { poll() }
+            .onFailure {
+                log.error("Error while reading topic", it)
+                if (it is CancellationException) throw it
+                delay(sec1)
+            }
+    }
+
+    fun cancelFlow(): Boolean {
+        job.cancel() // FIXME: what happens after this state? Will the app recover without restart
+        error("Failed to asynchronically produce expected record")
+    }
+
     suspend fun poll(): Flow<FhirMessage> = flow {
         runCatching {
             while (currentCoroutineContext().isActive) {
