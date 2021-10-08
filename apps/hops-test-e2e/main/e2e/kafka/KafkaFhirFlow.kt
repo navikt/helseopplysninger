@@ -50,7 +50,7 @@ internal class KafkaFhirFlow(
     private val sec1 = 1_000L
     private val Long.duration: Duration get() = Duration.ofMillis(this)
 
-    private val keepUpToDate = CoroutineScope(Dispatchers.IO).launch {
+    private val keepUpToDate = CoroutineScope(Dispatchers.Default).launch {
         while (isActive) runCatching {
             poll()
         }.onFailure {
