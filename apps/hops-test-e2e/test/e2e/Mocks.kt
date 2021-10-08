@@ -11,6 +11,7 @@ import e2e.Mocks.Matcher.get
 import e2e.Mocks.Matcher.post
 import e2e.Mocks.Testdata.maskinportResponse
 import e2e.fhir.FhirResource
+import mu.KotlinLogging
 import no.nav.helse.hops.convert.ContentTypes.fhirJsonR4
 import no.nav.helse.hops.maskinporten.GRANT_TYPE
 import no.nav.helse.hops.test.MockServer
@@ -23,6 +24,8 @@ import org.intellij.lang.annotations.Language
 import java.util.Date
 
 const val LIVENESS_PATH = "/actuator/live"
+
+private val log = KotlinLogging.logger {}
 
 object Mocks {
     val maskinporten = MockServer().apply {
@@ -44,14 +47,13 @@ object Mocks {
         matchRequest(get("/fhir/4.0/Bundle", "accept" to fhirJsonR4.toString()), respond("{}"))
         matchRequest(post("/fhir/4.0/\$process-message")) {
 
-            require(FhirResource.cache.size == 1)
-            val (id, resource) = FhirResource.cache.entries.first()
+            val resource = FhirResource.get { true }.maxByOrNull { it.timestamp }!!
 
             // Simulate hops-event-replay-kafka and put the message on kafka.
             EmbeddedKafka.produce(
                 topic = HOPS_TOPIC,
-                key = id,
-                value = resource.toByteArray(),
+                key = resource.id,
+                value = resource.content.toByteArray(),
                 headers = listOf(RecordHeader("Content-Type", fhirJsonR4.toString().toByteArray()))
             )
 

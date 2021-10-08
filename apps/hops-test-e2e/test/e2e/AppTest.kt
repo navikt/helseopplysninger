@@ -35,16 +35,29 @@ class AppTest : FeatureSpec({
 
         scenario("one test fails") {
             withTestApp {
-                Mocks.api.matchRequest(
-                    get("/actuator/live"),
-                    respond(503)
-                )
+                // Fail liveness
+                Mocks.api.matchRequest(get("/actuator/live"), respond(503))
+
                 with(handleRequest(HttpMethod.Get, "/runTests")) {
                     response shouldHaveStatus HttpStatusCode.OK
                     val content = Json.decodeFromString<Results>(response.content!!)
                     content.failedTests shouldHaveSize 1
                     content.failedTests.first().name shouldBe "api liveness"
                     Duration.parse(content.totalDurationMs) shouldBeGreaterThan Duration.milliseconds(0)
+                }
+
+                // Set mock back to happy path
+                Mocks.api.matchRequest(get(LIVENESS_PATH), respond("live"))
+            }
+        }
+
+        scenario("run test twice in a row") {
+            withTestApp {
+                with(handleRequest(HttpMethod.Get, "/runTests")) {
+                    Json.decodeFromString<Results>(response.content!!).failedTests shouldHaveSize 0
+                }
+                with(handleRequest(HttpMethod.Get, "/runTests")) {
+                    Json.decodeFromString<Results>(response.content!!).failedTests shouldHaveSize 0
                 }
             }
         }

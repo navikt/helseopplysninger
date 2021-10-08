@@ -6,56 +6,69 @@ import e2e.fhir.FhirResource
 import e2e.kafka.FhirMessage
 import e2e.kafka.KafkaFhirFlow
 import io.ktor.http.HttpStatusCode
-import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 import mu.KotlinLogging
 import no.nav.helse.hops.convert.ContentTypes
 import java.util.UUID
+import kotlin.coroutines.CoroutineContext
 import kotlin.time.DurationUnit
 import kotlin.time.ExperimentalTime
 import kotlin.time.toDuration
 
 private val log = KotlinLogging.logger {}
+private const val sec1 = 1_000L
+private const val sec25: Long = 25_000L
 
 internal class ApiPublish(
     override val name: String,
     private val api: ExternalApiFacade,
-    private val fhirFlow: KafkaFhirFlow,
-) : Test {
+    private val kafka: KafkaFhirFlow,
+) : Test, CoroutineScope {
     override val description: String = "publish fhir resource to make it available on kafka and eventstore"
     override var exception: Throwable? = null
 
+    private val job = CoroutineScope(Dispatchers.Default).launch {
+        while (isActive) runCatching {
+            kafka.poll()
+        }.onFailure {
+            log.error("Error while reading topic", it)
+            if (it is CancellationException) throw it
+            delay(sec1)
+        }
+    }
+
+    override val coroutineContext: CoroutineContext get() = Dispatchers.Main + job
+
     override suspend fun test(): Boolean = runSuspendCatching {
+        kafka.seekToLatestOffset()
+        val resource = FhirResource.create()
+
         coroutineScope {
-            val (id, resource) = FhirResource.generate()
-
-            val asyncKafkaResponse = async {
-                readTopic(sec25, id)
-            }
-
-            val asyncApiResponse = async {
-                log.trace("Sent record with key $id to API.")
-                api.post(resource)
-            }
+            val asyncKafkaResponse = async(Dispatchers.IO) { readTopic(resource.id) }
+            val asyncApiResponse = async(Dispatchers.IO) { api.post(resource.id, resource.content) }
 
             when (asyncApiResponse.await().status) {
                 HttpStatusCode.Accepted -> hasExpected(asyncKafkaResponse.await())
-                else -> cancelFlow(asyncKafkaResponse)
+                else -> cancelFlow()
             }
         }
     }
 
-    private suspend fun readTopic(timeout: Long, id: UUID) = withTimeoutOrNull(timeout) {
-        fhirFlow.poll().firstOrNull { record ->
-            val expectedResource = FhirResource.getAndRemove(id)
+    private suspend fun readTopic(id: UUID): FhirMessage? =
+        withTimeoutOrNull(sec25) {
+            val expectedResource = FhirResource.get { it.id == id }.firstOrNull() ?: error("resources was not in cache")
             val expectedType = ContentTypes.fhirJsonR4.toString()
-            record.content == expectedResource && record.contentType == expectedType
+            kafka.poll().first { it.content == expectedResource.content && it.contentType == expectedType }
         }
-    }
 
     @OptIn(ExperimentalTime::class)
     private fun hasExpected(fhirMessage: FhirMessage?) =
@@ -64,10 +77,8 @@ internal class ApiPublish(
             else -> true
         }
 
-    private fun cancelFlow(kafkaResponse: Deferred<FhirMessage?>): Boolean {
-        kafkaResponse.cancel("No need to wait any further")
+    private fun cancelFlow(): Boolean {
+        job.cancel() // FIXME: what happens after this state? Will the app recover without restart
         error("Failed to asynchronically produce expected record")
     }
-
-    private val sec25: Long = 25_000L
 }
