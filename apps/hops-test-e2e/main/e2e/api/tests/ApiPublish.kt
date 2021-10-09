@@ -58,8 +58,8 @@ internal class ApiPublish(
             kafka.poll { consumerRecord ->
                 consumerRecord.key() == resource.id
             }.first { fhirMessage ->
-                log.debug { "Consumed record with expected key: ${resource.id}" }
-                log.debug { "Consumed record: $fhirMessage" }
+                log.debug { "Expected content: ${resource.content}" }
+                log.debug { "Actual content: ${fhirMessage.content}" }
                 fhirMessage.content == expectedResource.content
             }
         }

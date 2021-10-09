@@ -80,7 +80,7 @@ data class FhirMessage(val contentType: String, val content: String) {
     companion object {
         fun fromRecord(record: ConsumerRecord<UUID, ByteArray>) = FhirMessage(
             contentType = record.headerOrDefault(HttpHeaders.ContentType, ""),
-            content = String(record.value())
+            content = String(record.value(), Charsets.UTF_8)
         )
 
         private fun ConsumerRecord<UUID, ByteArray>.headerOrDefault(header: String, default: String) =
