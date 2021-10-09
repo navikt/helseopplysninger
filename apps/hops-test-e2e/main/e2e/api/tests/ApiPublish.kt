@@ -55,8 +55,12 @@ internal class ApiPublish(
             val expectedType = ContentTypes.fhirJsonR4.toString()
             val expectedResource = FhirResource.get { it.id == resource.id }.single()
 
-            kafka.poll().first { consumedResource ->
-                consumedResource.content == expectedResource.content && consumedResource.contentType == expectedType
+            kafka.poll { consumerRecord ->
+                consumerRecord.key() == resource.id
+            }.first { fhirMessage ->
+                log.debug { "Consumed record with expected key: ${resource.id}" }
+                log.debug { "Consumed record: $fhirMessage" }
+                fhirMessage.content == expectedResource.content
             }
         }
     }

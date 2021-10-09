@@ -45,11 +45,12 @@ internal class KafkaFhirFlow(
         error("Failed to asynchronically produce expected record")
     }
 
-    suspend fun poll(): Flow<FhirMessage> = flow {
+    suspend fun poll(predicate: (ConsumerRecord<UUID, ByteArray>) -> Boolean = { true }): Flow<FhirMessage> = flow {
         runCatching {
             while (currentCoroutineContext().isActive) {
                 consumer.poll(sec2.duration)
                     .filterNotNull()
+                    .filter(predicate)
                     .logConsumed(log)
                     .map(FhirMessage::fromRecord)
                     .forEach {
