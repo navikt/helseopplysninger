@@ -14,10 +14,10 @@ object FhirResource {
 
     fun create(): Resource {
         cache.removeIf { it.timestamp.plusMinutes(5) < LocalDateTime.now() }
-        val id = UUID.randomUUID()
-        val resource = Resource(id, content(id, UUID.randomUUID()), LocalDateTime.now())
+        val resourceId = UUID.randomUUID()
+        val resource = Resource(resourceId, content(resourceId), LocalDateTime.now())
         cache.add(resource)
-        log.debug("created and cached resource with id $id")
+        log.debug("created and cached resource with id $resourceId")
         return resource
     }
 
@@ -26,10 +26,10 @@ object FhirResource {
         .also { log.debug("returned cached resources with ids: ${it.map { r -> r.id }.toList()}") }
 
     @Language("json")
-    private fun content(id: UUID, resourceId: UUID): String = """
+    private fun content(resourceId: UUID): String = """
     {
       "resourceType": "Bundle",
-      "id": "$id",
+      "id": "${UUID.randomUUID()}",
       "type": "message",
       "timestamp": "2015-07-14T11:15:33+10:00",
       "entry": [
