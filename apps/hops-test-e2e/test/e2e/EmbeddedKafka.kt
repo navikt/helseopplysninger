@@ -1,5 +1,6 @@
 package e2e
 
+import mu.KotlinLogging
 import no.nav.common.KafkaEnvironment
 import org.apache.kafka.clients.CommonClientConfigs
 import org.apache.kafka.clients.consumer.ConsumerConfig
@@ -12,15 +13,13 @@ import org.apache.kafka.common.serialization.ByteArrayDeserializer
 import org.apache.kafka.common.serialization.ByteArraySerializer
 import org.apache.kafka.common.serialization.UUIDDeserializer
 import org.apache.kafka.common.serialization.UUIDSerializer
-import org.slf4j.LoggerFactory
-import java.lang.invoke.MethodHandles
 import java.util.UUID
 
 const val HOPS_TOPIC = "helseopplysninger.river"
 
-object EmbeddedKafka {
-    private val log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass())
+private val log = KotlinLogging.logger {}
 
+object EmbeddedKafka {
     private val kafka: KafkaEnvironment = KafkaEnvironment(
         topicNames = listOf(HOPS_TOPIC),
         autoStart = true,
@@ -31,14 +30,8 @@ object EmbeddedKafka {
     fun produce(topic: String, key: UUID, value: ByteArray, headers: List<Header>) {
         val record = ProducerRecord(topic, null, key, value, headers)
         producer.send(record).get().also {
-            log.info(
-                """ Produced record.
-                topic: $it (-<partition>@<offset>)
-                key: $key
-                headers: ${headers.map { h -> h.key() to String(h.value()) }}
-                value: ${String(value)}
-                """.trimIndent()
-            )
+            log.info("Produced record on $it (topic-partition@offset)")
+            log.info("[key:$key] [value:${String(value)}] [header:${headers.map { h -> h.key() to String(h.value()) }}]")
         }
     }
 

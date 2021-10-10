@@ -2,7 +2,9 @@ package e2e.api.tests
 
 import e2e._common.Test
 import e2e.api.ExternalApiFacade
+import e2e.fhir.FhirContent
 import e2e.fhir.FhirResource
+import e2e.fhir.FhirResource.resourceId
 import e2e.kafka.FhirMessage
 import e2e.kafka.KafkaFhirFlow
 import io.ktor.http.HttpStatusCode
@@ -13,7 +15,6 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withTimeoutOrNull
 import mu.KotlinLogging
-import no.nav.helse.hops.convert.ContentTypes
 import kotlin.time.DurationUnit
 import kotlin.time.ExperimentalTime
 import kotlin.time.toDuration
@@ -31,11 +32,11 @@ internal class ApiPublish(
 
     override suspend fun test(): Boolean = runSuspendCatching {
         kafka.seekToLatestOffset()
-        val resource = FhirResource.create()
+        val content = FhirResource.create()
 
         coroutineScope {
-            val asyncKafkaResponse = consumeKafkaAsync(resource)
-            val asyncApiResponse = postResourceAsync(resource)
+            val asyncKafkaResponse = consumeKafkaAsync(content)
+            val asyncApiResponse = postResourceAsync(content)
 
             when (asyncApiResponse.await().status) {
                 HttpStatusCode.Accepted -> asyncKafkaResponse.await().isNotNull
@@ -44,23 +45,21 @@ internal class ApiPublish(
         }
     }
 
-    private fun CoroutineScope.postResourceAsync(resource: FhirResource.Resource) = async(Dispatchers.IO) {
-        api.post(resource.content).also {
-            log.trace("Posted resource to API: $resource")
+    private fun CoroutineScope.postResourceAsync(content: FhirContent) = async(Dispatchers.IO) {
+        api.post(content).also {
+            log.trace("Posted content to API: $content")
         }
     }
 
-    private fun CoroutineScope.consumeKafkaAsync(resource: FhirResource.Resource) = async(Dispatchers.IO) {
+    private fun CoroutineScope.consumeKafkaAsync(expectedContent: FhirContent) = async(Dispatchers.IO) {
         withTimeoutOrNull(sec25) {
-            val expectedType = ContentTypes.fhirJsonR4.toString()
-            val expectedResource = FhirResource.get { it.id == resource.id }.single()
-
-            kafka.poll { consumerRecord ->
-                consumerRecord.key() == resource.id
-            }.first { fhirMessage ->
-                log.debug { "Expected content: ${resource.content}" }
-                log.debug { "Actual content: ${fhirMessage.content}" }
-                fhirMessage.content == expectedResource.content
+            kafka.poll { record ->
+                record.key() == expectedContent.resourceId
+            }.first { actual: FhirMessage ->
+                val actualContent = FhirResource.decode(actual.content)
+                log.debug { "Expected content: $expectedContent" }
+                log.debug { "Actual content: $actualContent" }
+                actualContent == expectedContent
             }
         }
     }

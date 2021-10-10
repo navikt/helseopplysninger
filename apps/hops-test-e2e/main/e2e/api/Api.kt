@@ -4,6 +4,9 @@ import e2e._common.Liveness
 import e2e._common.Test
 import e2e.api.tests.ApiPublish
 import e2e.api.tests.ApiSubscribe
+import e2e.http.HttpClientFactory
+import e2e.http.HttpFeature.KOTLINX
+import e2e.http.HttpFeature.MASKINPORTEN
 import e2e.kafka.KafkaConfig
 import e2e.kafka.KafkaFactory
 import e2e.kafka.KafkaFhirFlow
@@ -13,12 +16,21 @@ import no.nav.helse.hops.hoplite.loadConfigsOrThrow
 
 internal fun Application.apiTests(): List<Test> {
     val config = loadConfigsOrThrow<ApiConfig>("/application.yaml")
-    val api = ApiExternalClient(HttpClientFactory.create(config.api.maskinporten), config)
-    val flow = KafkaFhirFlow(KafkaFactory.createConsumer(config.kafka), config.kafka.topic.published)
+
+    val api = ApiExternalClient(
+        config = config,
+        apiGetClient = HttpClientFactory.create(config.api.maskinporten, MASKINPORTEN),
+        apiPostClient = HttpClientFactory.create(config.api.maskinporten, MASKINPORTEN, KOTLINX),
+    )
+
+    val kafka = KafkaFhirFlow(
+        consumer = KafkaFactory.createConsumer(config.kafka),
+        topic = config.kafka.topic.published,
+    )
 
     return listOf(
         Liveness("api liveness", config.api.host),
-        ApiPublish("publish external", api, flow),
+        ApiPublish("publish external", api, kafka),
         ApiSubscribe("subscribe external", api)
     )
 }
