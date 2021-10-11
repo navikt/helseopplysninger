@@ -32,7 +32,7 @@ dependencies {
     implementation("io.ktor:ktor-server-netty:1.6.4")
     implementation("io.ktor:ktor-webjars:1.6.4")
     implementation("io.micrometer:micrometer-registry-prometheus:1.7.4")
-    implementation("no.nav.security:token-validation-ktor:1.3.8")
+    implementation("no.nav.security:token-validation-ktor:1.3.9")
     implementation("io.github.microutils:kotlin-logging-jvm:2.0.11")
     runtimeOnly("ch.qos.logback:logback-classic:1.2.6")
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
