@@ -31,7 +31,13 @@ object FhirResource {
             .let(UUID::fromString)
 
     @OptIn(ExperimentalSerializationApi::class)
-    fun decode(content: String): FhirContent = Json.decodeFromString(content)
+    fun decode(content: String): FhirContent? =
+        try {
+            Json.decodeFromString(content)
+        } catch (e: Exception) {
+            log.warn("Failed to decode string", e)
+            null
+        }
 
     private val json = Json { prettyPrint = true }
 

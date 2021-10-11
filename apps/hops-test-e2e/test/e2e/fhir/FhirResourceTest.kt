@@ -20,7 +20,7 @@ class FhirResourceTest : StringSpec({
 
     "parsing LocalDateTime back and forth preserve its format" {
         val created = FhirResource.create()
-        val decoded = FhirResource.decode(FhirResource.encode(created))
+        val decoded = FhirResource.decode(FhirResource.encode(created))!!
         decoded.timestamp shouldBe created.timestamp
     }
 })
