@@ -23,7 +23,7 @@ dependencies {
     api("io.kotest:kotest-assertions-shared:4.6.3")
     api("io.ktor:ktor-jackson:1.6.4")
     api("io.ktor:ktor-server-netty:1.6.4")
-    api("no.nav.security:token-validation-ktor:1.3.8")
+    api("no.nav.security:token-validation-ktor:1.3.9")
     api("io.mockk:mockk:1.12.0")
 }
 
