@@ -5,7 +5,6 @@ import e2e._common.Test
 import e2e.api.tests.ApiPublish
 import e2e.api.tests.ApiSubscribe
 import e2e.http.HttpClientFactory
-import e2e.http.HttpFeature.KOTLINX
 import e2e.http.HttpFeature.MASKINPORTEN
 import e2e.kafka.KafkaConfig
 import e2e.kafka.KafkaFactory
@@ -19,8 +18,7 @@ internal fun Application.apiTests(): List<Test> {
 
     val api = ApiExternalClient(
         config = config,
-        apiGetClient = HttpClientFactory.create(config.api.maskinporten, MASKINPORTEN),
-        apiPostClient = HttpClientFactory.create(config.api.maskinporten, MASKINPORTEN, KOTLINX),
+        httpClient = HttpClientFactory.create(config.api.maskinporten, MASKINPORTEN),
     )
 
     val kafka = KafkaFhirFlow(

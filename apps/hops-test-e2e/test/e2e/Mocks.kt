@@ -11,7 +11,6 @@ import e2e.Mocks.Matcher.get
 import e2e.Mocks.Matcher.post
 import e2e.Mocks.Testdata.maskinportResponse
 import e2e.fhir.FhirResource
-import e2e.fhir.FhirResource.resourceId
 import no.nav.helse.hops.convert.ContentTypes.fhirJsonR4
 import no.nav.helse.hops.maskinporten.GRANT_TYPE
 import no.nav.helse.hops.test.MockServer
@@ -51,8 +50,8 @@ object Mocks {
             // Simulate hops-event-replay-kafka and put the message on kafka.
             EmbeddedKafka.produce(
                 topic = HOPS_TOPIC,
-                key = content.resourceId,
-                value = FhirResource.encode(content)!!.toByteArray(),
+                key = content.id,
+                value = content.json.toByteArray(),
                 headers = listOf(RecordHeader("Content-Type", fhirJsonR4.toString().toByteArray()))
             )
 

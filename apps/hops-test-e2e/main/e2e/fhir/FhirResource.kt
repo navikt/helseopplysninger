@@ -1,14 +1,14 @@
 package e2e.fhir
 
-import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import mu.KotlinLogging
 import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.UUID
 
 private val log = KotlinLogging.logger {}
+
+data class FhirContent(val id: UUID, val json: String, val timestamp: LocalDateTime = LocalDateTime.now())
 
 object FhirResource {
     private val cache = mutableListOf<FhirContent>()
@@ -19,79 +19,66 @@ object FhirResource {
             log.debug("returned cached resources with ids: ${it.map { r -> r.id }.toList()}")
         }
 
-    /**
-     * The ID from the resource of type MessageHeader is the kafka key used by `hops-event-replay-kafka`
-     */
-    val FhirContent.resourceId: UUID
-        get() = entry
-            .map { it.resource }
-            .filterIsInstance<MessageHeaderResource>()
-            .single()
-            .id
-            .let(UUID::fromString)
-
-    @OptIn(ExperimentalSerializationApi::class)
-    fun decode(content: String): FhirContent? =
-        try {
-            Json.decodeFromString(content)
-        } catch (e: Exception) {
-            log.warn("Failed to decode string", e)
-            null
-        }
-
-    private val json = Json { prettyPrint = true }
-
-    @OptIn(ExperimentalSerializationApi::class)
-    fun encode(content: FhirContent): String = json.encodeToString(content)
-
     fun create(): FhirContent {
         cache.removeIf { it.timestamp.plusMinutes(5) < LocalDateTime.now() }
-
         val resourceId = UUID.randomUUID()
-
-        val pat1Entry = Entry(
-            fullUrl = "http://acme.com/ehr/fhir/Patient/pat1",
-            resource = PatientResource(
-                id = "pat1",
-                resourceType = "Patient",
-                gender = "male",
-            ),
-        )
-        val pat12Entry = Entry(
-            fullUrl = "http://acme.com/ehr/fhir/Patient/pat12",
-            resource = PatientResource(
-                id = "pat12",
-                resourceType = "Patient",
-                gender = "other",
-            ),
-        )
-        val messageEntry = Entry(
-            fullUrl = "urn:uuid:$resourceId",
-            resource = MessageHeaderResource(
-                id = resourceId.toString(),
-                resourceType = "MessageHeader",
-                focus = listOf(
-                    Reference(pat1Entry.fullUrl),
-                    Reference(pat12Entry.fullUrl),
-                ),
-                source = Source(endpoint = "http://example.org/clients/ehr-lite"),
-                eventCoding = EventCoding(
-                    system = "http://example.org/fhir/message-events",
-                    code = "patient-link",
-                ),
-            ),
-        )
-        val content = FhirContent(
-            resourceType = "Bundle",
-            type = "message",
-            entry = listOf(
-                messageEntry,
-                pat1Entry,
-                pat12Entry
-            ),
-        )
+        val content = FhirContent(resourceId, json(resourceId))
         cache.add(content)
-        log.debug("created and cached resource with id $resourceId")
         return content
     }
 }
+
+/** YYYY-MM-DDThh:mm:ss.sssZ **/
+private fun LocalDateTime.toIsoString(): String =
+    atZone(ZoneId.of("Europe/Oslo"))
+        .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+
+private fun json(resourceId: UUID): String =
+    """
+    {
+      "resourceType": "Bundle",
+      "id": "${UUID.randomUUID()}",
+      "type": "message",
+      "timestamp": "${LocalDateTime.now().toIsoString()}",
+      "entry": [
+        {
+          "fullUrl": "urn:uuid:"$resourceId",
+          "resource": {
+            "resourceType": "MessageHeader",
+            "id": "$resourceId",
+            "eventCoding": {
+              "system": "http://example.org/fhir/message-events",
+              "code": "patient-link"
+            },
+            "source": {
+              "endpoint": "http://example.org/clients/ehr-lite"
+            },
+            "focus": [
+              {
+                "reference": "http://acme.com/ehr/fhir/Patient/pat1"
+              },
+              {
+                "reference": "http://acme.com/ehr/fhir/Patient/pat12"
+              }
+            ]
+          }
+        },
+        {
+          "fullUrl": "http://acme.com/ehr/fhir/Patient/pat1",
+          "resource": {
+            "resourceType": "Patient",
+            "id": "pat1",
+            "gender": "male"
+          }
+        },
+        {
+          "fullUrl": "http://acme.com/ehr/fhir/Patient/pat12",
+          "resource": {
+            "resourceType": "Patient",
+            "id": "pat2",
+            "gender": "other"
+          }
+        }
+      ]
+    }
+    """.trimIndent()

@@ -20,19 +20,18 @@ interface ExternalApiFacade {
 
 internal class ApiExternalClient(
     private val config: ApiConfig,
-    private val apiGetClient: HttpClient,
-    private val apiPostClient: HttpClient,
+    private val httpClient: HttpClient,
 ) : ExternalApiFacade {
     override suspend fun get(): HttpResponse =
-        apiGetClient.get("${config.api.hostExternal}$subscribePath?_count=1&_offset=0") {
+        httpClient.get("${config.api.hostExternal}$subscribePath?_count=1&_offset=0") {
             accept(fhirJsonR4)
             header("X-Request-ID", "e2e")
         }
 
     override suspend fun post(resource: FhirContent): HttpResponse =
-        apiPostClient.post("${config.api.hostExternal}$publishPath") {
+        httpClient.post("${config.api.hostExternal}$publishPath") {
             contentType(fhirJsonR4)
             header("X-Request-ID", "e2e")
-            body = resource
+            body = resource.json
         }
 }
