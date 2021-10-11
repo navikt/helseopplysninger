@@ -71,7 +71,7 @@ internal class KafkaFhirFlow(
         consumer.assign(topicPartitions)
         consumer.endOffsets(topicPartitions).forEach { (topicPartition, endOffset) ->
             consumer.seek(topicPartition, max(endOffset - 1, 0))
-            log.info { "set offset on $topic (${topicPartition.partition()}) to ${max(endOffset - 1, 0)}" }
+            log.debug { "set offset on $topic (${topicPartition.partition()}) to ${max(endOffset - 1, 0)}" }
         }
     }
 }
