@@ -13,7 +13,7 @@ tasks {
 }
 
 dependencies {
-    api("org.apache.kafka:kafka-clients:2.8.1")
+    api("org.apache.kafka:kafka-clients:3.0.0")
 }
 
 kotlin.sourceSets["main"].kotlin.srcDirs("main")
