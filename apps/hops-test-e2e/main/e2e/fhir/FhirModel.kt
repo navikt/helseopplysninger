@@ -18,9 +18,9 @@ import java.util.UUID
 
 @Serializable
 data class FhirContent(
-    override val resourceType: ResourceType = ResourceType.Bundle,
-    override val id: String = UUID.randomUUID().toString(),
-    val type: String = "message",
+    val id: String = UUID.randomUUID().toString(),
+    val resourceType: String,
+    val type: String,
     @Serializable(LocalDateTimeSerde::class)
     val timestamp: LocalDateTime = LocalDateTime.now().toIso(),
     val entry: List<Entry>,
@@ -28,48 +28,40 @@ data class FhirContent(
 
 @Serializable
 data class Entry(
-    val fullUrl: String = "urn:uuid:${UUID.randomUUID()}",
+    val fullUrl: String,
     val resource: Resource,
 )
 
 @Serializable
 data class MessageHeaderResource(
-    override val resourceType: ResourceType = ResourceType.MessageHeader,
-    override val id: String,
-    val eventCoding: EventCoding = EventCoding(),
-    val source: Source = Source(),
-    val focus: List<Reference> = listOf(Reference(), Reference("http://acme.com/ehr/fhir/Patient/pat12")),
+    val resourceType: String,
+    val id: String,
+    val eventCoding: EventCoding,
+    val source: Source,
+    val focus: List<Reference>,
 ) : Resource()
+
+@Serializable
+sealed class Resource
 
 @Serializable
 data class PatientResource(
-    override val resourceType: ResourceType = ResourceType.Patient,
-    override val id: String = "pat1",
-    val gender: String = "male",
+    val resourceType: String,
+    val id: String,
+    val gender: String,
 ) : Resource()
 
 @Serializable
-sealed class Resource {
-    abstract val resourceType: ResourceType
-    abstract val id: String
-}
-
-@Serializable
-enum class ResourceType { Bundle, MessageHeader, Patient }
-
-@Serializable
 data class EventCoding(
-    val system: String = "http://example.org/fhir/message-events",
-    val code: String = "patient-link",
+    val system: String,
+    val code: String,
 )
 
-@JvmInline
 @Serializable
-value class Source(val endpoint: String = "http://example.org/clients/ehr-lite")
+data class Source(val endpoint: String)
 
-@JvmInline
 @Serializable
-value class Reference(val reference: String = "http://acme.com/ehr/fhir/Patient/pat1")
+data class Reference(val reference: String)
 
 @Serializer(forClass = LocalDateTime::class)
 @OptIn(ExperimentalSerializationApi::class)

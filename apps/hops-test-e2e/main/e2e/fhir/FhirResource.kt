@@ -23,13 +23,20 @@ object FhirResource {
      * The ID from the resource of type MessageHeader is the kafka key used by `hops-event-replay-kafka`
      */
     val FhirContent.resourceId: UUID
-        get() = UUID.fromString(entry.map { it.resource }.single { it.resourceType == ResourceType.MessageHeader }.id)
+        get() = entry
+            .map { it.resource }
+            .filterIsInstance<MessageHeaderResource>()
+            .single()
+            .id
+            .let(UUID::fromString)
 
     @OptIn(ExperimentalSerializationApi::class)
     fun decode(content: String): FhirContent? = runCatching<FhirContent> { Json.decodeFromString(content) }.getOrNull()
 
+    private val json = Json { prettyPrint = true }
+
     @OptIn(ExperimentalSerializationApi::class)
-    fun encode(content: FhirContent): String? = runCatching<String> { Json.encodeToString(content) }.getOrNull()
+    fun encode(content: FhirContent): String? = runCatching<String> { json.encodeToString(content) }.getOrNull()
 
     fun create(): FhirContent {
         cache.removeIf { it.timestamp.plusMinutes(5) < LocalDateTime.now() }
@@ -38,28 +45,44 @@ object FhirResource {
 
         val pat1Entry = Entry(
             fullUrl = "http://acme.com/ehr/fhir/Patient/pat1",
-            resource = PatientResource(id = "pat1", gender = "male")
+            resource = PatientResource(
+                id = "pat1",
+                resourceType = "Patient",
+                gender = "male",
+            ),
         )
         val pat12Entry = Entry(
             fullUrl = "http://acme.com/ehr/fhir/Patient/pat12",
-            resource = PatientResource(id = "pat12", gender = "other")
+            resource = PatientResource(
+                id = "pat12",
+                resourceType = "Patient",
+                gender = "other",
+            ),
         )
         val messageEntry = Entry(
             fullUrl = "urn:uuid:$resourceId",
             resource = MessageHeaderResource(
                 id = resourceId.toString(),
+                resourceType = "MessageHeader",
                 focus = listOf(
                     Reference(pat1Entry.fullUrl),
-                    Reference(pat12Entry.fullUrl)
-                )
-            )
+                    Reference(pat12Entry.fullUrl),
+                ),
+                source = Source(endpoint = "http://example.org/clients/ehr-lite"),
+                eventCoding = EventCoding(
+                    system = "http://example.org/fhir/message-events",
+                    code = "patient-link",
+                ),
+            ),
         )
         val content = FhirContent(
+            resourceType = "Bundle",
+            type = "message",
             entry = listOf(
                 messageEntry,
                 pat1Entry,
                 pat12Entry
-            )
+            ),
         )
         cache.add(content)
         log.debug("created and cached resource with id $resourceId")
