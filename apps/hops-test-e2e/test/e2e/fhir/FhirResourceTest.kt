@@ -13,14 +13,14 @@ class FhirResourceTest : StringSpec({
     }
 
     "can decode String to FhirContent" {
-        val string = FhirResource.encode(FhirResource.create())!!
+        val string = FhirResource.encode(FhirResource.create())
         val content = FhirResource.decode(string)
         content shouldNotBe null
     }
 
     "parsing LocalDateTime back and forth preserve its format" {
         val created = FhirResource.create()
-        val decoded = FhirResource.decode(FhirResource.encode(created)!!)!!
+        val decoded = FhirResource.decode(FhirResource.encode(created))
         decoded.timestamp shouldBe created.timestamp
     }
 })

@@ -13,7 +13,6 @@ import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.time.temporal.ChronoUnit
 import java.util.UUID
 
 @Serializable
@@ -77,11 +76,9 @@ private fun LocalDateTime.toIso() = toIsoString().toLocalDateTime()
 private fun String.toLocalDateTime(): LocalDateTime =
     Instant.parse(this)
         .atZone(ZoneId.of("Europe/Oslo"))
-        .truncatedTo(ChronoUnit.MILLIS)
         .toLocalDateTime()
 
 /** YYYY-MM-DDThh:mm:ss.sssZ **/
 private fun LocalDateTime.toIsoString(): String =
     atZone(ZoneId.of("Europe/Oslo"))
-        .truncatedTo(ChronoUnit.MILLIS)
         .format(DateTimeFormatter.ISO_INSTANT)

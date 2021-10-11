@@ -31,12 +31,12 @@ object FhirResource {
             .let(UUID::fromString)
 
     @OptIn(ExperimentalSerializationApi::class)
-    fun decode(content: String): FhirContent? = runCatching<FhirContent> { Json.decodeFromString(content) }.getOrNull()
+    fun decode(content: String): FhirContent = Json.decodeFromString(content)
 
     private val json = Json { prettyPrint = true }
 
     @OptIn(ExperimentalSerializationApi::class)
-    fun encode(content: FhirContent): String? = runCatching<String> { json.encodeToString(content) }.getOrNull()
+    fun encode(content: FhirContent): String = json.encodeToString(content)
 
     fun create(): FhirContent {
         cache.removeIf { it.timestamp.plusMinutes(5) < LocalDateTime.now() }
