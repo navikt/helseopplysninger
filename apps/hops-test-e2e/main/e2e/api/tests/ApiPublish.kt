@@ -50,15 +50,17 @@ internal class ApiPublish(
         }
     }
 
-    private fun CoroutineScope.consumeKafkaAsync(expectedContent: FhirContent) = async(Dispatchers.IO) {
+    private fun CoroutineScope.consumeKafkaAsync(publishedMsg: FhirContent) = async(Dispatchers.IO) {
         withTimeoutOrNull(sec25) {
             kafka.poll { record ->
-                record.key() == expectedContent.id
-            }.first { message: FhirMessage ->
-                if (message.content != expectedContent.json) {
+                record.key() == publishedMsg.id
+            }.first { consumedMsg: FhirMessage ->
+                val actualContent = consumedMsg.content.removeWhitespaces()
+                val expectedContent = consumedMsg.content.removeWhitespaces()
+                if (actualContent != expectedContent) {
                     log.error { "Content was not equal" }
-                    log.error { "Expected content: $expectedContent" }
-                    log.error { "Actual content: $message" }
+                    log.error { "Expected content: $publishedMsg" }
+                    log.error { "Actual content: $consumedMsg" }
                 }
                 true
             }
@@ -72,3 +74,5 @@ internal class ApiPublish(
             else -> true
         }
 }
+
+private fun String.removeWhitespaces() = replace("\\s".toRegex(), "")
