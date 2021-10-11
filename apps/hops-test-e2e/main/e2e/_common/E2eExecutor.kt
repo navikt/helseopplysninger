@@ -25,7 +25,7 @@ internal class E2eExecutor {
     val size: Int get() = allTests.size
 
     private suspend fun Test.run(results: Results) {
-        val (hasPassed, duration) = measureTimedValue { run() }
+        val (hasPassed, duration) = measureTimedValue { test() }
         when (hasPassed) {
             true -> results.addPassed(this, duration)
             false -> results.addFailed(this, duration)
@@ -48,12 +48,12 @@ data class Results(
     }
 
     fun addFailed(test: Test, duration: Duration) = apply {
-        log.warn("${test.name} [ FAILED ] in $duration", test.stacktrace)
+        log.warn("${test.name} [ FAILED ] in $duration", test.exception)
         test {
             name = test.name
             description = test.description
             durationMs = duration.toString(TimeUnit.MILLISECONDS)
-            message = test.stacktrace?.localizedMessage
+            message = test.exception?.localizedMessage
         }
     }
 

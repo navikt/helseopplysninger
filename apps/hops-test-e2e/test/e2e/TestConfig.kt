@@ -13,8 +13,8 @@ fun <R> withTestApp(test: TestApplicationEngine.() -> R): R =
         withTestApplication(Application::main, test)
     }
 
-private val config by lazy {
-    mapOf(
+private val config: Map<String, String>
+    get() = mapOf(
         "API_HOST" to Mocks.api.getBaseUrl(),
         "API_HOST_EXTERNAL" to Mocks.api.getBaseUrl(),
         "EVENT_REPLAY_KAFKA_HOST" to Mocks.eventreplay.getBaseUrl(),
@@ -24,8 +24,12 @@ private val config by lazy {
         "MASKINPORTEN_CLIENT_ID" to "e2e-test-id",
         "MASKINPORTEN_CLIENT_JWK" to jwk,
         "MASKINPORTEN_SCOPES" to "nav:helse:helseopplysninger.read nav:helse:helseopplysninger.write",
+        "KAFKA_BROKERS" to EmbeddedKafka.getHost(),
+        "KAFKA_CLIENT_ID" to "hops-test-e2e-$kafkaPrefix",
+        "KAFKA_GROUP_ID" to "hops-test-e2e-$kafkaPrefix"
     )
-}
+
+private val kafkaPrefix: Int get() = (0..100).random()
 
 class KotestSetup : ProjectListener, AbstractProjectConfig() {
     override fun listeners() = listOf(KotestSetup())
@@ -43,6 +47,7 @@ class KotestSetup : ProjectListener, AbstractProjectConfig() {
         Mocks.eventreplay.shutdown()
         Mocks.eventsink.shutdown()
         Mocks.eventstore.shutdown()
+        EmbeddedKafka.shutdown()
     }
 }
 

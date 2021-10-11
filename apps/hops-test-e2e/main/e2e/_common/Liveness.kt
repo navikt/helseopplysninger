@@ -11,19 +11,17 @@ private const val livenessPath = "/actuator/live"
 internal class Liveness(
     override val name: String,
     private val url: String,
+    override val description: String = "Checks the liveness probe",
+    override var exception: Throwable? = null,
 ) : Test {
-    override val description: String = "Checks the liveness probe"
-    override var stacktrace: Throwable? = null
 
-    override suspend fun run(): Boolean = runCatching {
+    override suspend fun test(): Boolean = runSuspendCatching {
         val response = client.get<HttpResponse>(url + livenessPath)
+
         when (response.status) {
             HttpStatusCode.OK -> true
             else -> false
         }
-    }.getOrElse {
-        stacktrace = it
-        false
     }
 
     private val client: HttpClient = HttpClient {

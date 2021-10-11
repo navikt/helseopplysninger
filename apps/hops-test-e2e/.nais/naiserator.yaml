@@ -31,6 +31,7 @@ spec:
       memory: 1Gi
   replicas:
     min: 1
+    max: 1
   maskinporten:
     enabled: true
     scopes:
@@ -50,6 +51,8 @@ spec:
         - application: hops-event-store
   ingresses:
     - https://hops-test-e2e.ekstern.dev.nav.no/runTests
+  kafka:
+    pool: nav-dev
   env:
     - name: LOG_APPENDER
       value: json
@@ -63,3 +66,5 @@ spec:
       value: http://hops-event-sink-kafka
     - name: EVENT_STORE_HOST
       value: http://hops-event-store
+    - name: KAFKA_SECURITY_ENABLED
+      value: "true"
