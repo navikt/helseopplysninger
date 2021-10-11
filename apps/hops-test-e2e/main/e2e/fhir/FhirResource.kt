@@ -1,6 +1,7 @@
 package e2e.fhir
 
 import mu.KotlinLogging
+import org.intellij.lang.annotations.Language
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -33,6 +34,7 @@ private fun LocalDateTime.toIsoString(): String =
     atZone(ZoneId.of("Europe/Oslo"))
         .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
 
+@Language("json")
 private fun json(resourceId: UUID): String =
     """
     {
@@ -42,7 +44,7 @@ private fun json(resourceId: UUID): String =
       "timestamp": "${LocalDateTime.now().toIsoString()}",
       "entry": [
         {
-          "fullUrl": "urn:uuid:"$resourceId",
+          "fullUrl": "urn:uuid:$resourceId",
           "resource": {
             "resourceType": "MessageHeader",
             "id": "$resourceId",
