@@ -72,7 +72,7 @@ jobs:
           distribution: 'temurin'
           cache: 'gradle'
       - name: 🪲 Run test
-        run: ./gradlew test --fail-fast -i
+        run: ./gradlew test --fail-fast --no-daemon
         timeout-minutes: 15
 
   # ALTERNATIVES
