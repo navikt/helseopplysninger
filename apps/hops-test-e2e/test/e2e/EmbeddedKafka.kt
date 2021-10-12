@@ -22,7 +22,6 @@ private val log = KotlinLogging.logger {}
 object EmbeddedKafka {
     private val kafka: KafkaEnvironment = KafkaEnvironment(
         topicNames = listOf(HOPS_TOPIC),
-        autoStart = true,
     )
 
     private val producer = kafka.createProducer<UUID, ByteArray>()
@@ -35,6 +34,7 @@ object EmbeddedKafka {
         }
     }
 
+    fun start() = kafka.start()
     fun shutdown() = kafka.tearDown()
     fun getHost() = kafka.brokersURL
 }

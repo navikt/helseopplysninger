@@ -37,6 +37,7 @@ private val kafkaPrefix: Int get() = (0..100).random()
 class KotestSetup : ProjectListener, AbstractProjectConfig() {
     override fun listeners() = listOf(KotestSetup())
     override suspend fun beforeProject() {
+        EmbeddedKafka.start()
         Mocks.maskinporten.start()
         Mocks.api.start()
         Mocks.eventreplay.start()

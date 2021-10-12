@@ -9,6 +9,8 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.server.testing.handleRequest
 
 internal class ActuatorsTest : FeatureSpec({
+    timeout = 5_000L
+
     feature("actuators") {
         scenario("GET /actuator/live = 200 OK") {
             withTestApp {
