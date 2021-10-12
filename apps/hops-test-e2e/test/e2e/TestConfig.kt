@@ -6,7 +6,10 @@ import io.kotest.extensions.system.withEnvironment
 import io.ktor.application.Application
 import io.ktor.server.testing.TestApplicationEngine
 import io.ktor.server.testing.withTestApplication
+import mu.KotlinLogging
 import org.intellij.lang.annotations.Language
+
+private val log = KotlinLogging.logger {}
 
 fun <R> withTestApp(test: TestApplicationEngine.() -> R): R =
     withEnvironment(config) {
