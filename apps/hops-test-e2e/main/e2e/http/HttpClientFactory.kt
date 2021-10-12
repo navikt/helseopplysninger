@@ -3,6 +3,7 @@ package e2e.http
 import com.nimbusds.jose.jwk.RSAKey
 import e2e.api.ApiConfig
 import io.ktor.client.HttpClient
+import io.ktor.client.features.HttpTimeout
 import io.ktor.client.features.auth.Auth
 import io.ktor.client.features.auth.AuthProvider
 import io.ktor.client.features.json.JsonFeature
@@ -24,6 +25,10 @@ internal object HttpClientFactory {
             }
             if (feature.contains(HttpFeature.KOTLINX)) {
                 install(JsonFeature) { serializer = KotlinxSerializer(Json) }
+            }
+            install(HttpTimeout) {
+                requestTimeoutMillis = 5_000L
+                connectTimeoutMillis = 5_000L
             }
         }
 }
