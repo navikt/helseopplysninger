@@ -67,7 +67,7 @@ jobs:
           java-version: 11
           distribution: 'adopt'
           cache: 'gradle'
-      - run: gradle test --continue --no-daemon
+      - run: ./gradlew test --continue --no-daemon
         continue-on-error: true
       - name: 📊 Publish results
         uses: EnricoMi/publish-unit-test-result-action@v1
@@ -84,9 +84,10 @@ jobs:
       - uses: actions/setup-java@v2
         with:
           java-version: 11
-          distribution: 'adopt'
+          distribution: 'temurin'
           cache: 'gradle'
-      - run: gradle test --no-daemon
+      - run: ./gradlew test --no-daemon
+        timeout-minutes: 5
 
   # ALTERNATIVES
   # - Github App: https://kodiakhq.com/
@@ -108,3 +109,12 @@ jobs:
         run: gh pr comment --body "@dependabot squash and merge"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  debug:
+    name: 🪲 Debug
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo ${{ github }}
+      - run: echo ${{ github.actor }}
+      - run: echo ${{ github.event.issue.user.login }}
+      - run: echo ${{ github.event.pull_request.user.login }}
