@@ -1,7 +1,5 @@
 package e2e
 
-import io.kotest.core.config.AbstractProjectConfig
-import io.kotest.core.listeners.ProjectListener
 import io.kotest.extensions.system.withEnvironment
 import io.ktor.application.Application
 import io.ktor.server.testing.TestApplicationEngine
@@ -33,27 +31,6 @@ private val config: Map<String, String>
     )
 
 private val kafkaPrefix: Int get() = (0..100).random()
-
-class KotestSetup : ProjectListener, AbstractProjectConfig() {
-    override fun listeners() = listOf(KotestSetup())
-    override suspend fun beforeProject() {
-        EmbeddedKafka.start()
-        Mocks.maskinporten.start()
-        Mocks.api.start()
-        Mocks.eventreplay.start()
-        Mocks.eventsink.start()
-        Mocks.eventstore.start()
-    }
-
-    override suspend fun afterProject() {
-        Mocks.maskinporten.shutdown()
-        Mocks.api.shutdown()
-        Mocks.eventreplay.shutdown()
-        Mocks.eventsink.shutdown()
-        Mocks.eventstore.shutdown()
-        EmbeddedKafka.shutdown()
-    }
-}
 
 @Language("json")
 private val jwk =
