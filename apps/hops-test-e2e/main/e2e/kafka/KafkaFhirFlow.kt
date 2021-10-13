@@ -4,16 +4,19 @@ import io.ktor.http.HttpHeaders
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
 import no.nav.helse.hops.plugin.logConsumed
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.common.TopicPartition
+import java.io.Closeable
 import java.time.Duration
 import java.util.UUID
 import kotlin.coroutines.CoroutineContext
@@ -26,10 +29,13 @@ private const val millis100 = 100L
 internal class KafkaFhirFlow(
     private val consumer: KafkaConsumer<UUID, ByteArray>,
     private val topic: String,
-) : CoroutineScope {
-    override val coroutineContext: CoroutineContext get() = Dispatchers.Default
+    context: CoroutineContext = Dispatchers.Default,
+) : Closeable {
+    override fun close() {
+        runBlocking { job.cancelAndJoin() }
+    }
 
-    private val job = CoroutineScope(coroutineContext).launch {
+    private val job = CoroutineScope(context).launch {
         seekToLatestOffset()
 
         while (isActive) runCatching { poll() }
