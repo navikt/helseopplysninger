@@ -11,6 +11,7 @@ import e2e.kafka.KafkaFactory
 import e2e.kafka.KafkaFhirFlow
 import e2e.replay.ReplayConfig
 import io.ktor.application.Application
+import kotlinx.coroutines.Dispatchers
 import no.nav.helse.hops.hoplite.loadConfigsOrThrow
 
 internal fun Application.apiTests(): List<Test> {
@@ -21,14 +22,16 @@ internal fun Application.apiTests(): List<Test> {
         httpClient = HttpClientFactory.create(config.api.maskinporten, MASKINPORTEN),
     )
 
+    val context = Dispatchers.Default
     val kafka = KafkaFhirFlow(
         consumer = KafkaFactory.createConsumer(config.kafka),
         topic = config.kafka.topic.published,
+        context = context,
     )
 
     return listOf(
         Liveness("api liveness", config.api.host),
-        ApiPublish("publish external", api, kafka),
+        ApiPublish("publish external", api, kafka, context),
         ApiSubscribe("subscribe external", api)
     )
 }
