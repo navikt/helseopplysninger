@@ -86,8 +86,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: ${{ github.event.pull_request.head_ref }}
-      - run: echo ${{ github.event.pull_request.head_ref }}
+          ref: ${{ github.head_ref }}
+      - run: echo ${{ toJSON(github) }}
       - if: github.event.pull_request.head.repo.full_name != github.repository
         run: |
           echo "Triggered by fork. Exit 1"
