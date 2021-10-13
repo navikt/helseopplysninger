@@ -4,7 +4,6 @@ import io.ktor.http.HttpHeaders
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -22,6 +21,7 @@ import kotlin.math.max
 
 private val log = KotlinLogging.logger {}
 private const val sec1 = 1_000L
+private const val millis100 = 100L
 
 internal class KafkaFhirFlow(
     private val consumer: KafkaConsumer<UUID, ByteArray>,
@@ -36,7 +36,7 @@ internal class KafkaFhirFlow(
             .onFailure {
                 log.error("Error while reading topic", it)
                 if (it is CancellationException) throw it
-                delay(sec1)
+                delay(millis100) // make it cancellable
             }
     }
 
@@ -47,8 +47,8 @@ internal class KafkaFhirFlow(
 
     suspend fun poll(predicate: (ConsumerRecord<UUID, ByteArray>) -> Boolean = { true }): Flow<FhirMessage> = flow {
         runCatching {
-            while (currentCoroutineContext().isActive) {
-                consumer.poll(sec2.duration)
+            while (true) {
+                consumer.poll(sec1.duration)
                     .filterNotNull()
                     .filter(predicate)
                     .logConsumed(log)
@@ -56,13 +56,13 @@ internal class KafkaFhirFlow(
                     .forEach {
                         emit(it)
                     }
+                delay(millis100) // make it cancellable
             }
         }
 
         consumer.unsubscribe()
     }
 
-    private val sec2 = 2_000L
     private val Long.duration: Duration get() = Duration.ofMillis(this)
 
     fun seekToLatestOffset() {
