@@ -1,6 +1,9 @@
 name: Auto merge dependabot
 
-on: pull_request_target
+on:
+  workflow_run:
+    workflows: [ 'Pull request' ]
+    types: [ completed ]
 
 jobs:
   # ALTERNATIVES
@@ -10,7 +13,6 @@ jobs:
     name: 🤖️ Auto merge dependency updates
     if: github.actor == 'dependabot[bot]' || github.event.pull_request.user.login == 'dependabot[bot]'
     runs-on: ubuntu-latest
-    needs: dependabot-test
     steps:
       - uses: actions/checkout@v2
         with:
