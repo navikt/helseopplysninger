@@ -15,11 +15,12 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PR_NUM: ${{ github.event.workflow_run.pull_request.number }}
+      PR_BRANCH: ${{ github.event.workflow_run.head_branch }}
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: ${{ github.head_ref }}
-      - run: echo " ${{ toJSON(github) }} "
+          ref: $PR_BRANCH
       - name: 🔰️ Request a merge from dependabot
         # Dependabot will rebase first
         run: gh pr comment --body "@dependabot squash and merge"
