@@ -8,7 +8,9 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import kotlin.time.ExperimentalTime
@@ -18,7 +20,7 @@ import kotlin.time.ExperimentalTime
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class AppTest {
 
-    @BeforeAll
+    @BeforeEach
     fun setUp() {
         EmbeddedKafka.start()
         Mocks.maskinporten.start()
@@ -28,7 +30,7 @@ class AppTest {
         Mocks.eventstore.start()
     }
 
-    @AfterAll
+    @AfterEach
     fun teardown() {
         EmbeddedKafka.shutdown()
         Mocks.maskinporten.shutdown()

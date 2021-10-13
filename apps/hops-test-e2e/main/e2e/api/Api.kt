@@ -11,6 +11,7 @@ import e2e.kafka.KafkaFactory
 import e2e.kafka.KafkaFhirFlow
 import e2e.replay.ReplayConfig
 import io.ktor.application.Application
+import io.ktor.application.ApplicationStopping
 import kotlinx.coroutines.Dispatchers
 import no.nav.helse.hops.hoplite.loadConfigsOrThrow
 
@@ -28,6 +29,11 @@ internal fun Application.apiTests(): List<Test> {
         topic = config.kafka.topic.published,
         context = context,
     )
+
+    environment.monitor.subscribe(ApplicationStopping) {
+        environment.log.info("closing kafka consuming flow...")
+        kafka.close()
+    }
 
     return listOf(
         Liveness("api liveness", config.api.host),

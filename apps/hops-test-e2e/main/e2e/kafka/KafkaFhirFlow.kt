@@ -47,11 +47,6 @@ internal class KafkaFhirFlow(
             }
     }
 
-    fun cancelFlow(): Boolean {
-        runBlocking { job.cancelAndJoin() }
-        error("Failed to asynchronically produce expected record")
-    }
-
     suspend fun poll(predicate: (ConsumerRecord<UUID, ByteArray>) -> Boolean = { true }): Flow<FhirMessage> = flow {
         runCatching {
             while (currentCoroutineContext().isActive) {

@@ -10,7 +10,6 @@ import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
@@ -42,7 +41,7 @@ internal class ApiPublish(
 
             when (asyncApiResponse.await().status) {
                 HttpStatusCode.Accepted -> asyncKafkaResponse.await().isNotNull
-                else -> kafka.cancelFlow()
+                else -> false.also { kafka.close() }
             }
         }
     }
