@@ -2,11 +2,9 @@ name: Pull request
 
 on:
   pull_request:
-    branches-ignore:
-      - 'dependabot/**'
+    types: [ unlabeled ]
 
 jobs:
-
   lint:
     name: 🖍️️ Linting (ktlint)
     if: github.actor != 'dependabot[bot]' && github.event.pull_request.user.login != 'dependabot[bot]'

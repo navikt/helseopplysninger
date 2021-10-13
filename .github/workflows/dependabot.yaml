@@ -2,8 +2,7 @@ name: Dependabot PR
 
 on:
   pull_request:
-    branches:
-      - 'dependabot/**'
+    types: [ labeled ]
 
 jobs:
   dependabot-test:
