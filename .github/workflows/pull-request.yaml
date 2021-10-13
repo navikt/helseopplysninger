@@ -1,6 +1,6 @@
 name: Pull request
 
-on:  pull_request
+on: pull_request
 
 jobs:
   lint:
@@ -76,16 +76,19 @@ jobs:
 
   dependabot-version:
     runs-on: ubuntu-latest
-    name: 🔰 ️Verify semantic version of dependencies
+    name: 🚦️Verify semantic version of dependencies
     #    (who triggered the workflow run) || (who is the pull-request author)
     if: github.actor == 'dependabot[bot]' || github.event.pull_request.user.login == 'dependabot[bot]'
     steps:
-      - name: 〽️ Fetch dependabot-metadata
+      - name: 🟡️ Fetch dependabot-metadata
         uses: dependabot/fetch-metadata@v1.1.1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-      - name: 🔗️ Merge minor/patch updates
+      - name: 🟢 Found minor or patch updates
+        if: ${{ steps.dependabot-metadata.outputs.update-type != 'version-update:semver-major' }}
+        run: echo "Will now trigger workflow_run with conclusion success"
+      - name: 🔴 Found major version
         if: ${{ steps.dependabot-metadata.outputs.update-type == 'version-update:semver-major' }}
         run: |
-          echo "Failing workflow because semver was ${{ steps.dependabot-metadata.outputs.update-type }}"
+          echo "Will now trigger workflow_run with conclusion failure"
           exit 1
