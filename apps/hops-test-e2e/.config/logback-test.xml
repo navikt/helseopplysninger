@@ -11,10 +11,10 @@
         <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
     </appender>
 
-    <logger name="kafka" level="INFO"/>
-    <logger name="org.apache.zookeeper" level="INFO"/>
+    <logger name="kafka" level="WARN"/>
+    <logger name="org.apache.zookeeper" level="WARN"/>
 
-    <logger name="org.apache.kafka" level="INFO" additivity="false">
+    <logger name="org.apache.kafka" level="WARN" additivity="false">
         <appender-ref ref="${LOG_APPENDER:-pretty}"/>
     </logger>
 
@@ -22,7 +22,7 @@
         <appender-ref ref="${LOG_APPENDER:-pretty}"/>
     </logger>
 
-    <root level="${LOG_LEVEL:-DEBUG}">
+    <root level="${LOG_LEVEL:-INFO}">
         <appender-ref ref="${LOG_APPENDER:-pretty}"/>
     </root>
 
