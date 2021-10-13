@@ -1,8 +1,13 @@
 package e2e
 
+import e2e.Mocks.Dispatcher.respond
+import e2e.Mocks.Matcher.get
 import e2e._common.Results
+import io.kotest.assertions.ktor.shouldHaveContent
 import io.kotest.assertions.ktor.shouldHaveStatus
 import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.comparables.shouldBeGreaterThan
+import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
@@ -11,11 +16,10 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import kotlin.time.Duration
 import kotlin.time.ExperimentalTime
 
 @ExperimentalTime
@@ -55,24 +59,24 @@ class AppTest {
         }
     }
 
-    //    @Test
-//    fun `one test fails`() {
-//        withTestApp {
-//            // Fail liveness
-//            Mocks.api.matchRequest(get("/actuator/live"), respond(503))
-//            with(handleRequest(HttpMethod.Get, "/runTests")) {
-//                response shouldHaveStatus HttpStatusCode.OK
-//                val content = Json.decodeFromString<Results>(response.content!!)
-//                content.failedTests shouldHaveSize 1
-//                content.failedTests.first().name shouldBe "api liveness"
-//                Duration.parse(content.totalDurationMs) shouldBeGreaterThan Duration.milliseconds(0)
-//            }
-//        }
-//
-//        // Set mock back to happy path
-//        Mocks.api.matchRequest(get(LIVENESS_PATH), respond("live"))
-//    }
-//
+    @Test
+    fun `one test fails`() {
+        withTestApp {
+            // Fail liveness
+            Mocks.api.matchRequest(get("/actuator/live"), respond(503))
+            with(handleRequest(HttpMethod.Get, "/runTests")) {
+                response shouldHaveStatus HttpStatusCode.OK
+                val content = Json.decodeFromString<Results>(response.content!!)
+                content.failedTests shouldHaveSize 1
+                content.failedTests.first().name shouldBe "api liveness"
+                Duration.parse(content.totalDurationMs) shouldBeGreaterThan Duration.milliseconds(0)
+            }
+        }
+
+        // Set mock back to happy path
+        Mocks.api.matchRequest(get(LIVENESS_PATH), respond("live"))
+    }
+
     @Test
     fun `run test twice in a row`() {
         withTestApp {
@@ -84,35 +88,35 @@ class AppTest {
             }
         }
     }
-//
-//    @Test
-//    fun `get liveness actuator returns 200 OK`() {
-//        withTestApp {
-//            with(handleRequest(HttpMethod.Get, "/actuator/live")) {
-//                response shouldHaveStatus HttpStatusCode.OK
-//                response shouldHaveContent "live"
-//            }
-//        }
-//    }
-//
-//    @Test
-//    fun `readiness actuator returns 200 OK`() {
-//        withTestApp {
-//            with(handleRequest(HttpMethod.Get, "/actuator/ready")) {
-//                response shouldHaveStatus HttpStatusCode.OK
-//                response shouldHaveContent "ready"
-//            }
-//        }
-//    }
-//
-//    @Test
-//    fun `metrics actuator returns 200 OK`() {
-//        withTestApp {
-//            with(handleRequest(HttpMethod.Get, "/metrics")) {
-//                response shouldHaveStatus HttpStatusCode.OK
-//                response.content shouldNotBe null
-//                response.content shouldNotBe ""
-//            }
-//        }
-//    }
+
+    @Test
+    fun `get liveness actuator returns 200 OK`() {
+        withTestApp {
+            with(handleRequest(HttpMethod.Get, "/actuator/live")) {
+                response shouldHaveStatus HttpStatusCode.OK
+                response shouldHaveContent "live"
+            }
+        }
+    }
+
+    @Test
+    fun `readiness actuator returns 200 OK`() {
+        withTestApp {
+            with(handleRequest(HttpMethod.Get, "/actuator/ready")) {
+                response shouldHaveStatus HttpStatusCode.OK
+                response shouldHaveContent "ready"
+            }
+        }
+    }
+
+    @Test
+    fun `metrics actuator returns 200 OK`() {
+        withTestApp {
+            with(handleRequest(HttpMethod.Get, "/metrics")) {
+                response shouldHaveStatus HttpStatusCode.OK
+                response.content shouldNotBe null
+                response.content shouldNotBe ""
+            }
+        }
+    }
 }
