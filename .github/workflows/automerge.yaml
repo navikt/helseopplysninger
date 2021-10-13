@@ -17,10 +17,6 @@ jobs:
       - uses: actions/checkout@v2
         with:
           ref: ${{ github.head_ref }}
-      - if: github.event.pull_request.head.repo.full_name != github.repository
-        run: |
-          echo "Triggered by fork. Exit 1"
-          exit 1
       - name: 〽️ Fetch dependabot-metadata
         uses: dependabot/fetch-metadata@v1.1.1
         with:
@@ -29,13 +25,6 @@ jobs:
         ## merge everything except major
         if: ${{ steps.dependabot-metadata.outputs.update-type != 'version-update:semver-major' }}
         env:
-          # GH CLI access token
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # GH CLI repo (from GHA env)
-          #          GH_REPO: ${{ github.event.repository.html_url }}
-          #          GH_REPO: ${{ github.base.repo.html_url }}
-          #          GH_REPO: ${{ github.event.pull_request.head_ref }}
-          # PULL-REQUEST NUMBER
-        #          PR_NUM: ${{ github.event.number }}
         # Dependabot will rebase first
         run: gh pr comment --body "@dependabot squash and merge"
