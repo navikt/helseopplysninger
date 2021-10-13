@@ -2,7 +2,7 @@ name: Auto merge dependabot
 
 on:
   workflow_run:
-    workflows: [ 'Dependabot PR' ]
+    workflows: [ 'Pull request' ]
     types: [ completed ]
 
 jobs:
@@ -11,7 +11,7 @@ jobs:
   # - GitHub Action: https://github.com/ahmadnassri/action-dependabot-auto-merge
   dependabot-merge:
     name: 🤖️ Auto merge dependency updates
-    if: github.actor == 'dependabot[bot]' || github.event.pull_request.user.login == 'dependabot[bot]'
+    if: github.actor == 'dependabot[bot]' && github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -19,6 +19,6 @@ jobs:
       - uses: actions/checkout@v2
         with:
           ref: ${{ github.head_ref }}
-      - name: 🔰️ Merge minor/patch updates
+      - name: 🔰️ Request a merge from dependabot
         # Dependabot will rebase first
         run: gh pr comment --body "@dependabot squash and merge"
