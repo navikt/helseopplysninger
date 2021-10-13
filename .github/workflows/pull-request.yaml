@@ -84,7 +84,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: dependabot-test
     steps:
-      - if: github.event.pull_request.head.repo.full_name == github.repository
+      - if: github.event.pull_request.head.repo.full_name != github.repository
         run: |
           echo "Triggered by fork. Exit 1"
           exit 1
