@@ -27,7 +27,7 @@ internal class KafkaFhirFlow(
     private val consumer: KafkaConsumer<UUID, ByteArray>,
     private val topic: String,
 ) : CoroutineScope {
-    override val coroutineContext: CoroutineContext get() = Dispatchers.Default + job
+    override val coroutineContext: CoroutineContext get() = Dispatchers.Default
 
     private val job = CoroutineScope(Dispatchers.Default).launch {
         seekToLatestOffset()
