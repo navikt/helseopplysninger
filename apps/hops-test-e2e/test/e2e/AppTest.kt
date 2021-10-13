@@ -1,8 +1,11 @@
 package e2e
 
 import e2e._common.Results
+import io.kotest.assertions.ktor.shouldHaveStatus
 import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.shouldNotBe
 import io.ktor.http.HttpMethod
+import io.ktor.http.HttpStatusCode
 import io.ktor.server.testing.handleRequest
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromString
@@ -20,7 +23,7 @@ import kotlin.time.ExperimentalTime
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class AppTest {
 
-    @BeforeEach
+    @BeforeAll
     fun setUp() {
         EmbeddedKafka.start()
         Mocks.maskinporten.start()
@@ -30,7 +33,7 @@ class AppTest {
         Mocks.eventstore.start()
     }
 
-    @AfterEach
+    @AfterAll
     fun teardown() {
         EmbeddedKafka.shutdown()
         Mocks.maskinporten.shutdown()
@@ -40,17 +43,17 @@ class AppTest {
         Mocks.eventstore.shutdown()
     }
 
-//    @Test
-//    fun `happy path for all e2e test`() {
-//        withTestApp {
-//            with(handleRequest(HttpMethod.Get, "/runTests")) {
-//                response shouldHaveStatus HttpStatusCode.OK
-//                val content = Json.decodeFromString<Results>(response.content!!)
-//                content.failedTests shouldHaveSize 0
-//                content.totalDurationMs shouldNotBe "0ms"
-//            }
-//        }
-//    }
+    @Test
+    fun `happy path for all e2e test`() {
+        withTestApp {
+            with(handleRequest(HttpMethod.Get, "/runTests")) {
+                response shouldHaveStatus HttpStatusCode.OK
+                val content = Json.decodeFromString<Results>(response.content!!)
+                content.failedTests shouldHaveSize 0
+                content.totalDurationMs shouldNotBe "0ms"
+            }
+        }
+    }
 
     //    @Test
 //    fun `one test fails`() {
