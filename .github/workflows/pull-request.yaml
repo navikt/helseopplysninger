@@ -51,6 +51,8 @@ jobs:
           java-version: 11
           distribution: 'temurin'
           cache: 'gradle'
+      - run: ./gradlew kotest --continue --no-daemon
+        continue-on-error: true
       - run: ./gradlew test --continue --no-daemon
         continue-on-error: true
       - name: 📊 Publish results
