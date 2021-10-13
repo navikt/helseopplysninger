@@ -29,7 +29,7 @@ internal class KafkaFhirFlow(
 ) : CoroutineScope {
     override val coroutineContext: CoroutineContext get() = Dispatchers.Default
 
-    private val job = CoroutineScope(Dispatchers.Default).launch {
+    private val job = CoroutineScope(coroutineContext).launch {
         seekToLatestOffset()
 
         while (isActive) runCatching { poll() }
