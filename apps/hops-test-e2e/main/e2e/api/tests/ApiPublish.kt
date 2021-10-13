@@ -10,10 +10,11 @@ import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import mu.KotlinLogging
+import kotlin.coroutines.CoroutineContext
 import kotlin.time.DurationUnit
 import kotlin.time.ExperimentalTime
 import kotlin.time.toDuration
@@ -25,6 +26,7 @@ internal class ApiPublish(
     override val name: String,
     private val api: ExternalApiFacade,
     private val kafka: KafkaFhirFlow,
+    private val context: CoroutineContext
 ) : Test {
     override val description: String = "publish fhir resource to make it available on kafka and eventstore"
     override var exception: Throwable? = null
@@ -33,13 +35,13 @@ internal class ApiPublish(
         kafka.seekToLatestOffset()
         val content = FhirResource.create()
 
-        coroutineScope {
+        withContext(context) {
             val asyncKafkaResponse = consumeKafkaAsync(content)
             val asyncApiResponse = postResourceAsync(content)
 
             when (asyncApiResponse.await().status) {
                 HttpStatusCode.Accepted -> asyncKafkaResponse.await().isNotNull
-                else -> kafka.cancelFlow()
+                else -> false.also { kafka.close() }
             }
         }
     }

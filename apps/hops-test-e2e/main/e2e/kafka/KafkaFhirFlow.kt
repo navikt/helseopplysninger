@@ -4,17 +4,21 @@ import io.ktor.http.HttpHeaders
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.yield
 import mu.KotlinLogging
 import no.nav.helse.hops.plugin.logConsumed
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.common.TopicPartition
+import java.io.Closeable
 import java.time.Duration
 import java.util.UUID
 import kotlin.coroutines.CoroutineContext
@@ -26,10 +30,13 @@ private const val sec1 = 1_000L
 internal class KafkaFhirFlow(
     private val consumer: KafkaConsumer<UUID, ByteArray>,
     private val topic: String,
-) : CoroutineScope {
-    override val coroutineContext: CoroutineContext get() = Dispatchers.Main + job
+    context: CoroutineContext = Dispatchers.Default,
+) : Closeable {
+    override fun close() {
+        runBlocking { job.cancelAndJoin() }
+    }
 
-    private val job = CoroutineScope(Dispatchers.Default).launch {
+    private val job = CoroutineScope(context).launch {
         seekToLatestOffset()
 
         while (isActive) runCatching { poll() }
@@ -40,15 +47,10 @@ internal class KafkaFhirFlow(
             }
     }
 
-    fun cancelFlow(): Boolean {
-        job.cancel() // FIXME: what happens after this state? Will the app recover without restart
-        error("Failed to asynchronically produce expected record")
-    }
-
     suspend fun poll(predicate: (ConsumerRecord<UUID, ByteArray>) -> Boolean = { true }): Flow<FhirMessage> = flow {
         runCatching {
             while (currentCoroutineContext().isActive) {
-                consumer.poll(sec2.duration)
+                consumer.poll(sec1.duration)
                     .filterNotNull()
                     .filter(predicate)
                     .logConsumed(log)
@@ -56,13 +58,13 @@ internal class KafkaFhirFlow(
                     .forEach {
                         emit(it)
                     }
+                yield()
             }
         }
 
         consumer.unsubscribe()
     }
 
-    private val sec2 = 2_000L
     private val Long.duration: Duration get() = Duration.ofMillis(this)
 
     fun seekToLatestOffset() {

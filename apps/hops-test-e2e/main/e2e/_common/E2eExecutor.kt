@@ -1,13 +1,14 @@
 package e2e._common
 
 import kotlinx.serialization.Serializable
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import mu.KotlinLogging
 import java.util.concurrent.TimeUnit
 import kotlin.time.Duration
 import kotlin.time.ExperimentalTime
 import kotlin.time.measureTime
 import kotlin.time.measureTimedValue
+
+private val log = KotlinLogging.logger {}
 
 @OptIn(ExperimentalTime::class)
 internal class E2eExecutor {
@@ -25,6 +26,7 @@ internal class E2eExecutor {
     val size: Int get() = allTests.size
 
     private suspend fun Test.run(results: Results) {
+        log.debug { "Running: $name" }
         val (hasPassed, duration) = measureTimedValue { test() }
         when (hasPassed) {
             true -> results.addPassed(this, duration)
@@ -41,7 +43,6 @@ data class Results(
     val failedTests: MutableList<FailedTest> = mutableListOf(),
     val totalDurationMs: String = "0ms",
 ) {
-    private val log: Logger = LoggerFactory.getLogger(Results::class.java)
     private fun test(init: FailedTest.() -> Unit) = FailedTest().also {
         it.init()
         failedTests.add(it)

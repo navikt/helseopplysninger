@@ -1,4 +1,5 @@
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     application
@@ -17,8 +18,9 @@ dependencies {
     implementation(project(":libs:hops-common-kafka"))
     implementation(project(":libs:hops-common-ktor"))
     implementation("io.github.microutils:kotlin-logging-jvm:2.0.11")
-    implementation("io.ktor:ktor-client-cio:1.6.4")
     implementation("io.ktor:ktor-client-serialization:1.6.4")
+    implementation("io.ktor:ktor-client-core:1.6.4")
+    implementation("io.ktor:ktor-client-cio:1.6.4")
     implementation("io.ktor:ktor-metrics-micrometer:1.6.4")
     implementation("io.ktor:ktor-serialization:1.6.4")
     implementation("io.ktor:ktor-server-netty:1.6.4")
@@ -30,11 +32,12 @@ dependencies {
     testImplementation("no.nav:kafka-embedded-env:2.8.0") {
         exclude("io.confluent", "kafka-schema-registry")
     }
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
 }
 
 tasks {
-    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        kotlinOptions.jvmTarget = "11"
+    withType<KotlinCompile> {
+        kotlinOptions.jvmTarget = "16"
         kotlinOptions.freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
     }
 
@@ -45,6 +48,8 @@ tasks {
             showExceptions = true
             exceptionFormat = TestExceptionFormat.FULL
         }
+
+        jvmArgs = listOf("--add-opens=java.base/java.util=ALL-UNNAMED")
     }
 }
 
