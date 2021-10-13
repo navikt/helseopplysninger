@@ -38,7 +38,7 @@ jobs:
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: cat build/ktlint-report-in-checkstyle-format.xml | reviewdog -f=checkstyle -diff="git diff" -name=ktlint \
-            -reporter=github-pr-review -filter-mode=nofilter -level=error
+          -reporter=github-pr-review -filter-mode=nofilter -level=error
 
   test:
     name: 🧪 Test
@@ -84,7 +84,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: dependabot-test
     steps:
-      - uses: actions/checkout@v2
       - if: github.event.pull_request.head.repo.full_name != github.repository
         run: |
           echo "Triggered by fork. Exit 1"
@@ -96,7 +95,12 @@ jobs:
       - name: 🔰️ Merge minor/patch updates
         ## merge everything except major
         if: ${{ steps.dependabot-metadata.outputs.update-type != 'version-update:semver-major' }}
-        # Dependabot will rebase first
-        run: gh pr comment --body "@dependabot squash and merge"
         env:
+          # GH CLI access token
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # GH CLI repo (from GHA env)
+          GH_REPO: ${{ env.GITHUB_REPOSITORY }}
+          # PULL-REQUEST NUMBER
+          PR_NUM: ${{ github.event.pull_request.number }}
+        # Dependabot will rebase first
+        run: gh pr comment $PR_NUM --body "@dependabot squash and merge"
