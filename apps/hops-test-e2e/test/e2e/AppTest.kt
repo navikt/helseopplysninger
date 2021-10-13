@@ -21,7 +21,7 @@ import kotlin.time.ExperimentalTime
 @ExperimentalTime
 @ExperimentalSerializationApi
 class AppTest : FeatureSpec({
-    timeout = 5_000L
+    timeout = 15_000L
 
     feature("GET /runTests") {
         scenario("happy path for all e2e tests") {
