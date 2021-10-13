@@ -23,4 +23,4 @@ jobs:
 #          ref: $PR_BRANCH
       - name: 🔰️ Request a merge from dependabot
         # Dependabot will rebase first
-        run: gh pr comment $PR_NUM--body "@dependabot squash and merge"
+        run: gh pr comment $PR_NUM --body "@dependabot squash and merge"
