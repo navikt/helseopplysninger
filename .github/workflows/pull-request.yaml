@@ -84,6 +84,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: dependabot-test
     steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head_ref }}
+      - run: echo ${{ github.event.pull_request.head_ref }}
       - if: github.event.pull_request.head.repo.full_name != github.repository
         run: |
           echo "Triggered by fork. Exit 1"
@@ -99,8 +103,8 @@ jobs:
           # GH CLI access token
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # GH CLI repo (from GHA env)
-          GH_REPO: ${{ env.GITHUB_REPOSITORY }}
+#          GH_REPO: ${{ github.event.pull_request.head_ref }}
           # PULL-REQUEST NUMBER
-          PR_NUM: ${{ github.event.pull_request.number }}
+#          PR_NUM: ${{ github.event.pull_request.number }}
         # Dependabot will rebase first
-        run: gh pr comment $PR_NUM --body "@dependabot squash and merge"
+        run: gh pr comment --body "@dependabot squash and merge"
