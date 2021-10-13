@@ -1,6 +1,9 @@
 name: Pull request
 
-on: pull_request
+on:
+  pull_request:
+    branches-ignore:
+      - 'dependabot/**'
 
 jobs:
 
@@ -58,19 +61,3 @@ jobs:
         with:
           commit: ${{ github.event.workflow_run.head_sha }}
           files: "**/build/test-results/test/TEST-*.xml"
-
-  dependabot-test:
-    name: 🧪 Test for dependabot
-    #    (who triggered the workflow run) || (who is the pull-request author)
-    if: github.actor == 'dependabot[bot]' || github.event.pull_request.user.login == 'dependabot[bot]'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-java@v2
-        with:
-          java-version: 16
-          distribution: 'temurin'
-          cache: 'gradle'
-      - name: 🪲 Run test
-        run: ./gradlew test --fail-fast --no-daemon
-        timeout-minutes: 15
