@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.yield
 import mu.KotlinLogging
 import no.nav.helse.hops.plugin.logConsumed
 import org.apache.kafka.clients.consumer.ConsumerRecord
@@ -42,12 +43,13 @@ internal class KafkaFhirFlow(
             .onFailure {
                 log.error("Error while reading topic", it)
                 if (it is CancellationException) throw it
-                delay(millis100) // make it cancellable
+                yield()
+//                delay(millis100) // make it cancellable
             }
     }
 
     fun cancelFlow(): Boolean {
-        job.cancel() // FIXME: what happens after this state? Will the app recover without restart
+        runBlocking { job.cancelAndJoin() }
         error("Failed to asynchronically produce expected record")
     }
 
@@ -62,7 +64,8 @@ internal class KafkaFhirFlow(
                     .forEach {
                         emit(it)
                     }
-                delay(millis100) // make it cancellable
+                yield()
+//                delay(millis100) // make it cancellable
             }
         }
 
