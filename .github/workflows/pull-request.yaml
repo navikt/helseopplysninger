@@ -93,7 +93,8 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: 🔰️ Merge minor/patch updates
-        if: ${{ steps.dependabot-metadata.outputs.update-type == 'version-update:semver-minor' }}
+        ## merge everything except major
+        if: ${{ steps.dependabot-metadata.outputs.update-type != 'version-update:semver-major' }}
         # Dependabot will rebase first
         run: gh pr comment --body "@dependabot squash and merge"
         env:
