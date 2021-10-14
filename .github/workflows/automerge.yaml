@@ -10,9 +10,11 @@ jobs:
     name: 🤖️ Auto merge dependency updates
     if: github.actor == 'dependabot[bot]' && github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
+    env:
+      PR_URL: ${{ github.event.pull_request.html_url }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
+      - name: 🟢 Approve PR
+        run: gh pr review --approve "$PR_URL"
       - name: Enable auto-merge for Dependabot PRs
         run: gh pr merge --auto --squash "$PR_URL"
-        env:
-          PR_URL: ${{ github.event.pull_request.html_url }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
