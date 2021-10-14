@@ -11,10 +11,14 @@ jobs:
     if: github.actor == 'dependabot[bot]' && github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     env:
-      PR_URL: ${{ github.event.pull_request.html_url }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PR_NUM: ${{ github.event.workflow_run.pull_requests[0].number }}
+      PR_BRANCH: ${{ github.event.workflow_run.head_branch }}
+      GH_REPO: ${{ github.repository }}
     steps:
+      - run : echo "${{ toJSON(env) }}"
+        continue-on-error: true
       - name: 🟢 Approve PR
-        run: gh pr review --approve "$PR_URL"
+        run: gh pr review $PR_BRANCH --approve
       - name: Enable auto-merge for Dependabot PRs
-        run: gh pr merge --auto --squash "$PR_URL"
+        run: gh pr merge $PR_BRANCH --auto --squash
