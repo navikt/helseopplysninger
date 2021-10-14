@@ -82,15 +82,13 @@ jobs:
     steps:
       - name: 🟡️ Dependabot metadata
         uses: dependabot/fetch-metadata@v1.1.1
+        id: metadata
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: 🔴 Stop auto merge
-        if: steps.dependabot-metadata.outputs.update-type != 'version-update:semver-minor' && steps.dependabot-metadata.outputs.update-type != 'version-update:semver-patch'
+        if: ${{ steps.metadata.outputs.update-type != 'version-update:semver-minor' }} && ${{ steps.metadata.outputs.update-type != 'version-update:semver-patch' }}
         run: |
-          echo "Version ${{ steps.dependabot-metadata.outputs.update-type }} is not enabled for auto merge"
+          echo "Major version is not enabled for auto merge"
           exit 1
-      - name: 🟢 Trigger auto merge
-        run: gh pr review --approve "$PR_URL"
-        env:
-          PR_URL: ${{ github.event.pull_request.html_url }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: 🟢 Start auto merge
+        run: echo "Will start auto merge workflow_run"
