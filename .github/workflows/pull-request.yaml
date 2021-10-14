@@ -58,19 +58,16 @@ jobs:
           distribution: 'temurin'
           cache: 'gradle'
 
+      - name: 🪲 Run gradle test
+        continue-on-error: true
+        run: ./gradlew test --continue --no-daemon
+
       - name: Generate team token
         uses: navikt/github-app-token-generator@v1
         id: gen-token
         with:
           private-key: ${{ secrets.HOPS_CI_TOOL_PRIVATE_KEY }}
           app-id: ${{ secrets.HOPS_CI_TOOL_APP_ID }}
-
-      - name: debug
-        run: echo "${{ steps.gen-token.outputs.token }}"
-
-      - name: 🪲 Run gradle test
-        continue-on-error: true
-        run: ./gradlew test --continue --no-daemon
 
       - name: 📊 Publish results
         uses: EnricoMi/publish-unit-test-result-action@v1
@@ -98,13 +95,15 @@ jobs:
           echo "Major version is not enabled for auto merge"
           exit 1
 
-      - run: |
-          echo " ${{ toJSON(github) }} "
-          echo "${{ toJSON(needs) }}"
-        continue-on-error: true
+      - name: Generate team token
+        uses: navikt/github-app-token-generator@v1
+        id: gen-token
+        with:
+          private-key: ${{ secrets.HOPS_CI_TOOL_PRIVATE_KEY }}
+          app-id: ${{ secrets.HOPS_CI_TOOL_APP_ID }}
 
       - name: 🔰️ Request a merge from dependabot
         run: gh pr comment $PR_BRANCH --body "@dependabot squash and merge"
         env:
-          GITHUB_TOKEN: ${{ env.TEAM_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.gen-token.outputs.token }}
           PR_BRANCH: ${{ github.event.pull_request.head_ref }}
