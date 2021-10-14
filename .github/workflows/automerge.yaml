@@ -1,0 +1,21 @@
+name: Auto merge dependabot
+
+on:
+  workflow_run:
+    workflows: [ 'Pull request' ]
+    types: [ completed ]
+
+jobs:
+  dependabot-merge:
+    name: 🤖️ Auto merge dependency updates
+    if: github.actor == 'dependabot[bot]' && github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PR_BRANCH: ${{ github.event.workflow_run.head_branch }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - name: 🟢 Approve PR
+        run: gh pr review $PR_BRANCH --approve
+      - name: Enable auto-merge for Dependabot PRs
+        run: gh pr merge $PR_BRANCH --auto --squash
