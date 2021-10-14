@@ -82,7 +82,6 @@ jobs:
   dependabot-version:
     name: 🚦️Verify semantic version of dependencies
     runs-on: ubuntu-latest
-    needs: token
     if: github.actor == 'dependabot[bot]'
     env:
       TEAM_TOKEN: ${{ needs.token.outputs.team-token }}
