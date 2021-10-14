@@ -8,14 +8,17 @@ jobs:
     name: Generate token
     runs-on: ubuntu-latest
     outputs:
-      team-token: ${{ steps.team-token.outputs.token }}
+      team-token: ${{ steps.set.outputs.token }}
     steps:
       - name: Generate team token
         uses: navikt/github-app-token-generator@v1
-        id: team-token
+        id: gen
         with:
           private-key: ${{ secrets.HOPS_CI_TOOL_PRIVATE_KEY }}
           app-id: ${{ secrets.HOPS_CI_TOOL_APP_ID }}
+      - name: Set team token
+        id: set
+        run: echo "::set-output name=token::${{ steps.gen.outputs.token }}"
 
   lint:
     name: 🖍️️ Linter
@@ -74,6 +77,14 @@ jobs:
           distribution: 'temurin'
           cache: 'gradle'
 
+      - name: debug
+        run: |
+          echo "${{ needs.token.outputs.team-token }}"
+          echo "${{ toJSON(needs) }}"
+          echo "${{ env.TEAM_TOKEN }}"
+          echo "${{ toJSON(env) }} "
+        continue-on-error: true
+
       - name: 🪲 Run gradle test
         continue-on-error: true
         run: ./gradlew test --continue --no-daemon
@@ -83,7 +94,7 @@ jobs:
         with:
           commit: ${{ github.event.workflow_run.head_sha }}
           files: "**/build/test-results/test/TEST-*.xml"
-          github_token: ${{ env.TEAM_TOKEN }}
+          github_token: ${{ needs.token.outputs.team-token }}
 
   dependabot-version:
     name: 🚦️Verify semantic version of dependencies
