@@ -80,15 +80,17 @@ jobs:
     #    (who triggered the workflow run) || (who is the pull-request author)
     if: github.actor == 'dependabot[bot]' || github.event.pull_request.user.login == 'dependabot[bot]'
     steps:
-      - name: 🟡️ Fetch dependabot-metadata
+      - name: 🟡️ Dependabot metadata
         uses: dependabot/fetch-metadata@v1.1.1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-      - name: 🟢 Found minor or patch updates
-        if: ${{ steps.dependabot-metadata.outputs.update-type != 'version-update:semver-major' }}
-        run: echo "Will now trigger workflow_run with conclusion success"
-      - name: 🔴 Found major version
-        if: ${{ steps.dependabot-metadata.outputs.update-type == 'version-update:semver-major' }}
+      - name: 🔴 Stop auto merge
+        if: steps.dependabot-metadata.outputs.update-type != 'version-update:semver-minor' && steps.dependabot-metadata.outputs.update-type != 'version-update:semver-patch'
         run: |
-          echo "Will now trigger workflow_run with conclusion failure"
+          echo "Version ${{ steps.dependabot-metadata.outputs.update-type }} is not enabled for auto merge"
           exit 1
+      - name: 🟢 Approve PR
+        run: gh pr review --approve "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -5,21 +5,33 @@ on:
     workflows: [ 'Pull request' ]
     types: [ completed ]
 
+permissions:
+  pull-requests: write
+  contents: write
+
 jobs:
-  # ALTERNATIVES
-  # - GitHub App: https://kodiakhq.com/
-  # - GitHub Action: https://github.com/ahmadnassri/action-dependabot-auto-merge
   dependabot-merge:
     name: 🤖️ Auto merge dependency updates
     if: github.actor == 'dependabot[bot]' && github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
-      - name: 🔰 Merge
-        uses: ridedott/merge-me-action@v2
-        with:
+      - name: Enable auto-merge for Dependabot PRs
+        run: gh pr merge --auto --squash "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PRESET: DEPENDABOT_MINOR
 
+# ALTERNATIVES
+# - GitHub App: https://kodiakhq.com/
+
+# https://stefanzweifel.io/posts/2021/04/28/auto-merge-dependabot-pull-requests
+# Fails with: https://github.com/ridedott/merge-me-action/issues/1149
+
+# Requires PAT
+# https://github.com/ahmadnassri/action-dependabot-auto-merge
+
+# REQUIRES PAT
+# Fails with dependabot commenting "Sorry, only users with push access can use that command."
 #      - uses: actions/checkout@v2
 #      - name: 🔰️ Request a merge from dependabot
 #        run: gh pr comment $PR_NUM --body "@dependabot squash and merge"
