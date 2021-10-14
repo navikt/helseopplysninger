@@ -15,7 +15,7 @@ jobs:
         id: team-token
         with:
           private-key: ${{ secrets.HOPS_CI_TOOL_PRIVATE_KEY }}
-          app-id: ${{ secrets.HOPS_CI_TOOL_CLIENT_SECRET }}
+          app-id: ${{ secrets.HOPS_CI_TOOL_APP_ID }}
 
   lint:
     name: 🖍️️ Linter
