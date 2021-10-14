@@ -86,9 +86,13 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: 🔴 Stop auto merge
-        if: ${{ steps.metadata.outputs.update-type != 'version-update:semver-minor' }} && ${{ steps.metadata.outputs.update-type != 'version-update:semver-patch' }}
+        if: ${{ steps.metadata.outputs.update-type == 'version-update:semver-major' }}
         run: |
           echo "Major version is not enabled for auto merge"
           exit 1
       - name: 🟢 Start auto merge
-        run: echo "Will start auto merge workflow_run"
+        run: |
+          echo "update type is $VERSION"
+          echo "Will start auto merge workflow_run"
+        env:
+          VERSION: ${{ steps.metadata.outputs.update-type }}
