@@ -58,12 +58,12 @@ jobs:
           distribution: 'temurin'
           cache: 'gradle'
 
-    - name: Generate team token
-      uses: navikt/github-app-token-generator@v1
-      id: gen-token
-      with:
-        private-key: ${{ secrets.HOPS_CI_TOOL_PRIVATE_KEY }}
-        app-id: ${{ secrets.HOPS_CI_TOOL_APP_ID }}
+      - name: Generate team token
+        uses: navikt/github-app-token-generator@v1
+        id: gen-token
+        with:
+          private-key: ${{ secrets.HOPS_CI_TOOL_PRIVATE_KEY }}
+          app-id: ${{ secrets.HOPS_CI_TOOL_APP_ID }}
 
       - name: debug
         run: echo "${{ steps.gen-token.outputs.token }}"
