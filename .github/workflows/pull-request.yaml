@@ -71,9 +71,27 @@ jobs:
 
       - name: 📊 Publish results
         uses: mikepenz/action-junit-report@v2
+        continue-on-error: true # debug
         with:
 #          files: "**/build/test-results/test/TEST-*.xml"
           report_paths: "test.xml"
+          token: ${{ steps.gen-token.outputs.token }}
+
+      - name: 📊 Publish results
+        continue-on-error: true # debug
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        with:
+          #          files: "**/build/test-results/test/TEST-*.xml"
+          files: "test.xml"
+          github_token: ${{ steps.gen-token.outputs.token }}
+          github_retries: 1
+
+      - name: 📊 Publish results
+        uses: dorny/test-reporter@v1
+        continue-on-error: true # debug
+        with:
+          path: test.xml
+          reporter: java-junit
           token: ${{ steps.gen-token.outputs.token }}
 
   dependabot-version:
