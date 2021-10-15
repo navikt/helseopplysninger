@@ -61,8 +61,8 @@ jobs:
       - uses: actions/cache@v2
         id: test-cache
         with:
-          key: ${{ runner.os }}
-          restore-keys: ${{ runner.os }}
+          key: ${{ runner.os }}-1
+          restore-keys: ${{ runner.os }}-1
           path: |
             **/**/build/test-results/test/
 
@@ -70,7 +70,7 @@ jobs:
         if: steps.test-cache.outputs.cache-hit != 'true'
         continue-on-error: true
 #        run: ./gradlew test --continue --no-daemon
-        run: ./gradlew libs:hops-common-core:test --continue --no-daemon
+        run: ./gradlew apps:hops-api:test --continue --no-daemon
 
       - name: Generate team token
         uses: navikt/github-app-token-generator@v1
