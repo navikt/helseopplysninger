@@ -52,47 +52,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-#      - uses: actions/setup-java@v2
-#        with:
-#          java-version: 16
-#          distribution: 'temurin'
-#          cache: 'gradle'
+      - uses: actions/setup-java@v2
+        with:
+          java-version: 16
+          distribution: 'temurin'
+          cache: 'gradle'
 
-#      - name: 🪲 Run gradle test
-#        continue-on-error: true
-#        run: ./gradlew test --continue --no-daemon
+      - name: 🪲 Run gradle test
+        continue-on-error: true
+        run: ./gradlew test --continue --no-daemon
 
-      - name: Generate team token
-        uses: navikt/github-app-token-generator@ae1a063977641cb8091866b44444bfdcbe799955
-#        uses: navikt/github-app-token-generator@v1
+      - name: 🔑 Generate team token
+        uses: navikt/github-app-token-generator@v1
         id: gen-token
         with:
           private-key: ${{ secrets.HOPS_CI_TOOL_PRIVATE_KEY }}
           app-id: ${{ secrets.HOPS_CI_TOOL_APP_ID }}
 
-      - name: 🔴 Publish results with mikepenz
-        uses: mikepenz/action-junit-report@v2
-        continue-on-error: true # debug
-        with:
-#          files: "**/build/test-results/test/TEST-*.xml"
-          report_paths: "test.xml"
-          token: ${{ steps.gen-token.outputs.token }}
-
-      - name: 🔴 Publish results with EnricoMi
-        continue-on-error: true # debug
-        uses: EnricoMi/publish-unit-test-result-action@v1
-        with:
-          #          files: "**/build/test-results/test/TEST-*.xml"
-          files: "test.xml"
-          github_token: ${{ steps.gen-token.outputs.token }}
-          github_retries: 1
-
-      - name: 🔴 Publish results with dorny
-        uses: dorny/test-reporter@v1
-        continue-on-error: true # debug
+      - name: 📊 Publish results with dorny
+        uses: dorny/test-reporter@v1.5.0
         with:
           name: junit tests
-          path: test.xml
+          path: "**/build/test-results/test/TEST-*.xml"
           reporter: java-junit
           token: ${{ steps.gen-token.outputs.token }}
 
@@ -115,14 +96,14 @@ jobs:
           echo "Major version is not enabled for auto merge"
           exit 1
 
-      - name: Generate team token
+      - name: 🔑 Generate team token
         uses: navikt/github-app-token-generator@v1
         id: gen-token
         with:
           private-key: ${{ secrets.HOPS_CI_TOOL_PRIVATE_KEY }}
           app-id: ${{ secrets.HOPS_CI_TOOL_APP_ID }}
 
-      - name: 🔰️ Request a merge from dependabot
+      - name: 🟢️ Request a merge from dependabot
         run: gh pr comment $PR_BRANCH --body "@dependabot squash and merge"
         env:
           GITHUB_TOKEN: ${{ steps.gen-token.outputs.token }}
