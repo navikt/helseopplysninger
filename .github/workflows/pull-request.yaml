@@ -81,8 +81,6 @@ jobs:
     name: 🚦️Verify semantic version of dependencies
     runs-on: ubuntu-latest
     if: github.actor == 'dependabot[bot]'
-    env:
-      TEAM_TOKEN: ${{ needs.token.outputs.team-token }}
     steps:
       - name: 🟡️ Dependabot metadata
         uses: dependabot/fetch-metadata@v1.1.1
