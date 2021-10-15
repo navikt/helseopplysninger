@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="api.routes.FhirRoutesPostTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2021-10-12T18:17:22" hostname="Robins-MacBook-Pro.local" time="0.965">
+    <properties/>
+    <testcase name="without token should reject with 401" classname="api.routes.FhirRoutesPostTest" time="0.2"/>
+    <testcase name="with incorrect scope (claims) should reject with 401" classname="api.routes.FhirRoutesPostTest" time="0.227"/>
+    <testcase name="without scope (claims) should reject with 401" classname="api.routes.FhirRoutesPostTest" time="0.228"/>
+    <testcase name="with valid tokens and correct claims should return 200" classname="api.routes.FhirRoutesPostTest" time="0.304"/>
+    <system-out><![CDATA[]]></system-out>
+    <system-err><![CDATA[]]></system-err>
+</testsuite>

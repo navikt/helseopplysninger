@@ -58,19 +58,9 @@ jobs:
           distribution: 'temurin'
           cache: 'gradle'
 
-      - uses: actions/cache@v2
-        id: test-cache
-        with:
-          key: ${{ runner.os }}-1
-          restore-keys: ${{ runner.os }}-1
-          path: |
-            **/**/build/test-results/test/
-
-      - name: 🪲 Run gradle test
-        if: steps.test-cache.outputs.cache-hit != 'true'
-        continue-on-error: true
+#      - name: 🪲 Run gradle test
+#        continue-on-error: true
 #        run: ./gradlew test --continue --no-daemon
-        run: ./gradlew apps:hops-api:test --continue --no-daemon
 
       - name: Generate team token
         uses: navikt/github-app-token-generator@v1
@@ -82,9 +72,11 @@ jobs:
       - name: 📊 Publish results
         uses: EnricoMi/publish-unit-test-result-action@v1
         with:
-          files: "**/build/test-results/test/TEST-*.xml"
+#          files: "**/build/test-results/test/TEST-*.xml"
+          files: "test.xml"
           github_token: ${{ steps.gen-token.outputs.token }}
           github_retries: 1
+          compare_to_earlier_commit: false
 
   dependabot-version:
     name: 🚦️Verify semantic version of dependencies
