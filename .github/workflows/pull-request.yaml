@@ -3,6 +3,7 @@ name: Pull request
 on: pull_request
 
 jobs:
+
   lint:
     name: 🖍️️ Linter
     if: github.actor != 'dependabot[bot]' && github.event.pull_request.user.login != 'dependabot[bot]'
@@ -57,34 +58,31 @@ jobs:
           distribution: 'temurin'
           cache: 'gradle'
 
-      - name: 🪲 Run tests for peer
-        if: github.actor != 'dependabot[bot]'
+      - name: 🪲 Run gradle test
         continue-on-error: true
         run: ./gradlew test --continue --no-daemon
 
-      - name: 📊 Publish results
-        if: github.actor != 'dependabot[bot]'
-        uses: EnricoMi/publish-unit-test-result-action@v1
+      - name: 🔑 Generate team token
+        uses: navikt/github-app-token-generator@v1
+        id: gen-token
         with:
-          commit: ${{ github.event.workflow_run.head_sha }}
-          files: "**/build/test-results/test/TEST-*.xml"
+          private-key: ${{ secrets.HOPS_CI_TOOL_PRIVATE_KEY }}
+          app-id: ${{ secrets.HOPS_CI_TOOL_APP_ID }}
 
-      - name: 🪲 Run tests for bot
-        if: github.actor == 'dependabot[bot]'
-        run: ./gradlew test --fail-fast --no-daemon
-
-      - name: Upload artifact [unit-test-results] (dependabot)
-        if: github.actor == 'dependabot[bot]'
-        uses: actions/upload-artifact@v2
+      - name: 📊 Publish results with dorny
+        uses: dorny/test-reporter@v1.5.0
         with:
-          name: unit-test-results
-          path: '**/build/test-results/test/TEST-*.xml'
-          retention-days: 5
+          name: junit tests
+          path: "**/build/test-results/test/TEST-*.xml"
+          reporter: java-junit
+          token: ${{ steps.gen-token.outputs.token }}
 
   dependabot-version:
-    runs-on: ubuntu-latest
     name: 🚦️Verify semantic version of dependencies
+    runs-on: ubuntu-latest
     if: github.actor == 'dependabot[bot]'
+    env:
+      TEAM_TOKEN: ${{ needs.token.outputs.team-token }}
     steps:
       - name: 🟡️ Dependabot metadata
         uses: dependabot/fetch-metadata@v1.1.1
@@ -98,9 +96,15 @@ jobs:
           echo "Major version is not enabled for auto merge"
           exit 1
 
-      - name: 🟢 Start auto merge
-        run: |
-          echo "update type is $VERSION"
-          echo "Will execute auto merge workflow_run"
+      - name: 🔑 Generate team token
+        uses: navikt/github-app-token-generator@v1
+        id: gen-token
+        with:
+          private-key: ${{ secrets.HOPS_CI_TOOL_PRIVATE_KEY }}
+          app-id: ${{ secrets.HOPS_CI_TOOL_APP_ID }}
+
+      - name: 🟢️ Request a merge from dependabot
+        run: gh pr comment $PR_BRANCH --body "@dependabot squash and merge"
         env:
-          VERSION: ${{ steps.metadata.outputs.update-type }}
+          GITHUB_TOKEN: ${{ steps.gen-token.outputs.token }}
+          PR_BRANCH: ${{ github.head_ref }}
