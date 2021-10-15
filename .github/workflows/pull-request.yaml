@@ -70,12 +70,11 @@ jobs:
           app-id: ${{ secrets.HOPS_CI_TOOL_APP_ID }}
 
       - name: 📊 Publish results
-        uses: EnricoMi/publish-unit-test-result-action@v1
+        uses: mikepenz/action-junit-report@v2
         with:
 #          files: "**/build/test-results/test/TEST-*.xml"
-          files: "test.xml"
-          github_token: ${{ steps.gen-token.outputs.token }}
-          github_retries: 10
+          report_paths: "test.xml"
+          token: ${{ steps.gen-token.outputs.token }}
 
   dependabot-version:
     name: 🚦️Verify semantic version of dependencies
