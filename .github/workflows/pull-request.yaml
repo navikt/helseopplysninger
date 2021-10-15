@@ -6,7 +6,7 @@ jobs:
 
   lint:
     name: 🖍️️ Linter
-    if: github.actor != 'dependabot[bot]' && github.event.pull_request.user.login != 'dependabot[bot]'
+    if: github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -49,6 +49,7 @@ jobs:
 
   test:
     name: 🧪 Test
+    if: github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -93,16 +94,3 @@ jobs:
         run: |
           echo "Major version is not enabled for auto merge"
           exit 1
-
-      - name: 🔑 Generate team token
-        uses: navikt/github-app-token-generator@v1
-        id: gen-token
-        with:
-          private-key: ${{ secrets.HOPS_CI_TOOL_PRIVATE_KEY }}
-          app-id: ${{ secrets.HOPS_CI_TOOL_APP_ID }}
-
-      - name: 🟢️ Request a merge from dependabot
-        run: gh pr comment $PR_BRANCH --body "@dependabot squash and merge"
-        env:
-          GITHUB_TOKEN: ${{ steps.gen-token.outputs.token }}
-          PR_BRANCH: ${{ github.head_ref }}
