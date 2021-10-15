@@ -80,12 +80,11 @@ jobs:
         run: gh pr comment $PR_BRANCH --body "test"
         env:
           GITHUB_TOKEN: ${{ steps.gen-token.outputs.token }}
-          PR_BRANCH: ${{ github.event.pull_request.head_ref }}
+          PR_BRANCH: ${{ github.head_ref }}
 
       - name: 📊 Publish results
         uses: EnricoMi/publish-unit-test-result-action@v1
         with:
-          commit: ${{ github.event.workflow_run.head_sha }}
           files: "**/build/test-results/test/TEST-*.xml"
           github_token: ${{ steps.gen-token.outputs.token }}
           github_retries: 1
@@ -120,4 +119,4 @@ jobs:
         run: gh pr comment $PR_BRANCH --body "@dependabot squash and merge"
         env:
           GITHUB_TOKEN: ${{ steps.gen-token.outputs.token }}
-          PR_BRANCH: ${{ github.event.pull_request.head_ref }}
+          PR_BRANCH: ${{ github.head_ref }}
