@@ -39,23 +39,11 @@ jobs:
           token: ${{ steps.gen-token.outputs.token }}
 
   approve:
-    name: 🤖️ approve
+    name: 🤖 approve
     if: github.actor == 'dependabot[bot]' && github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     needs: test
     steps:
-      - name: 🟡️ Dependabot metadata
-        uses: dependabot/fetch-metadata@v1.1.1
-        id: metadata
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: 🔴 Stop auto merge
-        if: ${{ steps.metadata.outputs.update-type == 'version-update:semver-major' }}
-        run: |
-          echo "Major version is not enabled for auto merge"
-          exit 1
-
       - name: 🔑 Generate team token
         uses: navikt/github-app-token-generator@v1
         id: gen-token
@@ -67,4 +55,5 @@ jobs:
         run: gh pr comment $PR_BRANCH --body "@dependabot squash and merge"
         env:
           GITHUB_TOKEN: ${{ steps.gen-token.outputs.token }}
-          PR_BRANCH: ${{ github.head_ref }}
+          PR_BRANCH: ${{ github.event.workflow_run.head_branch }}
+          GH_REPO: ${{ github.repository }}
