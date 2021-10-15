@@ -61,14 +61,16 @@ jobs:
       - uses: actions/cache@v2
         id: test-cache
         with:
-          key: test.xml
+          key: ${{ runner.os }}
+          restore-keys: ${{ runner.os }}
           path: |
             **/**/build/test-results/test/
 
       - name: 🪲 Run gradle test
         if: steps.test-cache.outputs.cache-hit != 'true'
         continue-on-error: true
-        run: ./gradlew test --continue --no-daemon
+#        run: ./gradlew test --continue --no-daemon
+        run: ./gradlew libs:hops-common-core:test --continue --no-daemon
 
       - name: Generate team token
         uses: navikt/github-app-token-generator@v1
@@ -76,12 +78,6 @@ jobs:
         with:
           private-key: ${{ secrets.HOPS_CI_TOOL_PRIVATE_KEY }}
           app-id: ${{ secrets.HOPS_CI_TOOL_APP_ID }}
-
-      - name: 🔰️ debug
-        run: gh pr comment $PR_BRANCH --body "test"
-        env:
-          GITHUB_TOKEN: ${{ steps.gen-token.outputs.token }}
-          PR_BRANCH: ${{ github.head_ref }}
 
       - name: 📊 Publish results
         uses: EnricoMi/publish-unit-test-result-action@v1
