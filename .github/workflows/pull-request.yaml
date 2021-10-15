@@ -69,7 +69,7 @@ jobs:
           private-key: ${{ secrets.HOPS_CI_TOOL_PRIVATE_KEY }}
           app-id: ${{ secrets.HOPS_CI_TOOL_APP_ID }}
 
-      - name: 📊 Publish results with mikepenz
+      - name: 🔴 Publish results with mikepenz
         uses: mikepenz/action-junit-report@v2
         continue-on-error: true # debug
         with:
@@ -77,7 +77,7 @@ jobs:
           report_paths: "test.xml"
           token: ${{ steps.gen-token.outputs.token }}
 
-      - name: 📊 Publish results with EnricoMi
+      - name: 🔴 Publish results with EnricoMi
         continue-on-error: true # debug
         uses: EnricoMi/publish-unit-test-result-action@v1
         with:
@@ -86,7 +86,7 @@ jobs:
           github_token: ${{ steps.gen-token.outputs.token }}
           github_retries: 1
 
-      - name: 📊 Publish results with dorny
+      - name: 🔴 Publish results with dorny
         uses: dorny/test-reporter@v1
         continue-on-error: true # debug
         with:
