@@ -58,7 +58,14 @@ jobs:
           distribution: 'temurin'
           cache: 'gradle'
 
+      - uses: actions/cache@v2
+        id: test-cache
+        with:
+          key: ${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          path: '**/build/test-results/test/TEST-*.xml'
+
       - name: 🪲 Run gradle test
+        if: steps.test-cache.outputs.cache-hit != 'true'
         continue-on-error: true
         run: ./gradlew test --continue --no-daemon
 
@@ -69,12 +76,19 @@ jobs:
           private-key: ${{ secrets.HOPS_CI_TOOL_PRIVATE_KEY }}
           app-id: ${{ secrets.HOPS_CI_TOOL_APP_ID }}
 
+      - name: 🔰️ debug
+        run: gh pr comment $PR_BRANCH --body "test"
+        env:
+          GITHUB_TOKEN: ${{ steps.gen-token.outputs.token }}
+          PR_BRANCH: ${{ github.event.pull_request.head_ref }}
+
       - name: 📊 Publish results
         uses: EnricoMi/publish-unit-test-result-action@v1
         with:
           commit: ${{ github.event.workflow_run.head_sha }}
           files: "**/build/test-results/test/TEST-*.xml"
           github_token: ${{ steps.gen-token.outputs.token }}
+          github_retries: 1
 
   dependabot-version:
     name: 🚦️Verify semantic version of dependencies
