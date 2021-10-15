@@ -90,6 +90,7 @@ jobs:
         uses: dorny/test-reporter@v1
         continue-on-error: true # debug
         with:
+          name: junit tests
           path: test.xml
           reporter: java-junit
           token: ${{ steps.gen-token.outputs.token }}
