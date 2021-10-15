@@ -63,7 +63,8 @@ jobs:
 #        run: ./gradlew test --continue --no-daemon
 
       - name: Generate team token
-        uses: navikt/github-app-token-generator@v1
+        uses: navikt/github-app-token-generator@ae1a063977641cb8091866b44444bfdcbe799955
+#        uses: navikt/github-app-token-generator@v1
         id: gen-token
         with:
           private-key: ${{ secrets.HOPS_CI_TOOL_PRIVATE_KEY }}
