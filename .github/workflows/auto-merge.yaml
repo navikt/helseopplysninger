@@ -49,9 +49,21 @@ jobs:
         run: echo "::set-output name=pr_info::$(curl ${{ github.event.pull_request.url }})"
 
       - name: 🧬 Check mergable state
-        run: |
-          if [ "$(echo "$PR_INFO" | jq .mergeable_state -r)" != "clean" ]; then exit 1; fi
-          if [ "$(echo "$PR_INFO" | jq .mergeable -r)" != "true" ]; then exit 1; fi
+        uses: nick-invision/retry@v2
+        with:
+          timeout_seconds: 10
+          max_attempts: 3
+          command: |
+            mr_state=$(echo "$PR_INFO" | jq .mergeable_state -r)
+            mr=$(echo "$PR_INFO" | jq .mergeable -r)
+            if [ "$mr_state" != "clean" ]; then
+              echo "mergeable_state: $mr_state"
+              exit 1
+            fi
+            if [ "$mr" != "true" ]; then
+              echo "mergeable: $mr"
+              exit 1
+            fi
         env:
           PR_INFO: ${{ steps.fetch_pr_info.outputs.pr_info }}
 
@@ -75,3 +87,6 @@ jobs:
           GITHUB_TOKEN: ${{ steps.gen-token.outputs.token }}
           PR_BRANCH: ${{ github.event.workflow_run.head_branch }}
           GH_REPO: ${{ github.repository }}
+
+#      if mergeable_state == BEHIND => git pull then git push
+#      if mergeable_state == DIRTY && rebaseable == true => @dependabot rebase (or do manual rebase/ use a gitub action)
