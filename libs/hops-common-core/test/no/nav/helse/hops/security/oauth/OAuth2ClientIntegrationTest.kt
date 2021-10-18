@@ -3,8 +3,6 @@ package no.nav.helse.hops.security.oauth
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod
-import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldNotBe
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.features.json.JacksonSerializer
@@ -18,6 +16,8 @@ import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.time.Duration
+import kotlin.test.assertEquals
+import kotlin.test.assertNotEquals
 
 /** Reference implementation:
  * https://github.com/navikt/token-support/blob/master/token-client-kotlin-demo/src/test/kotlin/no/nav/security/token/support/ktor/oauth/OAuth2ClientIntegrationTest.kt **/
@@ -68,9 +68,9 @@ internal class OAuth2ClientIntegrationTest {
             }
 
             // response should be cached
-            firstResponse shouldBe secondResponse
+            assertEquals(secondResponse, firstResponse)
             // response should have been evicted from cache
-            thirdResponse shouldNotBe secondResponse
+            assertNotEquals(secondResponse, thirdResponse)
         }
     }
 }

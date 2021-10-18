@@ -1,12 +1,5 @@
 package fileshare
 
-import io.kotest.assertions.ktor.client.shouldHaveStatus
-import io.kotest.assertions.ktor.haveHeader
-import io.kotest.assertions.ktor.shouldHaveContent
-import io.kotest.assertions.ktor.shouldHaveStatus
-import io.kotest.assertions.throwables.shouldThrow
-import io.kotest.core.spec.style.FeatureSpec
-import io.kotest.matchers.should
 import io.ktor.client.features.ClientRequestException
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
@@ -14,12 +7,28 @@ import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.testing.handleRequest
 import io.ktor.server.testing.setBody
+import kotlin.test.assertEquals
 import no.nav.helse.hops.test.HopsOAuthMock.MaskinportenScopes
 import okhttp3.mockwebserver.MockResponse
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.assertThrows
 
-class DownloadFileTest : FeatureSpec({
-    feature("Download authorization") {
-        scenario("Token by issuer that requires scope claims has scopes") {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class DownloadFileTest {
+    init {
+        MockServers.gcs.start()
+        MockServers.gcpMetadata.start()
+        MockServers.virusScanner.start()
+        MockServers.oAuth.start()
+    }
+
+    @Nested
+    inner class DownloadAuthorization {
+        @Test
+        fun `Token by issuer that requires scope claims has scopes`() {
             withFileshareTestApp {
                 with(
                     handleRequest(HttpMethod.Get, "/files/testfile") {
@@ -27,12 +36,13 @@ class DownloadFileTest : FeatureSpec({
                         addHeader("Authorization", "Bearer ${token.serialize()}")
                     }
                 ) {
-                    response shouldHaveStatus HttpStatusCode.OK
+                    assertEquals(HttpStatusCode.OK, response.status())
                 }
             }
         }
 
-        scenario("Issuer that requires scope claims does not have the required scope") {
+        @Test
+        fun `Issuer that requires scope claims does not have the required scope`() {
             withFileshareTestApp {
                 with(
                     handleRequest(HttpMethod.Post, "/files") {
@@ -42,12 +52,13 @@ class DownloadFileTest : FeatureSpec({
                         setBody("new fantastic content")
                     }
                 ) {
-                    response shouldHaveStatus HttpStatusCode.Unauthorized
+                    assertEquals(HttpStatusCode.Unauthorized, response.status())
                 }
             }
         }
 
-        scenario("Issuer that does not require scope claims can download") {
+        @Test
+        fun `Issuer that does not require scope claims can download`() {
             withFileshareTestApp {
                 with(
                     handleRequest(HttpMethod.Get, "/files/testfile") {
@@ -55,14 +66,17 @@ class DownloadFileTest : FeatureSpec({
                         addHeader("Authorization", "Bearer ${token.serialize()}")
                     }
                 ) {
-                    response shouldHaveStatus HttpStatusCode.OK
+                    assertEquals(HttpStatusCode.OK, response.status())
                 }
             }
         }
     }
 
-    feature("GET /files/{filename}") {
-        scenario("with existing file returns the file") {
+    @Nested
+    @DisplayName("GET /files/{filename}")
+    inner class GetFiles {
+        @Test
+        fun `with existing file returns the file`() {
             withFileshareTestApp {
                 with(
                     handleRequest(HttpMethod.Get, "/files/testfile") {
@@ -70,13 +84,14 @@ class DownloadFileTest : FeatureSpec({
                         addHeader("Authorization", "Bearer ${token.serialize()}")
                     }
                 ) {
-                    response shouldHaveStatus HttpStatusCode.OK
-                    response shouldHaveContent "Content"
+                    assertEquals(HttpStatusCode.OK, response.status())
+                    assertEquals("Content", response.content)
                 }
             }
         }
 
-        scenario("with non existing file returns 404 NOT FONUD") {
+        @Test
+        fun `with non existing file returns 404 NOT FONUD`() {
             withFileshareTestApp {
                 MockServers.gcs.matchRequest(
                     { request -> request.path?.contains("nonexistentfile") ?: false },
@@ -86,23 +101,25 @@ class DownloadFileTest : FeatureSpec({
                     }
                 )
                 with(
-                    shouldThrow<ClientRequestException> {
+                    assertThrows<ClientRequestException> {
                         handleRequest(HttpMethod.Get, "/files/nonexistentfile") {
                             val token = MockServers.oAuth.issueAzureToken()
                             addHeader("Authorization", "Bearer ${token.serialize()}")
                         }
                     }
                 ) {
-                    response shouldHaveStatus HttpStatusCode.NotFound
+                    assertEquals(HttpStatusCode.NotFound, response.status)
                 }
             }
         }
     }
-})
+}
 
-class UploadFileTest : FeatureSpec({
-    feature("Upload authorization") {
-        scenario("Token by issuer that requires scope claims has scopes") {
+class UploadFileTest {
+    @Nested
+    inner class UploadAuthorization {
+        @Test
+        fun `Token by issuer that requires scope claims has scopes`() {
             withFileshareTestApp {
                 with(
                     handleRequest(HttpMethod.Post, "/files") {
@@ -112,12 +129,13 @@ class UploadFileTest : FeatureSpec({
                         setBody("new fantastic content")
                     }
                 ) {
-                    response shouldHaveStatus HttpStatusCode.Created
+                    assertEquals(HttpStatusCode.Created, response.status())
                 }
             }
         }
 
-        scenario("Token by issuer that requires scope claims does not have the required scope") {
+        @Test
+        fun `Token by issuer that requires scope claims does not have the required scope`() {
             withFileshareTestApp {
                 with(
                     handleRequest(HttpMethod.Post, "/files") {
@@ -127,12 +145,13 @@ class UploadFileTest : FeatureSpec({
                         setBody("new fantastic content")
                     }
                 ) {
-                    response shouldHaveStatus HttpStatusCode.Unauthorized
+                    assertEquals(HttpStatusCode.Unauthorized, response.status())
                 }
             }
         }
 
-        scenario("Token by issuer that does not require scope claims can upload") {
+        @Test
+        fun `Token by issuer that does not require scope claims can upload`() {
             withFileshareTestApp {
                 with(
                     handleRequest(HttpMethod.Post, "/files") {
@@ -142,14 +161,17 @@ class UploadFileTest : FeatureSpec({
                         setBody("new fantastic content")
                     }
                 ) {
-                    response shouldHaveStatus HttpStatusCode.Created
+                    assertEquals(HttpStatusCode.Created, response.status())
                 }
             }
         }
     }
 
-    feature("POST /files") {
-        scenario("happy path") {
+    @Nested
+    @DisplayName("POST /files}")
+    inner class PublishFiles {
+        @Test
+        fun `happy path`() {
             withFileshareTestApp {
                 with(
                     handleRequest(HttpMethod.Post, "/files") {
@@ -159,13 +181,14 @@ class UploadFileTest : FeatureSpec({
                         setBody("new fantastic content")
                     }
                 ) {
-                    response shouldHaveStatus HttpStatusCode.Created
-                    response should haveHeader("Location", "http://localhost/files/file-name")
+                    assertEquals(HttpStatusCode.Created, response.status())
+                    assertEquals("http://localhost/files/file-name", response.headers["Location"])
                 }
             }
         }
 
-        scenario("Uploading a file that contains malicious content it should give back an error") {
+        @Test
+        fun `Uploading a file that contains malicious content it should give back an error`() {
             withFileshareTestApp {
                 MockServers.gcs.matchRequest(
                     { request -> request.body.readUtf8() == "malicious content" },
@@ -198,9 +221,9 @@ class UploadFileTest : FeatureSpec({
                         setBody("malicious content")
                     }
                 ) {
-                    response shouldHaveStatus HttpStatusCode.BadRequest
+                    assertEquals(HttpStatusCode.BadRequest, response.status())
                 }
             }
         }
     }
-})
+}
