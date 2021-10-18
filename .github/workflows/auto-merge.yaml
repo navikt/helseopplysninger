@@ -9,7 +9,7 @@ on:
 
 jobs:
   test:
-    name: 🧪 test
+    name: 🧪 Test
     if: github.actor == 'dependabot[bot]' && github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
@@ -38,20 +38,38 @@ jobs:
           reporter: java-junit
           token: ${{ steps.gen-token.outputs.token }}
 
-  approve:
-    name: 🤖 approve
+  squash-and-merge:
+    name: 🤖 Squash and merge
     if: github.actor == 'dependabot[bot]' && github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     needs: test
     steps:
-      - name: 🔑 Generate team token
+      - name: 📖 Fetch pull request info
+        id: fetch_pr_info
+        run: echo "::set-output name=pr_info::$(curl ${{ github.event.pull_request.url }})"
+
+      - name: 🧬 Check mergable state
+        run: |
+          if [ "$(echo "$PR_INFO" | jq .mergeable_state -r)" != "clean" ]; then exit 1; fi
+          if [ "$(echo "$PR_INFO" | jq .mergeable -r)" != "true" ]; then exit 1; fi
+        env:
+          PR_INFO: ${{ steps.fetch_pr_info.outputs.pr_info }}
+
+      - name: 🗝️ Generate team token
         uses: navikt/github-app-token-generator@v1
         id: gen-token
         with:
           private-key: ${{ secrets.HOPS_CI_TOOL_PRIVATE_KEY }}
           app-id: ${{ secrets.HOPS_CI_TOOL_APP_ID }}
 
-      - name: 🟢️ Request a merge from dependabot
+      - name: 🎨️ Comment on pull-request
+        run: gh pr comment $PR_BRANCH --body "State is clean and mergable, will now squash this pull-request."
+        env:
+          GITHUB_TOKEN: ${{ steps.gen-token.outputs.token }}
+          PR_BRANCH: ${{ github.event.workflow_run.head_branch }}
+          GH_REPO: ${{ github.repository }}
+
+      - name: 🧩️ Squash and merge
         run: gh pr comment $PR_BRANCH --body "@dependabot squash and merge"
         env:
           GITHUB_TOKEN: ${{ steps.gen-token.outputs.token }}
