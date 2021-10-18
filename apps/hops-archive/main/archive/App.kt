@@ -31,7 +31,7 @@ fun Application.module() {
     val pdfConverter = FhirJsonToPdfConverter(config.fhirJsonToPdfConverter, HttpClientFactory.create(config.fhirJsonToPdfConverter))
     val kafkaConsumer = FhirMessageStream(KafkaFactory.createFhirConsumer(config.kafka), config.kafka)
 
-    val job = ArchiveJob(kafkaConsumer, log, archive, pdfConverter)
+    val job = ArchiveJob(kafkaConsumer, log, archive, pdfConverter, environment.parentCoroutineContext)
 
     routing {
         naisRoutes(job, prometheusMeterRegistry)

@@ -22,14 +22,17 @@ class Dokarkiv(
 
 interface Journalpost {
     fun toJson(): String
+    enum class Type { INNGAAENDE, UTGAAENDE }
 }
 
 /** Dokumentasjon finnes på [confluence](https://confluence.adeo.no/display/BOA/opprettJournalpost). */
 @Suppress("SpellCheckingInspection")
-class InngaaendeJournalpost(
+class GenericJournalpost(
+    val type: Journalpost.Type,
     val datoMottatt: Date,
     val eksternReferanseId: String,
     val tittel: String,
+    val tema: String,
     val legeHpr: String,
     val brukerFnr: String,
     val brevkode: String,
@@ -38,11 +41,11 @@ class InngaaendeJournalpost(
 ) : Journalpost {
     override fun toJson() =
         """{
-              "datoMottatt": "$datoMottatt",
+              ${if (type == Journalpost.Type.INNGAAENDE) """"datoMottatt": "$datoMottatt",""" else "" }
               "eksternReferanseId": "$eksternReferanseId",
               "tittel": "$tittel",
-              "journalpostType": "INNGAAENDE",
-              "tema": "DAG",
+              "journalpostType": "$type",
+              "tema": "$tema",
               "kanal": "helseopplysninger",
               "journalfoerendeEnhet": 9999,
               "avsenderMottaker": {
