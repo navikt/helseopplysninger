@@ -15,16 +15,11 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.extension.ExtendWith
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@ExtendWith(MockServers.Setup::class)
 class DownloadFileTest {
-    init {
-        MockServers.gcs.start()
-        MockServers.gcpMetadata.start()
-        MockServers.virusScanner.start()
-        MockServers.oAuth.start()
-    }
-
     @Nested
     inner class DownloadAuthorization {
         @Test
@@ -115,6 +110,8 @@ class DownloadFileTest {
     }
 }
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@ExtendWith(MockServers.Setup::class)
 class UploadFileTest {
     @Nested
     inner class UploadAuthorization {

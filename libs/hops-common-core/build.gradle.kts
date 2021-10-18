@@ -27,7 +27,6 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.5.2")
     testImplementation(project(":libs:hops-common-test"))
     testImplementation("io.kotest:kotest-assertions-shared:4.6.3")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
 }
 
 kotlin.sourceSets["main"].kotlin.srcDirs("main")

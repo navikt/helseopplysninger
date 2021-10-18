@@ -23,6 +23,7 @@ dependencies {
     api("no.nav.security:token-validation-ktor:1.3.9")
     api("io.mockk:mockk:1.12.0")
     api("uk.org.webcompere:system-stubs-jupiter:1.2.0")
+    api("org.junit.jupiter:junit-jupiter:5.8.1")
 }
 
 kotlin.sourceSets["main"].kotlin.srcDirs("main")

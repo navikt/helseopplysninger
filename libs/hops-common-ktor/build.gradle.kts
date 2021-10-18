@@ -30,7 +30,6 @@ dependencies {
     implementation("com.sksamuel.hoplite:hoplite-hocon:1.4.9")
     implementation("com.sksamuel.hoplite:hoplite-yaml:1.4.9")
     testImplementation(project(":libs:hops-common-test"))
-    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
 }
 
 kotlin.sourceSets["main"].kotlin.srcDirs("main")
