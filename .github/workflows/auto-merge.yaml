@@ -45,8 +45,11 @@ jobs:
     needs: test
     steps:
       - name: 📖 Fetch pull request info
-        id: fetch_pr_info
-        run: echo "::set-output name=pr_info::$(curl ${{ github.event.pull_request.url }})"
+        id: pr-info
+        run : |
+          echo "::set-output name=MERGEABLE_STATE::$(curl $url | jq .mergeable_state -r)"
+          echo "::set-output name=MERGEABLE::$(curl $url | jq .mergeable_state -r)"
+          echo "::set-output name=REBASEABLE::$(curl $url | jq .rebaseable -r)"
 
       - name: 🧬 Check mergable state
         uses: nick-invision/retry@v2
@@ -54,18 +57,18 @@ jobs:
           timeout_seconds: 10
           max_attempts: 3
           command: |
-            mr_state=$(echo "$PR_INFO" | jq .mergeable_state -r)
-            mr=$(echo "$PR_INFO" | jq .mergeable -r)
-            if [ "$mr_state" != "clean" ]; then
+            if [ "${{ steps.pr-info.outputs.MERGEABLE_STATE }}" != "clean" ]; then
               echo "mergeable_state: $mr_state"
               exit 1
             fi
-            if [ "$mr" != "true" ]; then
+            if [ "${{ steps.pr-info.outputs.MERGEABLE }}" != "true" ]; then
               echo "mergeable: $mr"
               exit 1
             fi
         env:
-          PR_INFO: ${{ steps.fetch_pr_info.outputs.pr_info }}
+          MSTATE: ${{ steps.pr-info.outputs.MERGEABLE_STATE }}
+          M: ${{ steps.pr-info.outputs.MERGEABLE }}
+          R: ${{ steps.pr-info.outputs.REBASEABLE }}
 
       - name: 🗝️ Generate team token
         uses: navikt/github-app-token-generator@v1
