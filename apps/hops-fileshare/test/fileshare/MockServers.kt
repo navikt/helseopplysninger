@@ -3,9 +3,12 @@ package fileshare
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
+import java.util.concurrent.atomic.AtomicBoolean
 import no.nav.helse.hops.test.HopsOAuthMock
 import no.nav.helse.hops.test.MockServer
 import okhttp3.mockwebserver.MockResponse
+import org.junit.jupiter.api.extension.BeforeAllCallback
+import org.junit.jupiter.api.extension.ExtensionContext
 
 object MockServers {
     val oAuth = HopsOAuthMock()
@@ -79,6 +82,18 @@ object MockServers {
             MockResponse()
                 .setHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                 .setBody("""[{"result":"OK"}]""")
+        }
+    }
+
+    object Setup : BeforeAllCallback {
+        private val started = AtomicBoolean(false)
+        override fun beforeAll(context: ExtensionContext?) {
+            if (!started.getAndSet(true)) {
+                gcs.start()
+                gcpMetadata.start()
+                virusScanner.start()
+                oAuth.start()
+            }
         }
     }
 }

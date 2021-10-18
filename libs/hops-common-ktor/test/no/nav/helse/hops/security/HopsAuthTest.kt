@@ -1,14 +1,6 @@
 package no.nav.helse.hops.security
 
-import io.kotest.assertions.ktor.shouldHaveContent
-import io.kotest.assertions.ktor.shouldHaveStatus
-import io.kotest.assertions.throwables.shouldThrow
-import io.kotest.core.spec.style.FreeSpec
-import io.kotest.data.forAll
-import io.kotest.data.headers
-import io.kotest.data.row
-import io.kotest.data.table
-import io.kotest.matchers.shouldBe
+import com.nimbusds.jwt.SignedJWT
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -21,13 +13,24 @@ import io.ktor.routing.get
 import io.ktor.routing.routing
 import io.ktor.server.testing.handleRequest
 import io.ktor.server.testing.withTestApplication
+import kotlin.test.assertEquals
 import no.nav.helse.hops.MockServers
 import no.nav.helse.hops.test.HopsOAuthMock
+import org.junit.jupiter.api.DynamicTest
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestFactory
+import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.assertThrows
 
-class HopsAuthTest : FreeSpec({
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class HopsAuthTest {
+    init {
+        MockServers.oAuth.start()
+    }
 
-    "It should fail when installing with incomplete config" {
-        val e = shouldThrow<IllegalStateException> {
+    @Test
+    fun `It should fail when installing with incomplete config`() {
+        val e = assertThrows<IllegalStateException> {
             withTestApplication(
                 {
                     install(HopsAuth)
@@ -36,158 +39,166 @@ class HopsAuthTest : FreeSpec({
             )
         }
 
-        e.message shouldBe "No authentication configuration provided!"
+        assertEquals("No authentication configuration provided!", e.message)
     }
 
-    "It should have default and explicit auth realms when only azure is setup" {
+    @Test
+    fun `It should have default and explicit auth realms when only azure is setup`() {
         withTestApplication(Application::azureOnly) {
             var call = handleRequest(HttpMethod.Get, "/") {
                 val token = MockServers.oAuth.issueAzureToken()
                 addHeader(HttpHeaders.Authorization, "Bearer ${token.serialize()}")
             }
 
-            call.response shouldHaveStatus HttpStatusCode.OK
+            assertEquals(HttpStatusCode.OK, call.response.status())
 
             call = handleRequest(HttpMethod.Get, "/explicit") {
                 val token = MockServers.oAuth.issueAzureToken()
                 addHeader(HttpHeaders.Authorization, "Bearer ${token.serialize()}")
             }
 
-            call.response shouldHaveStatus HttpStatusCode.OK
+            assertEquals(HttpStatusCode.OK, call.response.status())
         }
     }
 
-    "It should respond unauthorized when only azure is setup and no/bad token is sent" {
+    @Test
+    fun `It should respond unauthorized when only azure is setup and no_bad token is sent`() {
         withTestApplication(Application::azureOnly) {
             var call = handleRequest(HttpMethod.Get, "/")
 
-            call.response shouldHaveStatus HttpStatusCode.Unauthorized
+            assertEquals(HttpStatusCode.Unauthorized, call.response.status())
 
             call = handleRequest(HttpMethod.Get, "/") {
                 addHeader(HttpHeaders.Authorization, "Bearer FAKE")
             }
 
-            call.response shouldHaveStatus HttpStatusCode.Unauthorized
+            assertEquals(HttpStatusCode.Unauthorized, call.response.status())
         }
     }
 
-    "It should respect realm rules" - {
-        table(
-            headers("endpoint", "token", "expectedStatus"),
-            row("/read", MockServers.oAuth.issueMaskinportenToken(), HttpStatusCode.OK),
-            row(
+    @TestFactory
+    fun `It should respect realm rules`(): List<DynamicTest> {
+        class Row(val endpoint: String, val token: SignedJWT, val expectedStatus: HttpStatusCode)
+
+        val rows = listOf(
+            Row("/read", MockServers.oAuth.issueMaskinportenToken(), HttpStatusCode.OK),
+            Row(
                 "/read",
                 MockServers.oAuth.issueMaskinportenToken(scopes = setOf(HopsOAuthMock.MaskinportenScopes.READ)),
                 HttpStatusCode.OK
             ),
-            row(
+            Row(
                 "/read",
                 MockServers.oAuth.issueMaskinportenToken(scopes = setOf(HopsOAuthMock.MaskinportenScopes.WRITE)),
                 HttpStatusCode.Unauthorized
             ),
-            row(
+            Row(
                 "/read",
                 MockServers.oAuth.issueAzureToken(),
                 HttpStatusCode.Unauthorized
             ),
-            row(
+            Row(
                 "/write",
                 MockServers.oAuth.issueMaskinportenToken(scopes = setOf(HopsOAuthMock.MaskinportenScopes.WRITE)),
                 HttpStatusCode.OK
             ),
-            row(
+            Row(
                 "/write",
                 MockServers.oAuth.issueMaskinportenToken(scopes = setOf(HopsOAuthMock.MaskinportenScopes.READ)),
                 HttpStatusCode.Unauthorized
             ),
-            row(
+            Row(
                 "/write",
                 MockServers.oAuth.issueAzureToken(),
                 HttpStatusCode.Unauthorized
             ),
-            row(
+            Row(
                 "/azure",
                 MockServers.oAuth.issueAzureToken(),
                 HttpStatusCode.OK
             ),
-            row(
+            Row(
                 "/azure",
                 MockServers.oAuth.issueMaskinportenToken(), // both scopes
                 HttpStatusCode.Unauthorized
             ),
-            row(
+            Row(
                 "/azure",
                 MockServers.oAuth.issueMaskinportenToken(scopes = setOf(HopsOAuthMock.MaskinportenScopes.WRITE)),
                 HttpStatusCode.Unauthorized
             ),
-            row(
+            Row(
                 "/azure",
                 MockServers.oAuth.issueMaskinportenToken(scopes = setOf(HopsOAuthMock.MaskinportenScopes.READ)),
                 HttpStatusCode.Unauthorized
             ),
-            row(
+            Row(
                 "/read-or-write",
                 MockServers.oAuth.issueMaskinportenToken(), // both scopes
                 HttpStatusCode.OK
             ),
-            row(
+            Row(
                 "/read-or-write",
                 MockServers.oAuth.issueMaskinportenToken(scopes = setOf(HopsOAuthMock.MaskinportenScopes.READ)),
                 HttpStatusCode.OK
             ),
-            row(
+            Row(
                 "/read-or-write",
                 MockServers.oAuth.issueMaskinportenToken(scopes = setOf(HopsOAuthMock.MaskinportenScopes.WRITE)),
                 HttpStatusCode.OK
             ),
-            row(
+            Row(
                 "/read-or-write",
                 MockServers.oAuth.issueAzureToken(),
                 HttpStatusCode.Unauthorized
             ),
-            row(
+            Row(
                 "/read-or-write-or-azure",
                 MockServers.oAuth.issueMaskinportenToken(), // both scopes
                 HttpStatusCode.OK
             ),
-            row(
+            Row(
                 "/read-or-write-or-azure",
                 MockServers.oAuth.issueMaskinportenToken(scopes = setOf(HopsOAuthMock.MaskinportenScopes.READ)),
                 HttpStatusCode.OK
             ),
-            row(
+            Row(
                 "/read-or-write-or-azure",
                 MockServers.oAuth.issueMaskinportenToken(scopes = setOf(HopsOAuthMock.MaskinportenScopes.WRITE)),
                 HttpStatusCode.OK
             ),
-            row(
+            Row(
                 "/read-or-write-or-azure",
                 MockServers.oAuth.issueAzureToken(),
                 HttpStatusCode.OK
-            ),
-        ).forAll { endpoint, token, expectedStatus ->
-            """Calling $endpoint with token ${token.jwtClaimsSet.issuer.substringAfterLast("/")}:scopes="${token.jwtClaimsSet.claims["scope"]}" should return $expectedStatus""" {
+            )
+        )
+
+        return rows.map {
+            val displayName = it.run { """Calling $endpoint with token ${token.jwtClaimsSet.issuer.substringAfterLast("/")}:scopes="${token.jwtClaimsSet.claims["scope"]}" should return $expectedStatus""" }
+            DynamicTest.dynamicTest(displayName) {
                 withTestApplication(Application::maskinportenAndAzure) {
-                    val call = handleRequest(HttpMethod.Get, endpoint) {
-                        addHeader(HttpHeaders.Authorization, "Bearer ${token.serialize()}")
+                    val call = handleRequest(HttpMethod.Get, it.endpoint) {
+                        addHeader(HttpHeaders.Authorization, "Bearer ${it.token.serialize()}")
                     }
 
-                    call.response shouldHaveStatus expectedStatus
+                    assertEquals(it.expectedStatus, call.response.status())
                 }
             }
         }
     }
 
-    "It should be able to extract auth identity" {
+    @Test
+    fun `It should be able to extract auth identity`() {
         withTestApplication(Application::azureOnly) {
             val call = handleRequest(HttpMethod.Get, "/auth-identity") {
                 val token = MockServers.oAuth.issueAzureToken()
                 addHeader(HttpHeaders.Authorization, "Bearer ${token.serialize()}")
             }
 
-            call.response shouldHaveStatus HttpStatusCode.OK
+            assertEquals(HttpStatusCode.OK, call.response.status())
 
-            shouldThrow<IllegalStateException> {
+            assertThrows<IllegalStateException> {
                 handleRequest(HttpMethod.Get, "/auth-identity-no-auth") {
                     val token = MockServers.oAuth.issueAzureToken()
                     addHeader(HttpHeaders.Authorization, "Bearer ${token.serialize()}")
@@ -202,10 +213,10 @@ class HopsAuthTest : FreeSpec({
                 addHeader(HttpHeaders.Authorization, "Bearer ${token.serialize()}")
             }
 
-            call.response shouldHaveStatus HttpStatusCode.OK
-            call.response shouldHaveContent orgNumber
+            assertEquals(HttpStatusCode.OK, call.response.status())
+            assertEquals(orgNumber, call.response.content)
 
-            shouldThrow<IllegalStateException> {
+            assertThrows<IllegalStateException> {
                 handleRequest(HttpMethod.Get, "/auth-identity-no-auth") {
                     val token = MockServers.oAuth.issueMaskinportenToken()
                     addHeader(HttpHeaders.Authorization, "Bearer ${token.serialize()}")
@@ -220,25 +231,25 @@ class HopsAuthTest : FreeSpec({
                 addHeader(HttpHeaders.Authorization, "Bearer ${token.serialize()}")
             }
 
-            call.response shouldHaveStatus HttpStatusCode.OK
-            call.response shouldHaveContent orgNumber
+            assertEquals(HttpStatusCode.OK, call.response.status())
+            assertEquals(orgNumber, call.response.content)
 
             call = handleRequest(HttpMethod.Get, "/auth-identity") {
                 val token = MockServers.oAuth.issueAzureToken()
                 addHeader(HttpHeaders.Authorization, "Bearer ${token.serialize()}")
             }
 
-            call.response shouldHaveStatus HttpStatusCode.OK
-            call.response shouldHaveContent "azure"
+            assertEquals(HttpStatusCode.OK, call.response.status())
+            assertEquals("azure", call.response.content)
 
-            shouldThrow<IllegalStateException> {
+            assertThrows<IllegalStateException> {
                 handleRequest(HttpMethod.Get, "/auth-identity-no-auth") {
                     val token = MockServers.oAuth.issueMaskinportenToken()
                     addHeader(HttpHeaders.Authorization, "Bearer ${token.serialize()}")
                 }
             }
 
-            shouldThrow<IllegalStateException> {
+            assertThrows<IllegalStateException> {
                 handleRequest(HttpMethod.Get, "/auth-identity-no-auth") {
                     val token = MockServers.oAuth.issueAzureToken()
                     addHeader(HttpHeaders.Authorization, "Bearer ${token.serialize()}")
@@ -246,7 +257,7 @@ class HopsAuthTest : FreeSpec({
             }
         }
     }
-})
+}
 
 fun Application.azureOnly() {
     install(HopsAuth) {

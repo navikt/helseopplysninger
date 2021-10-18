@@ -3,15 +3,15 @@ package e2e
 import e2e.Mocks.Dispatcher.respond
 import e2e.Mocks.Matcher.get
 import e2e._common.Results
-import io.kotest.assertions.ktor.shouldHaveContent
-import io.kotest.assertions.ktor.shouldHaveStatus
-import io.kotest.matchers.collections.shouldHaveSize
-import io.kotest.matchers.comparables.shouldBeGreaterThan
-import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldNotBe
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.testing.handleRequest
+import kotlin.test.assertEquals
+import kotlin.test.assertNotEquals
+import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
+import kotlin.time.Duration
+import kotlin.time.ExperimentalTime
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
@@ -19,8 +19,6 @@ import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import kotlin.time.Duration
-import kotlin.time.ExperimentalTime
 
 @ExperimentalTime
 @ExperimentalSerializationApi
@@ -51,10 +49,10 @@ class AppTest {
     fun `happy path for all e2e test`() {
         withTestApp {
             with(handleRequest(HttpMethod.Get, "/runTests")) {
-                response shouldHaveStatus HttpStatusCode.OK
+                assertEquals(HttpStatusCode.OK, response.status())
                 val content = Json.decodeFromString<Results>(response.content!!)
-                content.failedTests shouldHaveSize 0
-                content.totalDurationMs shouldNotBe "0ms"
+                assertEquals(0, content.failedTests.size)
+                assertNotEquals("0ms", content.totalDurationMs)
             }
         }
     }
@@ -65,11 +63,11 @@ class AppTest {
             // Fail liveness
             Mocks.api.matchRequest(get("/actuator/live"), respond(503))
             with(handleRequest(HttpMethod.Get, "/runTests")) {
-                response shouldHaveStatus HttpStatusCode.OK
+                assertEquals(HttpStatusCode.OK, response.status())
                 val content = Json.decodeFromString<Results>(response.content!!)
-                content.failedTests shouldHaveSize 1
-                content.failedTests.first().name shouldBe "api liveness"
-                Duration.parse(content.totalDurationMs) shouldBeGreaterThan Duration.milliseconds(0)
+                assertEquals(1, content.failedTests.size)
+                assertEquals("api liveness", content.failedTests.first().name)
+                assertTrue(Duration.parse(content.totalDurationMs) > Duration.milliseconds(0))
             }
         }
 
@@ -81,10 +79,10 @@ class AppTest {
     fun `run test twice in a row`() {
         withTestApp {
             with(handleRequest(HttpMethod.Get, "/runTests")) {
-                Json.decodeFromString<Results>(response.content!!).failedTests shouldHaveSize 0
+                assertEquals(0, Json.decodeFromString<Results>(response.content!!).failedTests.size)
             }
             with(handleRequest(HttpMethod.Get, "/runTests")) {
-                Json.decodeFromString<Results>(response.content!!).failedTests shouldHaveSize 0
+                assertEquals(0, Json.decodeFromString<Results>(response.content!!).failedTests.size)
             }
         }
     }
@@ -93,8 +91,8 @@ class AppTest {
     fun `get liveness actuator returns 200 OK`() {
         withTestApp {
             with(handleRequest(HttpMethod.Get, "/actuator/live")) {
-                response shouldHaveStatus HttpStatusCode.OK
-                response shouldHaveContent "live"
+                assertEquals(HttpStatusCode.OK, response.status())
+                assertEquals("live", response.content)
             }
         }
     }
@@ -103,8 +101,8 @@ class AppTest {
     fun `readiness actuator returns 200 OK`() {
         withTestApp {
             with(handleRequest(HttpMethod.Get, "/actuator/ready")) {
-                response shouldHaveStatus HttpStatusCode.OK
-                response shouldHaveContent "ready"
+                assertEquals(HttpStatusCode.OK, response.status())
+                assertEquals("ready", response.content)
             }
         }
     }
@@ -113,9 +111,9 @@ class AppTest {
     fun `metrics actuator returns 200 OK`() {
         withTestApp {
             with(handleRequest(HttpMethod.Get, "/metrics")) {
-                response shouldHaveStatus HttpStatusCode.OK
-                response.content shouldNotBe null
-                response.content shouldNotBe ""
+                assertEquals(HttpStatusCode.OK, response.status())
+                assertNotNull(response.content)
+                assertNotEquals("", response.content)
             }
         }
     }

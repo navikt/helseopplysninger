@@ -32,7 +32,6 @@ dependencies {
     testImplementation("no.nav:kafka-embedded-env:2.8.0") {
         exclude("io.confluent", "kafka-schema-registry")
     }
-    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
 }
 
 tasks {
