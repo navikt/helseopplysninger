@@ -61,8 +61,6 @@ jobs:
 
       - name: Run e2e tests
         run: bash .scripts/run-e2e
-        # remove when e2e is stable
-        continue-on-error: true
 
       - name: Deploy to Prod
         uses: nais/deploy/actions/deploy@master

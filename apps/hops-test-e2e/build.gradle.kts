@@ -1,3 +1,6 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     application
     kotlin("jvm")
@@ -11,22 +14,29 @@ application {
 }
 
 dependencies {
-    implementation(project(":libs:hops-common-ktor"))
     implementation(project(":libs:hops-client-maskinport"))
-    implementation("io.micrometer:micrometer-registry-prometheus:1.7.4")
-    implementation("io.ktor:ktor-metrics-micrometer:1.6.3")
-    implementation("io.ktor:ktor-client-cio:1.6.3")
-    implementation("io.ktor:ktor-server-netty:1.6.3")
-    implementation("io.ktor:ktor-client-serialization:1.6.3")
-    runtimeOnly("io.ktor:ktor-server-netty:1.6.3")
-    runtimeOnly("ch.qos.logback:logback-classic:1.2.5")
-    runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
+    implementation(project(":libs:hops-common-kafka"))
+    implementation(project(":libs:hops-common-ktor"))
+    implementation("io.github.microutils:kotlin-logging-jvm:2.0.11")
+    implementation("io.ktor:ktor-client-serialization:1.6.4")
+    implementation("io.ktor:ktor-client-core:1.6.4")
+    implementation("io.ktor:ktor-client-cio:1.6.4")
+    implementation("io.ktor:ktor-metrics-micrometer:1.6.4")
     implementation("io.ktor:ktor-serialization:1.6.3")
+    implementation("io.ktor:ktor-server-netty:1.6.4")
+    implementation("io.micrometer:micrometer-registry-prometheus:1.7.4")
+    implementation("org.apache.kafka:kafka-clients:2.8.1")
+    runtimeOnly("ch.qos.logback:logback-classic:1.2.6")
+    runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
     testImplementation(project(":libs:hops-common-test"))
+    testImplementation("no.nav:kafka-embedded-env:2.8.0") {
+        exclude("io.confluent", "kafka-schema-registry")
+    }
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
 }
 
 tasks {
-    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    withType<KotlinCompile> {
         kotlinOptions.jvmTarget = "16"
         kotlinOptions.freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
     }
@@ -34,10 +44,12 @@ tasks {
     withType<Test> {
         useJUnitPlatform()
         testLogging {
-            showCauses = true
+            events("skipped", "failed")
             showExceptions = true
-            events("passed", "failed")
+            exceptionFormat = TestExceptionFormat.FULL
         }
+
+        jvmArgs = listOf("--add-opens=java.base/java.util=ALL-UNNAMED")
     }
 }
 

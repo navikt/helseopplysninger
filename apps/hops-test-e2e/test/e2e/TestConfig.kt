@@ -1,20 +1,21 @@
 package e2e
 
-import io.kotest.core.config.AbstractProjectConfig
-import io.kotest.core.listeners.ProjectListener
 import io.kotest.extensions.system.withEnvironment
 import io.ktor.application.Application
 import io.ktor.server.testing.TestApplicationEngine
 import io.ktor.server.testing.withTestApplication
+import mu.KotlinLogging
 import org.intellij.lang.annotations.Language
+
+private val log = KotlinLogging.logger {}
 
 fun <R> withTestApp(test: TestApplicationEngine.() -> R): R =
     withEnvironment(config) {
         withTestApplication(Application::main, test)
     }
 
-private val config by lazy {
-    mapOf(
+private val config: Map<String, String>
+    get() = mapOf(
         "API_HOST" to Mocks.api.getBaseUrl(),
         "API_HOST_EXTERNAL" to Mocks.api.getBaseUrl(),
         "EVENT_REPLAY_KAFKA_HOST" to Mocks.eventreplay.getBaseUrl(),
@@ -24,27 +25,12 @@ private val config by lazy {
         "MASKINPORTEN_CLIENT_ID" to "e2e-test-id",
         "MASKINPORTEN_CLIENT_JWK" to jwk,
         "MASKINPORTEN_SCOPES" to "nav:helse:helseopplysninger.read nav:helse:helseopplysninger.write",
+        "KAFKA_BROKERS" to EmbeddedKafka.getHost(),
+        "KAFKA_CLIENT_ID" to "hops-test-e2e-$kafkaPrefix",
+        "KAFKA_GROUP_ID" to "hops-test-e2e-$kafkaPrefix"
     )
-}
 
-class KotestSetup : ProjectListener, AbstractProjectConfig() {
-    override fun listeners() = listOf(KotestSetup())
-    override suspend fun beforeProject() {
-        Mocks.maskinporten.start()
-        Mocks.api.start()
-        Mocks.eventreplay.start()
-        Mocks.eventsink.start()
-        Mocks.eventstore.start()
-    }
-
-    override suspend fun afterProject() {
-        Mocks.maskinporten.shutdown()
-        Mocks.api.shutdown()
-        Mocks.eventreplay.shutdown()
-        Mocks.eventsink.shutdown()
-        Mocks.eventstore.shutdown()
-    }
-}
+private val kafkaPrefix: Int get() = (0..100).random()
 
 @Language("json")
 private val jwk =

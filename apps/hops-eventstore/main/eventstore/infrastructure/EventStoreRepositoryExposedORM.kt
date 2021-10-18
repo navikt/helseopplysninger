@@ -17,11 +17,12 @@ import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.statements.InsertStatement
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
+import org.slf4j.LoggerFactory
+import java.lang.invoke.MethodHandles
 
 class EventStoreRepositoryExposedORM(config: Config.Database) : EventStoreRepository {
-
-    private val database =
-        Database.connect(url = config.url, user = config.username, password = config.password)
+    private val log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass())
+    private val database = Database.connect(url = config.url, user = config.username, password = config.password)
 
     init {
         Flyway
@@ -40,6 +41,7 @@ class EventStoreRepositoryExposedORM(config: Config.Database) : EventStoreReposi
                     it[eventId] = rowId
                     it[endpoint] = dest
                 }
+                log.trace("Saved event with id ${event.messageId}")
             }
         }
     }

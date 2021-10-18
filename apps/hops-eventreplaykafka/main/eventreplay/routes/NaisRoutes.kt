@@ -13,14 +13,14 @@ fun Routing.naisRoutes(
     replayJob: EventReplayJob,
     prometheusMeterRegistry: PrometheusMeterRegistry,
 ) {
-    get("/isReady") {
+    get("/actuator/ready") {
         val statusCode = if (replayJob.isRunning) HttpStatusCode.OK else HttpStatusCode.InternalServerError
         call.respond(statusCode, "EventReplayKafka")
     }
-    get("/isAlive") {
+    get("/actuator/live") {
         call.respondText("EventReplayKafka")
     }
-    get("/prometheus") {
+    get("/metrics") {
         call.respond(prometheusMeterRegistry.scrape())
     }
 }

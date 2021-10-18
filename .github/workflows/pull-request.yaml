@@ -3,126 +3,94 @@ name: Pull request
 on: pull_request
 
 jobs:
-  linter-ktlint:
+
+  lint:
+    name: 🖍️️ Linter
+    if: github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
-    name: Linting (ktlint)
     steps:
       - uses: actions/checkout@v2
 
-      - name: Get latest ktlint download-url
+      - name: 🔖 Get latest ktlint download-url
         id: ktlint-latest
         run: |
-          echo "::set-output name=KTLINT_URL::$( \
-            curl -SSL https://api.github.com/repos/pinterest/ktlint/releases/latest \
-            | jq .assets[0] | jq .browser_download_url -r \
-          )"
+          url=https://api.github.com/repos/pinterest/ktlint/releases/latest
+          echo "::set-output name=KTLINT_URL::$(curl -SSL $url | jq .assets[0] | jq .browser_download_url -r)"
 
-      - name: Cache ktlint
+      - name: 📌 Cache ktlint
         uses: actions/cache@v2
         id: ktlint-cache
         with:
           path: ktlint
           key: ${{ runner.os }}-${{ steps.ktlint-latest.outputs.KTLINT_URL }}
 
-      - name: Download ktlint
+      - name: 📩 Download ktlint
         if: steps.ktlint-cache.outputs.cache-hit != 'true'
         run: |
           echo ${{ steps.ktlint-latest.outputs.KTLINT_URL }} | wget -qi-
           chmod a+x ktlint
 
-      - name: Run ktlint
+      - name: ✏️ Run ktlint
         continue-on-error: true
         run: ./ktlint --reporter=checkstyle,output=build/ktlint-report-in-checkstyle-format.xml
 
-      - name: Print ktlint results
+      - name: 🎦 Print ktlint results
         if: always()
         run: cat build/ktlint-report-in-checkstyle-format.xml
 
-      - name: Install reviewdog
-        if: github.actor != 'dependabot[bot]' # requires write permission
+      - name: 📦 Install reviewdog
         uses: reviewdog/action-setup@v1
 
-      - name: Publish results (ktlint)
-        if: github.actor != 'dependabot[bot]' # requires write permission
+      - name: 📊 Publish results (ktlint)
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          args=(
-            -f=checkstyle
-            -diff="git diff"
-            -name=ktlint
-            -reporter=github-pr-review  # only supported code suggester
-            -filter-mode=nofilter       # partially supported by github-pr-review
-            -level=error                # if set to info, a lint error will end the job with exit code 1
-          )
-          cat build/ktlint-report-in-checkstyle-format.xml | reviewdog "${args[@]}"
+        run: cat build/ktlint-report-in-checkstyle-format.xml | reviewdog -f=checkstyle -diff="git diff" -name=ktlint \
+          -reporter=github-pr-review -filter-mode=nofilter -level=error
 
-      # Dependabot will only be granted read access
-      # Therefore we will upload an artifact with the ktlint results
-      - name: Upload artifact [ktlint-results] (dependabot)
-        if: github.actor == 'dependabot[bot]'
-        uses: actions/upload-artifact@v2
-        with:
-          name: ktlint-results
-          path: build/ktlint-report-in-checkstyle-format.xml
-          retention-days: 5
-
-  test-unit:
-    name: Test (unit test)
+  test:
+    name: 🧪 Test
+    if: github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
-    env:
-      GRADLE_OPTS: -Dorg.gradle.daemon=false
     steps:
       - uses: actions/checkout@v2
-
-      - name: Cache Gradle dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-caches-${{ hashFiles('**/*.gradle.kts') }}
-
-      - name: Cache Gradle wrapper
-        uses: actions/cache@v2
-        with:
-          path: ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}
-
       - uses: actions/setup-java@v2
         with:
           java-version: 16
-          distribution: 'adopt'
+          distribution: 'temurin'
           cache: 'gradle'
 
-      # Must login to gain access to docker.pkg.github.com/navikt/* images required by some integration-tests.
-      - uses: docker/login-action@v1
-        with:
-          registry: docker.pkg.github.com
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - run: ./gradlew test --continue
+      - name: 🪲 Run gradle test
         continue-on-error: true
+        run: ./gradlew test --continue --no-daemon
 
-      # Dependabot will only be granted read access
-      # Therefore we will upload an artifact with the unit test results
-      - name: Upload artifact [unit-test-results] (dependabot)
-        if: github.actor == 'dependabot[bot]'
-        uses: actions/upload-artifact@v2
+      - name: 🔑 Generate team token
+        uses: navikt/github-app-token-generator@v1
+        id: gen-token
         with:
-          name: unit-test-results
-          path: '**/build/test-results/test/TEST-*.xml'
-          retention-days: 5
+          private-key: ${{ secrets.HOPS_CI_TOOL_PRIVATE_KEY }}
+          app-id: ${{ secrets.HOPS_CI_TOOL_APP_ID }}
 
-      - name: Publish results (unit test)
-        if: github.actor != 'dependabot[bot]' # requires write permission
-        uses: EnricoMi/publish-unit-test-result-action@v1
+      - name: 📊 Publish results with dorny
+        uses: dorny/test-reporter@v1.5.0
         with:
-          commit: ${{ github.event.workflow_run.head_sha }}
-          files: "**/build/test-results/test/TEST-*.xml"
+          name: junit tests
+          path: "**/build/test-results/test/TEST-*.xml"
+          reporter: java-junit
+          token: ${{ steps.gen-token.outputs.token }}
 
-      - name: Cleanup Gradle Cache
-        # Remove some files from the Gradle cache, so they aren't cached by GitHub Actions.
-        # Restoring these files from a GitHub Actions cache might cause problems for future builds.
+  dependabot-version:
+    name: 🚦️Verify semantic version of dependencies
+    runs-on: ubuntu-latest
+    if: github.actor == 'dependabot[bot]'
+    steps:
+      - name: 🟡️ Dependabot metadata
+        uses: dependabot/fetch-metadata@v1.1.1
+        id: metadata
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🔴 Stop auto merge
+        if: ${{ steps.metadata.outputs.update-type == 'version-update:semver-major' }}
         run: |
-          rm -f ~/.gradle/caches/modules-2/modules-2.lock
-          rm -f ~/.gradle/caches/modules-2/gc.properties
+          echo "Major version is not enabled for auto merge"
+          exit 1

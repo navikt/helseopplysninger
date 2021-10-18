@@ -12,6 +12,9 @@ import org.apache.kafka.clients.producer.RecordMetadata
 import org.apache.kafka.common.TopicPartition
 import org.apache.kafka.common.header.Headers
 import org.apache.kafka.common.header.internals.RecordHeaders
+import org.slf4j.LoggerFactory
+import java.lang.invoke.MethodHandles
+import no.nav.helse.hops.plugin.send
 import java.time.Duration
 import java.time.ZoneOffset
 import java.util.UUID
@@ -25,6 +28,8 @@ class FhirMessageBusKafka(
     private val consumer: Consumer<UUID, ByteArray>,
     private val config: Config.Kafka,
 ) : FhirMessageBus {
+    private val log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass())
+
     override suspend fun publish(message: FhirMessage) {
         suspendCoroutine<RecordMetadata> { continuation ->
             val callback = Callback { metadata, exception ->
@@ -33,7 +38,7 @@ class FhirMessageBusKafka(
             }
 
             val record = createRecord(config.topic, message)
-            producer.send(record, callback)
+            producer.send(record, callback, log)
         }
     }
 
