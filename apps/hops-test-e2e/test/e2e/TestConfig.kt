@@ -1,16 +1,16 @@
 package e2e
 
-import io.kotest.extensions.system.withEnvironment
 import io.ktor.application.Application
 import io.ktor.server.testing.TestApplicationEngine
 import io.ktor.server.testing.withTestApplication
 import mu.KotlinLogging
 import org.intellij.lang.annotations.Language
+import uk.org.webcompere.systemstubs.environment.EnvironmentVariables
 
 private val log = KotlinLogging.logger {}
 
 fun <R> withTestApp(test: TestApplicationEngine.() -> R): R =
-    withEnvironment(config) {
+    EnvironmentVariables(config).execute<R> {
         withTestApplication(Application::main, test)
     }
 
