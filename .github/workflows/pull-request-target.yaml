@@ -167,8 +167,7 @@ jobs:
       - name: 📖 Fetch pull request info
         id: pr-info
         run: |
-          echo "${{  }}"
-          url=${{ github.event.pull_request.url }}
+          url=${{ github.event.pull_request.html }}
           echo "::set-output name=MERGEABLE_STATE::$(curl '$url' | jq .mergeable_state -r)"
           echo "::set-output name=MERGEABLE::$(curl '$url' | jq .mergeable_state -r)"
           echo "::set-output name=REBASEABLE::$(curl '$url' | jq .rebaseable -r)"
