@@ -15,7 +15,7 @@ tasks {
 dependencies {
     api(project(":libs:hops-common-ktor"))
     api(kotlin("test"))
-    api("no.nav.security:mock-oauth2-server:0.3.5")
+    api("no.nav.security:mock-oauth2-server:0.3.6")
     api("io.ktor:ktor-client-mock:1.6.4") // Ktor - http mock
     api("io.ktor:ktor-server-test-host:1.6.4") // Ktor - test engine
     api("io.ktor:ktor-jackson:1.6.4")
