@@ -21,6 +21,13 @@ jobs:
           private-key: ${{ secrets.HOPS_CI_TOOL_PRIVATE_KEY }}
           app-id: ${{ secrets.HOPS_CI_TOOL_APP_ID }}
 
+      - name: ✅️ Approve as codeowner
+        run: gh pr review $PR_BRANCH --approve
+        env:
+          GITHUB_TOKEN: ${{ secrets.CODEOWNER_PAT }}
+          PR_BRANCH: ${{ github.event.workflow_run.head_branch }}
+          GH_REPO: ${{ github.repository }}
+
       - name: 🎨️ Comment
         run: gh pr comment $PR_BRANCH --body "State is clean and mergable, will now squash this pull-request."
         env:
