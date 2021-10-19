@@ -2,10 +2,13 @@ package api
 
 import io.ktor.http.HttpHeaders
 import io.ktor.http.withCharset
+import java.util.concurrent.atomic.AtomicBoolean
 import no.nav.helse.hops.convert.ContentTypes
 import no.nav.helse.hops.test.HopsOAuthMock
 import no.nav.helse.hops.test.MockServer
 import okhttp3.mockwebserver.MockResponse
+import org.junit.jupiter.api.extension.BeforeAllCallback
+import org.junit.jupiter.api.extension.ExtensionContext
 
 object MockServers {
     val oAuth = HopsOAuthMock()
@@ -27,5 +30,15 @@ object MockServers {
                     .setBody("""""")
             }
         )
+    }
+
+    object Setup : BeforeAllCallback {
+        private val started = AtomicBoolean(false)
+        override fun beforeAll(context: ExtensionContext?) {
+            if (!started.getAndSet(true)) {
+                oAuth.start()
+                eventStore.start()
+            }
+        }
     }
 }

@@ -1,9 +1,6 @@
 package fileshare.infrastructure
 
 import fileshare.domain.FileStore
-import io.kotest.assertions.throwables.shouldThrow
-import io.kotest.core.spec.style.StringSpec
-import io.kotest.matchers.shouldBe
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.engine.mock.MockEngine
@@ -19,10 +16,15 @@ import io.ktor.http.fullPath
 import io.ktor.http.headersOf
 import io.ktor.utils.io.ByteReadChannel
 import java.net.URL
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
+import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.Instant
 import kotlinx.serialization.json.Json
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
-class GCPHttpTransportTest : StringSpec({
+class GCPHttpTransportTest {
 
     val baseConfig = Config.FileStore(
         URL("http://localhost"),
@@ -64,7 +66,8 @@ class GCPHttpTransportTest : StringSpec({
         block()
     }
 
-    "Can deserialize response" {
+    @Test
+    fun `Can deserialize response`() {
         val client = jsonMockClient {
             engine {
                 addHandler {
@@ -77,19 +80,22 @@ class GCPHttpTransportTest : StringSpec({
         }
         val transport = GCPHttpTransport(client, baseConfig)
 
-        val (name, contentType, _, created) = transport.upload(
-            "test",
-            ContentType.parse("image/png"),
-            ByteReadChannel("content"),
-            "file-name"
-        )
+        val (name, contentType, _, created) = runBlocking {
+            transport.upload(
+                "test",
+                ContentType.parse("image/png"),
+                ByteReadChannel("content"),
+                "file-name"
+            )
+        }
 
-        name shouldBe "file-name"
-        contentType shouldBe "image/png"
-        created shouldBe Instant.parse("2021-08-24T07:57:10.91259Z")
+        assertEquals("file-name", name)
+        assertEquals("image/png", contentType)
+        assertEquals(Instant.parse("2021-08-24T07:57:10.91259Z"), created)
     }
 
-    "Should decode md5 hash to hex" {
+    @Test
+    fun `Should decode md5 hash to hex`() {
         val client = jsonMockClient {
             engine {
                 addHandler {
@@ -102,17 +108,20 @@ class GCPHttpTransportTest : StringSpec({
         }
         val transport = GCPHttpTransport(client, baseConfig)
 
-        val (_, _, md5Hash, _) = transport.upload(
-            "test",
-            ContentType.parse("image/png"),
-            ByteReadChannel("content"),
-            "file-name"
-        )
+        val (_, _, md5Hash, _) = runBlocking {
+            transport.upload(
+                "test",
+                ContentType.parse("image/png"),
+                ByteReadChannel("content"),
+                "file-name"
+            )
+        }
 
-        md5Hash shouldBe "a8a60378d728a68d4115263278a8e46f"
+        assertEquals("a8a60378d728a68d4115263278a8e46f", md5Hash)
     }
 
-    "Should throw exception when file already exists" {
+    @Test
+    fun `Should throw exception when file already exists`() {
         val client = jsonMockClient {
             engine {
                 addHandler {
@@ -125,12 +134,15 @@ class GCPHttpTransportTest : StringSpec({
             }
         }
         val transport = GCPHttpTransport(client, baseConfig)
-        shouldThrow<FileStore.DuplicatedFileException> {
-            transport.upload("bucket", ContentType.parse("plain/txt"), ByteReadChannel("test"), "file-name")
+        assertThrows<FileStore.DuplicatedFileException> {
+            runBlocking {
+                transport.upload("bucket", ContentType.parse("plain/txt"), ByteReadChannel("test"), "file-name")
+            }
         }
     }
 
-    "Should send Google meta-data header to obtain tokens" {
+    @Test
+    fun `Should send Google meta-data header to obtain tokens`() {
 
         var receivedHeaders = Headers.Empty
         val client = jsonMockClient {
@@ -152,12 +164,15 @@ class GCPHttpTransportTest : StringSpec({
         }
         val transport = GCPHttpTransport(client, baseConfig.copy(requiresAuth = true))
 
-        transport.download("test", "file-name")
+        runBlocking {
+            transport.download("test", "file-name")
+        }
 
-        receivedHeaders.contains("Metadata-Flavor", "Google") shouldBe true
+        assertTrue(receivedHeaders.contains("Metadata-Flavor", "Google"))
     }
 
-    "!Can retrieve access token" {
+    @Test
+    fun `!Can retrieve access token`() {
 
         val client = jsonMockClient {
             engine {
@@ -172,4 +187,4 @@ class GCPHttpTransportTest : StringSpec({
 
         val transport = GCPHttpTransport(client, baseConfig.copy(requiresAuth = true))
     }
-})
+}
