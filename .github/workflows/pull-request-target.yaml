@@ -6,9 +6,9 @@ name: Pull request target
 # │	  make sure they use separate jobs with only use of secrets.GITHUB_TOKEN and scoped minimum requored permissions. │
 # ╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 
-on: pull_request
-#  pull_request_target:
-#    types: [ opened, labeled, unlabeled, synchronize ]
+on:
+  pull_request_target:
+    types: [ opened, labeled, unlabeled, synchronize ]
 
 jobs:
   # ╭─────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
@@ -130,21 +130,13 @@ jobs:
         continue-on-error: true
         run: ./gradlew test --continue --no-daemon
 
-      - name: 🔑 Generate team token
-        uses: navikt/github-app-token-generator@v1
-        id: gen-token
-        with:
-          private-key: ${{ secrets.HOPS_CI_TOOL_PRIVATE_KEY }}
-          app-id: ${{ secrets.HOPS_CI_TOOL_APP_ID }}
-
       - name: 📊 Publish results with dorny
         uses: dorny/test-reporter@v1.5.0
         with:
           name: 🧬 Test results
           path: "**/build/test-results/test/TEST-*.xml"
           reporter: java-junit
-          token: ${{ steps.gen-token.outputs.token }}
-#          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
   # ╭─────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
   # │	If actor is dependabot, we will check the semantic versions of the dependacices.                              │
@@ -158,19 +150,11 @@ jobs:
       github.event.pull_request.head.repo.full_name == github.repository &&
       github.actor == 'dependabot[bot]'
     steps:
-      - name: 🔑 Generate team token
-        uses: navikt/github-app-token-generator@v1
-        id: gen-token
-        with:
-          private-key: ${{ secrets.HOPS_CI_TOOL_PRIVATE_KEY }}
-          app-id: ${{ secrets.HOPS_CI_TOOL_APP_ID }}
-
       - name: 🟡️ Fetch metadata
         uses: dependabot/fetch-metadata@v1.1.1
         id: metadata
         with:
-          github-token: ${{ steps.gen-token.outputs.token }}
-#          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 🔴 Illegal version update
         if: ${{ steps.metadata.outputs.update-type == 'version-update:semver-major' }}
