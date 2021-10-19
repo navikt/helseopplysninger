@@ -13,10 +13,12 @@ on:
 jobs:
 
   lint-install:
-    name: Lint install
+    name: 🖍️ Lint install
     runs-on: ubuntu-latest
     # Trigger if not from fork
     if: github.event.pull_request.head.repo.full_name == github.repository
+    outputs:
+      KTLINT_URL: ${{ steps.ktlint-latest.outputs.KTLINT_URL }}
     steps:
       - uses: actions/checkout@v2
 
@@ -40,13 +42,18 @@ jobs:
           chmod a+x ktlint
 
   lint-format:
-    name: 💅 Lint format
+    name: 🖍 Lint format
     needs: lint-install
     runs-on: ubuntu-latest
     # Trigger if label=format and not by fork
     if: contains(github.event.pull_request.labels.*.name, 'format') && github.event.pull_request.head.repo.full_name == github.repository
     steps:
       - uses: actions/checkout@v2
+      - name: 📌 Get ktlint
+        uses: actions/cache@v2
+        with:
+          path: ktlint
+          key: ${{ runner.os }}-${{ needs.lint-install.outputs.KTLINT_URL }}
       - run: ./ktlint --format
 
   lint-check:
@@ -57,6 +64,13 @@ jobs:
     # Trigger if not from fork
     if: github.event.pull_request.head.repo.full_name == github.repository
     steps:
+      - name: 📌 Get ktlint
+        uses: actions/cache@v2
+        id: ktlint-cache
+        with:
+          path: ktlint
+          key: ${{ runner.os }}-${{ needs.lint-install.outputs.KTLINT_URL }}
+
       - name: ✏️ Run ktlint
         continue-on-error: true
         run: ./ktlint --reporter=checkstyle,output=build/ktlint-report-in-checkstyle-format.xml
@@ -89,7 +103,7 @@ jobs:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   test:
-    name: 🧪 Test
+    name: 🧬 Test
     runs-on: ubuntu-latest
     # Trigger if not from fork
     if: github.event.pull_request.head.repo.full_name == github.repository
@@ -106,24 +120,16 @@ jobs:
         continue-on-error: true
         run: ./gradlew test --continue --no-daemon
 
-      #      - name: 🔑 Generate team token
-      #        uses: navikt/github-app-token-generator@v1
-      #        id: gen-token
-      #        with:
-      #          private-key: ${{ secrets.HOPS_CI_TOOL_PRIVATE_KEY }}
-      #          app-id: ${{ secrets.HOPS_CI_TOOL_APP_ID }}
-
       - name: 📊 Publish results with dorny
         uses: dorny/test-reporter@v1.5.0
         with:
           name: junit tests
           path: "**/build/test-results/test/TEST-*.xml"
           reporter: java-junit
-          #          token: ${{ steps.gen-token.outputs.token }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
   dependabot-validate:
-    name: 🚦Validate semantic version of dependencies
+    name: 🚦Valid dependency version
     runs-on: ubuntu-latest
     # Trigger if actor=dependabot and not by fork
     if: github.actor == 'dependabot[bot]' && github.event.pull_request.head.repo.full_name == github.repository
@@ -136,28 +142,38 @@ jobs:
 
       - name: 🔴 Illegal version update
         if: ${{ steps.metadata.outputs.update-type == 'version-update:semver-major' }}
-        run: |
-          echo "Major version is not enabled for auto merge"
-          exit 1
+        run: exit 1
 
       - name: 🟢 Will update
         run: echo "Will update version=${{ steps.metadata.outputs.update-type }}"
 
   dependabot-verify:
-    name: Verify pull request state
+    name: 🧰 Verify pull request state
     runs-on: ubuntu-latest
     # Trigger if actor=dependabot and not by fork
     if: github.actor == 'dependabot[bot]' && github.event.pull_request.head.repo.full_name == github.repository
     steps:
+      - name: debug
+        env:
+          CTX: ${{ toJSON(github) }}
+          JOB: ${{ toJSON(job) }}
+          STEPS: ${{ toJSON(steps) }}
+        continue-on-error: true
+        run: |
+          echo "$CTX"
+          echo "$JOB"
+          echo "$STEPS"
+
       - name: 📖 Fetch pull request info
         id: pr-info
         run: |
+          echo "${{  }}"
           url=${{ github.event.pull_request.url }}
           echo "::set-output name=MERGEABLE_STATE::$(curl '$url' | jq .mergeable_state -r)"
           echo "::set-output name=MERGEABLE::$(curl '$url' | jq .mergeable_state -r)"
           echo "::set-output name=REBASEABLE::$(curl '$url' | jq .rebaseable -r)"
 
-      - name: 🧬 Check mergable state
+      - name: 🧪 Check mergable state
         uses: nick-invision/retry@v2
         with:
           timeout_seconds: 10
