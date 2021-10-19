@@ -58,11 +58,13 @@ jobs:
 
   lint-check:
     name: 🖍 Lint check
-    # TODO: this should run after lint-format if lint-format was not skipped, else we run it anyway
-    needs: lint-install
+    needs: [ lint-install, lint-format ]
     runs-on: ubuntu-latest
-    # Trigger if not from fork
-    if: github.event.pull_request.head.repo.full_name == github.repository
+    # Trigger if not from fork and lint-format was success or skipped
+    if: |
+      always() &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      (needs.lint-format.result == 'success' || needs.lint-format.result == 'skipped')
     steps:
       - uses: actions/checkout@v2
 
