@@ -1,9 +1,9 @@
 name: Pull request target
 
 # ╭───────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-# │	  When running pull_request_target we want to ignore all events caused by forks                                   │
+# │	  When running pull_request_target we want to ignore all events caused by pull-request from forks.                │
 # │	  If we want to support pull-request from forks in the future,                                                    │
-# │	  make sure they have very limited access/permissions                                                             │
+# │	  make sure they use separate jobs with only use of secrets.GITHUB_TOKEN and scoped minimum requored permissions. │
 # ╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 
 on:
@@ -11,11 +11,13 @@ on:
     types: [ opened, labeled, unlabeled, synchronize ]
 
 jobs:
-
+  # ╭─────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+  # │	The linter is installed seperately because it is used by both lint-format and lint-check                      │
+  # ╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
   lint-install:
     name: 🖍️ Lint install
     runs-on: ubuntu-latest
-    # Trigger if not from fork
+    # Ignore triggers from forks
     if: github.event.pull_request.head.repo.full_name == github.repository
     outputs:
       KTLINT_URL: ${{ steps.ktlint-latest.outputs.KTLINT_URL }}
@@ -41,12 +43,15 @@ jobs:
           echo ${{ steps.ktlint-latest.outputs.KTLINT_URL }} | wget -qi-
           chmod a+x ktlint
 
+  # ╭─────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+  # │	Run formatter by labelling the pull-request with 'format'                                                     │
+  # │	TODO: this will trigger the workflow with you as the actor, and will therefore not auto-merge                 │
+  # ╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
   lint-format:
     name: 🖍 Lint format
     needs: lint-install
     runs-on: ubuntu-latest
-    # Trigger if label=format and not by fork
-    if: contains(github.event.pull_request.labels.*.name, 'format') && github.event.pull_request.head.repo.full_name == github.repository
+    if: contains(github.event.pull_request.labels.*.name, 'format')
     steps:
       - uses: actions/checkout@v2
       - name: 📌 Get ktlint
@@ -56,11 +61,15 @@ jobs:
           key: ${{ runner.os }}-${{ needs.lint-install.outputs.KTLINT_URL }}
       - run: ./ktlint --format
 
+  # ╭─────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+  # │	Run the linter when lint-install is completed, and when lint-format is completed/skipped.                     │
+  # │	A token will be generated from the bot `HOPS CI Tools` to use as the bot reviewer instead of GitHub           │
+  # ╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
   lint-check:
     name: 🖍 Lint check
     needs: [ lint-install, lint-format ]
     runs-on: ubuntu-latest
-    # Trigger if not from fork and lint-format was success or skipped
+    # Ignore triggers from forks
     if: |
       always() &&
       github.event.pull_request.head.repo.full_name == github.repository &&
@@ -100,10 +109,13 @@ jobs:
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ steps.gen-token.outputs.token }}
 
+  # ╭─────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+  # │	Test results will be published to the pull-request, see the check-run for details if the check fails.         │
+  # ╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
   test:
     name: 🧬 Test
     runs-on: ubuntu-latest
-    # Trigger if not from fork
+    # Ignore triggers from forks
     if: github.event.pull_request.head.repo.full_name == github.repository
     steps:
       - uses: actions/checkout@v2
@@ -121,16 +133,22 @@ jobs:
       - name: 📊 Publish results with dorny
         uses: dorny/test-reporter@v1.5.0
         with:
-          name: junit tests
+          name: 🧬 Test results
           path: "**/build/test-results/test/TEST-*.xml"
           reporter: java-junit
           token: ${{ secrets.GITHUB_TOKEN }}
 
+  # ╭─────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+  # │	If actor is dependabot, we will check the semantic versions of the dependacices.                              │
+  # │	Only 'minor' and 'patch' versions will be automatically merged.                                               │
+  # ╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
   dependabot-verify:
     name: 🚦Verify dependency version
     runs-on: ubuntu-latest
-    # Trigger if actor=dependabot and not by fork
-    if: github.actor == 'dependabot[bot]' && github.event.pull_request.head.repo.full_name == github.repository
+    # Ignore triggers from forks
+    if: |
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.actor == 'dependabot[bot]'
     steps:
       - name: 🟡️ Fetch metadata
         uses: dependabot/fetch-metadata@v1.1.1
