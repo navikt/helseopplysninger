@@ -9,7 +9,7 @@ on:
 
 jobs:
   test:
-    name: 🧪 test
+    name: 🧪 Test
     if: github.actor == 'dependabot[bot]' && github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
@@ -38,22 +38,58 @@ jobs:
           reporter: java-junit
           token: ${{ steps.gen-token.outputs.token }}
 
-  approve:
-    name: 🤖 approve
+  squash-and-merge:
+    name: 🤖 Squash and merge
     if: github.actor == 'dependabot[bot]' && github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     needs: test
     steps:
-      - name: 🔑 Generate team token
+      - name: 📖 Fetch pull request info
+        id: pr-info
+        run : |
+          echo "::set-output name=MERGEABLE_STATE::$(curl $url | jq .mergeable_state -r)"
+          echo "::set-output name=MERGEABLE::$(curl $url | jq .mergeable_state -r)"
+          echo "::set-output name=REBASEABLE::$(curl $url | jq .rebaseable -r)"
+
+      - name: 🧬 Check mergable state
+        uses: nick-invision/retry@v2
+        with:
+          timeout_seconds: 10
+          max_attempts: 3
+          command: |
+            if [ "${{ steps.pr-info.outputs.MERGEABLE_STATE }}" != "clean" ]; then
+              echo "mergeable_state: $mr_state"
+              exit 1
+            fi
+            if [ "${{ steps.pr-info.outputs.MERGEABLE }}" != "true" ]; then
+              echo "mergeable: $mr"
+              exit 1
+            fi
+        env:
+          MSTATE: ${{ steps.pr-info.outputs.MERGEABLE_STATE }}
+          M: ${{ steps.pr-info.outputs.MERGEABLE }}
+          R: ${{ steps.pr-info.outputs.REBASEABLE }}
+
+      - name: 🗝️ Generate team token
         uses: navikt/github-app-token-generator@v1
         id: gen-token
         with:
           private-key: ${{ secrets.HOPS_CI_TOOL_PRIVATE_KEY }}
           app-id: ${{ secrets.HOPS_CI_TOOL_APP_ID }}
 
-      - name: 🟢️ Request a merge from dependabot
+      - name: 🎨️ Comment on pull-request
+        run: gh pr comment $PR_BRANCH --body "State is clean and mergable, will now squash this pull-request."
+        env:
+          GITHUB_TOKEN: ${{ steps.gen-token.outputs.token }}
+          PR_BRANCH: ${{ github.event.workflow_run.head_branch }}
+          GH_REPO: ${{ github.repository }}
+
+      - name: 🧩️ Squash and merge
         run: gh pr comment $PR_BRANCH --body "@dependabot squash and merge"
         env:
           GITHUB_TOKEN: ${{ steps.gen-token.outputs.token }}
           PR_BRANCH: ${{ github.event.workflow_run.head_branch }}
           GH_REPO: ${{ github.repository }}
+
+#      if mergeable_state == BEHIND => git pull then git push
+#      if mergeable_state == DIRTY && rebaseable == true => @dependabot rebase (or do manual rebase/ use a gitub action)

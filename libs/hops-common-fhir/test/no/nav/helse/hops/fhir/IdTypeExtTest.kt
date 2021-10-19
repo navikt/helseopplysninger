@@ -1,19 +1,21 @@
 package no.nav.helse.hops.fhir
 
-import io.kotest.assertions.throwables.shouldThrow
-import io.kotest.core.spec.style.StringSpec
-import io.kotest.matchers.shouldBe
+import kotlin.test.assertEquals
 import org.hl7.fhir.r4.model.IdType
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
-class IdTypeExtTest : StringSpec({
-    "toUriType() with valid UUID should return UriType" {
+class IdTypeExtTest {
+    @Test
+    fun `toUriType() with valid UUID should return UriType`() {
         val id = IdType("edaeae77-92c9-4ed1-b2d1-e15b953e8af8")
         val result = id.toUriType()
-        result.valueAsString shouldBe "urn:uuid:edaeae77-92c9-4ed1-b2d1-e15b953e8af8"
+        assertEquals("urn:uuid:edaeae77-92c9-4ed1-b2d1-e15b953e8af8", result.valueAsString)
     }
 
-    "toUriType() with invalid UUID should throw IllegalArgumentException" {
+    @Test
+    fun `toUriType() with invalid UUID should throw IllegalArgumentException`() {
         val id = IdType("not-an-uuid")
-        shouldThrow<IllegalArgumentException> { id.toUriType() }
+        assertThrows<IllegalArgumentException> { id.toUriType() }
     }
-})
+}

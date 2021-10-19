@@ -1,8 +1,5 @@
 package no.nav.helse.hops.convert
 
-import io.kotest.assertions.ktor.shouldHaveContent
-import io.kotest.assertions.ktor.shouldHaveHeader
-import io.kotest.assertions.ktor.shouldHaveStatus
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.features.ContentNegotiation
@@ -17,6 +14,7 @@ import io.ktor.routing.routing
 import io.ktor.server.testing.handleRequest
 import io.ktor.server.testing.setBody
 import io.ktor.server.testing.withTestApplication
+import kotlin.test.assertEquals
 import org.hl7.fhir.r4.model.Patient
 import org.junit.jupiter.api.Test
 
@@ -45,12 +43,10 @@ class FhirJsonContentConverterTest {
             addHeader(HttpHeaders.ContentType, "application/fhir+json; fhirVersion=4.0")
             setBody(patientJson)
         }.response.let { response ->
-            response shouldHaveStatus HttpStatusCode.OK
-            response shouldHaveContent patientJson
-            response.shouldHaveHeader(
-                name = HttpHeaders.ContentType,
-                value = ContentTypes.fhirJsonR4.withCharset(Charsets.UTF_8).contentType
-            )
+
+            assertEquals(HttpStatusCode.OK, response.status())
+            assertEquals(patientJson, response.content)
+            assertEquals(ContentTypes.fhirJsonR4.withCharset(Charsets.UTF_8).toString(), response.headers[HttpHeaders.ContentType])
         }
     }
 }

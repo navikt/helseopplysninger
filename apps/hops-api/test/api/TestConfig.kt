@@ -1,14 +1,11 @@
 package api
 
-import io.kotest.core.config.AbstractProjectConfig
-import io.kotest.core.listeners.Listener
-import io.kotest.core.listeners.ProjectListener
-import io.kotest.extensions.system.withEnvironment
 import io.ktor.application.Application
 import io.ktor.config.MapApplicationConfig
 import io.ktor.server.testing.TestApplicationEngine
 import io.ktor.server.testing.withTestApplication
 import no.nav.helse.hops.test.HopsOAuthMock.MaskinportenScopes
+import uk.org.webcompere.systemstubs.environment.EnvironmentVariables
 
 internal fun Application.config(): MapApplicationConfig {
 
@@ -22,13 +19,8 @@ internal fun Application.config(): MapApplicationConfig {
     }
 }
 
-internal fun <R> withHopsTestApplication(test: TestApplicationEngine.() -> R): R =
-    withEnvironment(
-        mapOf(
-            "HOPS_EVENTSTORE_BASE_URL" to MockServers.eventStore.getBaseUrl(),
-            "AZURE_APP_WELL_KNOWN_URL" to MockServers.oAuth.azureWellKnownUrl().toString()
-        )
-    ) {
+fun <R> withHopsTestApplication(test: TestApplicationEngine.() -> R): R =
+    EnvironmentVariables(config).execute<R> {
         withTestApplication(
             {
                 config()
@@ -38,18 +30,7 @@ internal fun <R> withHopsTestApplication(test: TestApplicationEngine.() -> R): R
         )
     }
 
-internal class KotestSetup() : AbstractProjectConfig() {
-    override fun listeners(): List<Listener> = super.listeners() + KotestListener()
-}
-
-internal class KotestListener : ProjectListener {
-    override suspend fun beforeProject() {
-        MockServers.oAuth.start()
-        MockServers.eventStore.start()
-    }
-
-    override suspend fun afterProject() {
-        MockServers.oAuth.shutdown()
-        MockServers.eventStore.shutdown()
-    }
-}
+private val config = mapOf(
+    "HOPS_EVENTSTORE_BASE_URL" to MockServers.eventStore.getBaseUrl(),
+    "AZURE_APP_WELL_KNOWN_URL" to MockServers.oAuth.azureWellKnownUrl().toString()
+)
