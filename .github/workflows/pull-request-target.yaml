@@ -159,9 +159,9 @@ jobs:
         id: pr-info
         run: |
           url=${{ github.event.pull_request.html_url }}
-          echo "::set-output name=MERGEABLE_STATE::$(curl '$url' | jq .mergeable_state -r)"
-          echo "::set-output name=MERGEABLE::$(curl '$url' | jq .mergeable_state -r)"
-          echo "::set-output name=REBASEABLE::$(curl '$url' | jq .rebaseable -r)"
+          echo "::set-output name=MERGEABLE_STATE::$(curl $url | jq .mergeable_state -r)"
+          echo "::set-output name=MERGEABLE::$(curl $url | jq .mergeable_state -r)"
+          echo "::set-output name=REBASEABLE::$(curl $url | jq .rebaseable -r)"
 
       - name: 🧪 Check mergable state
         uses: nick-invision/retry@v2
