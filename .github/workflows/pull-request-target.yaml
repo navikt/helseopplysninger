@@ -82,25 +82,19 @@ jobs:
       - name: 📦 Install reviewdog
         uses: reviewdog/action-setup@v1
 
-      #      - name: 🔑 Generate team token
-      #        uses: navikt/github-app-token-generator@v1
-      #        id: gen-token
-      #        with:
-      #          private-key: ${{ secrets.HOPS_CI_TOOL_PRIVATE_KEY }}
-      #          app-id: ${{ secrets.HOPS_CI_TOOL_APP_ID }}
+      - name: 🔑 Generate team token
+        uses: navikt/github-app-token-generator@v1
+        id: gen-token
+        with:
+          private-key: ${{ secrets.HOPS_CI_TOOL_PRIVATE_KEY }}
+          app-id: ${{ secrets.HOPS_CI_TOOL_APP_ID }}
 
       - name: 📊 Publish with reviewdog
         run: |
-          cat build/ktlint-report-in-checkstyle-format.xml | reviewdog \
-            -f=checkstyle \
-            -diff="git diff" \
-            -name=ktlint \
-            -reporter=github-pr-review \
-            -filter-mode=nofilter \
-            -level=error
+          cat build/ktlint-report-in-checkstyle-format.xml | \
+            reviewdog -reporter=github-pr-review -f=checkstyle -diff="git diff" -level=error
         env:
-          #          REVIEWDOG_GITHUB_API_TOKEN: ${{ steps.gen-token.outputs.token }}
-          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ steps.gen-token.outputs.token }}
 
   test:
     name: 🧬 Test
