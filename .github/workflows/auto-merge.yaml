@@ -36,7 +36,7 @@ jobs:
           GH_REPO: ${{ github.repository }}
 
       - name: 🧩️ Merge
-        run: gh pr merge $PR_BRANCH --squash --admin
+        run: gh pr merge $PR_BRANCH --squash
         env:
           GITHUB_TOKEN: ${{ steps.gen-token.outputs.token }}
           PR_BRANCH: ${{ github.event.workflow_run.head_branch }}
