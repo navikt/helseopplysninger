@@ -143,35 +143,35 @@ jobs:
       - name: 🟢 Will update
         run: echo "Will update version=${{ steps.metadata.outputs.update-type }}"
 
-    dependabot-verify:
-      name: Verify pull request state
-      runs-on: ubuntu-latest
-      # Trigger if actor=dependabot and not by fork
-      if: github.actor == 'dependabot[bot]' && github.event.pull_request.head.repo.full_name == github.repository
-      steps:
-        - name: 📖 Fetch pull request info
-          id: pr-info
-          run: |
-            url=${{ github.event.pull_request.url }}
-            echo "::set-output name=MERGEABLE_STATE::$(curl '$url' | jq .mergeable_state -r)"
-            echo "::set-output name=MERGEABLE::$(curl '$url' | jq .mergeable_state -r)"
-            echo "::set-output name=REBASEABLE::$(curl '$url' | jq .rebaseable -r)"
+  dependabot-verify:
+    name: Verify pull request state
+    runs-on: ubuntu-latest
+    # Trigger if actor=dependabot and not by fork
+    if: github.actor == 'dependabot[bot]' && github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      - name: 📖 Fetch pull request info
+        id: pr-info
+        run: |
+          url=${{ github.event.pull_request.url }}
+          echo "::set-output name=MERGEABLE_STATE::$(curl '$url' | jq .mergeable_state -r)"
+          echo "::set-output name=MERGEABLE::$(curl '$url' | jq .mergeable_state -r)"
+          echo "::set-output name=REBASEABLE::$(curl '$url' | jq .rebaseable -r)"
 
-        - name: 🧬 Check mergable state
-          uses: nick-invision/retry@v2
-          with:
-            timeout_seconds: 10
-            max_attempts: 3
-            command: |
-              if [ "${{ steps.pr-info.outputs.MERGEABLE_STATE }}" != "clean" ]; then
-                echo "mergeable_state: $mr_state"
-                exit 1
-              fi
-              if [ "${{ steps.pr-info.outputs.MERGEABLE }}" != "true" ]; then
-                echo "mergeable: $mr"
-                exit 1
-              fi
-          env:
-            MSTATE: ${{ steps.pr-info.outputs.MERGEABLE_STATE }}
-            M: ${{ steps.pr-info.outputs.MERGEABLE }}
-            R: ${{ steps.pr-info.outputs.REBASEABLE }}
+      - name: 🧬 Check mergable state
+        uses: nick-invision/retry@v2
+        with:
+          timeout_seconds: 10
+          max_attempts: 3
+          command: |
+            if [ "${{ steps.pr-info.outputs.MERGEABLE_STATE }}" != "clean" ]; then
+              echo "mergeable_state: $mr_state"
+              exit 1
+            fi
+            if [ "${{ steps.pr-info.outputs.MERGEABLE }}" != "true" ]; then
+              echo "mergeable: $mr"
+              exit 1
+            fi
+        env:
+          MSTATE: ${{ steps.pr-info.outputs.MERGEABLE_STATE }}
+          M: ${{ steps.pr-info.outputs.MERGEABLE }}
+          R: ${{ steps.pr-info.outputs.REBASEABLE }}
