@@ -19,11 +19,18 @@ jobs:
     runs-on: ubuntu-latest
     name: Code Inspection
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2.3.4
-
-      - name: Qodana - Code Inspection
-        uses: JetBrains/qodana-action@v2.2-eap
+      - uses: actions/checkout@v2.3.4
+      - uses: actions/cache@v2
+        with:
+          path: ~/work/_temp/_github_home/qodana-cache
+          key: ${{ runner.os }}-qodana-${{ github.ref }}
+          restore-keys: |
+            ${{ runner.os }}-qodana-${{ github.ref }}
+            ${{ runner.os }}-qodana-
+      - uses: JetBrains/qodana-action@v2.2.1-eap
+      - uses: actions/upload-artifact@v2
+        with:
+          path: ${{ github.workspace }}/qodana
 
   lisence:
     runs-on: ubuntu-latest
@@ -34,3 +41,14 @@ jobs:
 
       - name: Qodana - License Audit
         uses: JetBrains/qodana-license-audit-action@v2.0-eap
+
+      - uses: actions/upload-artifact@v2
+        with:
+          path: ${{ github.workspace }}/qodana
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ${{ github.workspace }}/qodana/report
+          destination_dir: ./
