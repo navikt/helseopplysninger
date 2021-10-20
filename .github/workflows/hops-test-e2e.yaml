@@ -20,7 +20,7 @@ jobs:
         uses: styfle/cancel-workflow-action@0.9.1
         with:
           access_token: ${{ github.token }}
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v2.3.5
       - uses: docker/login-action@v1
         with:
           registry: ghcr.io
@@ -37,7 +37,7 @@ jobs:
     needs: build
     name: Deploy e2e to dev
     steps:
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v2.3.5
       - uses: nais/deploy/actions/deploy@master
         env:
           CLUSTER: dev-gcp
