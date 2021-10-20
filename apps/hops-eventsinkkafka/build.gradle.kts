@@ -31,7 +31,7 @@ dependencies {
     implementation("io.ktor:ktor-metrics-micrometer:1.6.4")
     implementation("io.ktor:ktor-webjars:1.6.4")
     implementation("io.ktor:ktor-server-netty:1.6.4")
-    implementation("io.micrometer:micrometer-registry-prometheus:1.7.4")
+    implementation("io.micrometer:micrometer-registry-prometheus:1.7.5")
     runtimeOnly("ch.qos.logback:logback-classic:1.2.6")
     runtimeOnly("io.ktor:ktor-server-netty:1.6.3")
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
