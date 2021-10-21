@@ -1,4 +1,4 @@
-name: Pull request target
+name: Pull request
 
 # ╭───────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
 # │	  When running pull_request_target we want to ignore all events caused by pull-request from forks.                │
@@ -6,9 +6,7 @@ name: Pull request target
 # │	  make sure they use separate jobs with only use of secrets.GITHUB_TOKEN and scoped minimum requored permissions. │
 # ╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 
-on:
-  pull_request_target:
-    types: [ opened, labeled, unlabeled, synchronize ]
+on: pull_request_target
 
 jobs:
   # ╭─────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮

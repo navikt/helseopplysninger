@@ -8,7 +8,7 @@ name: Auto merge PR
 
 on:
   workflow_run:
-    workflows: [ 'Pull request target' ]
+    workflows: [ 'Pull request' ]
     types: [ completed ]
     branches:
       - 'dependabot/**'
