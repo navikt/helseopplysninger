@@ -19,8 +19,8 @@ fun <K, V> Producer<K, V>.send(
     return send(record, callback)
 }
 
-/** Same as [Producer.send], but implemented as a Kotlin suspend function. **/
-suspend fun <K, V> Producer<K, V>.sendAwait(record: ProducerRecord<K, V>) {
+/** Same as [Producer.send], but implemented as a non-blocking Kotlin suspend function. **/
+suspend fun <K, V> Producer<K, V>.sendAwait(record: ProducerRecord<K, V>) =
     suspendCoroutine<RecordMetadata> { continuation ->
         val callback = Callback { metadata, exception ->
             if (metadata == null) continuation.resumeWithException(exception!!)
@@ -29,4 +29,3 @@ suspend fun <K, V> Producer<K, V>.sendAwait(record: ProducerRecord<K, V>) {
 
         send(record, callback)
     }
-}

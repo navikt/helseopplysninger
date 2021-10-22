@@ -10,7 +10,7 @@ import java.time.Duration
 import java.util.UUID
 
 interface FhirMessageStream {
-    fun <T> poll(map: (ConsumerRecord<UUID, ByteArray>) -> T?): Flow<T>
+    fun <R> poll(map: (ConsumerRecord<UUID, ByteArray>) -> R?): Flow<R>
 }
 
 class FhirMessageStreamKafka(
@@ -18,7 +18,7 @@ class FhirMessageStreamKafka(
     private val topic: String,
     private val timeout: Duration = Duration.ofSeconds(2)
 ) : FhirMessageStream {
-    override fun <T> poll(map: (ConsumerRecord<UUID, ByteArray>) -> T?): Flow<T> =
+    override fun <R> poll(map: (ConsumerRecord<UUID, ByteArray>) -> R?): Flow<R> =
         flow {
             try {
                 consumer.subscribe(listOf(topic))

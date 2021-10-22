@@ -22,7 +22,6 @@ object KafkaFactory {
             it[ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG] = ByteArraySerializer::class.java
             it[ProducerConfig.ACKS_CONFIG] = "all"
             it[ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG] = "true"
-            it[ConsumerConfig.AUTO_OFFSET_RESET_CONFIG] = "earliest"
         }
         return KafkaProducer(props)
     }
@@ -32,6 +31,7 @@ object KafkaFactory {
             it[ConsumerConfig.GROUP_ID_CONFIG] = config.groupId
             it[ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG] = UUIDDeserializer::class.java
             it[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = ByteArrayDeserializer::class.java
+            it[ConsumerConfig.AUTO_OFFSET_RESET_CONFIG] = "earliest"
         }
         return KafkaConsumer(props)
     }
