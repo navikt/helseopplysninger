@@ -38,8 +38,12 @@ dependencies {
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
     runtimeOnly("org.webjars:swagger-ui:3.52.1")
     testImplementation(project(":libs:hops-common-test"))
+    testImplementation("no.nav:kafka-embedded-env:2.8.0") {
+        exclude("io.confluent", "kafka-schema-registry")
+    }
 }
 
 kotlin.sourceSets["main"].kotlin.srcDirs("main")
 kotlin.sourceSets["test"].kotlin.srcDirs("test")
 sourceSets["main"].resources.srcDir(".config")
+sourceSets["test"].resources.srcDir("test/resources")

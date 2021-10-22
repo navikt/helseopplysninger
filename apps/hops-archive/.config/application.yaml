@@ -7,7 +7,7 @@ kafka:
   credstorePsw: ${KAFKA_CREDSTORE_PASSWORD:-}
   clientId: hops-archive
   groupId: hops-archive-group
-  topic: ${KAFKA_TOPIC:-helseopplysninger.rapid}
+  topic: ${KAFKA_TOPIC:-helseopplysninger.river}
 
 dokarkiv:
   baseUrl: ${DOKARKIV_BASE_URL:-http://localhost:8082}

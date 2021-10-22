@@ -54,7 +54,7 @@ class ArchiveJob(
         val questionnaire = bundle.entryResourceOfType<Questionnaire>()
         val questionnaireResponse = bundle.entryResourceOfType<QuestionnaireResponse>()
 
-        val journalpost = GenericJournalpost(
+        val doc = GenericJournalpost(
             type = Journalpost.Type.INNGAAENDE,
             datoMottatt = bundle.meta.lastUpdated,
             eksternReferanseId = header.id,
@@ -67,7 +67,7 @@ class ArchiveJob(
             original = message.content
         )
 
-        archive.add(journalpost, header.id)
+        archive.add(doc, header.id)
     }
 }
 
