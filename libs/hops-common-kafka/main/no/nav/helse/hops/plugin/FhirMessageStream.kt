@@ -16,8 +16,8 @@ interface FhirMessageStream {
 class FhirMessageStreamKafka(
     private val consumer: Consumer<UUID, ByteArray>,
     private val topic: String,
-    private val timeout: Duration = Duration.ofSeconds(1)
-): FhirMessageStream {
+    private val timeout: Duration = Duration.ofSeconds(2)
+) : FhirMessageStream {
     override fun <T> poll(map: (ConsumerRecord<UUID, ByteArray>) -> T?): Flow<T> =
         flow {
             try {
@@ -25,11 +25,7 @@ class FhirMessageStreamKafka(
 
                 while (currentCoroutineContext().isActive) {
                     val records = consumer.poll(timeout)
-
-                    records
-                        .filterNotNull()
-                        .mapNotNull(map)
-                        .forEach { emit(it) }
+                    records.mapNotNull(map).forEach { emit(it) }
                 }
             } finally {
                 consumer.unsubscribe()

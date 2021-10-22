@@ -4,6 +4,7 @@ import ca.uhn.fhir.rest.api.Constants
 import eventreplay.domain.Constants.MessageHeaders.SOURCE_OFFSET
 import eventreplay.domain.FhirMessage
 import eventreplay.domain.FhirMessageStream
+import no.nav.helse.hops.plugin.KafkaConfig
 import no.nav.helse.hops.plugin.get
 import no.nav.helse.hops.plugin.sendAwait
 import no.nav.helse.hops.plugin.set
@@ -20,7 +21,7 @@ import kotlin.math.max
 class FhirMessageStreamKafka(
     private val producer: Producer<UUID, ByteArray>,
     private val consumer: Consumer<UUID, ByteArray>,
-    private val config: Config.Kafka,
+    private val config: KafkaConfig,
 ) : FhirMessageStream {
     override suspend fun publish(message: FhirMessage) {
         val record = createRecord(config.topic, message)

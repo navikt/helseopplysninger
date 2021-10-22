@@ -10,9 +10,5 @@ class FhirMessage(val id: UUID, val content: ByteArray, val contentType: String)
     }
 }
 
-fun fromKafkaRecord(record: ConsumerRecord<UUID, ByteArray>): FhirMessage {
-    fun valueOf(header: String) = record.headers().lastHeader(header).value().decodeToString()
-    val contentType = valueOf("Content-Type")
-
-    return FhirMessage(record.key(), record.value(), contentType)
-}
+fun fromKafkaRecord(record: ConsumerRecord<UUID, ByteArray>) =
+    FhirMessage(record.key(), record.value(), record.headers()["Content-Type"])

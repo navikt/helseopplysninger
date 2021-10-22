@@ -36,7 +36,7 @@ fun Application.module() {
     val config = loadConfigsOrThrow<Config>("/application.yaml")
     val fhirStore = EventStoreHttp(config.eventStore, HttpClientFactory.create(config.eventStore))
     val kafkaConsumer = FhirMessageStreamKafka(KafkaFactory.createFhirConsumer(config.kafka), config.kafka.topic)
-    val fhirSink = EventSinkJob(kafkaConsumer, log, fhirStore)
+    val fhirSink = EventSinkJob(kafkaConsumer, log, fhirStore, environment.parentCoroutineContext)
 
     routing {
         naisRoutes(fhirSink, prometheusMeterRegistry)

@@ -41,6 +41,7 @@ fun Application.module() {
         messageBus = kafka,
         log = log,
         eventStore = eventStore,
+        environment.parentCoroutineContext
     )
 
     install(Webjars)
