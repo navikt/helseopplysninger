@@ -30,7 +30,8 @@ dependencies {
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
     testImplementation(project(":libs:hops-common-test"))
     testImplementation("no.nav:kafka-embedded-env:2.8.0") {
-        exclude("io.confluent", "kafka-schema-registry")
+        exclude("io.confluent", "kafka-schema-registry") // not used (requires mock even if unused)
+        exclude("org.apache.kafka", "kafka-streams") // not used (Contains rocksbdjni with GPL 2.0 licence)
     }
 }
 
