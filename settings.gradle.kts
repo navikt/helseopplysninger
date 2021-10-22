@@ -1,6 +1,7 @@
 rootProject.name = "helseopplysninger"
 
 include("apps:hops-api")
+include("apps:hops-archive")
 include("apps:hops-eventreplaykafka")
 include("apps:hops-eventsinkkafka")
 include("apps:hops-eventstore")

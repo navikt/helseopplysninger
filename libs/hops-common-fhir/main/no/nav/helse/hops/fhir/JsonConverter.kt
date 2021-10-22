@@ -19,6 +19,11 @@ object JsonConverter {
     inline fun <reified R : IBaseResource> parse(json: String): R =
         newParser().parseResource(R::class.java, json)
 
+    inline fun <reified R : IBaseResource> parse(json: ByteArray): R =
+        json.inputStream().use {
+            newParser().parseResource(R::class.java, it)
+        }
+
     fun serialize(resource: IBaseResource, pretty: Boolean): String =
         newParser(pretty).encodeResourceToString(resource)
 }

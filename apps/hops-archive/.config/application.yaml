@@ -1,0 +1,24 @@
+# https://doc.nais.io/addons/kafka/#application-config
+kafka:
+  brokers: ${KAFKA_BROKERS:-localhost:9092}
+  security: ${KAFKA_SECURITY_ENABLED:-false}
+  truststorePath: ${KAFKA_TRUSTSTORE_PATH:-}
+  keystorePath: ${KAFKA_KEYSTORE_PATH:-}
+  credstorePsw: ${KAFKA_CREDSTORE_PASSWORD:-}
+  clientId: hops-archive
+  groupId: hops-archive-group
+  topic: ${KAFKA_TOPIC:-helseopplysninger.river}
+
+dokarkiv:
+  baseUrl: ${DOKARKIV_BASE_URL:-http://localhost:8082}
+  discoveryUrl: ${AZURE_APP_WELL_KNOWN_URL:-http://mock-oauth2-service:8081/default/.well-known/openid-configuration}
+  clientId: ${AZURE_APP_CLIENT_ID:-archive-test-client-id}
+  clientSecret: ${AZURE_APP_CLIENT_SECRET:-archive-test-secret}
+  scope: ${DOKARKIV_SCOPE:-dokarkiv}
+
+fhirJsonToPdfConverter:
+  baseUrl: ${CONVERT_BASE_URL:-http://localhost:8082}
+  discoveryUrl: ${AZURE_APP_WELL_KNOWN_URL:-http://mock-oauth2-service:8081/default/.well-known/openid-configuration}
+  clientId: ${AZURE_APP_CLIENT_ID:-archive-test-client-id}
+  clientSecret: ${AZURE_APP_CLIENT_SECRET:-archive-test-secret}
+  scope: "nav:helse:helseopplysninger.convert"
