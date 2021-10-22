@@ -1,17 +1,16 @@
-package archive
+package archive.testUtils
 
-import java.io.Closeable
 import no.nav.helse.hops.test.HopsOAuthMock
 
-class Mocks : Closeable {
+class Mocks : AutoCloseable {
     val oauth = HopsOAuthMock().apply { start() }
     val dokarkiv = DokarkivMock()
     val converter = ConverterMock()
-    val kafka = EmbeddedKafka().apply { start() }
+    val kafka = EmbeddedKafka()
 
     override fun close() {
         oauth.shutdown()
-        kafka.shutdown()
+        kafka.close()
         converter.close()
         dokarkiv.close()
     }

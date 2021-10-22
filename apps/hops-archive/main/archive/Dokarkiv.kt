@@ -6,6 +6,7 @@ import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
+import no.nav.helse.hops.security.toIsoString
 import java.util.Date
 
 class Dokarkiv(
@@ -41,7 +42,7 @@ class GenericJournalpost(
 ) : Journalpost {
     override fun toJson() =
         """{
-              ${if (type == Journalpost.Type.INNGAAENDE) """"datoMottatt": "$datoMottatt",""" else "" }
+              ${if (type == Journalpost.Type.INNGAAENDE) """"datoMottatt": "${datoMottatt.toIsoString()}",""" else "" }
               "eksternReferanseId": "$eksternReferanseId",
               "tittel": "$tittel",
               "journalpostType": "$type",
@@ -50,7 +51,7 @@ class GenericJournalpost(
               "journalfoerendeEnhet": 9999,
               "avsenderMottaker": {
                 "id": "$legeHpr",
-                "idType": "HPR",
+                "idType": "HPR"
               },
               "bruker": {
                 "id": "$brukerFnr",
@@ -73,7 +74,7 @@ class GenericJournalpost(
                       "fysiskDokument": "${java.util.Base64.getEncoder().encodeToString(original)}",
                       "variantformat": "ORIGINAL"
                     }
-                  ],
+                  ]
                 }
               ]
             }

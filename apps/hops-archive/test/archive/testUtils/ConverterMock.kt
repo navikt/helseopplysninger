@@ -1,4 +1,4 @@
-package archive
+package archive.testUtils
 
 import io.ktor.application.call
 import io.ktor.http.ContentType
@@ -8,9 +8,8 @@ import io.ktor.routing.routing
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.server.netty.NettyApplicationEngine
-import java.io.Closeable
 
-class ConverterMock : Closeable {
+class ConverterMock : AutoCloseable {
     private val port = getRandomPort()
     val url = "http://localhost:$port"
     private val server = createKtorServer(port).apply { start() }
@@ -19,7 +18,8 @@ class ConverterMock : Closeable {
         embeddedServer(factory = Netty, port = port) {
             routing {
                 post("/\$convert") {
-                    call.respondBytes(readResourcesFile("example.pdf"), ContentType.parse("application/pdf"))
+                    val pdf = readResourcesFile("/example.pdf")
+                    call.respondBytes(pdf, ContentType.Application.Pdf)
                 }
             }
         }

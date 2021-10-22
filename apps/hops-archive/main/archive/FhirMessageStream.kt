@@ -3,12 +3,12 @@ package archive
 import io.ktor.http.HttpHeaders
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import no.nav.helse.hops.convert.ContentTypes
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import java.time.Duration
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.isActive
+import java.util.UUID
 
 class FhirMessage(val content: ByteArray, val contentType: String) {
     init {
@@ -18,7 +18,7 @@ class FhirMessage(val content: ByteArray, val contentType: String) {
 }
 
 class FhirMessageStream(
-    private val consumer: Consumer<Unit, ByteArray>,
+    private val consumer: Consumer<UUID, ByteArray>,
     private val config: Config.Kafka,
 ) {
     fun poll(): Flow<FhirMessage> =
@@ -40,9 +40,9 @@ class FhirMessageStream(
         }
 }
 
-private fun toFhirMessage(record: ConsumerRecord<Unit, ByteArray>): FhirMessage {
-    fun valueOf(header: String) = record.headers().lastHeader(header)?.value()?.decodeToString()
-    val contentType = valueOf(HttpHeaders.ContentType) ?: ContentTypes.fhirJsonR4.toString()
+private fun toFhirMessage(record: ConsumerRecord<UUID, ByteArray>): FhirMessage {
+    fun valueOf(header: String) = record.headers().lastHeader(header).value().decodeToString()
+    val contentType = valueOf(HttpHeaders.ContentType)
 
     return FhirMessage(record.value(), contentType)
 }
