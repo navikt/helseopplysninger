@@ -9,13 +9,13 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import no.nav.helse.hops.plugin.FhirMessage
-import no.nav.helse.hops.plugin.FhirMessageStream
+import no.nav.helse.hops.plugin.MessageStream
 import no.nav.helse.hops.plugin.fromKafkaRecord
 import org.slf4j.Logger
 import kotlin.coroutines.CoroutineContext
 
 class EventSinkJob(
-    messageStream: FhirMessageStream,
+    messageStream: MessageStream,
     private val logger: Logger,
     private val eventStore: EventStore,
     context: CoroutineContext

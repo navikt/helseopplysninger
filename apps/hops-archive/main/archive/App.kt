@@ -14,7 +14,7 @@ import io.ktor.webjars.Webjars
 import io.micrometer.prometheus.PrometheusConfig.DEFAULT
 import io.micrometer.prometheus.PrometheusMeterRegistry
 import no.nav.helse.hops.hoplite.loadConfigsOrThrow
-import no.nav.helse.hops.plugin.FhirMessageStreamKafka
+import no.nav.helse.hops.plugin.MessageStreamKafka
 import no.nav.helse.hops.plugin.KafkaFactory
 
 fun main() {
@@ -31,7 +31,7 @@ fun Application.module() {
     val config = loadConfigsOrThrow<Config>("/application.yaml")
     val archive = Dokarkiv(config.dokarkiv, HttpClientFactory.create(config.dokarkiv))
     val pdfConverter = FhirJsonToPdfConverter(config.fhirJsonToPdfConverter, HttpClientFactory.create(config.fhirJsonToPdfConverter))
-    val kafkaConsumer = FhirMessageStreamKafka(KafkaFactory.createFhirConsumer(config.kafka), config.kafka.topic)
+    val kafkaConsumer = MessageStreamKafka(KafkaFactory.createFhirConsumer(config.kafka), config.kafka.topic)
 
     val job = ArchiveJob(kafkaConsumer, log, archive, pdfConverter, environment.parentCoroutineContext)
 

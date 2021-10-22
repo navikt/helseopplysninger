@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 import no.nav.helse.hops.convert.ContentTypes
 import no.nav.helse.hops.fhir.JsonConverter
 import no.nav.helse.hops.plugin.FhirMessage
-import no.nav.helse.hops.plugin.FhirMessageStream
+import no.nav.helse.hops.plugin.MessageStream
 import no.nav.helse.hops.plugin.fromKafkaRecord
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.MessageHeader
@@ -21,7 +21,7 @@ import org.slf4j.Logger
 import kotlin.coroutines.CoroutineContext
 
 class ArchiveJob(
-    messageStream: FhirMessageStream,
+    messageStream: MessageStream,
     private val logger: Logger,
     private val archive: Dokarkiv,
     private val converter: FhirJsonToPdfConverter,
