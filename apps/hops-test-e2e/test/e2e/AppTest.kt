@@ -110,7 +110,7 @@ class AppTest {
     @Test
     fun `metrics actuator returns 200 OK`() {
         withTestApp {
-            with(handleRequest(HttpMethod.Get, "/metrics")) {
+            with(handleRequest(HttpMethod.Get, "/actuator/metrics")) {
                 assertEquals(HttpStatusCode.OK, response.status())
                 assertNotNull(response.content)
                 assertNotEquals("", response.content)
