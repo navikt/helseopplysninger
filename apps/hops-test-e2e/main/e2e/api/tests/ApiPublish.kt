@@ -57,7 +57,7 @@ internal class ApiPublish(
             kafka.poll { record ->
                 record.key() == publishedMsg.id
             }.first { consumedMsg: FhirMessage ->
-                val actualContent = consumedMsg.content.removeWhitespaces()
+                val actualContent = publishedMsg.json.removeWhitespaces()
                 val expectedContent = consumedMsg.content.removeWhitespaces()
                 if (actualContent != expectedContent) {
                     log.error { "Content was not equal" }
