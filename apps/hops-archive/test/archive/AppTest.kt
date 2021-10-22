@@ -5,18 +5,14 @@ import archive.testUtils.Mocks
 import archive.testUtils.readResourcesFile
 import archive.testUtils.withTestApp
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.node.ObjectNode
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.testing.handleRequest
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withTimeout
-import no.nav.helse.hops.fhir.JsonConverter
-import no.nav.helse.hops.fhir.toJsonByteArray
-import org.hl7.fhir.r4.model.Bundle
-import org.junit.jupiter.api.Test
 import java.util.UUID
 import kotlin.test.assertEquals
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeout
+import org.junit.jupiter.api.Test
 import kotlin.test.assertTrue
 
 class AppTest {
@@ -45,10 +41,7 @@ class AppTest {
 
                         val mapper = ObjectMapper()
 
-                        val expected = (mapper.readTree(expectedBody) as ObjectNode).without<ObjectNode>("dokumenter")
-                        val actual = (mapper.readTree(req.body) as ObjectNode).without<ObjectNode>("dokumenter")
-
-                        assertEquals(expected, actual)
+                        assertEquals(mapper.readTree(expectedBody), mapper.readTree(req.body))
                         assertTrue(req.call.parameters.contains("forsoekFerdigstill", "true"))
                     }
                 }

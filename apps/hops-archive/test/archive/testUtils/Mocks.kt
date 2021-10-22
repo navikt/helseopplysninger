@@ -10,8 +10,8 @@ class Mocks : AutoCloseable {
 
     override fun close() {
         oauth.shutdown()
-        kafka.close()
         converter.close()
         dokarkiv.close()
+        kafka.close()
     }
 }
