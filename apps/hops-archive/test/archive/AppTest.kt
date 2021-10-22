@@ -20,7 +20,7 @@ class AppTest {
     fun `isAlive returns 200 OK`() {
         Mocks().use {
             withTestApp(it) {
-                with(handleRequest(HttpMethod.Get, "/internal/isAlive")) {
+                with(handleRequest(HttpMethod.Get, "/actuator/alive")) {
                     assertEquals(HttpStatusCode.OK, response.status())
                 }
             }

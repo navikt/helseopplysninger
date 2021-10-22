@@ -25,7 +25,7 @@ class DokarkivMock : AutoCloseable {
             routing {
                 post("/rest/journalpostapi/v1/journalpost") {
                     receivedRequest.complete(Request(call, call.receiveText()))
-                    call.respond(HttpStatusCode.OK)
+                    call.respond(HttpStatusCode.Created)
                 }
             }
         }

@@ -39,6 +39,7 @@ dependencies {
     testImplementation(project(":libs:hops-common-test"))
     testImplementation("no.nav:kafka-embedded-env:2.8.0") {
         exclude("io.confluent", "kafka-schema-registry")
+        exclude("org.apache.kafka", "kafka-streams") // not used (Contains rocksbdjni with GPL 2.0 licence)
     }
 }
 

@@ -10,7 +10,6 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import no.nav.helse.hops.convert.ContentTypes
 import no.nav.helse.hops.fhir.JsonConverter
-import no.nav.helse.hops.fhir.idAsUUID
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.MessageHeader
 import org.hl7.fhir.r4.model.Questionnaire

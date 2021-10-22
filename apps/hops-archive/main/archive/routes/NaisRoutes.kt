@@ -14,12 +14,12 @@ fun Routing.naisRoutes(
     job: ArchiveJob,
     prometheusMeterRegistry: PrometheusMeterRegistry,
 ) {
-    route("/internal") {
-        get("/isReady") {
+    route("/actuator") {
+        get("/ready") {
             val statusCode = if (job.isRunning) HttpStatusCode.OK else HttpStatusCode.InternalServerError
             call.respond(statusCode, "Archive")
         }
-        get("/isAlive") {
+        get("/alive") {
             call.respondText("Archive")
         }
         get("/prometheus") {
