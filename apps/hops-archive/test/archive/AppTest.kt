@@ -12,6 +12,9 @@ import java.util.UUID
 import kotlin.test.assertEquals
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
+import no.nav.helse.hops.fhir.JsonConverter
+import no.nav.helse.hops.fhir.toJsonByteArray
+import org.hl7.fhir.r4.model.Bundle
 import org.junit.jupiter.api.Test
 import kotlin.test.assertTrue
 
@@ -33,7 +36,8 @@ class AppTest {
             withTestApp(it) {
                 runBlocking {
                     withTimeout(10000) {
-                        val message = readResourcesFile("/FhirMessage.json")
+                        var message = readResourcesFile("/FhirMessage.json")
+                        message = JsonConverter.parse<Bundle>(message).toJsonByteArray()
                         it.kafka.produce(HOPS_TOPIC, UUID.randomUUID(), message)
 
                         val req = it.dokarkiv.receivedRequest.await()
