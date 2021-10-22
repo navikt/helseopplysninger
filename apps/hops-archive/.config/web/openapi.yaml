@@ -16,7 +16,7 @@ paths:
       responses:
         '200':
           description: Service is alive.
-  /actuator/prometheus:
+  /actuator/metrics:
     get:
       tags: [diagnostics]
       responses:

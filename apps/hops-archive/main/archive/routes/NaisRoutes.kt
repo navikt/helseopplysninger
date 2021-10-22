@@ -22,7 +22,7 @@ fun Routing.naisRoutes(
         get("/alive") {
             call.respondText("Archive")
         }
-        get("/prometheus") {
+        get("/metrics") {
             call.respond(prometheusMeterRegistry.scrape())
         }
     }
