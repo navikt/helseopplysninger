@@ -10,6 +10,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import no.nav.helse.hops.convert.ContentTypes
 import no.nav.helse.hops.fhir.JsonConverter
+import no.nav.helse.hops.fhir.idAsUUID
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.MessageHeader
 import org.hl7.fhir.r4.model.Questionnaire
@@ -57,7 +58,7 @@ class ArchiveJob(
         val doc = GenericJournalpost(
             type = Journalpost.Type.INNGAAENDE,
             datoMottatt = bundle.meta.lastUpdated,
-            eksternReferanseId = header.id,
+            eksternReferanseId = header.idElement.idPart,
             tittel = questionnaire.title,
             tema = "SYM", // Sykemelding. Bør utledes fra innholdet i meldingen
             legeHpr = questionnaireResponse.author.identifier.value,
