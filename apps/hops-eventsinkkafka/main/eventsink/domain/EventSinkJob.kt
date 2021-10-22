@@ -11,12 +11,15 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import no.nav.helse.hops.plugin.FhirMessage
+import no.nav.helse.hops.plugin.FhirMessageStream
+import no.nav.helse.hops.plugin.fromKafkaRecord
 import org.slf4j.Logger
 import java.io.Closeable
 import kotlin.coroutines.CoroutineContext
 
 class EventSinkJob(
-    messageBus: FhirMessageBus,
+    messageStream: FhirMessageStream,
     private val logger: Logger,
     private val eventStore: EventStore,
     context: CoroutineContext = Dispatchers.Default
@@ -24,7 +27,7 @@ class EventSinkJob(
     private val job = CoroutineScope(context).launch {
         while (isActive) {
             try {
-                messageBus.poll().collect(::addToEventStore)
+                messageStream.poll(::fromKafkaRecord).collect(::addToEventStore)
                 isRunning = true
             } catch (ex: Throwable) {
                 isRunning = false

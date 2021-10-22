@@ -3,9 +3,8 @@ package eventreplay
 import eventreplay.domain.EventReplayJob
 import eventreplay.infrastructure.Config
 import eventreplay.infrastructure.EventStoreHttp
-import eventreplay.infrastructure.FhirMessageBusKafka
+import eventreplay.infrastructure.FhirMessageStreamKafka
 import eventreplay.infrastructure.HttpClientFactory
-import eventreplay.infrastructure.KafkaFactory
 import eventreplay.routes.naisRoutes
 import eventreplay.routes.smokeTestRoutes
 import eventreplay.routes.swaggerRoutes
@@ -21,6 +20,7 @@ import io.ktor.webjars.Webjars
 import io.micrometer.prometheus.PrometheusConfig.DEFAULT
 import io.micrometer.prometheus.PrometheusMeterRegistry
 import no.nav.helse.hops.hoplite.loadConfigsOrThrow
+import no.nav.helse.hops.plugin.KafkaFactory
 
 fun main() {
     embeddedServer(Netty, port = 8080, module = Application::module).start(wait = true)
@@ -30,7 +30,7 @@ fun Application.module() {
     val prometheusMeterRegistry = PrometheusMeterRegistry(DEFAULT)
     val config = loadConfigsOrThrow<Config>("/application.yaml")
 
-    val kafka = FhirMessageBusKafka(
+    val kafka = FhirMessageStreamKafka(
         producer = KafkaFactory.createFhirProducer(config.kafka),
         consumer = KafkaFactory.createFhirConsumer(config.kafka),
         config = config.kafka,

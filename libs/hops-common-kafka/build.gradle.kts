@@ -14,6 +14,7 @@ tasks {
 
 dependencies {
     api("org.apache.kafka:kafka-clients:2.8.1")
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.5.2")
 }
 
 kotlin.sourceSets["main"].kotlin.srcDirs("main")

@@ -3,9 +3,7 @@ package eventsink
 import eventsink.domain.EventSinkJob
 import eventsink.infrastructure.Config
 import eventsink.infrastructure.EventStoreHttp
-import eventsink.infrastructure.FhirMessageBusKafka
 import eventsink.infrastructure.HttpClientFactory
-import eventsink.infrastructure.KafkaFactory
 import eventsink.routes.naisRoutes
 import eventsink.routes.smokeTestRoutes
 import eventsink.routes.swaggerRoutes
@@ -21,6 +19,8 @@ import io.ktor.webjars.Webjars
 import io.micrometer.prometheus.PrometheusConfig.DEFAULT
 import io.micrometer.prometheus.PrometheusMeterRegistry
 import no.nav.helse.hops.hoplite.loadConfigsOrThrow
+import no.nav.helse.hops.plugin.FhirMessageStreamKafka
+import no.nav.helse.hops.plugin.KafkaFactory
 
 fun main() {
     embeddedServer(Netty, port = 8080, module = Application::module).start(wait = true)
@@ -35,7 +35,7 @@ fun Application.module() {
 
     val config = loadConfigsOrThrow<Config>("/application.yaml")
     val fhirStore = EventStoreHttp(config.eventStore, HttpClientFactory.create(config.eventStore))
-    val kafkaConsumer = FhirMessageBusKafka(KafkaFactory.createFhirConsumer(config.kafka), config.kafka)
+    val kafkaConsumer = FhirMessageStreamKafka(KafkaFactory.createFhirConsumer(config.kafka), config.kafka.topic)
     val fhirSink = EventSinkJob(kafkaConsumer, log, fhirStore)
 
     routing {

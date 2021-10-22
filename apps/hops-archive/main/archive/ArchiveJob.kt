@@ -1,7 +1,6 @@
 package archive
 
 import io.ktor.http.ContentType
-import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
@@ -10,12 +9,16 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import no.nav.helse.hops.convert.ContentTypes
 import no.nav.helse.hops.fhir.JsonConverter
+import no.nav.helse.hops.plugin.FhirMessage
+import no.nav.helse.hops.plugin.FhirMessageStream
+import no.nav.helse.hops.plugin.fromKafkaRecord
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.MessageHeader
 import org.hl7.fhir.r4.model.Questionnaire
 import org.hl7.fhir.r4.model.QuestionnaireResponse
 import org.hl7.fhir.r4.model.Resource
 import org.slf4j.Logger
+import kotlin.coroutines.CoroutineContext
 
 class ArchiveJob(
     messageStream: FhirMessageStream,
@@ -28,7 +31,7 @@ class ArchiveJob(
         CoroutineScope(context).launch {
             while (isActive) {
                 try {
-                    messageStream.poll().collect(::addToArchive)
+                    messageStream.poll(::fromKafkaRecord).collect(::addToArchive)
                     isRunning = true
                 } catch (ex: Throwable) {
                     isRunning = false

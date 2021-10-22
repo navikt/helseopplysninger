@@ -17,7 +17,7 @@ import java.io.Closeable
 import kotlin.coroutines.CoroutineContext
 
 class EventReplayJob(
-    messageBus: FhirMessageBus,
+    messageBus: FhirMessageStream,
     log: Logger,
     eventStore: EventStore,
     context: CoroutineContext = Dispatchers.Default
