@@ -16,7 +16,7 @@ paths:
       responses:
         '200':
           description: Service is alive.
-  /metrics:
+  /actuator/metrics:
     get:
       tags: [diagnostics]
       responses:

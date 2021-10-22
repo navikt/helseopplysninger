@@ -17,6 +17,7 @@ import io.ktor.response.respond
 import io.ktor.response.respondText
 import io.ktor.routing.Routing
 import io.ktor.routing.get
+import io.ktor.routing.route
 import io.ktor.routing.routing
 import io.ktor.serialization.json
 import io.ktor.server.engine.embeddedServer
@@ -69,7 +70,9 @@ private fun Routing.trigger(e2e: E2eExecutor) {
 }
 
 private fun Routing.actuators(prometheus: PrometheusMeterRegistry) {
-    get("/actuator/ready") { call.respondText("ready") }
-    get("/actuator/live") { call.respondText("live") }
-    get("/metrics") { call.respond(prometheus.scrape()) }
+    route("/actuator") {
+        get("/ready") { call.respondText("ready") }
+        get("/live") { call.respondText("live") }
+        get("/metrics") { call.respond(prometheus.scrape()) }
+    }
 }
