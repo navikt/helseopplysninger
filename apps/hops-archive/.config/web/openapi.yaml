@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   version: 1.0.0
   title: Archive
-  description: En bakgrunnsprosess som lytter på 'rapid' kafka-topic og arkiverer meldinger i Joark.
+  description: En bakgrunnsprosess som lytter på 'river' kafka-topic og arkiverer meldinger i Joark.
 paths:
   /actuator/ready:
     get:
