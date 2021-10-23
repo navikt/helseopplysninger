@@ -122,7 +122,6 @@ jobs:
         with:
           java-version: 16
           distribution: 'temurin'
-          cache: 'gradle'
 
       - name: 🪲 Run gradle test
         continue-on-error: true
