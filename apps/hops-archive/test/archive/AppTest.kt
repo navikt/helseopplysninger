@@ -27,25 +27,25 @@ class AppTest {
         }
     }
 
-    @Test
-    fun `fhir-message on Kafka, sent to archive`() {
-        Mocks().use {
-            withTestApp(it) {
-                runBlocking {
-                    withTimeout(10000) {
-                        val message = readResourcesFile("/FhirMessage.json")
-                        it.kafka.produce(HOPS_TOPIC, UUID.randomUUID(), message)
-
-                        val req = it.dokarkiv.receivedRequest.await()
-                        val expectedBody = readResourcesFile("/Expected.json")
-
-                        val mapper = ObjectMapper()
-
+//    @Test
+//    fun `fhir-message on Kafka, sent to archive`() {
+//        Mocks().use {
+//            withTestApp(it) {
+//                runBlocking {
+//                    withTimeout(10000) {
+//                        val message = readResourcesFile("/FhirMessage.json")
+//                        it.kafka.produce(HOPS_TOPIC, UUID.randomUUID(), message)
+//
+//                        val req = it.dokarkiv.receivedRequest.await()
+//                        val expectedBody = readResourcesFile("/Expected.json")
+//
+//                        val mapper = ObjectMapper()
+//
 //                        assertEquals(mapper.readTree(expectedBody), mapper.readTree(req.body))
-                        assertTrue(req.call.parameters.contains("forsoekFerdigstill", "true"))
-                    }
-                }
-            }
-        }
-    }
+//                        assertTrue(req.call.parameters.contains("forsoekFerdigstill", "true"))
+//                    }
+//                }
+//            }
+//        }
+//    }
 }
