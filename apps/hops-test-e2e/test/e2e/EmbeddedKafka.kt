@@ -1,7 +1,6 @@
 package e2e
 
 import mu.KotlinLogging
-import no.nav.common.KafkaEnvironment
 import org.apache.kafka.clients.CommonClientConfigs
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.KafkaConsumer
@@ -14,13 +13,14 @@ import org.apache.kafka.common.serialization.ByteArraySerializer
 import org.apache.kafka.common.serialization.UUIDDeserializer
 import org.apache.kafka.common.serialization.UUIDSerializer
 import java.util.UUID
+import no.nav.helse.hops.test.ThreadSafeKafkaEnvironment
 
 const val HOPS_TOPIC = "helseopplysninger.river"
 
 private val log = KotlinLogging.logger {}
 
 object EmbeddedKafka {
-    private val kafka: KafkaEnvironment = KafkaEnvironment(
+    private val kafka = ThreadSafeKafkaEnvironment(
         topicNames = listOf(HOPS_TOPIC),
     )
 
@@ -39,7 +39,7 @@ object EmbeddedKafka {
     fun getHost() = kafka.brokersURL
 }
 
-private fun <K, V> KafkaEnvironment.createProducer() = KafkaProducer<K, V>(
+private fun <K, V> ThreadSafeKafkaEnvironment.createProducer() = KafkaProducer<K, V>(
     mapOf(
         CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG to brokersURL,
         CommonClientConfigs.CLIENT_ID_CONFIG to "hops-test-e2e-test",
@@ -50,7 +50,7 @@ private fun <K, V> KafkaEnvironment.createProducer() = KafkaProducer<K, V>(
     )
 )
 
-private fun <K, V> KafkaEnvironment.createConsumer() = KafkaConsumer<K, V>(
+private fun <K, V> ThreadSafeKafkaEnvironment.createConsumer() = KafkaConsumer<K, V>(
     mapOf(
         CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG to brokersURL,
         CommonClientConfigs.CLIENT_ID_CONFIG to "hops-test-e2e-test",

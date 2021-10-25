@@ -38,10 +38,7 @@ dependencies {
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
     runtimeOnly("org.webjars:swagger-ui:3.52.5")
     testImplementation(project(":libs:hops-common-test"))
-    testImplementation("no.nav:kafka-embedded-env:2.8.0") {
-        exclude("io.confluent", "kafka-schema-registry")
-        exclude("org.apache.kafka", "kafka-streams") // not used (Contains rocksbdjni with GPL 2.0 licence)
-    }
+    testImplementation(project(":libs:hops-common-kafka-test"))
 }
 
 kotlin.sourceSets["main"].kotlin.srcDirs("main")
