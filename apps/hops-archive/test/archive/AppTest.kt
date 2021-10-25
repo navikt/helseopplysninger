@@ -28,7 +28,7 @@ class AppTest {
     }
 
     @Test
-    fun `fhir-message on Kafka, sent to archive`() {
+    fun `fhir-message on Kafka, create pdf, sent to archive`() {
         Mocks().use {
             withTestApp(it) {
                 runBlocking {
