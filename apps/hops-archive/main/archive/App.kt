@@ -43,7 +43,7 @@ fun Application.module() {
 
     val archive = Dokarkiv(config.dokarkiv, dokarkivClient)
     val pdfConverter = FhirJsonToPdfConverter(config.fhirJsonToPdfConverter, pdfConverterClient)
-    val messageStream = MessageStreamKafka(KafkaFactory.createFhirConsumer(config.kafka), config.kafka.topic)
+    val messageStream = MessageStreamKafka(kafkaConsumer, config.kafka.topic)
 
     val job = ArchiveJob(messageStream, log, archive, pdfConverter, environment.parentCoroutineContext)
 
