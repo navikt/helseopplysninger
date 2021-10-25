@@ -4,6 +4,9 @@ name: Pull request
 # │	  When running pull_request_target we want to ignore all events caused by pull-request from forks.                │
 # │	  If we want to support pull-request from forks in the future,                                                    │
 # │	  make sure they use separate jobs with only use of secrets.GITHUB_TOKEN and scoped minimum requored permissions. │
+# │	                                                                                                                  │
+# │	  When using pull_request_target we have to manually checkout the merge commit SHA to get the code as it will     │
+# │	  become if we merged the pull-request (default behavior on pull_request event)                                   │
 # ╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 
 on: pull_request_target
@@ -20,7 +23,10 @@ jobs:
     outputs:
       KTLINT_URL: ${{ steps.ktlint-latest.outputs.KTLINT_URL }}
     steps:
-      - uses: actions/checkout@v2.3.5
+      - name: 🧳 Checkout merge commit SHA
+        uses: actions/checkout@v2.3.5
+        with:
+          ref: refs/pull/${{ github.event.number }}/merge
 
       - name: 🔖 Get latest ktlint download-url
         id: ktlint-latest
@@ -51,7 +57,10 @@ jobs:
     runs-on: ubuntu-latest
     if: contains(github.event.pull_request.labels.*.name, 'format')
     steps:
-      - uses: actions/checkout@v2.3.5
+      - name: 🧳 Checkout merge commit SHA
+        uses: actions/checkout@v2.3.5
+        with:
+          ref: refs/pull/${{ github.event.number }}/merge
       - name: 📌 Get ktlint
         uses: actions/cache@v2
         with:
@@ -73,7 +82,10 @@ jobs:
       github.event.pull_request.head.repo.full_name == github.repository &&
       (needs.lint-format.result == 'success' || needs.lint-format.result == 'skipped')
     steps:
-      - uses: actions/checkout@v2.3.5
+      - name: 🧳 Checkout merge commit SHA
+        uses: actions/checkout@v2.3.5
+        with:
+          ref: refs/pull/${{ github.event.number }}/merge
 
       - name: 📌 Get ktlint
         uses: actions/cache@v2
@@ -116,7 +128,10 @@ jobs:
     # Ignore triggers from forks
     if: github.event.pull_request.head.repo.full_name == github.repository
     steps:
-      - uses: actions/checkout@v2.3.5
+      - name: 🧳 Checkout merge commit SHA
+        uses: actions/checkout@v2.3.5
+        with:
+          ref: refs/pull/${{ github.event.number }}/merge
 
       - uses: actions/setup-java@v2
         with:
