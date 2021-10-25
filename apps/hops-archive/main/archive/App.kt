@@ -3,6 +3,7 @@ package archive
 import archive.routes.naisRoutes
 import archive.routes.swaggerRoutes
 import io.ktor.application.Application
+import io.ktor.application.ApplicationStopping
 import io.ktor.application.install
 import io.ktor.application.log
 import io.ktor.features.CallLogging
@@ -29,11 +30,22 @@ fun Application.module() {
     install(MicrometerMetrics) { registry = prometheusMeterRegistry }
 
     val config = loadConfigsOrThrow<Config>("/application.yaml")
-    val archive = Dokarkiv(config.dokarkiv, HttpClientFactory.create(config.dokarkiv))
-    val pdfConverter = FhirJsonToPdfConverter(config.fhirJsonToPdfConverter, HttpClientFactory.create(config.fhirJsonToPdfConverter))
-    val kafkaConsumer = MessageStreamKafka(KafkaFactory.createFhirConsumer(config.kafka), config.kafka.topic)
 
-    val job = ArchiveJob(kafkaConsumer, log, archive, pdfConverter, environment.parentCoroutineContext)
+    val dokarkivClient = HttpClientFactory.create(config.dokarkiv)
+    val pdfConverterClient = HttpClientFactory.create(config.fhirJsonToPdfConverter)
+    val kafkaConsumer = KafkaFactory.createFhirConsumer(config.kafka)
+
+    environment.monitor.subscribe(ApplicationStopping) {
+        dokarkivClient.close()
+        pdfConverterClient.close()
+        kafkaConsumer.close()
+    }
+
+    val archive = Dokarkiv(config.dokarkiv, dokarkivClient)
+    val pdfConverter = FhirJsonToPdfConverter(config.fhirJsonToPdfConverter, pdfConverterClient)
+    val messageStream = MessageStreamKafka(KafkaFactory.createFhirConsumer(config.kafka), config.kafka.topic)
+
+    val job = ArchiveJob(messageStream, log, archive, pdfConverter, environment.parentCoroutineContext)
 
     routing {
         naisRoutes(job, prometheusMeterRegistry)
