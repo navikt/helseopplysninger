@@ -1,4 +1,4 @@
-package archive.testUtils
+package archive.testutils
 
 import no.nav.helse.hops.test.EmbeddedKafka
 import no.nav.helse.hops.test.HopsOAuthMock

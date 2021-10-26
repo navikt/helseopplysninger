@@ -1,4 +1,4 @@
-package archive.testUtils
+package archive.testutils
 
 import java.net.ServerSocket
 

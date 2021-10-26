@@ -1,4 +1,4 @@
-package archive.testUtils
+package archive.testutils
 
 import archive.module
 import io.ktor.application.Application

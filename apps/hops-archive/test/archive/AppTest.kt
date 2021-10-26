@@ -1,8 +1,8 @@
 package archive
 
-import archive.testUtils.Mocks
-import archive.testUtils.readResourcesFile
-import archive.testUtils.withTestApp
+import archive.testutils.Mocks
+import archive.testutils.readResourcesFile
+import archive.testutils.withTestApp
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
