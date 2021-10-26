@@ -24,19 +24,32 @@ jobs:
 
       - name: Run vulnerability scan
         uses: snyk/actions/gradle-jdk16@master
-        continue-on-error: true # enable for SARIF to upload properly
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          args: --sarif-file-output=snyk.sarif --all-sub-projects --configuration-matching='^runtimeClasspath'
-          command: test
+          args: |
+            --sarif-file-output=snyk.sarif \
+            --configuration-matching='^runtimeClasspath' \
+            --all-sub-projects
 
-      - uses: actions/upload-artifact@v2
-        with:
-          name: snyk
-          path: snyk.sarif
+      # This is a temporary manual fix while waiting for https://github.com/snyk/actions/issues/66
+      - name: Remove prefix /github/workspace/ from file paths
+        run: |
+          jq \
+            < snyk.sarif \
+            '.runs[].results[].locations[].physicalLocation.artifactLocation.uri |= sub("/github/workspace/";"")' \
+            > snyk_modified.sarif
 
       - name: Upload result to GitHub Code Scanning
+        if: success() || failure()
         uses: github/codeql-action/upload-sarif@v1
         with:
-          sarif_file: snyk.sarif
+#          sarif_file: snyk.sarif
+          sarif_file: snyk_modified.sarif
+
+      - uses: actions/upload-artifact@v2
+        if: success() || failure()
+        with:
+          path: |
+            snyk.sarif
+            snyk_modified.sarif
