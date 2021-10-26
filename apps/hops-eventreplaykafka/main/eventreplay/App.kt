@@ -9,6 +9,7 @@ import eventreplay.routes.naisRoutes
 import eventreplay.routes.smokeTestRoutes
 import eventreplay.routes.swaggerRoutes
 import io.ktor.application.Application
+import io.ktor.application.ApplicationStopping
 import io.ktor.application.install
 import io.ktor.application.log
 import io.ktor.features.CallLogging
@@ -30,19 +31,30 @@ fun Application.module() {
     val prometheusMeterRegistry = PrometheusMeterRegistry(DEFAULT)
     val config = loadConfigsOrThrow<Config>("/application.yaml")
 
+    val kafkaProducer = KafkaFactory.createFhirProducer(config.kafka)
+    val kafkaConsumer = KafkaFactory.createFhirConsumer(config.kafka)
+
     val kafka = FhirMessageStreamKafka(
-        producer = KafkaFactory.createFhirProducer(config.kafka),
-        consumer = KafkaFactory.createFhirConsumer(config.kafka),
+        producer = kafkaProducer,
+        consumer = kafkaConsumer,
         config = config.kafka,
     )
 
-    val eventStore = EventStoreHttp(config.eventStore, HttpClientFactory.create(config.eventStore))
+    val eventStoreClient = HttpClientFactory.create(config.eventStore)
+    val eventStore = EventStoreHttp(config.eventStore, eventStoreClient)
+
     val replayJob = EventReplayJob(
-        messageBus = kafka,
+        messageStream = kafka,
         log = log,
-        eventStore = eventStore,
-        environment.parentCoroutineContext
+        eventStore = eventStore
     )
+
+    environment.monitor.subscribe(ApplicationStopping) {
+        replayJob.close()
+        eventStoreClient.close()
+        kafkaProducer.close()
+        kafkaConsumer.close()
+    }
 
     install(Webjars)
     install(CallLogging)

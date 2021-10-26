@@ -8,6 +8,7 @@ import eventsink.routes.naisRoutes
 import eventsink.routes.smokeTestRoutes
 import eventsink.routes.swaggerRoutes
 import io.ktor.application.Application
+import io.ktor.application.ApplicationStopping
 import io.ktor.application.install
 import io.ktor.application.log
 import io.ktor.features.CallLogging
@@ -34,12 +35,21 @@ fun Application.module() {
     install(MicrometerMetrics) { registry = prometheusMeterRegistry }
 
     val config = loadConfigsOrThrow<Config>("/application.yaml")
-    val fhirStore = EventStoreHttp(config.eventStore, HttpClientFactory.create(config.eventStore))
-    val kafkaConsumer = MessageStreamKafka(KafkaFactory.createFhirConsumer(config.kafka), config.kafka.topic)
-    val fhirSink = EventSinkJob(kafkaConsumer, log, fhirStore, environment.parentCoroutineContext)
+    val eventStoreClient = HttpClientFactory.create(config.eventStore)
+    val kafkaConsumer = KafkaFactory.createFhirConsumer(config.kafka)
+
+    val fhirStore = EventStoreHttp(config.eventStore, eventStoreClient)
+    val messageStream = MessageStreamKafka(kafkaConsumer, config.kafka.topic)
+    val sinkJob = EventSinkJob(messageStream, log, fhirStore)
+
+    environment.monitor.subscribe(ApplicationStopping) {
+        sinkJob.close()
+        eventStoreClient.close()
+        kafkaConsumer.close()
+    }
 
     routing {
-        naisRoutes(fhirSink, prometheusMeterRegistry)
+        naisRoutes(sinkJob, prometheusMeterRegistry)
         smokeTestRoutes(fhirStore)
         swaggerRoutes()
     }

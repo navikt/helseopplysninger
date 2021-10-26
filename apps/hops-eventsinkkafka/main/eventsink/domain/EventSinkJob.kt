@@ -4,10 +4,13 @@ import io.ktor.client.features.ClientRequestException
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import no.nav.helse.hops.plugin.FhirMessage
 import no.nav.helse.hops.plugin.MessageStream
 import no.nav.helse.hops.plugin.fromKafkaRecord
@@ -18,8 +21,8 @@ class EventSinkJob(
     messageStream: MessageStream,
     private val logger: Logger,
     private val eventStore: EventStore,
-    context: CoroutineContext
-) {
+    context: CoroutineContext = Dispatchers.Default
+) : AutoCloseable {
     private val job = CoroutineScope(context).launch {
         while (isActive) {
             try {
@@ -37,6 +40,14 @@ class EventSinkJob(
     @Volatile
     var isRunning = true
         private set
+
+    override fun close() {
+        if (!job.isCompleted) {
+            runBlocking {
+                job.cancelAndJoin()
+            }
+        }
+    }
 
     private suspend fun addToEventStore(message: FhirMessage) =
         try {
