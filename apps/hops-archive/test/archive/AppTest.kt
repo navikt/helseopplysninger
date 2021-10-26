@@ -1,6 +1,5 @@
 package archive
 
-import archive.testUtils.HOPS_TOPIC
 import archive.testUtils.Mocks
 import archive.testUtils.readResourcesFile
 import archive.testUtils.withTestApp
@@ -34,7 +33,7 @@ class AppTest {
                 runBlocking {
                     withTimeout(10000) {
                         val message = readResourcesFile("/FhirMessage.json")
-                        it.kafka.produce(HOPS_TOPIC, UUID.randomUUID(), message)
+                        it.kafka.produce("helseopplysninger.river", UUID.randomUUID(), message)
 
                         val req = it.dokarkiv.receivedRequest.await()
                         val expectedBody = readResourcesFile("/Expected.json")

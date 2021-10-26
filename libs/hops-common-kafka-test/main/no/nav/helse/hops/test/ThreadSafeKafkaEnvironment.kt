@@ -1,19 +1,16 @@
 package no.nav.helse.hops.test
 
-import java.util.Properties
-import java.util.UUID
 import no.nav.common.embeddedkafka.KBServer
-import no.nav.common.embeddedschemaregistry.SRServer
 import no.nav.common.embeddedutils.ServerBase
 import no.nav.common.embeddedutils.appDirFor
 import no.nav.common.embeddedutils.deleteDir
 import no.nav.common.embeddedutils.getAvailablePort
 import no.nav.common.embeddedzookeeper.ZKServer
-import org.apache.kafka.clients.CommonClientConfigs
 import org.apache.kafka.clients.admin.AdminClient
 import org.apache.kafka.clients.admin.NewTopic
 import org.apache.kafka.clients.consumer.ConsumerConfig
-import org.apache.kafka.common.config.SaslConfigs
+import java.util.Properties
+import java.util.UUID
 
 /**
  * A in-memory kafka environment consisting of
@@ -23,8 +20,6 @@ import org.apache.kafka.common.config.SaslConfigs
  * @param topicNames same as topicInfos, but for topics that can use the default values
  * @param withSchemaRegistry optional schema registry - default false
  * @param autoStart start servers immediately - default false
- * @param withSecurity gives SASL plain security (authentication and authorization)
- * @param users add custom users for authentication and authorization. Only relevant when withSecurity enabled
  * @param brokerConfigOverrides possibility to override broker configuration
  *
  * If noOfBrokers is zero, non-empty topics or withSchemaRegistry as true, will automatically include one broker
@@ -42,14 +37,11 @@ import org.apache.kafka.common.config.SaslConfigs
  * [schemaRegistry] property - relevant iff schema reg included in config and serverPark started
  *
  */
-
 class ThreadSafeKafkaEnvironment(
     noOfBrokers: Int = 1,
     topicNames: List<String> = emptyList(),
     topicInfos: List<TopicInfo> = emptyList(),
     withSchemaRegistry: Boolean = false,
-    val withSecurity: Boolean = false,
-    users: List<JAASCredentialCustom> = emptyList(),
     autoStart: Boolean = false,
     brokerConfigOverrides: Properties = Properties()
 ) : AutoCloseable {
@@ -95,40 +87,9 @@ class ThreadSafeKafkaEnvironment(
                     Properties().apply {
                         set(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, brokersURL)
                         set(ConsumerConfig.CLIENT_ID_CONFIG, "embkafka-adminclient")
-                        if (withSecurity) {
-                            set(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "SASL_PLAINTEXT")
-                            set(SaslConfigs.SASL_MECHANISM, "PLAIN")
-                            set(
-                                SaslConfigs.SASL_JAAS_CONFIG,
-                                "$JAAS_PLAIN_LOGIN $JAAS_REQUIRED " +
-                                    "username=\"${kafkaClient.username}\" password=\"${kafkaClient.password}\";"
-                            )
-                        }
                     }
                 )
             else null
-        else -> null
-    }
-
-    sealed class SchemaRegistryStatus {
-        data class Available(val schemaRegistry: ServerBase) : SchemaRegistryStatus()
-        object NotAvailable : SchemaRegistryStatus()
-    }
-
-    private fun SchemaRegistryStatus.start() = when (this) {
-        is SchemaRegistryStatus.Available -> this.schemaRegistry.start()
-        else -> {
-        }
-    }
-
-    private fun SchemaRegistryStatus.stop() = when (this) {
-        is SchemaRegistryStatus.Available -> this.schemaRegistry.stop()
-        else -> {
-        }
-    }
-
-    private fun SchemaRegistryStatus.getSchemaReg(): ServerBase? = when (this) {
-        is SchemaRegistryStatus.Available -> this.schemaRegistry
         else -> null
     }
 
@@ -142,7 +103,6 @@ class ThreadSafeKafkaEnvironment(
     data class ServerPark(
         val zookeeper: ServerBase,
         val brokerStatus: BrokerStatus,
-        val schemaRegStatus: SchemaRegistryStatus,
         val status: ServerParkStatus
     )
 
@@ -157,7 +117,7 @@ class ThreadSafeKafkaEnvironment(
     // in case of start of environment will be manually triggered later on
     private var topicsCreated = false
 
-    private val tempDir = appDirFor(UUID.randomUUID().toString())
+    private val tempDir = appDirFor("embedded-kafka").resolve(UUID.randomUUID().toString())
     private val zookeeperDataDir = tempDir.resolve("inmemoryzookeeper")
     private val brokerDataDir = tempDir.resolve("inmemorykafkabroker")
 
@@ -166,12 +126,7 @@ class ThreadSafeKafkaEnvironment(
 
     // initialize servers and start, creation of topics
     init {
-        if (withSecurity) {
-            JAASCustomUsers.addUsers(users)
-            setUpJAASContext()
-        }
-
-        val zk = ZKServer(getAvailablePort(), zookeeperDataDir, withSecurity)
+        val zk = ZKServer(getAvailablePort(), zookeeperDataDir, false)
 
         val kBrokers = (0 until reqNoOfBrokers).map {
             KBServer(
@@ -180,7 +135,7 @@ class ThreadSafeKafkaEnvironment(
                 reqNoOfBrokers,
                 brokerDataDir,
                 zk.url,
-                withSecurity,
+                false,
                 brokerConfigOverrides
             )
         }
@@ -194,10 +149,6 @@ class ThreadSafeKafkaEnvironment(
                 0 -> BrokerStatus.NotAvailable
                 else -> BrokerStatus.Available(kBrokers, brokersURL)
             },
-            when (withSchemaRegistry) {
-                false -> SchemaRegistryStatus.NotAvailable
-                else -> SchemaRegistryStatus.Available(SRServer(getAvailablePort(), brokersURL, withSecurity))
-            },
             ServerParkStatus.Initialized
         )
 
@@ -209,12 +160,11 @@ class ThreadSafeKafkaEnvironment(
     val brokers get() = serverPark.brokerStatus.getBrokers()
     val brokersURL get() = serverPark.brokerStatus.getBrokersURL()
     val adminClient get() = serverPark.brokerStatus.createAdminClient()
-    val schemaRegistry get() = serverPark.schemaRegStatus.getSchemaReg()
 
     /**
      * Start the kafka environment
      */
-    fun start() {
+    private fun start() {
 
         when (serverPark.status) {
             is ServerParkStatus.Started -> return
@@ -226,9 +176,8 @@ class ThreadSafeKafkaEnvironment(
         serverPark = serverPark.let { sp ->
             sp.zookeeper.start()
             sp.brokerStatus.start()
-            sp.schemaRegStatus.start()
 
-            ServerPark(sp.zookeeper, sp.brokerStatus, sp.schemaRegStatus, ServerParkStatus.Started)
+            ServerPark(sp.zookeeper, sp.brokerStatus, ServerParkStatus.Started)
         }
 
         if (serverPark.brokerStatus is BrokerStatus.Available && topics.isNotEmpty() && !topicsCreated)
@@ -248,11 +197,10 @@ class ThreadSafeKafkaEnvironment(
         }
 
         serverPark = serverPark.let { sp ->
-            sp.schemaRegStatus.stop()
             sp.brokerStatus.stop()
             sp.zookeeper.stop()
 
-            ServerPark(sp.zookeeper, sp.brokerStatus, sp.schemaRegStatus, ServerParkStatus.Stopped)
+            ServerPark(sp.zookeeper, sp.brokerStatus, ServerParkStatus.Stopped)
         }
     }
 
@@ -273,7 +221,6 @@ class ThreadSafeKafkaEnvironment(
         serverPark = ServerPark(
             serverPark.zookeeper,
             BrokerStatus.NotAvailable,
-            SchemaRegistryStatus.NotAvailable,
             ServerParkStatus.TearDownCompleted
         )
     }

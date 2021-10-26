@@ -25,7 +25,7 @@ private val config: Map<String, String>
         "MASKINPORTEN_CLIENT_ID" to "e2e-test-id",
         "MASKINPORTEN_CLIENT_JWK" to jwk,
         "MASKINPORTEN_SCOPES" to "nav:helse:helseopplysninger.read nav:helse:helseopplysninger.write",
-        "KAFKA_BROKERS" to EmbeddedKafka.getHost(),
+        "KAFKA_BROKERS" to Mocks.kafka.brokersURL,
         "KAFKA_CLIENT_ID" to "hops-test-e2e-$kafkaPrefix",
         "KAFKA_GROUP_ID" to "hops-test-e2e-$kafkaPrefix"
     )

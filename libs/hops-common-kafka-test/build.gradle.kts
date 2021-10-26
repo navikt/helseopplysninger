@@ -13,6 +13,7 @@ tasks {
 }
 
 dependencies {
+    implementation(project(":libs:hops-common-kafka"))
     implementation("no.nav:kafka-embedded-env:2.8.0") {
         exclude("io.confluent", "kafka-schema-registry") // not used (requires mock even if unused)
         exclude("org.apache.kafka", "kafka-streams") // not used (Contains rocksbdjni with GPL 2.0 licence)

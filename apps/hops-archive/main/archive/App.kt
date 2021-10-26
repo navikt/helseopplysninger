@@ -35,17 +35,18 @@ fun Application.module() {
     val pdfConverterClient = HttpClientFactory.create(config.fhirJsonToPdfConverter)
     val kafkaConsumer = KafkaFactory.createFhirConsumer(config.kafka)
 
-    environment.monitor.subscribe(ApplicationStopping) {
-        dokarkivClient.close()
-        pdfConverterClient.close()
-        kafkaConsumer.close()
-    }
-
     val archive = Dokarkiv(config.dokarkiv, dokarkivClient)
     val pdfConverter = FhirJsonToPdfConverter(config.fhirJsonToPdfConverter, pdfConverterClient)
     val messageStream = MessageStreamKafka(kafkaConsumer, config.kafka.topic)
 
-    val job = ArchiveJob(messageStream, log, archive, pdfConverter, environment.parentCoroutineContext)
+    val job = ArchiveJob(messageStream, log, archive, pdfConverter)
+
+    environment.monitor.subscribe(ApplicationStopping) {
+        job.close()
+        dokarkivClient.close()
+        pdfConverterClient.close()
+        kafkaConsumer.close()
+    }
 
     routing {
         naisRoutes(job, prometheusMeterRegistry)
