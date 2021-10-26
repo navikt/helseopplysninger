@@ -18,7 +18,7 @@
         <appender-ref ref="${LOG_APPENDER:-pretty}"/>
     </logger>
 
-    <logger name="e2e" level="TRACE" additivity="false">
+    <logger name="test" level="TRACE" additivity="false">
         <appender-ref ref="${LOG_APPENDER:-pretty}"/>
     </logger>
 
