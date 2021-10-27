@@ -3,6 +3,7 @@ package archive
 import archive.routes.naisRoutes
 import archive.routes.swaggerRoutes
 import io.ktor.application.Application
+import io.ktor.application.ApplicationStopping
 import io.ktor.application.install
 import io.ktor.application.log
 import io.ktor.features.CallLogging
@@ -14,6 +15,8 @@ import io.ktor.webjars.Webjars
 import io.micrometer.prometheus.PrometheusConfig.DEFAULT
 import io.micrometer.prometheus.PrometheusMeterRegistry
 import no.nav.helse.hops.hoplite.loadConfigsOrThrow
+import no.nav.helse.hops.plugin.MessageStreamKafka
+import no.nav.helse.hops.plugin.KafkaFactory
 
 fun main() {
     embeddedServer(Netty, port = 8080, module = Application::module).start(wait = true)
@@ -27,11 +30,23 @@ fun Application.module() {
     install(MicrometerMetrics) { registry = prometheusMeterRegistry }
 
     val config = loadConfigsOrThrow<Config>("/application.yaml")
-    val archive = Dokarkiv(config.dokarkiv, HttpClientFactory.create(config.dokarkiv))
-    val pdfConverter = FhirJsonToPdfConverter(config.fhirJsonToPdfConverter, HttpClientFactory.create(config.fhirJsonToPdfConverter))
-    val kafkaConsumer = FhirMessageStream(KafkaFactory.createFhirConsumer(config.kafka), config.kafka)
 
-    val job = ArchiveJob(kafkaConsumer, log, archive, pdfConverter, environment.parentCoroutineContext)
+    val dokarkivClient = HttpClientFactory.create(config.dokarkiv)
+    val pdfConverterClient = HttpClientFactory.create(config.fhirJsonToPdfConverter)
+    val kafkaConsumer = KafkaFactory.createFhirConsumer(config.kafka)
+
+    val archive = Dokarkiv(config.dokarkiv, dokarkivClient)
+    val pdfConverter = FhirJsonToPdfConverter(config.fhirJsonToPdfConverter, pdfConverterClient)
+    val messageStream = MessageStreamKafka(kafkaConsumer, config.kafka.topic)
+
+    val job = ArchiveJob(messageStream, log, archive, pdfConverter)
+
+    environment.monitor.subscribe(ApplicationStopping) {
+        job.close()
+        dokarkivClient.close()
+        pdfConverterClient.close()
+        kafkaConsumer.close()
+    }
 
     routing {
         naisRoutes(job, prometheusMeterRegistry)

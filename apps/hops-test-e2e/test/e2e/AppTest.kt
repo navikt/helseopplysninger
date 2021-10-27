@@ -15,6 +15,7 @@ import kotlin.time.ExperimentalTime
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import no.nav.helse.hops.test.EmbeddedKafka
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
@@ -27,7 +28,7 @@ class AppTest {
 
     @BeforeAll
     fun setUp() {
-        EmbeddedKafka.start()
+        Mocks.kafka = EmbeddedKafka("helseopplysninger.river")
         Mocks.maskinporten.start()
         Mocks.api.start()
         Mocks.eventreplay.start()
@@ -37,7 +38,7 @@ class AppTest {
 
     @AfterAll
     fun teardown() {
-        EmbeddedKafka.shutdown()
+        Mocks.kafka.close()
         Mocks.maskinporten.shutdown()
         Mocks.api.shutdown()
         Mocks.eventreplay.shutdown()

@@ -1,9 +1,8 @@
 package archive
 
-import archive.testUtils.HOPS_TOPIC
-import archive.testUtils.Mocks
-import archive.testUtils.readResourcesFile
-import archive.testUtils.withTestApp
+import archive.testutils.Mocks
+import archive.testutils.readResourcesFile
+import archive.testutils.withTestApp
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
@@ -28,13 +27,13 @@ class AppTest {
     }
 
     @Test
-    fun `fhir-message on Kafka, sent to archive`() {
+    fun `fhir-message on Kafka, create pdf, sent to archive`() {
         Mocks().use {
             withTestApp(it) {
                 runBlocking {
                     withTimeout(10000) {
                         val message = readResourcesFile("/FhirMessage.json")
-                        it.kafka.produce(HOPS_TOPIC, UUID.randomUUID(), message)
+                        it.kafka.produce("helseopplysninger.river", UUID.randomUUID(), message)
 
                         val req = it.dokarkiv.receivedRequest.await()
                         val expectedBody = readResourcesFile("/Expected.json")

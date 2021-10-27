@@ -3,43 +3,29 @@ package eventreplay.infrastructure
 import ca.uhn.fhir.rest.api.Constants
 import eventreplay.domain.Constants.MessageHeaders.SOURCE_OFFSET
 import eventreplay.domain.FhirMessage
-import eventreplay.domain.FhirMessageBus
+import eventreplay.domain.FhirMessageStream
+import no.nav.helse.hops.plugin.KafkaConfig
+import no.nav.helse.hops.plugin.get
+import no.nav.helse.hops.plugin.sendAwait
+import no.nav.helse.hops.plugin.set
 import org.apache.kafka.clients.consumer.Consumer
-import org.apache.kafka.clients.producer.Callback
 import org.apache.kafka.clients.producer.Producer
 import org.apache.kafka.clients.producer.ProducerRecord
-import org.apache.kafka.clients.producer.RecordMetadata
 import org.apache.kafka.common.TopicPartition
-import org.apache.kafka.common.header.Headers
 import org.apache.kafka.common.header.internals.RecordHeaders
-import org.slf4j.LoggerFactory
-import java.lang.invoke.MethodHandles
-import no.nav.helse.hops.plugin.send
 import java.time.Duration
 import java.time.ZoneOffset
 import java.util.UUID
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
-import kotlin.coroutines.suspendCoroutine
 import kotlin.math.max
 
-class FhirMessageBusKafka(
+class FhirMessageStreamKafka(
     private val producer: Producer<UUID, ByteArray>,
     private val consumer: Consumer<UUID, ByteArray>,
-    private val config: Config.Kafka,
-) : FhirMessageBus {
-    private val log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass())
-
+    private val config: KafkaConfig,
+) : FhirMessageStream {
     override suspend fun publish(message: FhirMessage) {
-        suspendCoroutine<RecordMetadata> { continuation ->
-            val callback = Callback { metadata, exception ->
-                if (metadata == null) continuation.resumeWithException(exception!!)
-                else continuation.resume(metadata)
-            }
-
-            val record = createRecord(config.topic, message)
-            producer.send(record, callback, log)
-        }
+        val record = createRecord(config.topic, message)
+        producer.sendAwait(record)
     }
 
     /**
@@ -78,10 +64,3 @@ private fun createRecord(topic: String, message: FhirMessage) =
             it[SOURCE_OFFSET] = message.sourceOffset.toString()
         }
     )
-
-private operator fun Headers.get(key: String) =
-    headers(key).map { it.value().decodeToString() }.single()
-
-private operator fun Headers.set(key: String, value: String) {
-    remove(key).add(key, value.toByteArray())
-}

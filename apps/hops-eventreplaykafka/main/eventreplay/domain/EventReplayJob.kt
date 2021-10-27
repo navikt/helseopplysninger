@@ -13,20 +13,19 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.slf4j.Logger
-import java.io.Closeable
 import kotlin.coroutines.CoroutineContext
 
 class EventReplayJob(
-    messageBus: FhirMessageBus,
+    messageStream: FhirMessageStream,
     log: Logger,
     eventStore: EventStore,
     context: CoroutineContext = Dispatchers.Default
-) : Closeable {
+) : AutoCloseable {
     private val job = CoroutineScope(context).launch {
         while (isActive) {
             runCatching {
-                val startingOffset = messageBus.sourceOffsetOfLatestMessage()
-                eventStore.poll(startingOffset).collect(messageBus::publish)
+                val startingOffset = messageStream.sourceOffsetOfLatestMessage()
+                eventStore.poll(startingOffset).collect(messageStream::publish)
                 isRunning = true
             }.onFailure {
                 isRunning = false
@@ -41,7 +40,13 @@ class EventReplayJob(
     var isRunning = true
         private set
 
-    override fun close() = runBlocking { job.cancelAndJoin() }
+    override fun close() {
+        if (!job.isCompleted) {
+            runBlocking {
+                job.cancelAndJoin()
+            }
+        }
+    }
 }
 
 private fun EventStore.poll(startingOffset: Long) =
