@@ -14,6 +14,7 @@ import io.ktor.routing.Routing
 import io.ktor.routing.get
 import io.ktor.routing.route
 import io.micrometer.prometheus.PrometheusMeterRegistry
+import java.net.URL
 
 fun Routing.read() {
     route("/4.0") {
@@ -33,10 +34,17 @@ fun Routing.search() {
     route("/4.0") {
         get("/questionnaire/{url}") {
             when (val url = call.parameters["url"]) {
-                null -> error("todo")
+                null -> call.respondText("Missing required parameter 'url'", status = BadRequest)
                 else -> {
                     if (url.contains("|")) {
-                        QuestionnaireCache
+                        val version = url.substringAfter("|")
+                        when (val entry = QuestionnaireCache.get(URL(url), version)) {
+                            null -> call.respondText(
+                                "url $url and version $version not found",
+                                status = HttpStatusCode.NotFound
+                            )
+                            else -> call.respondText(entry.raw, contentType = ContentType.Application.Json)
+                        }
                     }
                 }
             }
