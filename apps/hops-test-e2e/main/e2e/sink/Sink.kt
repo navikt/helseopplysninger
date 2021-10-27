@@ -6,7 +6,7 @@ import io.ktor.application.Application
 import no.nav.helse.hops.hoplite.loadConfigsOrThrow
 
 internal fun Application.sinkTests(): List<Test> {
-    val config = loadConfigsOrThrow<SinkConfig>("/application.yaml")
+    val config = loadConfigsOrThrow<SinkConfig>()
 
     return listOf(
         Liveness("event-sink liveness", config.sink.host)

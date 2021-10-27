@@ -37,7 +37,7 @@ fun main() {
 }
 
 fun Application.module() {
-    val config = loadConfigsOrThrow<Config>("/application.yaml")
+    val config = loadConfigsOrThrow<Config>()
     log.debug { "Running configuration: $config" }
 
     val httpClient = HttpClientFactory.create(config.eventStore)

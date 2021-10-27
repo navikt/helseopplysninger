@@ -26,7 +26,7 @@ fun main() {
 
 fun Application.module() {
     val prometheusMeterRegistry = PrometheusMeterRegistry(DEFAULT)
-    val config = loadConfigsOrThrow<Config>("/application.yaml")
+    val config = loadConfigsOrThrow<Config>()
     val applicationServices = ApplicationServices(config)
 
     install(Webjars)

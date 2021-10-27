@@ -29,7 +29,7 @@ fun main() {
 
 fun Application.module() {
     val prometheusMeterRegistry = PrometheusMeterRegistry(DEFAULT)
-    val config = loadConfigsOrThrow<Config>("/application.yaml")
+    val config = loadConfigsOrThrow<Config>()
 
     val kafkaProducer = KafkaFactory.createFhirProducer(config.kafka)
     val kafkaConsumer = KafkaFactory.createFhirConsumer(config.kafka)

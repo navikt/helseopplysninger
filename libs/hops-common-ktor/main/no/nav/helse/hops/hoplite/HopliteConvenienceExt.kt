@@ -8,13 +8,7 @@ import io.ktor.application.Application
 import io.ktor.config.ApplicationConfig
 import io.ktor.config.MapApplicationConfig
 
-inline fun <reified T : Any> loadConfigsOrThrow(vararg resources: String = arrayOf("/application.conf")) =
-    ConfigLoader.Builder()
-        .addShadowJarWorkaround()
-        .build()
-        .loadConfigOrThrow<T>(*resources)
-
-inline fun <reified T : Any> Application.loadConfigsOrThrow(vararg resources: String = arrayOf("/application.conf")) =
+inline fun <reified T : Any> Application.loadConfigsOrThrow(vararg resources: String = arrayOf("/application.yaml")) =
     ConfigLoader.Builder()
         .addShadowJarWorkaround()
         .addKtorConfig(environment.config)
@@ -26,6 +20,7 @@ inline fun <reified T : Any> Application.loadConfigsOrThrow(vararg resources: St
 fun ConfigLoader.Builder.addKtorConfig(config: ApplicationConfig) = apply {
     if (config is MapApplicationConfig) {
         // Workaround to access the private property 'map'.
+        @Suppress("UNCHECKED_CAST")
         val map = config.javaClass.getDeclaredField("map").let {
             it.isAccessible = true
             it.get(config) as Map<String, String>

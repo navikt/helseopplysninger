@@ -34,7 +34,7 @@ fun main() {
 }
 
 fun Application.module() {
-    val config = loadConfigsOrThrow<Config>("/application.yaml")
+    val config = loadConfigsOrThrow<Config>()
     val meterRegistry = PrometheusMeterRegistry(DEFAULT)
 
     install(HopsAuth) {
