@@ -15,8 +15,8 @@ import io.ktor.webjars.Webjars
 import io.micrometer.prometheus.PrometheusConfig.DEFAULT
 import io.micrometer.prometheus.PrometheusMeterRegistry
 import no.nav.helse.hops.hoplite.loadConfigsOrThrow
-import no.nav.helse.hops.plugin.MessageStreamKafka
 import no.nav.helse.hops.plugin.KafkaFactory
+import no.nav.helse.hops.plugin.MessageStreamKafka
 
 fun main() {
     embeddedServer(Netty, port = 8080, module = Application::module).start(wait = true)

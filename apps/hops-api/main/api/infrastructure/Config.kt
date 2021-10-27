@@ -1,7 +1,7 @@
 package api.infrastructure
 
-import java.net.URL
 import no.nav.helse.hops.security.MaskinportenProvider
+import java.net.URL
 
 data class Config(
     val oauth: ModuleOAuth,
@@ -10,6 +10,7 @@ data class Config(
     data class ModuleOAuth(
         val maskinporten: MaskinportenProvider.Configuration,
     )
+
     data class EventStore(
         val baseUrl: URL,
         val discoveryUrl: URL,
