@@ -1,0 +1,26 @@
+openapi: 3.0.1
+info:
+  version: 1.0.0
+  title: Archive
+  description: Eksponerer questionnaire-ressursene våres på fhir
+paths:
+  /actuator/ready:
+    get:
+      tags: [diagnostics]
+      responses:
+        '200':
+          description: Service is ready
+  /actuator/live:
+    get:
+      tags: [diagnostics]
+      responses:
+        '200':
+          description: Service is live
+  /actuator/metrics:
+    get:
+      tags: [diagnostics]
+      responses:
+        '200':
+          description: Metrics
+  /questionnaire/:
+    get:

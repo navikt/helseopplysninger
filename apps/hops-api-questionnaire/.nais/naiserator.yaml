@@ -1,0 +1,41 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  name: hops-api-questionnaire
+  namespace: helseopplysninger
+  labels:
+    team: helseopplysninger
+spec:
+  image: {{ image }}
+  team: helseopplysninger
+  liveness:
+    path: /actuator/live
+    initialDelay: 10
+    timeout: 5
+    periodSeconds: 5
+    failureThreshold: 30
+  readiness:
+    path: /actuator/ready
+    initialDelay: 10
+    periodSeconds: 5
+    timeout: 5
+  prometheus:
+    enabled: true
+    path: /actuator/metrics
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 2Gi
+    requests:
+      cpu: 500m
+      memory: 1Gi
+  replicas:
+    min: 1
+    max: 2
+  ingresses:
+    - https://hops-api-questionnaire.ekstern.dev.nav.no/event
+  kafka:
+    pool: nav-dev
+  env:
+    - name: LOG_APPENDER
+      value: json
