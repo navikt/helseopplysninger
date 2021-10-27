@@ -1,6 +1,6 @@
 package api.questionnaire
 
-import api.questionnaire.github.GithubReleaseCache
+import api.questionnaire.github.QuestionnaireCache
 import io.ktor.application.call
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
@@ -20,9 +20,9 @@ fun Routing.read() {
         get("/questionnaire/{id}") {
             when (val id = call.parameters["id"]) {
                 null -> call.respondText("Missing required parameter 'id'", status = BadRequest)
-                else -> when (val schema = GithubReleaseCache.get(id)) {
+                else -> when (val questionnaireEntry = QuestionnaireCache.get(id)) {
                     null -> call.respondText("id $id not found", status = HttpStatusCode.NotFound)
-                    else -> call.respondText(schema, contentType = ContentType.Application.Json)
+                    else -> call.respondText(questionnaireEntry.raw, contentType = ContentType.Application.Json)
                 }
             }
         }
@@ -33,9 +33,12 @@ fun Routing.search() {
     route("/4.0") {
         get("/questionnaire/{url}") {
             when (val url = call.parameters["url"]) {
-                null ->
-                if (url.contains("|"))
-
+                null -> error("todo")
+                else -> {
+                    if (url.contains("|")) {
+                        QuestionnaireCache
+                    }
+                }
             }
         }
     }

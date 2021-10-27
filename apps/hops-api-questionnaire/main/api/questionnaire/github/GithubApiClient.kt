@@ -17,10 +17,16 @@ class GithubApiClient(private val config: GithubConfig) {
         }
     }
 
-    suspend fun getAllReleases(): List<String> {
-        val result = client.get<Release.Releases>(config.github.questionnaireUrl)
+    suspend fun getAllReleaseUrls(): List<String> {
+        val result = client.get<Releases>(config.github.questionnaireUrl)
         return result.releases
-            .flatMap(Release.Release::assets)
-            .map(Release.Asset::browser_download_url)
+            .flatMap(Release::assets)
+            .map(Asset::browser_download_url)
     }
+
+    suspend fun getRelease(downloadUrl: String): String = client.get(downloadUrl)
+
+    private data class Releases(val releases: List<Release>)
+    private data class Release(val prerelease: Boolean, val assets: List<Asset>)
+    private data class Asset(val browser_download_url: String)
 }

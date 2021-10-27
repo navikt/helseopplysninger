@@ -1,43 +1,44 @@
 package api.questionnaire.github
 
-object Release {
-    data class Releases(val releases: List<Release>)
+data class Webhook(val action: Action, val release: Release)
+data class Release(val assets: List<Asset>)
+data class Asset(val browser_download_url: String)
 
-    data class Release(
-        val prerelease: Boolean,
-        val assets: List<Asset>,
-    )
+enum class Action {
+    /**
+     * A release, pre-release or draft of a release is published
+     */
+    published,
 
-    data class Asset(val browser_download_url: String)
-}
+    /**
+     * A release or pre-release is deleted
+     */
+    unpublished,
 
-object Webhook {
-    data class Webhook(
-        val zen: String,
-        val hook_id: Int,
-        val hook: WebhookConfig,
-        val repository: Repository,
-        val organization: Organization,
-        val sender: Sender,
-    )
+    /**
+     * A draft is saved,
+     * or a release or pre-release is published without previously being saved as a draft
+     */
+    created,
 
-    data class WebhookConfig(
-        val type: String,
-    )
+    /**
+     * A release, pre-release or draft release is edited
+     */
+    edited,
 
-    data class Repository(
-        val name: String,
-        val full_name: String,
-        val html_url: String,
-        val fork: Boolean,
-    )
+    /**
+     * A release, pre-release or draft is deleted
+     */
+    deleted,
 
-    data class Organization(
-        val name: String,
-    )
+    /**
+     * A pre-release is created
+     */
+    prereleased,
 
-    data class Sender(
-        val login: String, // the username
-        val type: String, // User
-    )
+    /**
+     * A release or draft of a release is published,
+     * or a pre-release is changed to a release
+     */
+    released,
 }

@@ -1,7 +1,7 @@
 package api.questionnaire
 
 import api.questionnaire.github.GithubApiClient
-import api.questionnaire.github.GithubReleaseCache
+import api.questionnaire.github.QuestionnaireCache
 import api.questionnaire.github.githubWebhook
 import io.ktor.application.Application
 import io.ktor.application.install
@@ -29,9 +29,8 @@ fun Application.module() {
     install(MicrometerMetrics) { registry = prometheus }
 
     val github = GithubApiClient(config.github)
-    github.initReleaseCache()
-
-    githubWebhook()
+    initReleaseCache(github)
+    githubWebhook(github)
 
     routing {
         actuators(prometheus)
@@ -41,7 +40,13 @@ fun Application.module() {
     }
 }
 
-private fun GithubApiClient.initReleaseCache() = runBlocking {
-    val releases = getAllReleases()
-    releases.forEach(GithubReleaseCache::add)
+/**
+ * Populate the in memory cache for every releases available on github.com/navikt/fhir-questionnaire
+ */
+private fun initReleaseCache(github: GithubApiClient) = runBlocking {
+    val releaseUrls = github.getAllReleaseUrls()
+    releaseUrls.forEach { url ->
+        val release = github.getRelease(url)
+        QuestionnaireCache.add(release)
+    }
 }

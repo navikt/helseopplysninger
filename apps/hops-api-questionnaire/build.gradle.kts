@@ -29,6 +29,7 @@ tasks {
 dependencies {
     implementation(project(":libs:hops-common-fhir"))
     implementation(project(":libs:hops-common-ktor"))
+    implementation("io.github.microutils:kotlin-logging-jvm:2.0.11")
     implementation("io.ktor:ktor-client-serialization:1.6.4")
     implementation("io.ktor:ktor-client-jackson:1.6.4")
     implementation("io.ktor:ktor-metrics-micrometer:1.6.3")
