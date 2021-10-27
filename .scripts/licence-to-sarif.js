@@ -1,5 +1,5 @@
 const fs = require("fs");
-const sourceRaw = fs.readFileSync("./qodana/report.json");
+const sourceRaw = fs.readFileSync(__dirname+"/report.json");
 const sources = JSON.parse(sourceRaw);
 const output = {
     $schema:
@@ -45,7 +45,7 @@ sources.forEach((source) => {
     });
 });
 try {
-    fs.writeFileSync('./qodana/report.sarif', JSON.stringify(output, null, 2))
+    fs.writeFileSync(__dirname+'/report.sarif', JSON.stringify(output, null, 2))
 } catch (err) {
     console.log(err)
 }

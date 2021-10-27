@@ -43,7 +43,9 @@ jobs:
           path: ${{ github.workspace }}/qodana
 
       - name: Convert report.json to report.sarif
-        run: node .scripts/licence-to-sarif.js
+        run: |
+          cp .scripts/licence-to-sarif.js ${{ github.workspace }}/qodana/licence-to-sarif.js
+          node ${{ github.workspace }}/qodana/licence-to-sarif.js
 
       - name: Upload to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@v1
