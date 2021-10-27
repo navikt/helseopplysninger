@@ -7,7 +7,6 @@ import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.testing.handleRequest
 import io.ktor.server.testing.setBody
-import kotlin.test.assertEquals
 import no.nav.helse.hops.test.HopsOAuthMock.MaskinportenScopes
 import okhttp3.mockwebserver.MockResponse
 import org.junit.jupiter.api.DisplayName
@@ -16,6 +15,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
+import kotlin.test.assertEquals
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(MockServers.Setup::class)

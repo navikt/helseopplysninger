@@ -7,11 +7,11 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.testing.handleRequest
-import java.util.UUID
-import kotlin.test.assertEquals
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
 import org.junit.jupiter.api.Test
+import java.util.UUID
+import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class AppTest {

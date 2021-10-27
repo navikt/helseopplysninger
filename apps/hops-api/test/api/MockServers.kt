@@ -2,13 +2,13 @@ package api
 
 import io.ktor.http.HttpHeaders
 import io.ktor.http.withCharset
-import java.util.concurrent.atomic.AtomicBoolean
 import no.nav.helse.hops.convert.ContentTypes
 import no.nav.helse.hops.test.HopsOAuthMock
 import no.nav.helse.hops.test.MockServer
 import okhttp3.mockwebserver.MockResponse
 import org.junit.jupiter.api.extension.BeforeAllCallback
 import org.junit.jupiter.api.extension.ExtensionContext
+import java.util.concurrent.atomic.AtomicBoolean
 
 object MockServers {
     val oAuth = HopsOAuthMock()

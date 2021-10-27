@@ -14,9 +14,9 @@ import io.ktor.routing.routing
 import io.ktor.server.testing.handleRequest
 import io.ktor.server.testing.setBody
 import io.ktor.server.testing.withTestApplication
-import kotlin.test.assertEquals
 import org.hl7.fhir.r4.model.Patient
 import org.junit.jupiter.api.Test
+import kotlin.test.assertEquals
 
 private const val patientJson = """{
   "resourceType": "Patient",
