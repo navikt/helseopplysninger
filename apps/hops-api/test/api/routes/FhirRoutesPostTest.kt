@@ -7,12 +7,12 @@ import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.http.HttpStatusCode.Companion.Unauthorized
 import io.ktor.server.testing.handleRequest
 import io.ktor.server.testing.setBody
-import kotlin.test.assertEquals
 import no.nav.helse.hops.test.HopsOAuthMock.MaskinportenScopes
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
+import kotlin.test.assertEquals
 
 @DisplayName("POST /fhir/4.0/\$process-message")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)

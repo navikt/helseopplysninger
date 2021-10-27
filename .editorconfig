@@ -1,4 +1,1 @@
 [*.{kt,kts}]
-# Disable import order linting in both IDEA and ktlint
-# Reason for disable: https://youtrack.jetbrains.com/issue/IDEA-275840
-disabled_rules = import-ordering
