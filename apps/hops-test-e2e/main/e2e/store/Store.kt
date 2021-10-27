@@ -6,7 +6,7 @@ import io.ktor.application.Application
 import no.nav.helse.hops.hoplite.loadConfigsOrThrow
 
 internal fun Application.storeTests(): List<Test> {
-    val config = loadConfigsOrThrow<StoreConfig>("/application.yaml")
+    val config = loadConfigsOrThrow<StoreConfig>()
 
     return listOf(
         Liveness("event-store liveness", config.store.host)

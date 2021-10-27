@@ -29,7 +29,7 @@ fun Application.module() {
     install(CallLogging)
     install(MicrometerMetrics) { registry = prometheusMeterRegistry }
 
-    val config = loadConfigsOrThrow<Config>("/application.yaml")
+    val config = loadConfigsOrThrow<Config>()
 
     val dokarkivClient = HttpClientFactory.create(config.dokarkiv)
     val pdfConverterClient = HttpClientFactory.create(config.fhirJsonToPdfConverter)

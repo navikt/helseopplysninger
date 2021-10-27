@@ -6,7 +6,7 @@ import io.ktor.application.Application
 import no.nav.helse.hops.hoplite.loadConfigsOrThrow
 
 internal fun Application.replayTests(): List<Test> {
-    val config = loadConfigsOrThrow<ReplayConfig>("/application.yaml")
+    val config = loadConfigsOrThrow<ReplayConfig>()
 
     return listOf(
         Liveness("event-replay liveness", config.replay.host)
