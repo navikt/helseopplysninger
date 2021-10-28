@@ -25,6 +25,7 @@ jobs:
         with:
           name: code-inspection
           path: ${{ github.workspace }}/qodana
+          retention-days: 5
 
       - name: Upload to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@v1
@@ -47,6 +48,7 @@ jobs:
         with:
           name: license-audit
           path: ${{ github.workspace }}/qodana
+          retention-days: 5
 
       - name: Upload to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@v1
