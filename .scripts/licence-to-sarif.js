@@ -14,7 +14,7 @@ sources.forEach((source) => {
                 name: source.tool,
                 rules: [
                     {
-                        id: source.hash,
+                        id: source.hash.toString(),
                         shortDescription: {
                             text: source.comment,
                         },
@@ -22,7 +22,7 @@ sources.forEach((source) => {
                             text: source.type,
                         },
                         help: {
-                            text: source.defailsInfo,
+                            text: source.detailsInfo,
                             markdown: "",
                         },
                         properties: {
@@ -34,7 +34,7 @@ sources.forEach((source) => {
         },
         results: [
             {
-                ruleId: source.hash,
+                ruleId: source.hash.toString(),
                 level: "warning",
                 message: {
                     text: source.attributes.inspectionName,
