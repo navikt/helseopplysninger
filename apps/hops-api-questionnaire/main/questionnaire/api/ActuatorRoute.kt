@@ -8,20 +8,10 @@ import io.ktor.routing.get
 import io.ktor.routing.route
 import io.micrometer.prometheus.PrometheusMeterRegistry
 
-fun Routing.actuators(
-    prometheusMeterRegistry: PrometheusMeterRegistry,
-) {
+fun Routing.actuators(prometheusMeterRegistry: PrometheusMeterRegistry) {
     route("/actuator") {
-        get("/ready") {
-            call.respond("ready")
-        }
-
-        get("/live") {
-            call.respondText("live")
-        }
-
-        get("/metrics") {
-            call.respond(prometheusMeterRegistry.scrape())
-        }
+        get("/ready") { call.respond("ready") }
+        get("/live") { call.respondText("live") }
+        get("/metrics") { call.respond(prometheusMeterRegistry.scrape()) }
     }
 }
