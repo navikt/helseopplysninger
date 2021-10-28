@@ -1,6 +1,6 @@
 package eventreplay.domain
 
-interface FhirMessageBus {
+interface FhirMessageStream {
     suspend fun publish(message: FhirMessage)
     suspend fun sourceOffsetOfLatestMessage(): Long
 }

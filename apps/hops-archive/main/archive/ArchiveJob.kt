@@ -1,41 +1,45 @@
 package archive
 
 import io.ktor.http.ContentType
-import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import no.nav.helse.hops.convert.ContentTypes
 import no.nav.helse.hops.fhir.JsonConverter
+import no.nav.helse.hops.plugin.FhirMessage
+import no.nav.helse.hops.plugin.MessageStream
+import no.nav.helse.hops.plugin.fromKafkaRecord
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.MessageHeader
 import org.hl7.fhir.r4.model.Questionnaire
 import org.hl7.fhir.r4.model.QuestionnaireResponse
 import org.hl7.fhir.r4.model.Resource
 import org.slf4j.Logger
+import kotlin.coroutines.CoroutineContext
 
 class ArchiveJob(
-    messageStream: FhirMessageStream,
+    messageStream: MessageStream,
     private val logger: Logger,
     private val archive: Dokarkiv,
     private val converter: FhirJsonToPdfConverter,
-    context: CoroutineContext
-) {
-    init {
-        CoroutineScope(context).launch {
-            while (isActive) {
-                try {
-                    messageStream.poll().collect(::addToArchive)
-                    isRunning = true
-                } catch (ex: Throwable) {
-                    isRunning = false
-                    if (ex is CancellationException) throw ex
-                    logger.error("Error while publishing document to archive.", ex)
-                    delay(5000)
-                }
+    context: CoroutineContext = Dispatchers.Default
+) : AutoCloseable {
+    private val job = CoroutineScope(context).launch {
+        while (isActive) {
+            try {
+                messageStream.poll(::fromKafkaRecord).collect(::addToArchive)
+                isRunning = true
+            } catch (ex: Throwable) {
+                isRunning = false
+                if (ex is CancellationException) throw ex
+                logger.error("Error while publishing document to archive.", ex)
+                delay(5000)
             }
         }
     }
@@ -43,6 +47,14 @@ class ArchiveJob(
     @Volatile
     var isRunning = true
         private set
+
+    override fun close() {
+        if (!job.isCompleted) {
+            runBlocking {
+                job.cancelAndJoin()
+            }
+        }
+    }
 
     private suspend fun addToArchive(message: FhirMessage) {
         require(ContentTypes.fhirJsonR4.match(message.contentType)) {

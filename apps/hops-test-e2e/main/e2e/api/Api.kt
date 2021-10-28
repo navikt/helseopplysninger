@@ -16,7 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import no.nav.helse.hops.hoplite.loadConfigsOrThrow
 
 internal fun Application.apiTests(): List<Test> {
-    val config = loadConfigsOrThrow<ApiConfig>("/application.yaml")
+    val config = loadConfigsOrThrow<ApiConfig>()
 
     val api = ApiExternalClient(
         config = config,

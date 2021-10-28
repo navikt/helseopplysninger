@@ -1,9 +1,9 @@
 package no.nav.helse.hops.fhir
 
-import kotlin.test.assertEquals
 import org.hl7.fhir.r4.model.Patient
 import org.hl7.fhir.r4.model.Reference
 import org.junit.jupiter.api.Test
+import kotlin.test.assertEquals
 
 class ResourceExtAllChildrenTest {
     @Test

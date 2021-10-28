@@ -13,12 +13,12 @@ import e2e.Mocks.Testdata.maskinportResponse
 import e2e.fhir.FhirResource
 import no.nav.helse.hops.convert.ContentTypes.fhirJsonR4
 import no.nav.helse.hops.maskinporten.GRANT_TYPE
+import no.nav.helse.hops.test.EmbeddedKafka
 import no.nav.helse.hops.test.MockServer
 import okhttp3.Headers
 import okhttp3.Headers.Companion.headersOf
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.RecordedRequest
-import org.apache.kafka.common.header.internals.RecordHeader
 import org.intellij.lang.annotations.Language
 import java.util.Date
 
@@ -48,11 +48,10 @@ object Mocks {
             val content = FhirResource.get { true }.maxByOrNull { it.timestamp }!!
 
             // Simulate hops-event-replay-kafka and put the message on kafka.
-            EmbeddedKafka.produce(
-                topic = HOPS_TOPIC,
+            kafka.produce(
+                topic = "helseopplysninger.river",
                 key = content.id,
-                value = content.json.toByteArray(),
-                headers = listOf(RecordHeader("Content-Type", fhirJsonR4.toString().toByteArray()))
+                value = content.json.toByteArray()
             )
 
             // Then respond with Accepted
@@ -71,6 +70,8 @@ object Mocks {
     val eventstore = MockServer().apply {
         matchRequest(get(LIVENESS_PATH), respond("live"))
     }
+
+    lateinit var kafka: EmbeddedKafka
 
     object Matcher {
         fun get(path: String) = { req: RecordedRequest ->

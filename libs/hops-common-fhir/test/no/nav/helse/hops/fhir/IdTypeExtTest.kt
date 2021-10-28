@@ -1,9 +1,9 @@
 package no.nav.helse.hops.fhir
 
-import kotlin.test.assertEquals
 import org.hl7.fhir.r4.model.IdType
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import kotlin.test.assertEquals
 
 class IdTypeExtTest {
     @Test

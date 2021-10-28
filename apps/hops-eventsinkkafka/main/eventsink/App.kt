@@ -3,13 +3,12 @@ package eventsink
 import eventsink.domain.EventSinkJob
 import eventsink.infrastructure.Config
 import eventsink.infrastructure.EventStoreHttp
-import eventsink.infrastructure.FhirMessageBusKafka
 import eventsink.infrastructure.HttpClientFactory
-import eventsink.infrastructure.KafkaFactory
 import eventsink.routes.naisRoutes
 import eventsink.routes.smokeTestRoutes
 import eventsink.routes.swaggerRoutes
 import io.ktor.application.Application
+import io.ktor.application.ApplicationStopping
 import io.ktor.application.install
 import io.ktor.application.log
 import io.ktor.features.CallLogging
@@ -21,6 +20,8 @@ import io.ktor.webjars.Webjars
 import io.micrometer.prometheus.PrometheusConfig.DEFAULT
 import io.micrometer.prometheus.PrometheusMeterRegistry
 import no.nav.helse.hops.hoplite.loadConfigsOrThrow
+import no.nav.helse.hops.plugin.KafkaFactory
+import no.nav.helse.hops.plugin.MessageStreamKafka
 
 fun main() {
     embeddedServer(Netty, port = 8080, module = Application::module).start(wait = true)
@@ -33,13 +34,22 @@ fun Application.module() {
     install(CallLogging)
     install(MicrometerMetrics) { registry = prometheusMeterRegistry }
 
-    val config = loadConfigsOrThrow<Config>("/application.yaml")
-    val fhirStore = EventStoreHttp(config.eventStore, HttpClientFactory.create(config.eventStore))
-    val kafkaConsumer = FhirMessageBusKafka(KafkaFactory.createFhirConsumer(config.kafka), config.kafka)
-    val fhirSink = EventSinkJob(kafkaConsumer, log, fhirStore)
+    val config = loadConfigsOrThrow<Config>()
+    val eventStoreClient = HttpClientFactory.create(config.eventStore)
+    val kafkaConsumer = KafkaFactory.createFhirConsumer(config.kafka)
+
+    val fhirStore = EventStoreHttp(config.eventStore, eventStoreClient)
+    val messageStream = MessageStreamKafka(kafkaConsumer, config.kafka.topic)
+    val sinkJob = EventSinkJob(messageStream, log, fhirStore)
+
+    environment.monitor.subscribe(ApplicationStopping) {
+        sinkJob.close()
+        eventStoreClient.close()
+        kafkaConsumer.close()
+    }
 
     routing {
-        naisRoutes(fhirSink, prometheusMeterRegistry)
+        naisRoutes(sinkJob, prometheusMeterRegistry)
         smokeTestRoutes(fhirStore)
         swaggerRoutes()
     }

@@ -6,12 +6,12 @@ import io.ktor.http.HttpMethod.Companion.Get
 import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.http.HttpStatusCode.Companion.Unauthorized
 import io.ktor.server.testing.handleRequest
-import kotlin.test.assertEquals
 import no.nav.helse.hops.test.HopsOAuthMock.MaskinportenScopes
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
+import kotlin.test.assertEquals
 
 @DisplayName("GET /fhir/4.0/Bundle")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)

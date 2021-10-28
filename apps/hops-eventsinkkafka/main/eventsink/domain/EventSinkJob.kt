@@ -11,20 +11,22 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import no.nav.helse.hops.plugin.FhirMessage
+import no.nav.helse.hops.plugin.MessageStream
+import no.nav.helse.hops.plugin.fromKafkaRecord
 import org.slf4j.Logger
-import java.io.Closeable
 import kotlin.coroutines.CoroutineContext
 
 class EventSinkJob(
-    messageBus: FhirMessageBus,
+    messageStream: MessageStream,
     private val logger: Logger,
     private val eventStore: EventStore,
     context: CoroutineContext = Dispatchers.Default
-) : Closeable {
+) : AutoCloseable {
     private val job = CoroutineScope(context).launch {
         while (isActive) {
             try {
-                messageBus.poll().collect(::addToEventStore)
+                messageStream.poll(::fromKafkaRecord).collect(::addToEventStore)
                 isRunning = true
             } catch (ex: Throwable) {
                 isRunning = false
@@ -40,8 +42,10 @@ class EventSinkJob(
         private set
 
     override fun close() {
-        runBlocking {
-            job.cancelAndJoin()
+        if (!job.isCompleted) {
+            runBlocking {
+                job.cancelAndJoin()
+            }
         }
     }
 
