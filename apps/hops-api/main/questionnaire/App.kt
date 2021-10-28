@@ -1,12 +1,5 @@
 package questionnaire
 
-import questionnaire.infrastructure.Config
-import questionnaire.infrastructure.EventStoreHttp
-import questionnaire.infrastructure.HttpClientFactory
-import questionnaire.routes.fhirRoutes
-import questionnaire.routes.naisRoutes
-import questionnaire.routes.smokeTestRoutes
-import questionnaire.routes.swaggerRoutes
 import io.ktor.application.Application
 import io.ktor.application.install
 import io.ktor.features.CallId
@@ -29,6 +22,13 @@ import no.nav.helse.hops.hoplite.loadConfigsOrThrow
 import no.nav.helse.hops.security.HopsAuth
 import no.nav.helse.hops.security.MaskinportenProvider
 import no.nav.helse.hops.statuspages.useFhirErrorStatusPage
+import questionnaire.infrastructure.Config
+import questionnaire.infrastructure.EventStoreHttp
+import questionnaire.infrastructure.HttpClientFactory
+import questionnaire.routes.fhirRoutes
+import questionnaire.routes.naisRoutes
+import questionnaire.routes.smokeTestRoutes
+import questionnaire.routes.swaggerRoutes
 
 private val log = KotlinLogging.logger {}
 

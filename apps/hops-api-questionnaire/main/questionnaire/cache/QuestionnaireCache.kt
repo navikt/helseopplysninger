@@ -36,7 +36,6 @@ object QuestionnaireCache {
 
     fun find(uri: URI, version: String): Questionnaire? = cache
         .firstOrNull { questionnaire -> questionnaire.slice.url == uri && questionnaire.slice.version == version }
-
 }
 
 data class Questionnaire(

@@ -1,7 +1,5 @@
 package questionnaire.routes
 
-import questionnaire.MockServers
-import questionnaire.withHopsTestApplication
 import io.ktor.http.HttpMethod.Companion.Get
 import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.http.HttpStatusCode.Companion.Unauthorized
@@ -11,6 +9,8 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
+import questionnaire.MockServers
+import questionnaire.withHopsTestApplication
 import kotlin.test.assertEquals
 
 @DisplayName("GET /fhir/4.0/Bundle")

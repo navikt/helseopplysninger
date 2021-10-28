@@ -45,4 +45,3 @@ fun Application.githubWebhook(
         }
     }
 }
-

@@ -18,7 +18,7 @@ class GithubApiClient(private val config: GithubConfig) {
     }
 
     suspend fun getAllReleaseUrls(): List<String> {
-        val result = client.get<Releases>(config.github.questionnaireUrl)
+        val result = client.get<Releases>(config.questionnaireUrl)
         return result.releases
             .flatMap(Release::assets)
             .map(Asset::browser_download_url)

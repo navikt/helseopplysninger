@@ -1,2 +1,3 @@
 github:
-  questionnaire-url: https://api.github.com/repos/navikt/fhir-questionnaires/releases
+#  questionnaire-url: https://api.github.com/repos/navikt/fhir-questionnaires/releases
+  questionnaire-url: http://localhost:8081/questionnaires/releases
