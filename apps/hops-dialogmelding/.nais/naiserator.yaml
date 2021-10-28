@@ -1,0 +1,59 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  name: hops-dialogmelding
+  namespace: helseopplysninger
+  labels:
+    team: helseopplysninger
+spec:
+  image: {{ image }}
+  port: 8080
+  team: helseopplysninger
+  liveness:
+    path: /actuator/live
+    initialDelay: 10
+    timeout: 5
+    periodSeconds: 5
+    failureThreshold: 30
+  readiness:
+    path: /actuator/ready
+    initialDelay: 10
+    periodSeconds: 5
+    timeout: 5
+  prometheus:
+    enabled: true
+    path: /actuator/metrics
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 1024Mi
+    requests:
+      cpu: 500m
+      memory: 512Mi
+  replicas:
+    min: 1
+    max: 2
+    cpuThresholdPercentage: 90
+  azure:
+    application:
+      enabled: true
+      tenant: nav.no
+  accessPolicy:
+    inbound:
+      rules:
+        - application: hops-test-e2e
+  kafka:
+    pool: {{ kafka_pool }}
+  ingresses:
+  {{#each ingresses as |url|}}
+    - {{url}}
+  {{/each}}
+  env:
+    - name: LOG_APPENDER
+      value: json
+    - name: KAFKA_SECURITY_ENABLED
+      value: "true"
+  {{#each env}}
+    - name: {{@key}}
+      value: "{{this}}"
+  {{/each}}

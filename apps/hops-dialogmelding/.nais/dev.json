@@ -1,0 +1,4 @@
+{
+  "ingresses":  ["https://hops-dialogmelding.dev.intern.nav.no"],
+  "kafka_pool": "nav-dev"
+}
