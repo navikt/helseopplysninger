@@ -11,11 +11,13 @@ value class PersonId(private val value: String) {
 
     val type get() = if (value.first().digitToInt() >= 4) Type.DNR else Type.FNR
     val system get() = if (type == Type.FNR) fnrSystem else dnrSystem
+    val gender get() = if (value[8].digitToInt() % 2 == 0) Gender.Female else Gender.Male
 
     enum class Type { FNR, DNR }
+    enum class Gender { Female, Male }
 
     companion object {
-        private val pattern = Regex("""^[0145]\d[0-1]\d\d{7}$""")
+        private val pattern = Regex("""^[0-7]\d[0-1]\d\d{7}$""")
         val fnrSystem = "urn:oid:2.16.578.1.12.4.1.4.1"
         val dnrSystem = "urn:oid:2.16.578.1.12.4.1.4.2"
     }
