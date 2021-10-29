@@ -2,1048 +2,1048 @@
   "version": 3,
   "listProblem": [
     {
-      "sources": [
-        {
-          "type": "module",
-          "path": ""
-        }
-      ],
-      "tags": [
-        "LICENSE: UNKNOWN"
-      ],
       "attributes": {
         "module": "",
         "inspectionName": "UnrecognizedDependencyLicense"
       },
+      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)",
+      "tags": [
+        "LICENSE: UNKNOWN"
+      ],
       "comment": "com.fasterxml.jackson:jackson-bom (2.12.0) license cannot be recognized",
+      "category": "License Compliance",
+      "sources": [
+        {
+          "path": "",
+          "type": "module"
+        }
+      ],
+      "tool": "License Audit",
       "severity": "High",
       "hash": 492264726219711447,
-      "type": "Unrecognized dependency license",
-      "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)"
+      "type": "Unrecognized dependency license"
     },
     {
-      "sources": [
-        {
-          "type": "module",
-          "path": ""
-        }
-      ],
-      "tags": [
-        "LICENSE: UNKNOWN"
-      ],
       "attributes": {
         "module": "",
         "inspectionName": "UnrecognizedDependencyLicense"
       },
+      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)",
+      "tags": [
+        "LICENSE: UNKNOWN"
+      ],
       "comment": "com.fasterxml.jackson:jackson-bom (2.12.3) license cannot be recognized",
+      "category": "License Compliance",
+      "sources": [
+        {
+          "path": "",
+          "type": "module"
+        }
+      ],
+      "tool": "License Audit",
       "severity": "High",
       "hash": 484732673630063653,
-      "type": "Unrecognized dependency license",
-      "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)"
+      "type": "Unrecognized dependency license"
     },
     {
-      "sources": [
-        {
-          "type": "module",
-          "path": ""
-        }
-      ],
-      "tags": [
-        "LICENSE: UNKNOWN"
-      ],
       "attributes": {
         "module": "",
         "inspectionName": "UnrecognizedDependencyLicense"
       },
+      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)",
+      "tags": [
+        "LICENSE: UNKNOWN"
+      ],
       "comment": "com.fasterxml.jackson:jackson-bom (2.12.5) license cannot be recognized",
+      "category": "License Compliance",
+      "sources": [
+        {
+          "path": "",
+          "type": "module"
+        }
+      ],
+      "tool": "License Audit",
       "severity": "High",
       "hash": 100133369507456704,
-      "type": "Unrecognized dependency license",
-      "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)"
+      "type": "Unrecognized dependency license"
     },
     {
-      "sources": [
-        {
-          "type": "module",
-          "path": ""
-        }
-      ],
-      "tags": [
-        "LICENSE: UNKNOWN"
-      ],
       "attributes": {
         "module": "",
         "inspectionName": "UnrecognizedDependencyLicense"
       },
+      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)",
+      "tags": [
+        "LICENSE: UNKNOWN"
+      ],
       "comment": "com.thoughtworks.paranamer:paranamer (2.8) license cannot be recognized",
+      "category": "License Compliance",
+      "sources": [
+        {
+          "path": "",
+          "type": "module"
+        }
+      ],
+      "tool": "License Audit",
       "severity": "High",
       "hash": 804207886151501689,
-      "type": "Unrecognized dependency license",
-      "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)"
+      "type": "Unrecognized dependency license"
     },
     {
-      "sources": [
-        {
-          "type": "module",
-          "path": ""
-        }
-      ],
-      "tags": [
-        "LICENSE: UNKNOWN"
-      ],
       "attributes": {
         "module": "",
         "inspectionName": "UnrecognizedDependencyLicense"
       },
+      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)",
+      "tags": [
+        "LICENSE: UNKNOWN"
+      ],
       "comment": "io.github.microutils:kotlin-logging (2.0.11) license cannot be recognized",
+      "category": "License Compliance",
+      "sources": [
+        {
+          "path": "",
+          "type": "module"
+        }
+      ],
+      "tool": "License Audit",
       "severity": "High",
       "hash": 313100869817136388,
-      "type": "Unrecognized dependency license",
-      "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)"
+      "type": "Unrecognized dependency license"
     },
     {
-      "sources": [
-        {
-          "type": "module",
-          "path": ""
-        }
-      ],
-      "tags": [
-        "LICENSE: UNKNOWN"
-      ],
       "attributes": {
         "module": "",
         "inspectionName": "UnrecognizedDependencyLicense"
       },
+      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)",
+      "tags": [
+        "LICENSE: UNKNOWN"
+      ],
       "comment": "io.kotest:kotest-assertions-api (4.6.3) license cannot be recognized",
+      "category": "License Compliance",
+      "sources": [
+        {
+          "path": "",
+          "type": "module"
+        }
+      ],
+      "tool": "License Audit",
       "severity": "High",
       "hash": 954218714770917782,
-      "type": "Unrecognized dependency license",
-      "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)"
+      "type": "Unrecognized dependency license"
     },
     {
-      "sources": [
-        {
-          "type": "module",
-          "path": ""
-        }
-      ],
-      "tags": [
-        "LICENSE: UNKNOWN"
-      ],
       "attributes": {
         "module": "",
         "inspectionName": "UnrecognizedDependencyLicense"
       },
+      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)",
+      "tags": [
+        "LICENSE: UNKNOWN"
+      ],
       "comment": "io.kotest:kotest-assertions-shared (4.6.3) license cannot be recognized",
+      "category": "License Compliance",
+      "sources": [
+        {
+          "path": "",
+          "type": "module"
+        }
+      ],
+      "tool": "License Audit",
       "severity": "High",
       "hash": 586677710116155363,
-      "type": "Unrecognized dependency license",
-      "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)"
+      "type": "Unrecognized dependency license"
     },
     {
-      "sources": [
-        {
-          "type": "module",
-          "path": ""
-        }
-      ],
-      "tags": [
-        "LICENSE: UNKNOWN"
-      ],
       "attributes": {
         "module": "",
         "inspectionName": "UnrecognizedDependencyLicense"
       },
+      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)",
+      "tags": [
+        "LICENSE: UNKNOWN"
+      ],
       "comment": "io.kotest:kotest-common (4.6.3) license cannot be recognized",
+      "category": "License Compliance",
+      "sources": [
+        {
+          "path": "",
+          "type": "module"
+        }
+      ],
+      "tool": "License Audit",
       "severity": "High",
       "hash": 446419204072368109,
-      "type": "Unrecognized dependency license",
-      "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)"
+      "type": "Unrecognized dependency license"
     },
     {
-      "sources": [
-        {
-          "type": "module",
-          "path": ""
-        }
-      ],
-      "tags": [
-        "LICENSE: UNKNOWN"
-      ],
       "attributes": {
         "module": "",
         "inspectionName": "UnrecognizedDependencyLicense"
       },
+      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)",
+      "tags": [
+        "LICENSE: UNKNOWN"
+      ],
       "comment": "io.ktor:ktor-client-auth (1.6.4) license cannot be recognized",
+      "category": "License Compliance",
+      "sources": [
+        {
+          "path": "",
+          "type": "module"
+        }
+      ],
+      "tool": "License Audit",
       "severity": "High",
       "hash": 412436923406345108,
-      "type": "Unrecognized dependency license",
-      "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)"
+      "type": "Unrecognized dependency license"
     },
     {
-      "sources": [
-        {
-          "type": "module",
-          "path": ""
-        }
-      ],
-      "tags": [
-        "LICENSE: UNKNOWN"
-      ],
       "attributes": {
         "module": "",
         "inspectionName": "UnrecognizedDependencyLicense"
       },
+      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)",
+      "tags": [
+        "LICENSE: UNKNOWN"
+      ],
       "comment": "io.ktor:ktor-client-cio (1.6.4) license cannot be recognized",
+      "category": "License Compliance",
+      "sources": [
+        {
+          "path": "",
+          "type": "module"
+        }
+      ],
+      "tool": "License Audit",
       "severity": "High",
       "hash": 109271238858218876,
-      "type": "Unrecognized dependency license",
-      "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)"
+      "type": "Unrecognized dependency license"
     },
     {
-      "sources": [
-        {
-          "type": "module",
-          "path": ""
-        }
-      ],
-      "tags": [
-        "LICENSE: UNKNOWN"
-      ],
       "attributes": {
         "module": "",
         "inspectionName": "UnrecognizedDependencyLicense"
       },
+      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)",
+      "tags": [
+        "LICENSE: UNKNOWN"
+      ],
       "comment": "io.ktor:ktor-client-core (1.6.4) license cannot be recognized",
+      "category": "License Compliance",
+      "sources": [
+        {
+          "path": "",
+          "type": "module"
+        }
+      ],
+      "tool": "License Audit",
       "severity": "High",
       "hash": 546809353038935298,
-      "type": "Unrecognized dependency license",
-      "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)"
+      "type": "Unrecognized dependency license"
     },
     {
-      "sources": [
-        {
-          "type": "module",
-          "path": ""
-        }
-      ],
-      "tags": [
-        "LICENSE: UNKNOWN"
-      ],
       "attributes": {
         "module": "",
         "inspectionName": "UnrecognizedDependencyLicense"
       },
+      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)",
+      "tags": [
+        "LICENSE: UNKNOWN"
+      ],
       "comment": "io.ktor:ktor-client-jetty-kotlinMultiplatform (1.6.4) license cannot be recognized",
+      "category": "License Compliance",
+      "sources": [
+        {
+          "path": "",
+          "type": "module"
+        }
+      ],
+      "tool": "License Audit",
       "severity": "High",
       "hash": 937115435747100683,
-      "type": "Unrecognized dependency license",
-      "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)"
+      "type": "Unrecognized dependency license"
     },
     {
-      "sources": [
-        {
-          "type": "module",
-          "path": ""
-        }
-      ],
-      "tags": [
-        "LICENSE: UNKNOWN"
-      ],
       "attributes": {
         "module": "",
         "inspectionName": "UnrecognizedDependencyLicense"
       },
+      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)",
+      "tags": [
+        "LICENSE: UNKNOWN"
+      ],
       "comment": "io.ktor:ktor-client-json (1.6.4) license cannot be recognized",
+      "category": "License Compliance",
+      "sources": [
+        {
+          "path": "",
+          "type": "module"
+        }
+      ],
+      "tool": "License Audit",
       "severity": "High",
       "hash": 923172397826873719,
-      "type": "Unrecognized dependency license",
-      "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)"
+      "type": "Unrecognized dependency license"
     },
     {
-      "sources": [
-        {
-          "type": "module",
-          "path": ""
-        }
-      ],
-      "tags": [
-        "LICENSE: UNKNOWN"
-      ],
       "attributes": {
         "module": "",
         "inspectionName": "UnrecognizedDependencyLicense"
       },
+      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)",
+      "tags": [
+        "LICENSE: UNKNOWN"
+      ],
       "comment": "io.ktor:ktor-client-mock (1.6.4) license cannot be recognized",
+      "category": "License Compliance",
+      "sources": [
+        {
+          "path": "",
+          "type": "module"
+        }
+      ],
+      "tool": "License Audit",
       "severity": "High",
       "hash": 613343469403080466,
-      "type": "Unrecognized dependency license",
-      "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)"
+      "type": "Unrecognized dependency license"
     },
     {
-      "sources": [
-        {
-          "type": "module",
-          "path": ""
-        }
-      ],
-      "tags": [
-        "LICENSE: UNKNOWN"
-      ],
       "attributes": {
         "module": "",
         "inspectionName": "UnrecognizedDependencyLicense"
       },
+      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)",
+      "tags": [
+        "LICENSE: UNKNOWN"
+      ],
       "comment": "io.ktor:ktor-client-serialization (1.6.4) license cannot be recognized",
+      "category": "License Compliance",
+      "sources": [
+        {
+          "path": "",
+          "type": "module"
+        }
+      ],
+      "tool": "License Audit",
       "severity": "High",
       "hash": 134818722532102473,
-      "type": "Unrecognized dependency license",
-      "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)"
+      "type": "Unrecognized dependency license"
     },
     {
-      "sources": [
-        {
-          "type": "module",
-          "path": ""
-        }
-      ],
-      "tags": [
-        "LICENSE: UNKNOWN"
-      ],
       "attributes": {
         "module": "",
         "inspectionName": "UnrecognizedDependencyLicense"
       },
+      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)",
+      "tags": [
+        "LICENSE: UNKNOWN"
+      ],
       "comment": "io.ktor:ktor-http (1.6.4) license cannot be recognized",
+      "category": "License Compliance",
+      "sources": [
+        {
+          "path": "",
+          "type": "module"
+        }
+      ],
+      "tool": "License Audit",
       "severity": "High",
       "hash": 431153264727969642,
-      "type": "Unrecognized dependency license",
-      "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)"
+      "type": "Unrecognized dependency license"
     },
     {
-      "sources": [
-        {
-          "type": "module",
-          "path": ""
-        }
-      ],
-      "tags": [
-        "LICENSE: UNKNOWN"
-      ],
       "attributes": {
         "module": "",
         "inspectionName": "UnrecognizedDependencyLicense"
       },
+      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)",
+      "tags": [
+        "LICENSE: UNKNOWN"
+      ],
       "comment": "io.ktor:ktor-http-cio (1.6.4) license cannot be recognized",
+      "category": "License Compliance",
+      "sources": [
+        {
+          "path": "",
+          "type": "module"
+        }
+      ],
+      "tool": "License Audit",
       "severity": "High",
       "hash": 894426347819077054,
-      "type": "Unrecognized dependency license",
-      "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)"
+      "type": "Unrecognized dependency license"
     },
     {
-      "sources": [
-        {
-          "type": "module",
-          "path": ""
-        }
-      ],
-      "tags": [
-        "LICENSE: UNKNOWN"
-      ],
       "attributes": {
         "module": "",
         "inspectionName": "UnrecognizedDependencyLicense"
       },
+      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)",
+      "tags": [
+        "LICENSE: UNKNOWN"
+      ],
       "comment": "io.ktor:ktor-io (1.6.4) license cannot be recognized",
+      "category": "License Compliance",
+      "sources": [
+        {
+          "path": "",
+          "type": "module"
+        }
+      ],
+      "tool": "License Audit",
       "severity": "High",
       "hash": 253484140611765646,
-      "type": "Unrecognized dependency license",
-      "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)"
+      "type": "Unrecognized dependency license"
     },
     {
-      "sources": [
-        {
-          "type": "module",
-          "path": ""
-        }
-      ],
-      "tags": [
-        "LICENSE: UNKNOWN"
-      ],
       "attributes": {
         "module": "",
         "inspectionName": "UnrecognizedDependencyLicense"
       },
+      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)",
+      "tags": [
+        "LICENSE: UNKNOWN"
+      ],
       "comment": "io.ktor:ktor-network (1.6.4) license cannot be recognized",
+      "category": "License Compliance",
+      "sources": [
+        {
+          "path": "",
+          "type": "module"
+        }
+      ],
+      "tool": "License Audit",
       "severity": "High",
       "hash": 388048422739856783,
-      "type": "Unrecognized dependency license",
-      "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)"
+      "type": "Unrecognized dependency license"
     },
     {
-      "sources": [
-        {
-          "type": "module",
-          "path": ""
-        }
-      ],
-      "tags": [
-        "LICENSE: UNKNOWN"
-      ],
       "attributes": {
         "module": "",
         "inspectionName": "UnrecognizedDependencyLicense"
       },
+      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)",
+      "tags": [
+        "LICENSE: UNKNOWN"
+      ],
       "comment": "io.ktor:ktor-network-tls (1.6.4) license cannot be recognized",
+      "category": "License Compliance",
+      "sources": [
+        {
+          "path": "",
+          "type": "module"
+        }
+      ],
+      "tool": "License Audit",
       "severity": "High",
       "hash": 625841690128716633,
-      "type": "Unrecognized dependency license",
-      "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)"
+      "type": "Unrecognized dependency license"
     },
     {
-      "sources": [
-        {
-          "type": "module",
-          "path": ""
-        }
-      ],
-      "tags": [
-        "LICENSE: UNKNOWN"
-      ],
       "attributes": {
         "module": "",
         "inspectionName": "UnrecognizedDependencyLicense"
       },
+      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)",
+      "tags": [
+        "LICENSE: UNKNOWN"
+      ],
       "comment": "io.ktor:ktor-network-tls-certificates-kotlinMultiplatform (1.6.4) license cannot be recognized",
+      "category": "License Compliance",
+      "sources": [
+        {
+          "path": "",
+          "type": "module"
+        }
+      ],
+      "tool": "License Audit",
       "severity": "High",
       "hash": 943719735135337535,
-      "type": "Unrecognized dependency license",
-      "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)"
+      "type": "Unrecognized dependency license"
     },
     {
-      "sources": [
-        {
-          "type": "module",
-          "path": ""
-        }
-      ],
-      "tags": [
-        "LICENSE: UNKNOWN"
-      ],
       "attributes": {
         "module": "",
         "inspectionName": "UnrecognizedDependencyLicense"
       },
+      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)",
+      "tags": [
+        "LICENSE: UNKNOWN"
+      ],
       "comment": "io.ktor:ktor-server-core-kotlinMultiplatform (1.6.4) license cannot be recognized",
+      "category": "License Compliance",
+      "sources": [
+        {
+          "path": "",
+          "type": "module"
+        }
+      ],
+      "tool": "License Audit",
       "severity": "High",
       "hash": 197812912354470261,
-      "type": "Unrecognized dependency license",
-      "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)"
+      "type": "Unrecognized dependency license"
     },
     {
-      "sources": [
-        {
-          "type": "module",
-          "path": ""
-        }
-      ],
-      "tags": [
-        "LICENSE: UNKNOWN"
-      ],
       "attributes": {
         "module": "",
         "inspectionName": "UnrecognizedDependencyLicense"
       },
+      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)",
+      "tags": [
+        "LICENSE: UNKNOWN"
+      ],
       "comment": "io.ktor:ktor-server-host-common-kotlinMultiplatform (1.6.3) license cannot be recognized",
+      "category": "License Compliance",
+      "sources": [
+        {
+          "path": "",
+          "type": "module"
+        }
+      ],
+      "tool": "License Audit",
       "severity": "High",
       "hash": 917633869564116435,
-      "type": "Unrecognized dependency license",
-      "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)"
+      "type": "Unrecognized dependency license"
     },
     {
-      "sources": [
-        {
-          "type": "module",
-          "path": ""
-        }
-      ],
-      "tags": [
-        "LICENSE: UNKNOWN"
-      ],
       "attributes": {
         "module": "",
         "inspectionName": "UnrecognizedDependencyLicense"
       },
+      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)",
+      "tags": [
+        "LICENSE: UNKNOWN"
+      ],
       "comment": "io.ktor:ktor-server-host-common-kotlinMultiplatform (1.6.4) license cannot be recognized",
+      "category": "License Compliance",
+      "sources": [
+        {
+          "path": "",
+          "type": "module"
+        }
+      ],
+      "tool": "License Audit",
       "severity": "High",
       "hash": 738338891426216652,
-      "type": "Unrecognized dependency license",
-      "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)"
+      "type": "Unrecognized dependency license"
     },
     {
-      "sources": [
-        {
-          "type": "module",
-          "path": ""
-        }
-      ],
-      "tags": [
-        "LICENSE: UNKNOWN"
-      ],
       "attributes": {
         "module": "",
         "inspectionName": "UnrecognizedDependencyLicense"
       },
+      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)",
+      "tags": [
+        "LICENSE: UNKNOWN"
+      ],
       "comment": "io.ktor:ktor-utils (1.6.4) license cannot be recognized",
+      "category": "License Compliance",
+      "sources": [
+        {
+          "path": "",
+          "type": "module"
+        }
+      ],
+      "tool": "License Audit",
       "severity": "High",
       "hash": 717878579652475359,
-      "type": "Unrecognized dependency license",
-      "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)"
+      "type": "Unrecognized dependency license"
     },
     {
-      "sources": [
-        {
-          "type": "module",
-          "path": ""
-        }
-      ],
-      "tags": [
-        "LICENSE: UNKNOWN"
-      ],
       "attributes": {
         "module": "",
         "inspectionName": "UnrecognizedDependencyLicense"
       },
+      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)",
+      "tags": [
+        "LICENSE: UNKNOWN"
+      ],
       "comment": "io.ktor:ktor-websockets-kotlinMultiplatform (1.6.4) license cannot be recognized",
+      "category": "License Compliance",
+      "sources": [
+        {
+          "path": "",
+          "type": "module"
+        }
+      ],
+      "tool": "License Audit",
       "severity": "High",
       "hash": 342691439312249465,
-      "type": "Unrecognized dependency license",
-      "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)"
+      "type": "Unrecognized dependency license"
     },
     {
-      "sources": [
-        {
-          "type": "module",
-          "path": ""
-        }
-      ],
-      "tags": [
-        "LICENSE: MIT",
-        "LICENSE: CDDL-1.0"
-      ],
       "attributes": {
         "module": "",
         "inspectionName": "UncategorizedDependencyLicense"
       },
+      "detailsInfo": "Check the [dependency](https://kafka.apache.org) licenses and either remove the dependency or [add its licenses to the allowed list](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense): project license MIT, dependency license CDDL-1.0",
+      "tags": [
+        "LICENSE: MIT",
+        "LICENSE: CDDL-1.0"
+      ],
       "comment": "org.apache.kafka:kafka-clients (2.8.1) CDDL 1.0 is not in the allowed or the prohibited license lists",
+      "category": "License Compliance",
+      "sources": [
+        {
+          "path": "",
+          "type": "module"
+        }
+      ],
+      "tool": "License Audit",
       "severity": "High",
       "hash": 348225866160667579,
-      "type": "Uncategorized dependency license",
-      "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Check the [dependency](https://kafka.apache.org) licenses and either remove the dependency or [add its licenses to the allowed list](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense): project license MIT, dependency license CDDL-1.0"
+      "type": "Uncategorized dependency license"
     },
     {
-      "sources": [
-        {
-          "type": "module",
-          "path": ""
-        }
-      ],
-      "tags": [
-        "LICENSE: MIT",
-        "LICENSE: CDDL-1.0"
-      ],
       "attributes": {
         "module": "",
         "inspectionName": "UncategorizedDependencyLicense"
       },
+      "detailsInfo": "Check the [dependency](https://kafka.apache.org) licenses and either remove the dependency or [add its licenses to the allowed list](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense): project license MIT, dependency license CDDL-1.0",
+      "tags": [
+        "LICENSE: MIT",
+        "LICENSE: CDDL-1.0"
+      ],
       "comment": "org.apache.kafka:kafka-metadata (2.8.0) CDDL 1.0 is not in the allowed or the prohibited license lists",
+      "category": "License Compliance",
+      "sources": [
+        {
+          "path": "",
+          "type": "module"
+        }
+      ],
+      "tool": "License Audit",
       "severity": "High",
       "hash": 361520877268308223,
-      "type": "Uncategorized dependency license",
-      "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Check the [dependency](https://kafka.apache.org) licenses and either remove the dependency or [add its licenses to the allowed list](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense): project license MIT, dependency license CDDL-1.0"
+      "type": "Uncategorized dependency license"
     },
     {
-      "sources": [
-        {
-          "type": "module",
-          "path": ""
-        }
-      ],
-      "tags": [
-        "LICENSE: MIT",
-        "LICENSE: CDDL-1.0"
-      ],
       "attributes": {
         "module": "",
         "inspectionName": "UncategorizedDependencyLicense"
       },
+      "detailsInfo": "Check the [dependency](https://kafka.apache.org) licenses and either remove the dependency or [add its licenses to the allowed list](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense): project license MIT, dependency license CDDL-1.0",
+      "tags": [
+        "LICENSE: MIT",
+        "LICENSE: CDDL-1.0"
+      ],
       "comment": "org.apache.kafka:kafka-raft (2.8.0) CDDL 1.0 is not in the allowed or the prohibited license lists",
+      "category": "License Compliance",
+      "sources": [
+        {
+          "path": "",
+          "type": "module"
+        }
+      ],
+      "tool": "License Audit",
       "severity": "High",
       "hash": 160672120694268382,
-      "type": "Uncategorized dependency license",
-      "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Check the [dependency](https://kafka.apache.org) licenses and either remove the dependency or [add its licenses to the allowed list](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense): project license MIT, dependency license CDDL-1.0"
+      "type": "Uncategorized dependency license"
     },
     {
-      "sources": [
-        {
-          "type": "module",
-          "path": ""
-        }
-      ],
+      "attributes": {
+        "module": "",
+        "inspectionName": "UncategorizedDependencyLicense"
+      },
+      "detailsInfo": "Check the [dependency](https://kafka.apache.org) licenses and either remove the dependency or [add its licenses to the allowed list](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense): project license MIT, dependency license CDDL-1.0",
       "tags": [
         "LICENSE: MIT",
         "LICENSE: CDDL-1.0"
       ],
-      "attributes": {
-        "module": "",
-        "inspectionName": "UncategorizedDependencyLicense"
-      },
       "comment": "org.apache.kafka:kafka_2.13 (2.8.0) CDDL 1.0 is not in the allowed or the prohibited license lists",
+      "category": "License Compliance",
+      "sources": [
+        {
+          "path": "",
+          "type": "module"
+        }
+      ],
+      "tool": "License Audit",
       "severity": "High",
       "hash": 100478131860749179,
-      "type": "Uncategorized dependency license",
-      "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Check the [dependency](https://kafka.apache.org) licenses and either remove the dependency or [add its licenses to the allowed list](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense): project license MIT, dependency license CDDL-1.0"
+      "type": "Uncategorized dependency license"
     },
     {
-      "sources": [
-        {
-          "type": "module",
-          "path": ""
-        }
-      ],
-      "tags": [
-        "LICENSE: UNKNOWN"
-      ],
       "attributes": {
         "module": "",
         "inspectionName": "UnrecognizedDependencyLicense"
       },
+      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)",
+      "tags": [
+        "LICENSE: UNKNOWN"
+      ],
       "comment": "org.jetbrains.kotlinx:kotlinx-coroutines-core (1.5.0) license cannot be recognized",
+      "category": "License Compliance",
+      "sources": [
+        {
+          "path": "",
+          "type": "module"
+        }
+      ],
+      "tool": "License Audit",
       "severity": "High",
       "hash": 446563845125801383,
-      "type": "Unrecognized dependency license",
-      "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)"
+      "type": "Unrecognized dependency license"
     },
     {
-      "sources": [
-        {
-          "type": "module",
-          "path": ""
-        }
-      ],
-      "tags": [
-        "LICENSE: UNKNOWN"
-      ],
       "attributes": {
         "module": "",
         "inspectionName": "UnrecognizedDependencyLicense"
       },
+      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)",
+      "tags": [
+        "LICENSE: UNKNOWN"
+      ],
       "comment": "org.jetbrains.kotlinx:kotlinx-coroutines-core (1.5.1) license cannot be recognized",
+      "category": "License Compliance",
+      "sources": [
+        {
+          "path": "",
+          "type": "module"
+        }
+      ],
+      "tool": "License Audit",
       "severity": "High",
       "hash": 520790772838898433,
-      "type": "Unrecognized dependency license",
-      "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)"
+      "type": "Unrecognized dependency license"
     },
     {
-      "sources": [
-        {
-          "type": "module",
-          "path": ""
-        }
-      ],
-      "tags": [
-        "LICENSE: UNKNOWN"
-      ],
       "attributes": {
         "module": "",
         "inspectionName": "UnrecognizedDependencyLicense"
       },
+      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)",
+      "tags": [
+        "LICENSE: UNKNOWN"
+      ],
       "comment": "org.jetbrains.kotlinx:kotlinx-coroutines-core (1.5.1-native-mt) license cannot be recognized",
+      "category": "License Compliance",
+      "sources": [
+        {
+          "path": "",
+          "type": "module"
+        }
+      ],
+      "tool": "License Audit",
       "severity": "High",
       "hash": 527395422764567873,
-      "type": "Unrecognized dependency license",
-      "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)"
+      "type": "Unrecognized dependency license"
     },
     {
-      "sources": [
-        {
-          "type": "module",
-          "path": ""
-        }
-      ],
-      "tags": [
-        "LICENSE: UNKNOWN"
-      ],
       "attributes": {
         "module": "",
         "inspectionName": "UnrecognizedDependencyLicense"
       },
+      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)",
+      "tags": [
+        "LICENSE: UNKNOWN"
+      ],
       "comment": "org.jetbrains.kotlinx:kotlinx-coroutines-core (1.5.2) license cannot be recognized",
+      "category": "License Compliance",
+      "sources": [
+        {
+          "path": "",
+          "type": "module"
+        }
+      ],
+      "tool": "License Audit",
       "severity": "High",
       "hash": 804669623419644789,
-      "type": "Unrecognized dependency license",
-      "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)"
+      "type": "Unrecognized dependency license"
     },
     {
-      "sources": [
-        {
-          "type": "module",
-          "path": ""
-        }
-      ],
-      "tags": [
-        "LICENSE: UNKNOWN"
-      ],
       "attributes": {
         "module": "",
         "inspectionName": "UnrecognizedDependencyLicense"
       },
+      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)",
+      "tags": [
+        "LICENSE: UNKNOWN"
+      ],
       "comment": "org.jetbrains.kotlinx:kotlinx-datetime (0.3.1) license cannot be recognized",
+      "category": "License Compliance",
+      "sources": [
+        {
+          "path": "",
+          "type": "module"
+        }
+      ],
+      "tool": "License Audit",
       "severity": "High",
       "hash": 456886616002609080,
-      "type": "Unrecognized dependency license",
-      "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)"
+      "type": "Unrecognized dependency license"
     },
     {
-      "sources": [
-        {
-          "type": "module",
-          "path": ""
-        }
-      ],
-      "tags": [
-        "LICENSE: UNKNOWN"
-      ],
       "attributes": {
         "module": "",
         "inspectionName": "UnrecognizedDependencyLicense"
       },
+      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)",
+      "tags": [
+        "LICENSE: UNKNOWN"
+      ],
       "comment": "org.jetbrains.kotlinx:kotlinx-serialization-core (1.1.0) license cannot be recognized",
+      "category": "License Compliance",
+      "sources": [
+        {
+          "path": "",
+          "type": "module"
+        }
+      ],
+      "tool": "License Audit",
       "severity": "High",
       "hash": 102510788509775670,
-      "type": "Unrecognized dependency license",
-      "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)"
+      "type": "Unrecognized dependency license"
     },
     {
-      "sources": [
-        {
-          "type": "module",
-          "path": ""
-        }
-      ],
-      "tags": [
-        "LICENSE: UNKNOWN"
-      ],
       "attributes": {
         "module": "",
         "inspectionName": "UnrecognizedDependencyLicense"
       },
+      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)",
+      "tags": [
+        "LICENSE: UNKNOWN"
+      ],
       "comment": "org.jetbrains.kotlinx:kotlinx-serialization-core (1.2.2) license cannot be recognized",
+      "category": "License Compliance",
+      "sources": [
+        {
+          "path": "",
+          "type": "module"
+        }
+      ],
+      "tool": "License Audit",
       "severity": "High",
       "hash": 371237872531576243,
-      "type": "Unrecognized dependency license",
-      "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)"
+      "type": "Unrecognized dependency license"
     },
     {
-      "sources": [
-        {
-          "type": "module",
-          "path": ""
-        }
-      ],
-      "tags": [
-        "LICENSE: UNKNOWN"
-      ],
       "attributes": {
         "module": "",
         "inspectionName": "UnrecognizedDependencyLicense"
       },
+      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)",
+      "tags": [
+        "LICENSE: UNKNOWN"
+      ],
       "comment": "org.jetbrains.kotlinx:kotlinx-serialization-json (1.1.0) license cannot be recognized",
+      "category": "License Compliance",
+      "sources": [
+        {
+          "path": "",
+          "type": "module"
+        }
+      ],
+      "tool": "License Audit",
       "severity": "High",
       "hash": 376369679975204286,
-      "type": "Unrecognized dependency license",
-      "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)"
+      "type": "Unrecognized dependency license"
     },
     {
-      "sources": [
-        {
-          "type": "module",
-          "path": ""
-        }
-      ],
-      "tags": [
-        "LICENSE: UNKNOWN"
-      ],
       "attributes": {
         "module": "",
         "inspectionName": "UnrecognizedDependencyLicense"
       },
+      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)",
+      "tags": [
+        "LICENSE: UNKNOWN"
+      ],
       "comment": "org.jetbrains.kotlinx:kotlinx-serialization-json (1.2.2) license cannot be recognized",
+      "category": "License Compliance",
+      "sources": [
+        {
+          "path": "",
+          "type": "module"
+        }
+      ],
+      "tool": "License Audit",
       "severity": "High",
       "hash": 461735068268943835,
-      "type": "Unrecognized dependency license",
-      "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)"
+      "type": "Unrecognized dependency license"
     },
     {
-      "sources": [
-        {
-          "type": "module",
-          "path": ""
-        }
-      ],
-      "tags": [
-        "LICENSE: MIT",
-        "LICENSE: EPL-2.0"
-      ],
       "attributes": {
         "module": "",
         "inspectionName": "UncategorizedDependencyLicense"
       },
+      "detailsInfo": "Check the [dependency](https://junit.org/junit5/) licenses and either remove the dependency or [add its licenses to the allowed list](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense): project license MIT, dependency license EPL-2.0",
+      "tags": [
+        "LICENSE: MIT",
+        "LICENSE: EPL-2.0"
+      ],
       "comment": "org.junit.jupiter:junit-jupiter (5.8.1) EPL 2.0 is not in the allowed or the prohibited license lists",
+      "category": "License Compliance",
+      "sources": [
+        {
+          "path": "",
+          "type": "module"
+        }
+      ],
+      "tool": "License Audit",
       "severity": "High",
       "hash": 546952036031567731,
-      "type": "Uncategorized dependency license",
-      "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Check the [dependency](https://junit.org/junit5/) licenses and either remove the dependency or [add its licenses to the allowed list](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense): project license MIT, dependency license EPL-2.0"
+      "type": "Uncategorized dependency license"
     },
     {
-      "sources": [
-        {
-          "type": "module",
-          "path": ""
-        }
-      ],
-      "tags": [
-        "LICENSE: MIT",
-        "LICENSE: EPL-2.0"
-      ],
       "attributes": {
         "module": "",
         "inspectionName": "UncategorizedDependencyLicense"
       },
+      "detailsInfo": "Check the [dependency](https://junit.org/junit5/) licenses and either remove the dependency or [add its licenses to the allowed list](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense): project license MIT, dependency license EPL-2.0",
+      "tags": [
+        "LICENSE: MIT",
+        "LICENSE: EPL-2.0"
+      ],
       "comment": "org.junit.jupiter:junit-jupiter-api (5.8.1) EPL 2.0 is not in the allowed or the prohibited license lists",
+      "category": "License Compliance",
+      "sources": [
+        {
+          "path": "",
+          "type": "module"
+        }
+      ],
+      "tool": "License Audit",
       "severity": "High",
       "hash": 238513497720597000,
-      "type": "Uncategorized dependency license",
-      "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Check the [dependency](https://junit.org/junit5/) licenses and either remove the dependency or [add its licenses to the allowed list](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense): project license MIT, dependency license EPL-2.0"
+      "type": "Uncategorized dependency license"
     },
     {
-      "sources": [
-        {
-          "type": "module",
-          "path": ""
-        }
-      ],
-      "tags": [
-        "LICENSE: MIT",
-        "LICENSE: EPL-2.0"
-      ],
       "attributes": {
         "module": "",
         "inspectionName": "UncategorizedDependencyLicense"
       },
+      "detailsInfo": "Check the [dependency](https://junit.org/junit5/) licenses and either remove the dependency or [add its licenses to the allowed list](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense): project license MIT, dependency license EPL-2.0",
+      "tags": [
+        "LICENSE: MIT",
+        "LICENSE: EPL-2.0"
+      ],
       "comment": "org.junit.jupiter:junit-jupiter-engine (5.8.1) EPL 2.0 is not in the allowed or the prohibited license lists",
+      "category": "License Compliance",
+      "sources": [
+        {
+          "path": "",
+          "type": "module"
+        }
+      ],
+      "tool": "License Audit",
       "severity": "High",
       "hash": 758510922930576563,
-      "type": "Uncategorized dependency license",
-      "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Check the [dependency](https://junit.org/junit5/) licenses and either remove the dependency or [add its licenses to the allowed list](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense): project license MIT, dependency license EPL-2.0"
+      "type": "Uncategorized dependency license"
     },
     {
-      "sources": [
-        {
-          "type": "module",
-          "path": ""
-        }
-      ],
-      "tags": [
-        "LICENSE: MIT",
-        "LICENSE: EPL-2.0"
-      ],
       "attributes": {
         "module": "",
         "inspectionName": "UncategorizedDependencyLicense"
       },
+      "detailsInfo": "Check the [dependency](https://junit.org/junit5/) licenses and either remove the dependency or [add its licenses to the allowed list](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense): project license MIT, dependency license EPL-2.0",
+      "tags": [
+        "LICENSE: MIT",
+        "LICENSE: EPL-2.0"
+      ],
       "comment": "org.junit.jupiter:junit-jupiter-params (5.8.1) EPL 2.0 is not in the allowed or the prohibited license lists",
+      "category": "License Compliance",
+      "sources": [
+        {
+          "path": "",
+          "type": "module"
+        }
+      ],
+      "tool": "License Audit",
       "severity": "High",
       "hash": 152177928672092488,
-      "type": "Uncategorized dependency license",
-      "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Check the [dependency](https://junit.org/junit5/) licenses and either remove the dependency or [add its licenses to the allowed list](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense): project license MIT, dependency license EPL-2.0"
+      "type": "Uncategorized dependency license"
     },
     {
-      "sources": [
-        {
-          "type": "module",
-          "path": ""
-        }
-      ],
-      "tags": [
-        "LICENSE: MIT",
-        "LICENSE: EPL-2.0"
-      ],
       "attributes": {
         "module": "",
         "inspectionName": "UncategorizedDependencyLicense"
       },
+      "detailsInfo": "Check the [dependency](https://junit.org/junit5/) licenses and either remove the dependency or [add its licenses to the allowed list](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense): project license MIT, dependency license EPL-2.0",
+      "tags": [
+        "LICENSE: MIT",
+        "LICENSE: EPL-2.0"
+      ],
       "comment": "org.junit.platform:junit-platform-commons (1.8.1) EPL 2.0 is not in the allowed or the prohibited license lists",
+      "category": "License Compliance",
+      "sources": [
+        {
+          "path": "",
+          "type": "module"
+        }
+      ],
+      "tool": "License Audit",
       "severity": "High",
       "hash": 110985283415976059,
-      "type": "Uncategorized dependency license",
-      "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Check the [dependency](https://junit.org/junit5/) licenses and either remove the dependency or [add its licenses to the allowed list](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense): project license MIT, dependency license EPL-2.0"
+      "type": "Uncategorized dependency license"
     },
     {
-      "sources": [
-        {
-          "type": "module",
-          "path": ""
-        }
-      ],
-      "tags": [
-        "LICENSE: MIT",
-        "LICENSE: EPL-2.0"
-      ],
       "attributes": {
         "module": "",
         "inspectionName": "UncategorizedDependencyLicense"
       },
+      "detailsInfo": "Check the [dependency](https://junit.org/junit5/) licenses and either remove the dependency or [add its licenses to the allowed list](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense): project license MIT, dependency license EPL-2.0",
+      "tags": [
+        "LICENSE: MIT",
+        "LICENSE: EPL-2.0"
+      ],
       "comment": "org.junit.platform:junit-platform-engine (1.8.1) EPL 2.0 is not in the allowed or the prohibited license lists",
-      "severity": "High",
-      "hash": 531177304199109193,
-      "type": "Uncategorized dependency license",
       "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Check the [dependency](https://junit.org/junit5/) licenses and either remove the dependency or [add its licenses to the allowed list](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense): project license MIT, dependency license EPL-2.0"
-    },
-    {
       "sources": [
         {
-          "type": "module",
-          "path": ""
+          "path": "",
+          "type": "module"
         }
       ],
-      "tags": [
-        "LICENSE: UNKNOWN"
-      ],
+      "tool": "License Audit",
+      "severity": "High",
+      "hash": 531177304199109193,
+      "type": "Uncategorized dependency license"
+    },
+    {
       "attributes": {
         "module": "",
         "inspectionName": "UnrecognizedDependencyLicense"
       },
+      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)",
+      "tags": [
+        "LICENSE: UNKNOWN"
+      ],
       "comment": "org.junit:junit-bom (5.8.1) license cannot be recognized",
-      "severity": "High",
-      "hash": 100929117623112937,
-      "type": "Unrecognized dependency license",
       "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Try to find the dependency licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#UncategorizedDependencyLicense)"
-    },
-    {
       "sources": [
         {
-          "type": "module",
-          "path": ""
+          "path": "",
+          "type": "module"
         }
       ],
-      "tags": [
-        "LICENSE: NONE"
-      ],
+      "tool": "License Audit",
+      "severity": "High",
+      "hash": 100929117623112937,
+      "type": "Unrecognized dependency license"
+    },
+    {
       "attributes": {
         "module": "",
         "inspectionName": "NoDependencyLicenses"
       },
+      "detailsInfo": "Try to find the [dependency](http://www.extreme.indiana.edu/xgws/xsoap/xpp/mxp1/) licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#NoDependencyLicenses)",
+      "tags": [
+        "LICENSE: NONE"
+      ],
       "comment": "xpp3:xpp3_xpath (1.1.4c) has no licenses found",
+      "category": "License Compliance",
+      "sources": [
+        {
+          "path": "",
+          "type": "module"
+        }
+      ],
+      "tool": "License Audit",
       "severity": "High",
       "hash": 668337472106464596,
-      "type": "No dependency licenses",
-      "category": "License Compliance",
-      "tool": "License Audit",
-      "detailsInfo": "Try to find the [dependency](http://www.extreme.indiana.edu/xgws/xsoap/xpp/mxp1/) licenses and either ignore the problem or manually [assign the found licenses to this dependency](https://www.jetbrains.com/help/qodana/?LA-Output#NoDependencyLicenses)"
+      "type": "No dependency licenses"
     }
   ]
 }
