@@ -1,4 +1,4 @@
-package questionnaire.github
+package questionnaire.github.mock
 
 import org.intellij.lang.annotations.Language
 
@@ -72,7 +72,7 @@ val releases = """
         "download_count": 3,
         "created_at": "2021-10-27T10:42:48Z",
         "updated_at": "2021-10-27T10:42:48Z",
-        "browser_download_url": "localhost:8081/questionnaires/release/download/hjelpestonad.json"
+        "browser_download_url": "http://localhost:8081/questionnaires/release/download/hjelpestonad.json"
       }
     ],
     "tarball_url": "https://api.github.com/repos/navikt/fhir-questionnaires/tarball/fhir-questionnaires_hjelpestonad-v1.0.0",
@@ -146,7 +146,7 @@ val releases = """
         "download_count": 0,
         "created_at": "2021-10-27T10:42:43Z",
         "updated_at": "2021-10-27T10:42:43Z",
-        "browser_download_url": "localhost:8081/questionnaires/release/download/grunnstonad.json"
+        "browser_download_url": "http://localhost:8081/questionnaires/release/download/grunnstonad.json"
       }
     ],
     "tarball_url": "https://api.github.com/repos/navikt/fhir-questionnaires/tarball/fhir-questionnaires_grunnstonad-v1.0.0",

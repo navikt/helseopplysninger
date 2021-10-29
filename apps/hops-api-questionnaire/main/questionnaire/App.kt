@@ -5,7 +5,6 @@ import io.ktor.application.install
 import io.ktor.features.CallLogging
 import io.ktor.features.ContentNegotiation
 import io.ktor.http.ContentType
-import io.ktor.jackson.jackson
 import io.ktor.metrics.micrometer.MicrometerMetrics
 import io.ktor.routing.routing
 import io.ktor.server.engine.embeddedServer
@@ -14,15 +13,16 @@ import io.ktor.webjars.Webjars
 import io.micrometer.prometheus.PrometheusConfig
 import io.micrometer.prometheus.PrometheusMeterRegistry
 import no.nav.helse.hops.content.JsonFhirR4
+import no.nav.helse.hops.convert.FhirR4JsonContentConverter
 import no.nav.helse.hops.hoplite.loadConfigsOrThrow
 import questionnaire.api.actuators
 import questionnaire.api.read
-import questionnaire.api.search
+import questionnaire.api.search.search
 import questionnaire.api.swagger
-import questionnaire.cache.QuestionnaireCache
+import questionnaire.cache.Cache
 import questionnaire.github.GithubApiClient
-import questionnaire.github.GithubMock
 import questionnaire.github.githubWebhook
+import questionnaire.github.mock.GithubMock
 
 fun main() {
     GithubMock().use {
@@ -38,12 +38,12 @@ fun Application.module() {
     install(Webjars)
     install(MicrometerMetrics) { registry = prometheus }
     install(ContentNegotiation) {
-        jackson(ContentType.Application.Json)
-        jackson(ContentType.Application.JsonFhirR4)
+        register(ContentType.Application.Json, FhirR4JsonContentConverter())
+        register(ContentType.Application.JsonFhirR4, FhirR4JsonContentConverter())
     }
 
     val github = GithubApiClient(config.github)
-    QuestionnaireCache.initiate(github)
+    Cache.init(github)
     githubWebhook(github)
 
     routing {

@@ -2,7 +2,10 @@ package questionnaire.github
 
 import io.ktor.application.Application
 import io.ktor.application.call
+import io.ktor.application.install
+import io.ktor.features.ContentNegotiation
 import io.ktor.http.HttpStatusCode
+import io.ktor.jackson.jackson
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.get
@@ -10,7 +13,8 @@ import io.ktor.routing.post
 import io.ktor.routing.route
 import io.ktor.routing.routing
 import mu.KotlinLogging
-import questionnaire.cache.QuestionnaireCache
+import questionnaire.cache.Cache
+import questionnaire.cache.QuestionnaireDto
 import questionnaire.github.Action.deleted
 
 private val log = KotlinLogging.logger {}
@@ -22,10 +26,13 @@ fun Application.githubWebhook(
         .assets
         .map(Asset::browser_download_url)
         .map { github.getRelease(it) }
-        .forEach(QuestionnaireCache::add)
+        .map(QuestionnaireDto::create)
+        .forEach(Cache::add)
 
     routing {
         route("/github") {
+
+            install(ContentNegotiation) { jackson() }
 
             /**
              * See repository settings for subscribed webhook events and registred webhook url
