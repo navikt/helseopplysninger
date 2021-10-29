@@ -62,6 +62,7 @@ object DialogmeldingFactory {
                     <Document>
                         <DocumentConnection V="H" DN="Hoveddokument" />
                         <RefDoc>
+                            <IssueDate V="${m.timestamp.toIsoString()}"/>
                             <MsgType V="XML" DN="XML-instans" />
                             <MimeType>text/xml</MimeType>
                             <Content>
@@ -77,6 +78,7 @@ object DialogmeldingFactory {
                     <Document>
                         <DocumentConnection V="V" DN="Vedlegg" />
                         <RefDoc>
+                            <IssueDate V="${m.timestamp.toIsoString()}"/>
                             <MsgType V="A" DN="Vedlegg" />
                             <MimeType>application/pdf</MimeType>
                             <Content>
