@@ -15,3 +15,13 @@ fhirJsonToPdfConverter:
   clientId: ${AZURE_APP_CLIENT_ID:-dialogmelding-test-client-id}
   clientSecret: ${AZURE_APP_CLIENT_SECRET:-archive-test-secret}
   scope: "nav:helse:helseopplysninger.convert"
+
+messageQueue:
+  applicationName: "hops-dialogmelding"
+  queueManager: ${MQGATEWAY_NAME:-QM1}
+  host: ${MQGATEWAY_HOSTNAME:-localhost}
+  port: ${MQGATEWAY_PORT:-1414}
+  channel: ${MQGATEWAY_CHANNEL_NAME:-DEV.APP.SVRCONN}
+  queue: queue:///${MQQUEUENAME:-queue}
+  user: ${SERVICEUSER_USERNAME:-user}
+  password: ${SERVICEUSER_PASSWORD:-psw}

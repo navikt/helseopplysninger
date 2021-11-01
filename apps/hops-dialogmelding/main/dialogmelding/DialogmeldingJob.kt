@@ -30,6 +30,7 @@ class DialogmeldingJob(
     messageStream: MessageStream,
     private val logger: Logger,
     private val converter: FhirJsonToPdfConverter,
+    private val mq: MQSender,
     context: CoroutineContext = Dispatchers.Default
 ) : AutoCloseable {
     private val job = CoroutineScope(context).launch {
@@ -83,6 +84,7 @@ class DialogmeldingJob(
         )
 
         val dialogmelding = DialogmeldingFactory.createNoteFromNavToPractitioner(meta)
+        mq.send(dialogmelding)
     }
 }
 

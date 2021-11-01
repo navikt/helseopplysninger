@@ -36,8 +36,9 @@ fun Application.module() {
 
     val pdfConverter = FhirJsonToPdfConverter(config.fhirJsonToPdfConverter, pdfConverterClient)
     val messageStream = MessageStreamKafka(kafkaConsumer, config.kafka.topic)
+    val mqSender = MQSender(config.messageQueue)
 
-    val job = DialogmeldingJob(messageStream, log, pdfConverter)
+    val job = DialogmeldingJob(messageStream, log, pdfConverter, mqSender)
 
     environment.monitor.subscribe(ApplicationStopping) {
         job.close()

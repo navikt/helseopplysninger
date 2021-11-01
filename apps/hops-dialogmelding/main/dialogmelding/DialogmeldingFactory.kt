@@ -13,6 +13,7 @@ object DialogmeldingFactory {
         """
             <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
             <ff:EI_fellesformat xmlns:ff="http://www.nav.no/xml/eiff/2/">
+                <ff:MottakenhetBlokk ebAction="Henvendelse" ebRole="Saksbehandler" ebService="HenvendelseFraSaksbehandler" herIdentifikator="${m.mottaker.herId}" />
                 <MsgHead xmlns="http://www.kith.no/xmlstds/msghead/2006-05-24">
                     <MsgInfo>
                         <Type V="DIALOG_NOTAT" DN="Notat" />
