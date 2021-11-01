@@ -13,25 +13,25 @@ import io.ktor.routing.post
 import io.ktor.routing.route
 import io.ktor.routing.routing
 import mu.KotlinLogging
-import questionnaire.cache.Cache
-import questionnaire.cache.QuestionnaireDto
+import questionnaire.fhir.FhirResourceFactory
+import questionnaire.fhir.QuestionnaireEnricher
 import questionnaire.github.Action.deleted
+import questionnaire.store.QuestionnaireStore
 
 private val log = KotlinLogging.logger {}
 
 fun Application.githubWebhook(
     github: GithubApiClient,
 ) {
-    suspend fun fetchAndCache(release: Release) = release
-        .assets
+    suspend fun fetchAndCache(release: Release) = release.assets
         .map(Asset::browser_download_url)
         .map { github.getRelease(it) }
-        .map(QuestionnaireDto::create)
-        .forEach(Cache::add)
+        .map(FhirResourceFactory::questionnaire)
+        .map { QuestionnaireEnricher.enrich(release.created_at, it) }
+        .forEach(QuestionnaireStore::add)
 
     routing {
         route("/github") {
-
             install(ContentNegotiation) { jackson() }
 
             /**

@@ -1,4 +1,4 @@
-package questionnaire.infrastructure
+package api.infrastructure
 
 import io.ktor.client.HttpClient
 import io.ktor.client.features.auth.Auth

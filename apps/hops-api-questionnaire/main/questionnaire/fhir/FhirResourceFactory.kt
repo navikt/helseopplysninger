@@ -4,16 +4,12 @@ import no.nav.helse.hops.fhir.JsonConverter
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.InstantType
 import org.hl7.fhir.r4.model.Questionnaire
-import questionnaire.cache.QuestionnaireDto
 import java.util.UUID
 
-object BundleFactory {
-    private val parser = JsonConverter.newParser()
-
-    fun searchset(questionnaires: List<QuestionnaireDto>): Bundle {
-        fun toBundleEntry(questionnaire: QuestionnaireDto) = Bundle.BundleEntryComponent().apply {
-            fullUrl = questionnaire.url.toString()
-            resource = parser.parseResource(Questionnaire::class.java, questionnaire.raw)
+object FhirResourceFactory {
+    fun searchset(questionnaires: Collection<Questionnaire>): Bundle {
+        fun toBundleEntry(questionnaire: Questionnaire) = Bundle.BundleEntryComponent().apply {
+            resource = questionnaire
         }
 
         return Bundle().apply {
@@ -23,4 +19,6 @@ object BundleFactory {
             entry = questionnaires.map(::toBundleEntry)
         }
     }
+
+    fun questionnaire(raw: String): Questionnaire = JsonConverter.parse(raw)
 }

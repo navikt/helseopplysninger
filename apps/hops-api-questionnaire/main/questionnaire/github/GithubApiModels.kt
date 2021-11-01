@@ -1,5 +1,7 @@
 package questionnaire.github
 
+import java.util.Date
+
 data class Webhook(
     val action: Action,
     val release: Release,
@@ -7,6 +9,7 @@ data class Webhook(
 
 data class Release(
     val assets: List<Asset>,
+    val created_at: Date,
 )
 
 data class Asset(

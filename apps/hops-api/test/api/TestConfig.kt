@@ -1,4 +1,4 @@
-package questionnaire
+package api
 
 import io.ktor.application.Application
 import io.ktor.config.MapApplicationConfig

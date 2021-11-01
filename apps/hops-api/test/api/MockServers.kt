@@ -1,4 +1,4 @@
-package questionnaire
+package api
 
 import io.ktor.http.HttpHeaders
 import io.ktor.http.withCharset

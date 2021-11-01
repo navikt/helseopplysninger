@@ -1,5 +1,6 @@
-package questionnaire.infrastructure
+package api.infrastructure
 
+import api.domain.EventStore
 import io.ktor.client.HttpClient
 import io.ktor.client.features.expectSuccess
 import io.ktor.client.request.accept
@@ -12,7 +13,6 @@ import io.ktor.http.HeadersBuilder
 import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
 import io.ktor.utils.io.ByteReadChannel
-import questionnaire.domain.EventStore
 import java.net.URL
 
 class EventStoreHttp(

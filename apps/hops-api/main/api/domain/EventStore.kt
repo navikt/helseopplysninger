@@ -1,4 +1,4 @@
-package questionnaire.domain
+package api.domain
 
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType

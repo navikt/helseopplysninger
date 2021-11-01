@@ -1,5 +1,6 @@
-package questionnaire.routes
+package api.routes
 
+import api.domain.EventStore
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.isSuccess
@@ -9,7 +10,6 @@ import io.ktor.routing.Routing
 import io.ktor.routing.get
 import io.ktor.routing.route
 import no.nav.helse.hops.convert.ContentTypes
-import questionnaire.domain.EventStore
 import java.net.URL
 
 fun Routing.smokeTestRoutes(eventStore: EventStore) {

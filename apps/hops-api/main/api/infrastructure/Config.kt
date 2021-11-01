@@ -1,4 +1,4 @@
-package questionnaire.infrastructure
+package api.infrastructure
 
 import no.nav.helse.hops.security.MaskinportenProvider
 import java.net.URL

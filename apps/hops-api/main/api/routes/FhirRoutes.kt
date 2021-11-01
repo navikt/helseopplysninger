@@ -1,5 +1,6 @@
-package questionnaire.routes
+package api.routes
 
+import api.domain.EventStore
 import io.ktor.application.ApplicationCall
 import io.ktor.application.call
 import io.ktor.auth.authenticate
@@ -21,7 +22,6 @@ import io.ktor.routing.route
 import io.ktor.utils.io.copyAndClose
 import no.nav.helse.hops.routing.fullUrl
 import no.nav.helse.hops.security.MaskinportenProvider
-import questionnaire.domain.EventStore
 
 fun Routing.fhirRoutes(eventStore: EventStore) {
     route("fhir/4.0") {

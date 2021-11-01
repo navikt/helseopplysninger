@@ -1,4 +1,4 @@
-package questionnaire.routes
+package api.routes
 
 import io.ktor.application.call
 import io.ktor.response.respond

@@ -17,12 +17,12 @@ import no.nav.helse.hops.convert.FhirR4JsonContentConverter
 import no.nav.helse.hops.hoplite.loadConfigsOrThrow
 import questionnaire.api.actuators
 import questionnaire.api.read
-import questionnaire.api.search.search
 import questionnaire.api.swagger
-import questionnaire.cache.Cache
 import questionnaire.github.GithubApiClient
 import questionnaire.github.githubWebhook
 import questionnaire.github.mock.GithubMock
+import questionnaire.store.QuestionnaireStore
+import questionnaire.store.QuestionnaireStore.search
 
 fun main() {
     GithubMock().use {
@@ -32,18 +32,17 @@ fun main() {
 
 fun Application.module() {
     val prometheus = PrometheusMeterRegistry(PrometheusConfig.DEFAULT)
-    val config = loadConfigsOrThrow<Config>("/application.yaml")
+    val config = loadConfigsOrThrow<Config>()
 
     install(CallLogging)
     install(Webjars)
     install(MicrometerMetrics) { registry = prometheus }
     install(ContentNegotiation) {
-        register(ContentType.Application.Json, FhirR4JsonContentConverter())
         register(ContentType.Application.JsonFhirR4, FhirR4JsonContentConverter())
     }
 
     val github = GithubApiClient(config.github)
-    Cache.init(github)
+    QuestionnaireStore.init(github)
     githubWebhook(github)
 
     routing {
