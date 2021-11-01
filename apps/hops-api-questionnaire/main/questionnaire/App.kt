@@ -21,7 +21,6 @@ import questionnaire.api.swagger
 import questionnaire.github.GithubApiClient
 import questionnaire.github.githubWebhook
 import questionnaire.github.mock.GithubMock
-import questionnaire.store.QuestionnaireStore
 import questionnaire.store.QuestionnaireStore.search
 
 fun main() {
@@ -42,7 +41,6 @@ fun Application.module() {
     }
 
     val github = GithubApiClient(config.github)
-    QuestionnaireStore.init(github)
     githubWebhook(github)
 
     routing {

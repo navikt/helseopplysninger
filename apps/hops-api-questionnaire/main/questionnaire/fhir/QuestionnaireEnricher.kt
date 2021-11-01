@@ -7,7 +7,7 @@ import java.util.Date
 object QuestionnaireEnricher {
     fun enrich(timestamp: Date, questionnaire: Questionnaire): Questionnaire =
         questionnaire.copy().apply {
-            id = questionnaire.url.substringAfterLast("/") + "-" + questionnaire.version
+            id = url.substringAfterLast("/") + "-" + version
 
             if (meta == null) meta = Meta()
             meta.lastUpdated = timestamp

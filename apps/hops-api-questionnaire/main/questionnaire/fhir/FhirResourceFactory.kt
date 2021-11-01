@@ -7,6 +7,8 @@ import org.hl7.fhir.r4.model.Questionnaire
 import java.util.UUID
 
 object FhirResourceFactory {
+    fun questionnaire(raw: String): Questionnaire = JsonConverter.parse(raw)
+
     fun searchset(questionnaires: Collection<Questionnaire>): Bundle {
         fun toBundleEntry(questionnaire: Questionnaire) = Bundle.BundleEntryComponent().apply {
             resource = questionnaire
@@ -19,6 +21,4 @@ object FhirResourceFactory {
             entry = questionnaires.map(::toBundleEntry)
         }
     }
-
-    fun questionnaire(raw: String): Questionnaire = JsonConverter.parse(raw)
 }

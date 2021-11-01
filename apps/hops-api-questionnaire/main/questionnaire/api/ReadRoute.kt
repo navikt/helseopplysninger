@@ -13,6 +13,7 @@ fun Routing.read() {
         get("/questionnaire/{id}") {
             val id = call.parameters["id"]!!
             val schema = QuestionnaireStore.get(id) ?: return@get respondNotFound()
+
             call.respond(schema)
         }
     }

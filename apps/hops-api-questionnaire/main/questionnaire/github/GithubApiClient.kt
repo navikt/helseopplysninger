@@ -10,8 +10,20 @@ import io.ktor.client.statement.HttpStatement
 import io.ktor.utils.io.ByteReadChannel
 import io.ktor.utils.io.jvm.javaio.toInputStream
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import mu.KotlinLogging
+import org.hl7.fhir.r4.model.Questionnaire
+import questionnaire.fhir.FhirResourceFactory
+import questionnaire.fhir.QuestionnaireEnricher
+import questionnaire.store.QuestionnaireStore
 import java.io.BufferedReader
+
+private val log = KotlinLogging.logger {}
 
 class GithubApiClient(private val config: GithubConfig) {
     private val client: HttpClient = HttpClient {
@@ -22,12 +34,36 @@ class GithubApiClient(private val config: GithubConfig) {
         }
     }
 
-    suspend fun getAllReleaseUrls(): List<String> =
-        client.get<List<Release>>(config.questionnaireUrl)
-            .flatMap(Release::assets)
-            .map(Asset::browser_download_url)
+    init {
+        runBlocking {
+            launch {
+                fetchQuestionnaires(client.get(config.questionnaireUrl))
+                    .collect(QuestionnaireStore::add)
+            }
+        }
+    }
 
-    suspend fun getRelease(downloadUrl: String): String =
+    suspend fun fetchAndStoreLatest() {
+        val latestUrl = config.questionnaireUrl.toURI().resolve("/latest").toString()
+        val release = client.get<Release>(latestUrl)
+        log.info { "Triggered from github event" }
+        log.info { release }
+        fetchQuestionnaires(listOf(release))
+            .collect(QuestionnaireStore::add)
+    }
+
+    private fun fetchQuestionnaires(releases: List<Release>): Flow<Questionnaire> = flow {
+        releases.forEach { release ->
+            release.assets
+                .map(Asset::browser_download_url)
+                .map { download(it) }
+                .map(FhirResourceFactory::questionnaire)
+                .map { QuestionnaireEnricher.enrich(release.created_at, it) }
+                .forEach { emit(it) }
+        }
+    }
+
+    private suspend fun download(downloadUrl: String): String =
         client.get<HttpStatement>(downloadUrl).execute { response ->
             val channel: ByteReadChannel = response.receive()
             withContext(Dispatchers.IO) {
@@ -36,7 +72,4 @@ class GithubApiClient(private val config: GithubConfig) {
                     .use(BufferedReader::readText)
             }
         }
-
-    private data class Release(val prerelease: Boolean, val assets: List<Asset>)
-    private data class Asset(val browser_download_url: String)
 }

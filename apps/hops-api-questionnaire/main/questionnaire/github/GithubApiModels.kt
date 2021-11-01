@@ -9,6 +9,7 @@ data class Webhook(
 
 data class Release(
     val assets: List<Asset>,
+    val prerelease: Boolean,
     val created_at: Date,
 )
 

@@ -18,6 +18,7 @@ fun Routing.search() {
         get("/questionnaire") {
             val url = call.parameters["url"]?.toURI()
             val version = url?.version()
+
             searchAndRespond(url, version)
         }
 
@@ -25,15 +26,13 @@ fun Routing.search() {
             val params = call.receiveParameters()
             val url = params["url"]?.toURI()
             val version = params["version"]
+
             searchAndRespond(url, version)
         }
     }
 }
 
-private suspend fun PipelineContext<Unit, ApplicationCall>.searchAndRespond(
-    url: URI?,
-    version: String?
-) {
+private suspend fun PipelineContext<Unit, ApplicationCall>.searchAndRespond(url: URI?, version: String?) {
     val questionnaires = QuestionnaireStore.search(url, version)
     val searchset = FhirResourceFactory.searchset(questionnaires)
 
@@ -41,7 +40,10 @@ private suspend fun PipelineContext<Unit, ApplicationCall>.searchAndRespond(
 }
 
 private fun String.toURI(): URI = URI(this)
-private fun URI.version(): String? = when (toString().contains("|")) { // TODO: test at tostring er riktig her
-    true -> toString().substringAfterLast("|")
-    false -> null
-}
+
+// TODO: test at tostring er riktig her
+private fun URI.version(): String? =
+    when (toString().contains("|")) {
+        true -> toString().substringAfterLast("|")
+        false -> null
+    }
