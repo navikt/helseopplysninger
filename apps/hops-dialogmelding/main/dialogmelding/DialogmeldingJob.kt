@@ -25,6 +25,7 @@ import org.hl7.fhir.r4.model.QuestionnaireResponse
 import org.hl7.fhir.r4.model.Resource
 import org.slf4j.Logger
 import kotlin.coroutines.CoroutineContext
+import kotlinx.coroutines.flow.map
 
 class DialogmeldingJob(
     messageStream: MessageStream,
@@ -36,7 +37,7 @@ class DialogmeldingJob(
     private val job = CoroutineScope(context).launch {
         while (isActive) {
             try {
-                messageStream.poll(::fromKafkaRecord).collect(::addToArchive)
+                messageStream.poll(::fromKafkaRecord).map(::createDialogmelding).collect { mq.send(it) }
                 isRunning = true
             } catch (ex: Throwable) {
                 isRunning = false
@@ -59,7 +60,7 @@ class DialogmeldingJob(
         }
     }
 
-    private suspend fun addToArchive(message: FhirMessage) {
+    private suspend fun createDialogmelding(message: FhirMessage): String {
         require(ContentTypes.fhirJsonR4.match(message.contentType)) {
             "${message.contentType} is not a known Content-Type."
         }
@@ -83,8 +84,7 @@ class DialogmeldingJob(
             pdf
         )
 
-        val dialogmelding = DialogmeldingFactory.createNoteFromNavToPractitioner(meta)
-        mq.send(dialogmelding)
+        return DialogmeldingFactory.createNoteFromNavToPractitioner(meta)
     }
 }
 
