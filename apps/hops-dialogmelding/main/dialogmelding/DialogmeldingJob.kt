@@ -42,7 +42,7 @@ class DialogmeldingJob(
             } catch (ex: Throwable) {
                 isRunning = false
                 if (ex is CancellationException) throw ex
-                logger.error("Error while publishing document to archive.", ex)
+                logger.error("Error while publishing message to IBM MQ.", ex)
                 delay(5000)
             }
         }

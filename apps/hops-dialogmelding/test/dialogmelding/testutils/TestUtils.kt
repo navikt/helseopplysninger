@@ -8,3 +8,6 @@ fun getRandomPort() = ServerSocket(0).use {
 
 fun readResourcesFile(path: String) =
     object {}.javaClass.getResource(path)!!.readBytes()
+
+fun readResourcesFileAsString(path: String) =
+    object {}.javaClass.getResource(path)!!.readText()
