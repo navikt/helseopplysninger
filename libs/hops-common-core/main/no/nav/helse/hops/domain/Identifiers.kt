@@ -12,6 +12,7 @@ value class PersonId(private val value: String) {
     val type get() = if (value.first().digitToInt() >= 4) Type.DNR else Type.FNR
     val system get() = if (type == Type.FNR) fnrSystem else dnrSystem
     val gender get() = if (value[8].digitToInt() % 2 == 0) Gender.Female else Gender.Male
+    override fun toString() = value
 
     enum class Type { FNR, DNR }
     enum class Gender { Female, Male }
@@ -32,8 +33,10 @@ value class HprNr(private val value: String) {
         }
     }
 
+    override fun toString() = value
+
     companion object {
-        private val pattern = Regex("""^\d{9}$""")
+        private val pattern = Regex("""^\d{1,9}$""")
         val system = "urn:oid:2.16.578.1.12.4.1.4.4"
     }
 }
@@ -46,6 +49,8 @@ value class OrgNr(private val value: String) {
             "$value is not a valid Org-NR according to regex: $pattern"
         }
     }
+
+    override fun toString() = value
 
     companion object {
         private val pattern = Regex("""^\d{9}$""")
@@ -64,6 +69,8 @@ value class HerId(private val value: String) {
             "$value is not a valid HER-id according to regex: $pattern"
         }
     }
+
+    override fun toString() = value
 
     companion object {
         private val pattern = Regex("""^\d+$""")

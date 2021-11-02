@@ -40,6 +40,7 @@ dependencies {
     runtimeOnly("org.webjars:swagger-ui:3.52.5")
     testImplementation(project(":libs:hops-common-test"))
     testImplementation(project(":libs:hops-common-kafka-test"))
+    testImplementation("org.testcontainers:junit-jupiter:1.16.2")
 }
 
 kotlin.sourceSets["main"].kotlin.srcDirs("main")
