@@ -15,7 +15,7 @@ tasks {
 
 dependencies {
     api("com.nimbusds:nimbus-jose-jwt:9.15.2")
-    api("io.ktor:ktor-client-core:1.6.4")
+    api("io.ktor:ktor-client-core:1.6.5")
     api("io.ktor:ktor-client-serialization:1.6.4")
     api("io.ktor:ktor-serialization:1.6.4")
 }
