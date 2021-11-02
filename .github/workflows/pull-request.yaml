@@ -24,7 +24,7 @@ jobs:
       KTLINT_URL: ${{ steps.ktlint-latest.outputs.KTLINT_URL }}
     steps:
       - name: 🧳 Checkout merge commit SHA
-        uses: actions/checkout@v2.3.5
+        uses: actions/checkout@v2.4.0
         with:
           ref: refs/pull/${{ github.event.number }}/merge
 
@@ -58,7 +58,7 @@ jobs:
     if: contains(github.event.pull_request.labels.*.name, 'format')
     steps:
       - name: 🧳 Checkout merge commit SHA
-        uses: actions/checkout@v2.3.5
+        uses: actions/checkout@v2.4.0
         with:
           ref: refs/pull/${{ github.event.number }}/merge
       - name: 📌 Get ktlint
@@ -83,7 +83,7 @@ jobs:
       (needs.lint-format.result == 'success' || needs.lint-format.result == 'skipped')
     steps:
       - name: 🧳 Checkout merge commit SHA
-        uses: actions/checkout@v2.3.5
+        uses: actions/checkout@v2.4.0
         with:
           ref: refs/pull/${{ github.event.number }}/merge
 
@@ -130,7 +130,7 @@ jobs:
     if: github.event.pull_request.head.repo.full_name == github.repository
     steps:
       - name: 🧳 Checkout merge commit SHA
-        uses: actions/checkout@v2.3.5
+        uses: actions/checkout@v2.4.0
         with:
           ref: refs/pull/${{ github.event.number }}/merge
 
