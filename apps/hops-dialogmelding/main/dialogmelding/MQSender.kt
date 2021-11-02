@@ -33,15 +33,15 @@ class MQSender(private val config: Config.MQ) {
 
 private fun createConnectionFactory(config: Config.MQ) =
     JmsFactoryFactory.getInstance(WMQ_PROVIDER).createConnectionFactory().apply {
-        setIntProperty(WMQ_CONNECTION_MODE, WMQ_CM_CLIENT)
-        setStringProperty(WMQ_QUEUE_MANAGER, config.queueManager)
-        setStringProperty(WMQ_HOST_NAME, config.host)
-        setStringProperty(WMQ_APPLICATIONNAME, config.applicationName)
-        setIntProperty(WMQ_PORT, config.port)
-        setStringProperty(WMQ_CHANNEL, config.channel)
-        setIntProperty(WMQ_CCSID, UTF_8_WITH_PUA)
-        setIntProperty(JMS_IBM_ENCODING, MQENC_NATIVE)
         setIntProperty(JMS_IBM_CHARACTER_SET, UTF_8_WITH_PUA)
-        setStringProperty(USERID, config.user)
+        setIntProperty(JMS_IBM_ENCODING, MQENC_NATIVE)
+        setIntProperty(WMQ_CCSID, UTF_8_WITH_PUA)
+        setIntProperty(WMQ_CONNECTION_MODE, WMQ_CM_CLIENT)
+        setIntProperty(WMQ_PORT, config.port)
         setStringProperty(PASSWORD, config.password)
+        setStringProperty(USERID, config.user)
+        setStringProperty(WMQ_APPLICATIONNAME, config.applicationName)
+        setStringProperty(WMQ_CHANNEL, config.channel)
+        setStringProperty(WMQ_HOST_NAME, config.host)
+        setStringProperty(WMQ_QUEUE_MANAGER, config.queueManager)
     }
