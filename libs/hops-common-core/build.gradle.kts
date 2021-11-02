@@ -22,7 +22,7 @@ tasks {
 
 dependencies {
     implementation("io.ktor:ktor-client-jackson:1.6.4")
-    implementation("io.ktor:ktor-client-java:1.6.4")
+    implementation("io.ktor:ktor-client-java:1.6.5")
     implementation("no.nav.security:token-client-core:1.3.9")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.5.2")
     testImplementation(project(":libs:hops-common-test"))
