@@ -48,6 +48,9 @@ spec:
   {{#each ingresses as |url|}}
     - {{url}}
   {{/each}}
+  envFrom:
+    # Google Secrets Manager
+    - secret: emottak-mq
   env:
     - name: LOG_APPENDER
       value: json

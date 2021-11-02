@@ -19,10 +19,10 @@ fhirJsonToPdfConverter:
 # https://doc.nais.io/persistence/mq/
 messageQueue:
   applicationName: "hops-dialogmelding"
-  queueManager: ${MQGATEWAY_NAME:-QM1}
-  host: ${MQGATEWAY_HOSTNAME:-localhost}
-  port: ${MQGATEWAY_PORT:-1414}
-  channel: ${MQGATEWAY_CHANNEL_NAME:-DEV.APP.SVRCONN}
-  queue: queue:///${MQQUEUENAME:-queue}
-  user: ${SERVICEUSER_USERNAME:-user}
-  password: ${SERVICEUSER_PASSWORD:-psw}
+  queueManager: ${MQ_QUEUE_MANAGER}
+  host: ${MQ_HOST:-localhost}
+  port: ${MQ_PORT:-1414}
+  channel: ${MQ_CHANNEL}
+  queue: queue:///${MQ_QUEUE}
+  user: ${MQ_USER}
+  password: ${MQ_PASSWORD}

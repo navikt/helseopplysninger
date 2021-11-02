@@ -1,9 +1,9 @@
 {
   "ingresses":  ["https://hops-dialogmelding.dev.intern.nav.no"],
   "kafka_pool": "nav-dev",
-  "MQGATEWAY_PORT": 1413,
-  "MQGATEWAY_NAME": "MQLS02",
-  "MQGATEWAY_HOSTNAME": "b27apvl220.preprod.local",
-  "MQGATEWAY_CHANNEL_NAME": "DEV.APP.SVRCONN",
-  "MQQUEUENAME": ""
+  "MQ_PORT": 1413,
+  "MQ_HOST": "b27apvl219.preprod.local",
+  "MQ_QUEUE_MANAGER": "MQLS01",
+  "MQ_CHANNEL": "Q1_HOPS_DIALOGMELDIN",
+  "MQ_QUEUE": "QA.Q1_VARSELPRODUKSJON.BEST_SRVMLD_M_KONTAKT"
 }
