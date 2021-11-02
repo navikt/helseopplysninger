@@ -20,7 +20,7 @@ dependencies {
     implementation("io.github.microutils:kotlin-logging-jvm:2.0.11")
     implementation("io.ktor:ktor-client-serialization:1.6.4")
     implementation("io.ktor:ktor-client-core:1.6.4")
-    implementation("io.ktor:ktor-client-cio:1.6.4")
+    implementation("io.ktor:ktor-client-cio:1.6.5")
     implementation("io.ktor:ktor-metrics-micrometer:1.6.4")
     implementation("io.ktor:ktor-serialization:1.6.4")
     implementation("io.ktor:ktor-server-netty:1.6.4")
