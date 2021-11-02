@@ -23,7 +23,7 @@ dependencies {
         exclude("org.jetbrains.kotlinx", "kotlinx-coroutines-debug")
     }
     api("io.ktor:ktor-jackson:1.6.5")
-    api("io.ktor:ktor-server-netty:1.6.4")
+    api("io.ktor:ktor-server-netty:1.6.5")
     api("no.nav.security:token-validation-ktor:1.3.9")
     api("io.mockk:mockk:1.12.0")
     api("uk.org.webcompere:system-stubs-jupiter:1.2.0")
