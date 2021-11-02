@@ -18,6 +18,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import mu.KotlinLogging
 import org.hl7.fhir.r4.model.Questionnaire
+import questionnaire.Config
 import questionnaire.fhir.FhirResourceFactory
 import questionnaire.fhir.QuestionnaireEnricher
 import questionnaire.store.QuestionnaireStore
@@ -25,10 +26,12 @@ import java.io.BufferedReader
 
 private val log = KotlinLogging.logger {}
 
-class GithubApiClient(private val config: GithubConfig) {
-    private val client: HttpClient = HttpClient {
+class GithubApiClient(private val config: Config.Github.Api) {
+    private val downloadClient = HttpClient()
+    private val jsonClient = HttpClient {
         install(JsonFeature) {
             serializer = JacksonSerializer {
+                // We will only grab the relevant fields from the GitHub Api JSON responses
                 configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
             }
         }
@@ -37,15 +40,14 @@ class GithubApiClient(private val config: GithubConfig) {
     init {
         runBlocking {
             launch {
-                fetchQuestionnaires(client.get(config.questionnaireUrl))
+                fetchQuestionnaires(jsonClient.get("${config.url}/repos/${config.repo}/releases"))
                     .collect(QuestionnaireStore::add)
             }
         }
     }
 
     suspend fun fetchAndStoreLatest() {
-        val latestUrl = config.questionnaireUrl.toURI().resolve("/latest").toString()
-        val release = client.get<Release>(latestUrl)
+        val release = jsonClient.get<Release>("${config.url}/repos/${config.repo}/releases/latest")
         log.info { "Triggered from github event" }
         log.info { release }
         fetchQuestionnaires(listOf(release))
@@ -64,7 +66,7 @@ class GithubApiClient(private val config: GithubConfig) {
     }
 
     private suspend fun download(downloadUrl: String): String =
-        client.get<HttpStatement>(downloadUrl).execute { response ->
+        downloadClient.get<HttpStatement>(downloadUrl).execute { response ->
             val channel: ByteReadChannel = response.receive()
             withContext(Dispatchers.IO) {
                 channel.toInputStream()

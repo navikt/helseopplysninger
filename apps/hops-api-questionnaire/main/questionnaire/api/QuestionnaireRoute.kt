@@ -10,16 +10,28 @@ import io.ktor.routing.post
 import io.ktor.routing.route
 import io.ktor.util.pipeline.PipelineContext
 import questionnaire.fhir.FhirResourceFactory
+import questionnaire.ktor.respondNotFound
 import questionnaire.store.QuestionnaireStore
 import java.net.URI
 
-fun Routing.search() {
+fun Routing.questionnaire() {
     route("/4.0") {
+        get("/questionnaire/{id}") {
+            val id = call.parameters["id"]!!
+            val schema = QuestionnaireStore.get(id) ?: return@get respondNotFound()
+            call.respond(schema)
+        }
+
         get("/questionnaire") {
-            val url = call.parameters["url"]?.toURI()
+            val url = call.parameters["url"]
             val version = url?.version()
 
-            searchAndRespond(url, version)
+            val uri = when (version != null) {
+                true -> url.substringBefore("|").toURI()
+                false -> url?.toURI()
+            }
+
+            searchAndRespond(uri, version)
         }
 
         post("/questionnaire/_search") {
@@ -32,18 +44,19 @@ fun Routing.search() {
     }
 }
 
+private fun String.toURI(): URI = URI(this)
+
 private suspend fun PipelineContext<Unit, ApplicationCall>.searchAndRespond(url: URI?, version: String?) {
     val questionnaires = QuestionnaireStore.search(url, version)
     val searchset = FhirResourceFactory.searchset(questionnaires)
-
     call.respond(searchset)
 }
 
-private fun String.toURI(): URI = URI(this)
+private fun String.version(): String? {
+    require((count { it == '|' }) <= 1) // nested pipe is not supported
 
-// TODO: test at tostring er riktig her
-private fun URI.version(): String? =
-    when (toString().contains("|")) {
-        true -> toString().substringAfterLast("|")
+    return when (contains("|")) {
+        true -> substringAfter("|")
         false -> null
     }
+}

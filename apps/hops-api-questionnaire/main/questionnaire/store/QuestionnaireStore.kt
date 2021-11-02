@@ -21,7 +21,7 @@ object QuestionnaireStore {
         uri: URI? = null,
         version: String? = null
     ): Collection<Questionnaire> = store
-        .filterValues { schema -> uri?.let { it.toString() == schema.url } ?: true } // todo: test it.tostring
+        .filterValues { schema -> uri?.let { it.toString() == schema.url } ?: true }
         .filterValues { schema -> version?.let { it == schema.version } ?: true }
         .values
 }

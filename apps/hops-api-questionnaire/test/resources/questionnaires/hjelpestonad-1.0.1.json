@@ -1,0 +1,954 @@
+{
+  "resourceType": "Questionnaire",
+  "id": "hjelpestonad",
+  "url": "http://fhir.nav.no/Questionnaire/hjelpestonad",
+  "title": "Hjelpstønad",
+  "status": "draft",
+  "subjectType": [
+    "Patient"
+  ],
+  "item": [
+    {
+      "linkId": "patient-group",
+      "type": "group",
+      "text": "Pasients uttalelse",
+      "item": [
+        {
+          "linkId": "patient-name",
+          "type": "text",
+          "required": true,
+          "text": "Etternavn, fornavn"
+        },
+        {
+          "linkId": "patient-fnumber",
+          "type": "text",
+          "text": "Fødselsnummer"
+        },
+        {
+          "linkId": "patient-age",
+          "type": "integer",
+          "required": true,
+          "text": "Alder"
+        },
+        {
+          "linkId": "support-types",
+          "text": "Hvilke oppgavene bruker trenger hjelp til:",
+          "type": "choice",
+          "answerOption": [
+            {
+              "valueCoding": {
+                "code": "av-po-kledning",
+                "display": "Av-/på-kledning"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "staa-opp-legge-seg",
+                "display": "Stå opp/legge seg"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "personlig-hygiene",
+                "display": "Personlig hygiene"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "daglig-tilsyn",
+                "display": "Daglig tilsyn"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "nattlig-tilsyn",
+                "display": "Nattlig tilsyn"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "spise",
+                "display": "Spise"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "annet",
+                "display": "Annet"
+              }
+            }
+          ],
+          "required": true,
+          "repeats": true,
+          "item": [
+            {
+              "linkId": "support-types-other",
+              "text": "Hvis annet, spesifiere",
+              "type": "text"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "linkId": "doctor-group",
+      "type": "group",
+      "text": "Legens uttalelse",
+      "item": [
+        {
+          "linkId": "diagnoses",
+          "type": "open-choice",
+          "text": "Hvilke(n) diagnose(r) har søkeren?",
+          "required": true,
+          "repeats": true
+        },
+        {
+          "linkId": "hjelpestonad-duration",
+          "type": "boolean",
+          "text": "Er tilstanden varig (som hovedregel 2-3 år eller mer)?",
+          "required": true
+        },
+        {
+          "linkId": "hjelpestonad-duration-variation",
+          "text": "Kan det ventes endring på kort eller lengre sikt?",
+          "type": "boolean",
+          "required": true,
+          "item": [
+            {
+              "linkId": "hjelpestonad-duration-variation-details",
+              "enableWhen": [
+                {
+                  "question": "hjelpestonad-duration-variation",
+                  "operator": "=",
+                  "answerBoolean": true
+                }
+              ],
+              "type": "text",
+              "text": "Når og hvorfor/hvordan?"
+            }
+          ]
+        },
+        {
+          "linkId": "hjelpestonad-assesment",
+          "type": "text",
+          "text": "I hvilken grad bekrefter undersøkelsen(e) søkerens utsagn om egen funksjonsevne og behov for ekstra tilsyn/pleie?"
+        },
+        {
+          "linkId": "hjelpestonad-hide-from-patient",
+          "type": "boolean",
+          "text": "Er det noe i legeerklæringen som pasienten ikke bør få vite av medisinske grunner?",
+          "item": [
+            {
+              "linkId": "hjelpestonad-hide-from-patient-details",
+              "type": "text",
+              "text": "Oppgi hva pasienten ikke bør få vite:",
+              "enableWhen": [
+                {
+                  "question": "hjelpestonad-hide-from-patient",
+                  "operator": "=",
+                  "answerBoolean": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "linkId": "hjelpestonad-questionnaire-child",
+          "text": "Vennligst velg sjkema som passer best dette søknad",
+          "type": "choice",
+          "answerOption": [
+            {
+              "valueCoding": {
+                "code": "general",
+                "display": "Generell"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "hudlidelse",
+                "display": "Hudlidelse"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "astma",
+                "display": "Astma"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "blodersykdom",
+                "display": "Blødersykdom"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "cystisk-fibrose",
+                "display": "Cystisk fibrose"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "diabetes",
+                "display": "Diabetes"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "dovhet",
+                "display": "Døvhet / sterkt tunghørt"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "epilepsi",
+                "display": "Epilepsi"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "fenylketonuri",
+                "display": "Fenylketonuri (PKU/Føllings) – barn under 16"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "hofteleddsdysplasi",
+                "display": "Hofteleddsdysplasi / hofteleddslukasjon / Calvé-Legg-Perthes sykdom"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "kreft",
+                "display": "Kreft"
+              }
+            }
+          ],
+          "enableWhen": [
+            {
+              "question": "patient-age",
+              "operator": "<",
+              "answerInteger": 18
+            }
+          ]
+        },
+        {
+          "linkId": "general-adult",
+          "type": "group",
+          "text": "Generell - voksen",
+          "enableWhen": [
+            {
+              "question": "patient-age",
+              "operator": ">=",
+              "answerInteger": 18
+            }
+          ],
+          "item": [
+            {
+              "linkId": "general-adult-sykdomer",
+              "type": "text",
+              "text": "Hvilke sykdommer bruker har som er aktuelle for denne søknaden"
+            },
+            {
+              "linkId": "general-adult-behov",
+              "type": "text",
+              "text": "Beskriv brukers behov for tilsyn og pleie"
+            },
+            {
+              "linkId": "general-adult-challenges",
+              "type": "text",
+              "text": "Beskriv brukers utfordringer som følge av sykdommen. Dette kan være  uro, utagering, konsentrasjonsvansker, impulsivitet, søvnvansker, motoriske vansker og lignende."
+            },
+            {
+              "linkId": "general-adult-medicine",
+              "type": "choice",
+              "text": "Bruker er medisinert?",
+              "answerOption": [
+                {
+                  "valueString": "Ja"
+                },
+                {
+                  "valueString": "Nei"
+                }
+              ],
+              "item": [
+                {
+                  "linkId": "general-adult-medicine-details",
+                  "type": "text",
+                  "text": "Hvis ja - ber vi deg redegjøre for effekt / bivirkninger",
+                  "enableWhen": [
+                    {
+                      "question": "general-adult-medicine",
+                      "operator": "=",
+                      "answerString": "Ja"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "text": "Hvor mange år det er forventet at tilstanden og hjelpebehovet vil vare?",
+              "type": "text",
+              "linkId": "fordyret-kosthold-general-duration"
+            },
+            {
+              "linkId": "general-adult-endringer",
+              "type": "boolean",
+              "text": "Det kan ventes endring av tilstanden",
+              "item": [
+                {
+                  "text": "Redegjør nærmere",
+                  "type": "text",
+                  "linkId": "general-adult-details",
+                  "enableWhen": [
+                    {
+                      "question": "general-adult-endringer",
+                      "operator": "=",
+                      "answerBoolean": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "text": "Er det noe mer vi bør vite for å vurdere søknaden?",
+              "type": "text",
+              "linkId": "general-adult-extra"
+            }
+          ]
+        },
+        {
+          "linkId": "general-child",
+          "type": "group",
+          "text": "Generell - barn",
+          "enableWhen": [
+            {
+              "question": "hjelpestonad-questionnaire-child",
+              "operator": "=",
+              "answerCoding": {
+                "code": "general"
+              }
+            }
+          ],
+          "item": [
+            {
+              "linkId": "general-child-sykdomer",
+              "type": "text",
+              "text": "Hvilke sykdommer barnet har som er aktuelle for denne saken"
+            },
+            {
+              "linkId": "general-child-behov",
+              "type": "text",
+              "text": "Beskriv barnets behov for tilsyn og pleie sammenlignet med andre barn?"
+            },
+            {
+              "linkId": "general-child-challenges",
+              "type": "text",
+              "text": "Beskriv barnets utfordringer som følge av sykdommen.. Dette kan være uro, utagering, konsentrasjonsvansker, impulsivitet, søvnvansker, motoriske vansker og lignende."
+            },
+            {
+              "linkId": "general-child-medicine",
+              "type": "choice",
+              "text": "Barnet er medisinert?",
+              "answerOption": [
+                {
+                  "valueString": "Ja"
+                },
+                {
+                  "valueString": "Nei"
+                }
+              ],
+              "item": [
+                {
+                  "linkId": "general-child-medicine-details",
+                  "type": "text",
+                  "text": "Hvis ja - ber vi deg redegjøre for effekt / bivirkninger",
+                  "enableWhen": [
+                    {
+                      "question": "general-child-medicine",
+                      "operator": "=",
+                      "answerString": "Ja"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "text": "Hvor mange år det er forventet at tilstanden og hjelpebehovet vil vare?",
+              "type": "text",
+              "linkId": "general-child-duration"
+            },
+            {
+              "linkId": "general-child-endringer",
+              "type": "boolean",
+              "text": "Det kan ventes endring av tilstanden",
+              "item": [
+                {
+                  "text": "Redegjør nærmere",
+                  "type": "text",
+                  "linkId": "general-child-details",
+                  "enableWhen": [
+                    {
+                      "question": "general-child-endringer",
+                      "operator": "=",
+                      "answerBoolean": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "text": "Er det noe mer vi bør vite for å vurdere søknaden?",
+              "type": "text",
+              "linkId": "general-child-extra"
+            }
+          ]
+        },
+        {
+          "linkId": "hudlidelse",
+          "type": "group",
+          "text": "Hudliselse",
+          "enableWhen": [
+            {
+              "question": "hjelpestonad-questionnaire-child",
+              "operator": "=",
+              "answerCoding": {
+                "code": "hudlidelse"
+              }
+            }
+          ],
+          "item": [
+            {
+              "linkId": "hudlidelse-sykdomer",
+              "type": "text",
+              "text": "Hvilke sykdommer barnet har som er aktuelle for denne saken"
+            },
+            {
+              "linkId": "hudlidelse-karakterisering",
+              "type": "text",
+              "text": "Hvordan hudlidelsen karakterisere"
+            },
+            {
+              "linkId": "hudlidelse-hvor",
+              "type": "text",
+              "text": "Hvor på kroppen den er lokalisert"
+            },
+            {
+              "linkId": "hudlidelse-behandling",
+              "type": "text",
+              "text": "Hvordan den behandles"
+            },
+            {
+              "linkId": "hudlidelse-sesong",
+              "type": "boolean",
+              "text": "Det er sesongvariasjoner?"
+            },
+            {
+              "linkId": "hudlidelse-hantere-selv",
+              "type": "text",
+              "text": "I hvilken grad barnet kan håndtere hudlidelsen selv?",
+              "enableWhen": [
+                {
+                  "question": "patient-age",
+                  "operator": ">=",
+                  "answerInteger": 13
+                }
+              ]
+            },
+            {
+              "linkId": "hudlidelse-duration",
+              "type": "text",
+              "text": "Hvor mange år det er forventet at tilstanden vil vare?"
+            },
+            {
+              "text": "Det kan ventes endring av tilstanden",
+              "type": "boolean",
+              "linkId": "hudlidelse-endringer",
+              "item": [
+                {
+                  "text": "Redegjør nærmere",
+                  "type": "text",
+                  "linkId": "hudlidelse-endringer-details",
+                  "enableWhen": [
+                    {
+                      "question": "hudlidelse-endringer",
+                      "operator": "=",
+                      "answerBoolean": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "text": "Er det noe mer vi bør vite for å vurdere søknaden?",
+              "type": "text",
+              "linkId": "hudlidelse-extra"
+            }
+          ]
+        },
+        {
+          "linkId": "astma",
+          "type": "group",
+          "text": "Astma",
+          "enableWhen": [
+            {
+              "question": "hjelpestonad-questionnaire-child",
+              "operator": "=",
+              "answerCoding": {
+                "code": "astma"
+              }
+            }
+          ],
+          "item": [
+            {
+              "linkId": "astma-sykdomer",
+              "type": "text",
+              "text": "Hvilke sykdommer barnet har som er aktuelle for denne saken"
+            },
+            {
+              "linkId": "astma-grad",
+              "type": "choice",
+              "text": "Astmaen er å anse som:",
+              "answerOption": [
+                {
+                  "valueString": "Mild"
+                },
+                {
+                  "valueString": "Moderat"
+                },
+                {
+                  "valueString": "Alvorlig"
+                }
+              ]
+            },
+            {
+              "linkId": "astma-behandling",
+              "type": "text",
+              "text": "Hvordan astmaen behandles"
+            },
+            {
+              "linkId": "astma-sesong",
+              "type": "boolean",
+              "text": "Det er sesongvariasjoner?"
+            },
+            {
+              "linkId": "astma-hantere-selv",
+              "type": "text",
+              "text": "I hvilken grad barnet kan håndtere astmaen selv?",
+              "enableWhen": [
+                {
+                  "question": "patient-age",
+                  "operator": ">=",
+                  "answerInteger": 13
+                }
+              ]
+            },
+            {
+              "linkId": "astma-duration",
+              "type": "text",
+              "text": "Hvor mange år det er forventet at tilstanden vil vare?"
+            },
+            {
+              "text": "Det kan ventes endring av tilstanden",
+              "type": "boolean",
+              "linkId": "astma-endringer",
+              "item": [
+                {
+                  "text": "Redegjør nærmere",
+                  "type": "text",
+                  "linkId": "astma-endringer-details",
+                  "enableWhen": [
+                    {
+                      "question": "astma-endringer",
+                      "operator": "=",
+                      "answerBoolean": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "text": "Er det noe mer vi bør vite for å vurdere søknaden?",
+              "type": "text",
+              "linkId": "astma-extra"
+            }
+          ]
+        },
+        {
+          "linkId": "blodersykdom",
+          "type": "group",
+          "text": "Blødersykdom",
+          "enableWhen": [
+            {
+              "question": "hjelpestonad-questionnaire-child",
+              "operator": "=",
+              "answerCoding": {
+                "code": "blodersykdom"
+              }
+            }
+          ],
+          "item": [
+            {
+              "linkId": "blodersykdom-sykdomer",
+              "type": "text",
+              "text": "Hvilke sykdommer barnet har som er aktuelle for denne saken"
+            },
+            {
+              "linkId": "blodersykdom-skrev-ut-dato",
+              "type": "date",
+              "text": "Når barnet ble skrevet ut fra sykehuset"
+            },
+            {
+              "linkId": "blodersykdom-alvorlighet",
+              "type": "text",
+              "text": "Alvorlighetsgraden"
+            },
+            {
+              "linkId": "blodersykdom-behandling",
+              "type": "text",
+              "text": "Hvordan sykdommen behandles"
+            },
+            {
+              "linkId": "blodersykdom-extra",
+              "type": "text",
+              "text": "Er det noe mer vi bør vite for å vurdere søknaden?"
+            }
+          ]
+        },
+        {
+          "linkId": "cystisk-fibrose",
+          "type": "group",
+          "text": "Cystisk fibrose",
+          "enableWhen": [
+            {
+              "question": "hjelpestonad-questionnaire-child",
+              "operator": "=",
+              "answerCoding": {
+                "code": "cystisk-fibrose"
+              }
+            }
+          ],
+          "item": [
+            {
+              "linkId": "cystisk-fibrose-sykdomer",
+              "type": "text",
+              "text": "Hvilke sykdommer barnet har som er aktuelle for denne saken"
+            },
+            {
+              "linkId": "cystisk-fibrose-affected-organs",
+              "type": "choice",
+              "text": "Det er affeksjon av",
+              "answerOption": [
+                {
+                  "valueString": "Mage"
+                },
+                {
+                  "valueString": "Lunge"
+                },
+                {
+                  "valueString": "Begge deler"
+                }
+              ]
+            },
+            {
+              "linkId": "cystisk-fibrose-behandling",
+              "type": "text",
+              "text": "Hvordan sykdommen behandles"
+            },
+            {
+              "linkId": "cystisk-fibrose-hantere-selv",
+              "type": "text",
+              "text": "I hvilken grad barnet kan håndtere sykdommen selv?",
+              "enableWhen": [
+                {
+                  "question": "patient-age",
+                  "operator": ">=",
+                  "answerInteger": 16
+                }
+              ]
+            },
+            {
+              "text": "Er det noe mer vi bør vite for å vurdere søknaden?",
+              "type": "text",
+              "linkId": "cystisk-fibrose-extra"
+            }
+          ]
+        },
+        {
+          "linkId": "diabetes",
+          "type": "group",
+          "text": "Diabetes",
+          "enableWhen": [
+            {
+              "question": "hjelpestonad-questionnaire-child",
+              "operator": "=",
+              "answerCoding": {
+                "code": "diabetes"
+              }
+            }
+          ],
+          "item": [
+            {
+              "linkId": "diabetes-sykdomer",
+              "type": "text",
+              "text": "Hvilke sykdommer barnet har som er aktuelle for denne søknaden"
+            },
+            {
+              "linkId": "diabetes-diagnosis-date",
+              "type": "date",
+              "text": "Når sykdommen ble oppdaget"
+            },
+            {
+              "linkId": "diabetes-checkout-date",
+              "type": "date",
+              "text": "Når barnet ble skrevet ut fra sykehuset"
+            },
+            {
+              "linkId": "diabetes-hvordan-reguleres",
+              "type": "text",
+              "text": "Hvordan sykdommen er regulert"
+            },
+            {
+              "linkId": "diabetes-pump",
+              "type": "choice",
+              "text": "Barnet bruker insulinpumpe",
+              "answerOption": [
+                {
+                  "valueString": "Ja"
+                },
+                {
+                  "valueString": "Nei"
+                }
+              ]
+            },
+            {
+              "linkId": "diabetes-oppfoling",
+              "type": "text",
+              "text": "Hvilken medisinsk oppfølging barnet får og hvilken effekt dette har"
+            },
+            {
+              "linkId": "diabetes-extra-help",
+              "type": "text",
+              "text": "Er det andre medisinske forhold som fører til et ekstra hjelpebehov?"
+            }
+          ]
+        },
+        {
+          "linkId": "dovhet",
+          "type": "group",
+          "text": "Døvhet / sterkt tunghørt",
+          "enableWhen": [
+            {
+              "question": "hjelpestonad-questionnaire-child",
+              "operator": "=",
+              "answerCoding": {
+                "code": "dovhet"
+              }
+            }
+          ],
+          "item": [
+            {
+              "linkId": "dovhet-sykdom",
+              "type": "text",
+              "text": "Hvilke sykdommer barnet har som er aktuelle for denne saken"
+            },
+            {
+              "linkId": "dovhet-omfanget-alvorlighet",
+              "type": "text",
+              "text": "Omfanget og alvorlighetsgraden av hørselssvekkelsen"
+            },
+            {
+              "text": "Er det noe mer vi bør vite for å vurdere søknaden?",
+              "type": "text",
+              "linkId": "dovhet-extra"
+            },
+            {
+              "text": "Du må også legge ved et audiogram (Kan vi bare spørre det vi trenger fra testet?)",
+              "type": "text",
+              "linkId": "dovhet-audiogram"
+            }
+          ]
+        },
+        {
+          "linkId": "epilepsi",
+          "type": "group",
+          "text": "Epilepsi",
+          "enableWhen": [
+            {
+              "question": "hjelpestonad-questionnaire-child",
+              "operator": "=",
+              "answerCoding": {
+                "code": "epilepsi"
+              }
+            }
+          ],
+          "item": [
+            {
+              "text": "Hvilke sykdommer barnet har som er aktuelle for denne saken",
+              "type": "text",
+              "linkId": "epilepsi-sykdommer"
+            },
+            {
+              "text": "Hva slags anfall har barnet",
+              "type": "text",
+              "linkId": "epilepsi-anfall"
+            },
+            {
+              "text": "Hva slags hjelpebehov har barnet som følge av anfallene",
+              "type": "text",
+              "linkId": "epilepsi-anfall-behover"
+            },
+            {
+              "text": "Hvordan behandles sykdommen",
+              "type": "text",
+              "linkId": "epilepsi-behandling"
+            },
+            {
+              "text": "Hvilke sykdommer barnet har som er aktuelle for denne saken",
+              "type": "text",
+              "linkId": "epilepsi-sykdommer"
+            },
+            {
+              "linkId": "epilepsi-duration",
+              "type": "text",
+              "text": "Hvor mange år det er forventet at tilstanden vil vare?"
+            },
+            {
+              "text": "Det kan ventes endring av tilstanden",
+              "type": "boolean",
+              "linkId": "epilepsi-endringer",
+              "item": [
+                {
+                  "text": "Redegjør nærmere",
+                  "type": "text",
+                  "linkId": "epilepsi-endringer-details",
+                  "enableWhen": [
+                    {
+                      "question": "epilepsi-endringer",
+                      "operator": "=",
+                      "answerBoolean": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "text": "Er det noe mer vi bør vite for å vurdere søknaden?",
+              "type": "text",
+              "linkId": "epilepsi-extra"
+            }
+          ]
+        },
+        {
+          "linkId": "fenylketonuri",
+          "type": "group",
+          "text": "Fenylketonuri (PKU/Føllings) – barn under 16",
+          "enableWhen": [
+            {
+              "question": "hjelpestonad-questionnaire-child",
+              "operator": "=",
+              "answerCoding": {
+                "code": "fenylketonuri"
+              }
+            }
+          ],
+          "item": [
+            {
+              "linkId": "fenylketonuri-sykdommer",
+              "type": "text",
+              "text": "Hvilke sykdommer barnet har som er aktuelle for denne saken"
+            },
+            {
+              "linkId": "fenylketonuri-diagnosis-date",
+              "type": "date",
+              "text": "Når sykdommen ble oppdaget"
+            },
+            {
+              "linkId": "fenylketonuri-skrev-ut-dato",
+              "type": "date",
+              "text": "Når barnet ble skrevet ut fra sykehuset"
+            },
+            {
+              "text": "Er det noe mer vi bør vite for å vurdere søknaden?",
+              "type": "text",
+              "linkId": "fenylketonuri-extra"
+            }
+          ]
+        },
+        {
+          "linkId": "hofteleddsdysplasi",
+          "type": "group",
+          "text": "Hofteleddsdysplasi / hofteleddslukasjon / Calvé-Legg-Perthes sykdom",
+          "enableWhen": [
+            {
+              "question": "hjelpestonad-questionnaire-child",
+              "operator": "=",
+              "answerCoding": {
+                "code": "hofteleddsdysplasi"
+              }
+            }
+          ],
+          "item": [
+            {
+              "linkId": "hofteleddsdysplasi-sykdomer",
+              "type": "text",
+              "text": "Hvilke sykdommer barnet har som er aktuelle for denne saken"
+            },
+            {
+              "linkId": "hofteleddsdysplasi-behandling",
+              "type": "text",
+              "text": "Hvordan barnet behandles"
+            },
+            {
+              "linkId": "hofteleddsdysplasi-varighet",
+              "type": "text",
+              "text": "Hvor lang tid vil behandlingsperioden og opptreningsperioden vil vare"
+            },
+            {
+              "linkId": "hofteleddsdysplasi-extra",
+              "type": "text",
+              "text": "Er det noe mer vi bør vite for å vurdere søknaden?"
+            }
+          ]
+        },
+        {
+          "linkId": "kreft",
+          "type": "group",
+          "text": "Kreft",
+          "enableWhen": [
+            {
+              "question": "hjelpestonad-questionnaire-child",
+              "operator": "=",
+              "answerCoding": {
+                "code": "kreft"
+              }
+            }
+          ],
+          "item": [
+            {
+              "linkId": "kreft-sykdomer",
+              "type": "text",
+              "text": "Hvilke sykdommer barnet har som er aktuelle for denne saken"
+            },
+            {
+              "linkId": "kreft-behandling",
+              "type": "text",
+              "text": "Hvordan barnet behandles"
+            },
+            {
+              "linkId": "kreft-varighet",
+              "type": "text",
+              "text": "Hvor lang tid vil behandlingsperioden vil vare"
+            },
+            {
+              "linkId": "kreft-extra",
+              "type": "text",
+              "text": "Er det noe mer vi bør vite for å vurdere søknaden?"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "version": "1.0.1"
+}
