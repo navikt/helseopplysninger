@@ -26,7 +26,7 @@ jobs:
         uses: styfle/cancel-workflow-action@0.9.1
         with:
           access_token: ${{ github.token }}
-      - uses: actions/checkout@v2.3.5
+      - uses: actions/checkout@v2.4.0
 
       - uses: docker/login-action@v1
         with:
@@ -47,7 +47,7 @@ jobs:
       APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
       RESOURCE: apps/${{ github.workflow }}/.nais/naiserator.yaml
     steps:
-      - uses: actions/checkout@v2.3.5
+      - uses: actions/checkout@v2.4.0
 
       - name: Deploy to Dev
         uses: nais/deploy/actions/deploy@master
