@@ -17,7 +17,7 @@ dependencies {
     api(kotlin("test"))
     api("no.nav.security:mock-oauth2-server:0.3.6")
     api("io.ktor:ktor-client-mock:1.6.4") // Ktor - http mock
-    api("io.ktor:ktor-server-test-host:1.6.4") { // Ktor - test engine
+    api("io.ktor:ktor-server-test-host:1.6.5") { // Ktor - test engine
         // Transitive dependency net.java.dev.jna:jna is GPL 1.0 licenced
         // Transitive dependency net.java.dev.jna:jna-platform is GPL 1.0 licenced
         exclude("org.jetbrains.kotlinx", "kotlinx-coroutines-debug")
