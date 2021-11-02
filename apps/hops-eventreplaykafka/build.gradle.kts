@@ -29,7 +29,7 @@ dependencies {
     implementation(project(":libs:hops-common-fhir"))
     implementation(project(":libs:hops-common-kafka"))
     implementation(project(":libs:hops-common-ktor"))
-    implementation("io.ktor:ktor-metrics-micrometer:1.6.4")
+    implementation("io.ktor:ktor-metrics-micrometer:1.6.5")
     implementation("io.ktor:ktor-webjars:1.6.4")
     implementation("io.ktor:ktor-server-netty:1.6.4")
     implementation("io.micrometer:micrometer-registry-prometheus:1.7.5")
