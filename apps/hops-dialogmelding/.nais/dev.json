@@ -1,4 +1,9 @@
 {
   "ingresses":  ["https://hops-dialogmelding.dev.intern.nav.no"],
-  "kafka_pool": "nav-dev"
+  "kafka_pool": "nav-dev",
+  "MQGATEWAY_PORT": 1413,
+  "MQGATEWAY_NAME": "MQLS02",
+  "MQGATEWAY_HOSTNAME": "b27apvl220.preprod.local",
+  "MQGATEWAY_CHANNEL_NAME": "DEV.APP.SVRCONN",
+  "MQQUEUENAME": ""
 }

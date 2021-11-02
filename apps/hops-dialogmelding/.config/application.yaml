@@ -16,6 +16,7 @@ fhirJsonToPdfConverter:
   clientSecret: ${AZURE_APP_CLIENT_SECRET:-archive-test-secret}
   scope: "nav:helse:helseopplysninger.convert"
 
+# https://doc.nais.io/persistence/mq/
 messageQueue:
   applicationName: "hops-dialogmelding"
   queueManager: ${MQGATEWAY_NAME:-QM1}
