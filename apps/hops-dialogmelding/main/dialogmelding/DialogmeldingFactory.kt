@@ -52,11 +52,12 @@ object DialogmeldingFactory {
                         <Patient>
                             <Ident>
                                 <Id>${m.pasient.pid}</Id>
-                                ${if (m.pasient.pid.type == PersonId.Type.FNR)
-                                    """<TypeId V="FNR" S="2.16.578.1.12.4.1.1.8116" DN="Fødselsnummer" />"""
-                                else
-                                    """<TypeId V="DNR" S="2.16.578.1.12.4.1.1.8116" DN="D-nummer" />"""
-                                }
+                                ${
+        if (m.pasient.pid.type == PersonId.Type.FNR)
+            """<TypeId V="FNR" S="2.16.578.1.12.4.1.1.8116" DN="Fødselsnummer" />"""
+        else
+            """<TypeId V="DNR" S="2.16.578.1.12.4.1.1.8116" DN="D-nummer" />"""
+        }
                             </Ident>
                         </Patient>
                     </MsgInfo>

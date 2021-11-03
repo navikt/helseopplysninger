@@ -37,7 +37,7 @@ class MQConsumer() {
 
 private fun createConnectionFactory() =
     JmsFactoryFactory.getInstance(WMQ_PROVIDER).createConnectionFactory().apply {
-        setBooleanProperty(USER_AUTHENTICATION_MQCSP, true);
+        setBooleanProperty(USER_AUTHENTICATION_MQCSP, true)
         setIntProperty(JMS_IBM_CHARACTER_SET, UTF_8_WITH_PUA)
         setIntProperty(JMS_IBM_ENCODING, MQENC_NATIVE)
         setIntProperty(WMQ_CCSID, UTF_8_WITH_PUA)
