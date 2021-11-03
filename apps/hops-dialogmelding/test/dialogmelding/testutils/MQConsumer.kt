@@ -28,7 +28,7 @@ class MQConsumer() {
         connectionFactory.createContext(AUTO_ACKNOWLEDGE).use {
             val queue = it.createQueue("DEV.QUEUE.1")
             it.createConsumer(queue).use { consumer ->
-                val message = (consumer.receive() as TextMessage)
+                val message = consumer.receive() as TextMessage
                 return message.text
             }
         }
