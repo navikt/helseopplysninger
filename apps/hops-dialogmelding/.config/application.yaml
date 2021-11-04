@@ -1,0 +1,28 @@
+# https://doc.nais.io/addons/kafka/#application-config
+kafka:
+  brokers: ${KAFKA_BROKERS:-localhost:9092}
+  security: ${KAFKA_SECURITY_ENABLED:-false}
+  truststorePath: ${KAFKA_TRUSTSTORE_PATH:-}
+  keystorePath: ${KAFKA_KEYSTORE_PATH:-}
+  credstorePsw: ${KAFKA_CREDSTORE_PASSWORD:-}
+  clientId: hops-dialogmelding
+  groupId: hops-dialogmelding-group
+  topic: ${KAFKA_TOPIC:-helseopplysninger.river}
+
+fhirJsonToPdfConverter:
+  baseUrl: ${CONVERT_BASE_URL:-http://localhost:8082}
+  discoveryUrl: ${AZURE_APP_WELL_KNOWN_URL:-http://mock-oauth2-service:8081/default/.well-known/openid-configuration}
+  clientId: ${AZURE_APP_CLIENT_ID:-dialogmelding-test-client-id}
+  clientSecret: ${AZURE_APP_CLIENT_SECRET:-archive-test-secret}
+  scope: "nav:helse:helseopplysninger.convert"
+
+# https://doc.nais.io/persistence/mq/
+messageQueue:
+  applicationName: "hops-dialogmelding"
+  queueManager: ${MQ_QUEUE_MANAGER:-QM1}
+  host: ${MQ_HOST:-localhost}
+  port: ${MQ_PORT:-1414}
+  channel: ${MQ_CHANNEL:-DEV.APP.SVRCONN}
+  queue: ${MQ_QUEUE:-DEV.QUEUE.1}
+  user: ${MQ_USER:-app}
+  password: ${MQ_PASSWORD:-passw0rd}

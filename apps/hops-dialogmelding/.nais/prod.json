@@ -1,0 +1,11 @@
+{
+  "ingresses":  ["https://hops-dialogmelding.intern.nav.no"],
+  "kafka_pool": "nav-prod",
+  "env": {
+    "MQ_PORT": 1414,
+    "MQ_HOST": "a01apvl247.adeo.no",
+    "MQ_QUEUE_MANAGER": "MPLS01",
+    "MQ_CHANNEL": "",
+    "MQ_QUEUE": ""
+  }
+}
