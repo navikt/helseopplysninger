@@ -69,7 +69,7 @@ class DialogmeldingJob(
         val header = bundle.entryResourceOfType<MessageHeader>()
         val questionnaireResponse = bundle.entryResourceOfType<QuestionnaireResponse>()
 
-        val destName = header.source.name!! // Bør nok hentes fra adresseregisteret eller annet element
+        val destName = header.source.name!! // TODO: Bør nok hentes fra adresseregisteret eller annet element
         val herId = HerId(header.source.endpoint.split('.').last())
         val patientId = PersonId(questionnaireResponse.subject.identifier.value)
         val practitionerId = HprNr(questionnaireResponse.author.identifier.value)

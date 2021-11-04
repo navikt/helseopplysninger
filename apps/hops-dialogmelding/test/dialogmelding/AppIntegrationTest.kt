@@ -19,7 +19,7 @@ import kotlin.test.assertEquals
 @Testcontainers
 class AppIntegrationTest {
 
-    // Denne testen fungerer ikke pga: DetailedIllegalStateRuntimeException:
+    // TODO: Denne testen fungerer ikke pga: DetailedIllegalStateRuntimeException:
     // JMSWMQ0018: Failed to connect to queue manager 'QM1' with connection mode 'Client' and host name 'Client'.
     // Siden prosjektet er lagt på is har det ikke blitt brukt mer tid på å løse dette.
     @Test
