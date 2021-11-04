@@ -1,6 +1,5 @@
 [
   {
-    "prohibited": [],
     "allowed": [
       "AGPL-1.0-only",
       "AGPL-1.0-or-later",
@@ -44,10 +43,10 @@
       "ZPL-2.0",
       "ZPL-2.1"
     ],
-    "key": "AGPL-1.0-only"
+    "key": "AGPL-1.0-only",
+    "prohibited": []
   },
   {
-    "prohibited": [],
     "allowed": [
       "AGPL-1.0-only",
       "AGPL-1.0-or-later",
@@ -91,10 +90,10 @@
       "ZPL-2.0",
       "ZPL-2.1"
     ],
-    "key": "AGPL-1.0-or-later"
+    "key": "AGPL-1.0-or-later",
+    "prohibited": []
   },
   {
-    "prohibited": [],
     "allowed": [
       "AGPL-1.0-only",
       "AGPL-1.0-or-later",
@@ -138,10 +137,10 @@
       "ZPL-2.0",
       "ZPL-2.1"
     ],
-    "key": "AGPL-3.0-only"
+    "key": "AGPL-3.0-only",
+    "prohibited": []
   },
   {
-    "prohibited": [],
     "allowed": [
       "AGPL-1.0-only",
       "AGPL-1.0-or-later",
@@ -185,24 +184,10 @@
       "ZPL-2.0",
       "ZPL-2.1"
     ],
-    "key": "AGPL-3.0-or-later"
+    "key": "AGPL-3.0-or-later",
+    "prohibited": []
   },
   {
-    "prohibited": [
-      "AGPL-1.0-only",
-      "AGPL-1.0-or-later",
-      "AGPL-3.0-only",
-      "AGPL-3.0-or-later",
-      "GPL-1.0-only",
-      "GPL-1.0-or-later",
-      "GPL-2.0-only",
-      "GPL-2.0-or-later",
-      "GPL-3.0-only",
-      "GPL-3.0-or-later",
-      "MS-RL",
-      "ODbL-1.0",
-      "OSL-3.0"
-    ],
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -233,9 +218,7 @@
       "ZPL-2.0",
       "ZPL-2.1"
     ],
-    "key": "Apache-2.0"
-  },
-  {
+    "key": "Apache-2.0",
     "prohibited": [
       "AGPL-1.0-only",
       "AGPL-1.0-or-later",
@@ -250,7 +233,9 @@
       "MS-RL",
       "ODbL-1.0",
       "OSL-3.0"
-    ],
+    ]
+  },
+  {
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -281,9 +266,7 @@
       "ZPL-2.0",
       "ZPL-2.1"
     ],
-    "key": "BSD-2-Clause"
-  },
-  {
+    "key": "BSD-2-Clause",
     "prohibited": [
       "AGPL-1.0-only",
       "AGPL-1.0-or-later",
@@ -298,7 +281,9 @@
       "MS-RL",
       "ODbL-1.0",
       "OSL-3.0"
-    ],
+    ]
+  },
+  {
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -329,9 +314,7 @@
       "ZPL-2.0",
       "ZPL-2.1"
     ],
-    "key": "BSD-3-Clause"
-  },
-  {
+    "key": "BSD-3-Clause",
     "prohibited": [
       "AGPL-1.0-only",
       "AGPL-1.0-or-later",
@@ -346,7 +329,9 @@
       "MS-RL",
       "ODbL-1.0",
       "OSL-3.0"
-    ],
+    ]
+  },
+  {
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -377,9 +362,7 @@
       "ZPL-2.0",
       "ZPL-2.1"
     ],
-    "key": "BSD-3-Clause-Attribution"
-  },
-  {
+    "key": "BSD-3-Clause-Attribution",
     "prohibited": [
       "AGPL-1.0-only",
       "AGPL-1.0-or-later",
@@ -394,7 +377,9 @@
       "MS-RL",
       "ODbL-1.0",
       "OSL-3.0"
-    ],
+    ]
+  },
+  {
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -425,9 +410,7 @@
       "ZPL-2.0",
       "ZPL-2.1"
     ],
-    "key": "BSD-3-Clause-Clear"
-  },
-  {
+    "key": "BSD-3-Clause-Clear",
     "prohibited": [
       "AGPL-1.0-only",
       "AGPL-1.0-or-later",
@@ -442,7 +425,9 @@
       "MS-RL",
       "ODbL-1.0",
       "OSL-3.0"
-    ],
+    ]
+  },
+  {
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -473,64 +458,24 @@
       "ZPL-2.0",
       "ZPL-2.1"
     ],
-    "key": "CC0-1.0"
-  },
-  {
+    "key": "CC0-1.0",
     "prohibited": [
       "AGPL-1.0-only",
       "AGPL-1.0-or-later",
       "AGPL-3.0-only",
       "AGPL-3.0-or-later",
-      "OSL-3.0"
-    ],
-    "allowed": [
-      "Apache-2.0",
-      "0BSD",
-      "BSD-2-Clause",
-      "BSD-3-Clause",
-      "BSD-3-Clause-Attribution",
-      "BSD-3-Clause-Clear",
-      "PUBLIC-DOMAIN",
-      "CC0-1.0",
-      "EPL-1.0",
       "GPL-1.0-only",
       "GPL-1.0-or-later",
       "GPL-2.0-only",
       "GPL-2.0-or-later",
       "GPL-3.0-only",
       "GPL-3.0-or-later",
-      "ISC",
-      "LGPL-2.0-only",
-      "LGPL-2.0-or-later",
-      "LGPL-2.1-only",
-      "LGPL-2.1-or-later",
-      "LGPL-3.0-only",
-      "LGPL-3.0-or-later",
-      "MIT",
-      "MPL-1.0",
-      "MPL-1.1",
-      "MPL-2.0",
       "MS-RL",
       "ODbL-1.0",
-      "PDDL-1.0",
-      "PSF-2.0",
-      "Python-2.0",
-      "SAX-PD",
-      "Unlicense",
-      "ZPL-1.0",
-      "ZPL-2.0",
-      "ZPL-2.1"
-    ],
-    "key": "EPL-1.0"
+      "OSL-3.0"
+    ]
   },
   {
-    "prohibited": [
-      "AGPL-1.0-only",
-      "AGPL-1.0-or-later",
-      "AGPL-3.0-only",
-      "AGPL-3.0-or-later",
-      "OSL-3.0"
-    ],
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -569,16 +514,16 @@
       "ZPL-2.0",
       "ZPL-2.1"
     ],
-    "key": "GPL-1.0-only"
-  },
-  {
+    "key": "EPL-1.0",
     "prohibited": [
       "AGPL-1.0-only",
       "AGPL-1.0-or-later",
       "AGPL-3.0-only",
       "AGPL-3.0-or-later",
       "OSL-3.0"
-    ],
+    ]
+  },
+  {
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -617,16 +562,16 @@
       "ZPL-2.0",
       "ZPL-2.1"
     ],
-    "key": "GPL-1.0-or-later"
-  },
-  {
+    "key": "GPL-1.0-only",
     "prohibited": [
       "AGPL-1.0-only",
       "AGPL-1.0-or-later",
       "AGPL-3.0-only",
       "AGPL-3.0-or-later",
       "OSL-3.0"
-    ],
+    ]
+  },
+  {
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -665,16 +610,16 @@
       "ZPL-2.0",
       "ZPL-2.1"
     ],
-    "key": "GPL-2.0-only"
-  },
-  {
+    "key": "GPL-1.0-or-later",
     "prohibited": [
       "AGPL-1.0-only",
       "AGPL-1.0-or-later",
       "AGPL-3.0-only",
       "AGPL-3.0-or-later",
       "OSL-3.0"
-    ],
+    ]
+  },
+  {
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -713,16 +658,16 @@
       "ZPL-2.0",
       "ZPL-2.1"
     ],
-    "key": "GPL-2.0-or-later"
-  },
-  {
+    "key": "GPL-2.0-only",
     "prohibited": [
       "AGPL-1.0-only",
       "AGPL-1.0-or-later",
       "AGPL-3.0-only",
       "AGPL-3.0-or-later",
       "OSL-3.0"
-    ],
+    ]
+  },
+  {
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -761,16 +706,16 @@
       "ZPL-2.0",
       "ZPL-2.1"
     ],
-    "key": "GPL-3.0-only"
-  },
-  {
+    "key": "GPL-2.0-or-later",
     "prohibited": [
       "AGPL-1.0-only",
       "AGPL-1.0-or-later",
       "AGPL-3.0-only",
       "AGPL-3.0-or-later",
       "OSL-3.0"
-    ],
+    ]
+  },
+  {
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -809,64 +754,16 @@
       "ZPL-2.0",
       "ZPL-2.1"
     ],
-    "key": "GPL-3.0-or-later"
-  },
-  {
-    "prohibited": [
-      "AGPL-1.0-only",
-      "AGPL-1.0-or-later",
-      "AGPL-3.0-only",
-      "AGPL-3.0-or-later",
-      "GPL-1.0-only",
-      "GPL-1.0-or-later",
-      "GPL-2.0-only",
-      "GPL-2.0-or-later",
-      "GPL-3.0-only",
-      "GPL-3.0-or-later",
-      "MS-RL",
-      "ODbL-1.0",
-      "OSL-3.0"
-    ],
-    "allowed": [
-      "Apache-2.0",
-      "0BSD",
-      "BSD-2-Clause",
-      "BSD-3-Clause",
-      "BSD-3-Clause-Attribution",
-      "BSD-3-Clause-Clear",
-      "PUBLIC-DOMAIN",
-      "CC0-1.0",
-      "EPL-1.0",
-      "ISC",
-      "LGPL-2.0-only",
-      "LGPL-2.0-or-later",
-      "LGPL-2.1-only",
-      "LGPL-2.1-or-later",
-      "LGPL-3.0-only",
-      "LGPL-3.0-or-later",
-      "MIT",
-      "MPL-1.0",
-      "MPL-1.1",
-      "MPL-2.0",
-      "PDDL-1.0",
-      "PSF-2.0",
-      "Python-2.0",
-      "SAX-PD",
-      "Unlicense",
-      "ZPL-1.0",
-      "ZPL-2.0",
-      "ZPL-2.1"
-    ],
-    "key": "ISC"
-  },
-  {
+    "key": "GPL-3.0-only",
     "prohibited": [
       "AGPL-1.0-only",
       "AGPL-1.0-or-later",
       "AGPL-3.0-only",
       "AGPL-3.0-or-later",
       "OSL-3.0"
-    ],
+    ]
+  },
+  {
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -905,16 +802,64 @@
       "ZPL-2.0",
       "ZPL-2.1"
     ],
-    "key": "LGPL-2.0-only"
-  },
-  {
+    "key": "GPL-3.0-or-later",
     "prohibited": [
       "AGPL-1.0-only",
       "AGPL-1.0-or-later",
       "AGPL-3.0-only",
       "AGPL-3.0-or-later",
       "OSL-3.0"
+    ]
+  },
+  {
+    "allowed": [
+      "Apache-2.0",
+      "0BSD",
+      "BSD-2-Clause",
+      "BSD-3-Clause",
+      "BSD-3-Clause-Attribution",
+      "BSD-3-Clause-Clear",
+      "PUBLIC-DOMAIN",
+      "CC0-1.0",
+      "EPL-1.0",
+      "ISC",
+      "LGPL-2.0-only",
+      "LGPL-2.0-or-later",
+      "LGPL-2.1-only",
+      "LGPL-2.1-or-later",
+      "LGPL-3.0-only",
+      "LGPL-3.0-or-later",
+      "MIT",
+      "MPL-1.0",
+      "MPL-1.1",
+      "MPL-2.0",
+      "PDDL-1.0",
+      "PSF-2.0",
+      "Python-2.0",
+      "SAX-PD",
+      "Unlicense",
+      "ZPL-1.0",
+      "ZPL-2.0",
+      "ZPL-2.1"
     ],
+    "key": "ISC",
+    "prohibited": [
+      "AGPL-1.0-only",
+      "AGPL-1.0-or-later",
+      "AGPL-3.0-only",
+      "AGPL-3.0-or-later",
+      "GPL-1.0-only",
+      "GPL-1.0-or-later",
+      "GPL-2.0-only",
+      "GPL-2.0-or-later",
+      "GPL-3.0-only",
+      "GPL-3.0-or-later",
+      "MS-RL",
+      "ODbL-1.0",
+      "OSL-3.0"
+    ]
+  },
+  {
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -953,16 +898,16 @@
       "ZPL-2.0",
       "ZPL-2.1"
     ],
-    "key": "LGPL-2.0-or-later"
-  },
-  {
+    "key": "LGPL-2.0-only",
     "prohibited": [
       "AGPL-1.0-only",
       "AGPL-1.0-or-later",
       "AGPL-3.0-only",
       "AGPL-3.0-or-later",
       "OSL-3.0"
-    ],
+    ]
+  },
+  {
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -1001,16 +946,16 @@
       "ZPL-2.0",
       "ZPL-2.1"
     ],
-    "key": "LGPL-2.1-only"
-  },
-  {
+    "key": "LGPL-2.0-or-later",
     "prohibited": [
       "AGPL-1.0-only",
       "AGPL-1.0-or-later",
       "AGPL-3.0-only",
       "AGPL-3.0-or-later",
       "OSL-3.0"
-    ],
+    ]
+  },
+  {
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -1049,16 +994,16 @@
       "ZPL-2.0",
       "ZPL-2.1"
     ],
-    "key": "LGPL-2.1-or-later"
-  },
-  {
+    "key": "LGPL-2.1-only",
     "prohibited": [
       "AGPL-1.0-only",
       "AGPL-1.0-or-later",
       "AGPL-3.0-only",
       "AGPL-3.0-or-later",
       "OSL-3.0"
-    ],
+    ]
+  },
+  {
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -1097,16 +1042,16 @@
       "ZPL-2.0",
       "ZPL-2.1"
     ],
-    "key": "LGPL-3.0-only"
-  },
-  {
+    "key": "LGPL-2.1-or-later",
     "prohibited": [
       "AGPL-1.0-only",
       "AGPL-1.0-or-later",
       "AGPL-3.0-only",
       "AGPL-3.0-or-later",
       "OSL-3.0"
-    ],
+    ]
+  },
+  {
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -1145,64 +1090,16 @@
       "ZPL-2.0",
       "ZPL-2.1"
     ],
-    "key": "LGPL-3.0-or-later"
-  },
-  {
-    "prohibited": [
-      "AGPL-1.0-only",
-      "AGPL-1.0-or-later",
-      "AGPL-3.0-only",
-      "AGPL-3.0-or-later",
-      "GPL-1.0-only",
-      "GPL-1.0-or-later",
-      "GPL-2.0-only",
-      "GPL-2.0-or-later",
-      "GPL-3.0-only",
-      "GPL-3.0-or-later",
-      "MS-RL",
-      "ODbL-1.0",
-      "OSL-3.0"
-    ],
-    "allowed": [
-      "Apache-2.0",
-      "0BSD",
-      "BSD-2-Clause",
-      "BSD-3-Clause",
-      "BSD-3-Clause-Attribution",
-      "BSD-3-Clause-Clear",
-      "PUBLIC-DOMAIN",
-      "CC0-1.0",
-      "EPL-1.0",
-      "ISC",
-      "LGPL-2.0-only",
-      "LGPL-2.0-or-later",
-      "LGPL-2.1-only",
-      "LGPL-2.1-or-later",
-      "LGPL-3.0-only",
-      "LGPL-3.0-or-later",
-      "MIT",
-      "MPL-1.0",
-      "MPL-1.1",
-      "MPL-2.0",
-      "PDDL-1.0",
-      "PSF-2.0",
-      "Python-2.0",
-      "SAX-PD",
-      "Unlicense",
-      "ZPL-1.0",
-      "ZPL-2.0",
-      "ZPL-2.1"
-    ],
-    "key": "MIT"
-  },
-  {
+    "key": "LGPL-3.0-only",
     "prohibited": [
       "AGPL-1.0-only",
       "AGPL-1.0-or-later",
       "AGPL-3.0-only",
       "AGPL-3.0-or-later",
       "OSL-3.0"
-    ],
+    ]
+  },
+  {
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -1241,16 +1138,64 @@
       "ZPL-2.0",
       "ZPL-2.1"
     ],
-    "key": "MPL-1.0"
-  },
-  {
+    "key": "LGPL-3.0-or-later",
     "prohibited": [
       "AGPL-1.0-only",
       "AGPL-1.0-or-later",
       "AGPL-3.0-only",
       "AGPL-3.0-or-later",
       "OSL-3.0"
+    ]
+  },
+  {
+    "allowed": [
+      "Apache-2.0",
+      "0BSD",
+      "BSD-2-Clause",
+      "BSD-3-Clause",
+      "BSD-3-Clause-Attribution",
+      "BSD-3-Clause-Clear",
+      "PUBLIC-DOMAIN",
+      "CC0-1.0",
+      "EPL-1.0",
+      "ISC",
+      "LGPL-2.0-only",
+      "LGPL-2.0-or-later",
+      "LGPL-2.1-only",
+      "LGPL-2.1-or-later",
+      "LGPL-3.0-only",
+      "LGPL-3.0-or-later",
+      "MIT",
+      "MPL-1.0",
+      "MPL-1.1",
+      "MPL-2.0",
+      "PDDL-1.0",
+      "PSF-2.0",
+      "Python-2.0",
+      "SAX-PD",
+      "Unlicense",
+      "ZPL-1.0",
+      "ZPL-2.0",
+      "ZPL-2.1"
     ],
+    "key": "MIT",
+    "prohibited": [
+      "AGPL-1.0-only",
+      "AGPL-1.0-or-later",
+      "AGPL-3.0-only",
+      "AGPL-3.0-or-later",
+      "GPL-1.0-only",
+      "GPL-1.0-or-later",
+      "GPL-2.0-only",
+      "GPL-2.0-or-later",
+      "GPL-3.0-only",
+      "GPL-3.0-or-later",
+      "MS-RL",
+      "ODbL-1.0",
+      "OSL-3.0"
+    ]
+  },
+  {
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -1289,16 +1234,16 @@
       "ZPL-2.0",
       "ZPL-2.1"
     ],
-    "key": "MPL-1.1"
-  },
-  {
+    "key": "MPL-1.0",
     "prohibited": [
       "AGPL-1.0-only",
       "AGPL-1.0-or-later",
       "AGPL-3.0-only",
       "AGPL-3.0-or-later",
       "OSL-3.0"
-    ],
+    ]
+  },
+  {
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -1337,16 +1282,16 @@
       "ZPL-2.0",
       "ZPL-2.1"
     ],
-    "key": "MPL-2.0"
-  },
-  {
+    "key": "MPL-1.1",
     "prohibited": [
       "AGPL-1.0-only",
       "AGPL-1.0-or-later",
       "AGPL-3.0-only",
       "AGPL-3.0-or-later",
       "OSL-3.0"
-    ],
+    ]
+  },
+  {
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -1385,16 +1330,16 @@
       "ZPL-2.0",
       "ZPL-2.1"
     ],
-    "key": "MS-RL"
-  },
-  {
+    "key": "MPL-2.0",
     "prohibited": [
       "AGPL-1.0-only",
       "AGPL-1.0-or-later",
       "AGPL-3.0-only",
       "AGPL-3.0-or-later",
       "OSL-3.0"
-    ],
+    ]
+  },
+  {
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -1433,10 +1378,64 @@
       "ZPL-2.0",
       "ZPL-2.1"
     ],
-    "key": "ODbL-1.0"
+    "key": "MS-RL",
+    "prohibited": [
+      "AGPL-1.0-only",
+      "AGPL-1.0-or-later",
+      "AGPL-3.0-only",
+      "AGPL-3.0-or-later",
+      "OSL-3.0"
+    ]
   },
   {
-    "prohibited": [],
+    "allowed": [
+      "Apache-2.0",
+      "0BSD",
+      "BSD-2-Clause",
+      "BSD-3-Clause",
+      "BSD-3-Clause-Attribution",
+      "BSD-3-Clause-Clear",
+      "PUBLIC-DOMAIN",
+      "CC0-1.0",
+      "EPL-1.0",
+      "GPL-1.0-only",
+      "GPL-1.0-or-later",
+      "GPL-2.0-only",
+      "GPL-2.0-or-later",
+      "GPL-3.0-only",
+      "GPL-3.0-or-later",
+      "ISC",
+      "LGPL-2.0-only",
+      "LGPL-2.0-or-later",
+      "LGPL-2.1-only",
+      "LGPL-2.1-or-later",
+      "LGPL-3.0-only",
+      "LGPL-3.0-or-later",
+      "MIT",
+      "MPL-1.0",
+      "MPL-1.1",
+      "MPL-2.0",
+      "MS-RL",
+      "ODbL-1.0",
+      "PDDL-1.0",
+      "PSF-2.0",
+      "Python-2.0",
+      "SAX-PD",
+      "Unlicense",
+      "ZPL-1.0",
+      "ZPL-2.0",
+      "ZPL-2.1"
+    ],
+    "key": "ODbL-1.0",
+    "prohibited": [
+      "AGPL-1.0-only",
+      "AGPL-1.0-or-later",
+      "AGPL-3.0-only",
+      "AGPL-3.0-or-later",
+      "OSL-3.0"
+    ]
+  },
+  {
     "allowed": [
       "AGPL-1.0-only",
       "AGPL-1.0-or-later",
@@ -1480,24 +1479,10 @@
       "ZPL-2.0",
       "ZPL-2.1"
     ],
-    "key": "OSL-3.0"
+    "key": "OSL-3.0",
+    "prohibited": []
   },
   {
-    "prohibited": [
-      "AGPL-1.0-only",
-      "AGPL-1.0-or-later",
-      "AGPL-3.0-only",
-      "AGPL-3.0-or-later",
-      "GPL-1.0-only",
-      "GPL-1.0-or-later",
-      "GPL-2.0-only",
-      "GPL-2.0-or-later",
-      "GPL-3.0-only",
-      "GPL-3.0-or-later",
-      "MS-RL",
-      "ODbL-1.0",
-      "OSL-3.0"
-    ],
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -1528,9 +1513,7 @@
       "ZPL-2.0",
       "ZPL-2.1"
     ],
-    "key": "PDDL-1.0"
-  },
-  {
+    "key": "PDDL-1.0",
     "prohibited": [
       "AGPL-1.0-only",
       "AGPL-1.0-or-later",
@@ -1545,7 +1528,9 @@
       "MS-RL",
       "ODbL-1.0",
       "OSL-3.0"
-    ],
+    ]
+  },
+  {
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -1576,9 +1561,7 @@
       "ZPL-2.0",
       "ZPL-2.1"
     ],
-    "key": "Python-2.0"
-  },
-  {
+    "key": "Python-2.0",
     "prohibited": [
       "AGPL-1.0-only",
       "AGPL-1.0-or-later",
@@ -1593,7 +1576,9 @@
       "MS-RL",
       "ODbL-1.0",
       "OSL-3.0"
-    ],
+    ]
+  },
+  {
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -1624,9 +1609,7 @@
       "ZPL-2.0",
       "ZPL-2.1"
     ],
-    "key": "SAX-PD"
-  },
-  {
+    "key": "SAX-PD",
     "prohibited": [
       "AGPL-1.0-only",
       "AGPL-1.0-or-later",
@@ -1641,7 +1624,9 @@
       "MS-RL",
       "ODbL-1.0",
       "OSL-3.0"
-    ],
+    ]
+  },
+  {
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -1672,9 +1657,7 @@
       "ZPL-2.0",
       "ZPL-2.1"
     ],
-    "key": "Unlicense"
-  },
-  {
+    "key": "Unlicense",
     "prohibited": [
       "AGPL-1.0-only",
       "AGPL-1.0-or-later",
@@ -1689,7 +1672,9 @@
       "MS-RL",
       "ODbL-1.0",
       "OSL-3.0"
-    ],
+    ]
+  },
+  {
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -1720,9 +1705,7 @@
       "ZPL-2.0",
       "ZPL-2.1"
     ],
-    "key": "ZPL-1.0"
-  },
-  {
+    "key": "ZPL-1.0",
     "prohibited": [
       "AGPL-1.0-only",
       "AGPL-1.0-or-later",
@@ -1737,7 +1720,9 @@
       "MS-RL",
       "ODbL-1.0",
       "OSL-3.0"
-    ],
+    ]
+  },
+  {
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -1768,9 +1753,7 @@
       "ZPL-2.0",
       "ZPL-2.1"
     ],
-    "key": "ZPL-2.0"
-  },
-  {
+    "key": "ZPL-2.0",
     "prohibited": [
       "AGPL-1.0-only",
       "AGPL-1.0-or-later",
@@ -1785,7 +1768,9 @@
       "MS-RL",
       "ODbL-1.0",
       "OSL-3.0"
-    ],
+    ]
+  },
+  {
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -1816,15 +1801,12 @@
       "ZPL-2.0",
       "ZPL-2.1"
     ],
-    "key": "ZPL-2.1"
-  },
-  {
+    "key": "ZPL-2.1",
     "prohibited": [
       "AGPL-1.0-only",
       "AGPL-1.0-or-later",
       "AGPL-3.0-only",
       "AGPL-3.0-or-later",
-      "EPL-1.0",
       "GPL-1.0-only",
       "GPL-1.0-or-later",
       "GPL-2.0-only",
@@ -1833,12 +1815,10 @@
       "GPL-3.0-or-later",
       "MS-RL",
       "ODbL-1.0",
-      "OSL-3.0",
-      "CC-BY-SA-4.0",
-      "Vim",
-      "LPPL-1.3c",
-      "CECILL-2.1"
-    ],
+      "OSL-3.0"
+    ]
+  },
+  {
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -1859,6 +1839,26 @@
       "ZPL-2.1",
       "PROPRIETARY-LICENSE"
     ],
-    "key": "PROPRIETARY-LICENSE"
+    "key": "PROPRIETARY-LICENSE",
+    "prohibited": [
+      "AGPL-1.0-only",
+      "AGPL-1.0-or-later",
+      "AGPL-3.0-only",
+      "AGPL-3.0-or-later",
+      "EPL-1.0",
+      "GPL-1.0-only",
+      "GPL-1.0-or-later",
+      "GPL-2.0-only",
+      "GPL-2.0-or-later",
+      "GPL-3.0-only",
+      "GPL-3.0-or-later",
+      "MS-RL",
+      "ODbL-1.0",
+      "OSL-3.0",
+      "CC-BY-SA-4.0",
+      "Vim",
+      "LPPL-1.3c",
+      "CECILL-2.1"
+    ]
   }
 ]
