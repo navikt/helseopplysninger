@@ -2,25 +2,62 @@ openapi: 3.0.1
 info:
   version: 1.0.0
   title: Archive
-  description: Eksponerer questionnaire-ressursene våres på fhir
+  description: API for NAVs FHIR questionnaire resources
 paths:
   /actuator/ready:
     get:
-      tags: [diagnostics]
+      tags: [ diagnostics ]
       responses:
-        '200':
-          description: Service is ready
+        200:
+          description: Readiness probe for kubernetes
   /actuator/live:
     get:
-      tags: [diagnostics]
+      tags: [ diagnostics ]
       responses:
-        '200':
-          description: Service is live
+        200:
+          description: Liveness probe for kubernetes
   /actuator/metrics:
     get:
-      tags: [diagnostics]
+      tags: [ diagnostics ]
       responses:
-        '200':
-          description: Metrics
-  /questionnaire/:
-    get:
+        200:
+          description: Application metrics (provided by Micrometer for Prometheus)
+  /github/event:
+    post:
+      tags: [ webhook ]
+      externalDocs:
+        url: https://docs.github.com/en/developers/webhooks-and-events/webhooks
+      parameters:
+        - in: header
+          name: X-GitHub-Event
+          description: The GitHub event type
+          required: true
+          schema:
+            type: string
+            example: ping
+            enum : [ping, release]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+              example: The content is irrelevant
+      responses:
+        202:
+          description: The event was relevant and is now processed
+          links:
+        204:
+          description: The ping operation was successful
+        422:
+          description: The event was irrelevant and is skipped
+
+components:
+  parameters:
+    requestId:
+      name: X-Request-ID
+      in: header
+      description: To help connect between requests and logs/audit trails.
+      schema:
+        type: string
+        maxLength: 200
+        example: 0ff7d846-16bb-47b5-a2f1-0598dcca4bc8

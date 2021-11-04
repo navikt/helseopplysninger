@@ -8,9 +8,10 @@ import io.ktor.routing.routing
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.server.netty.NettyApplicationEngine
+import no.nav.helse.hops.test.utils.SocketUtil
 
 class ConverterMock : AutoCloseable {
-    private val port = getRandomPort()
+    private val port = SocketUtil.getAvailablePort()
     val url = "http://localhost:$port"
     private val server = createKtorServer(port).apply { start() }
 

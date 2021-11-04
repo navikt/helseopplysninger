@@ -7,12 +7,6 @@ import no.nav.helse.hops.fhir.JsonConverter
 import org.hl7.fhir.r4.model.Bundle
 import org.hl7.fhir.r4.model.DomainResource
 import java.io.File
-import java.net.ServerSocket
-
-fun randomPort(): Int = ServerSocket(0).use {
-    it.reuseAddress = false // don't bind the same port (macOS)
-    it.localPort
-}
 
 fun resourceFile(path: String): String = object {}.javaClass.getResource(path)!!.readText()
 
