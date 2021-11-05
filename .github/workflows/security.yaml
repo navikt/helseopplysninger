@@ -46,7 +46,8 @@ jobs:
         if: steps.modified.conclusion == 'success'
         uses: github/codeql-action/upload-sarif@v1
         with:
-          sarif_file: snyk_modified.sarif
+          sarif_file: snyk.sarif
+#          sarif_file: snyk_modified.sarif
 
       - name: Upload result to GitHub Code Scanning
         if: steps.modified.conclusion == 'failure'
