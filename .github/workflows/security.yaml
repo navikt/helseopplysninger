@@ -27,10 +27,7 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          args: |
-            --sarif-file-output=snyk.sarif \
-            --configuration-matching='^runtimeClasspath' \
-            --all-sub-projects
+          args: --sarif-file-output=snyk.sarif --all-sub-projects --configuration-matching='^runtimeClasspath'
 
       # This is a temporary manual fix while waiting for https://github.com/snyk/actions/issues/66
       - name: Remove prefix /github/workspace/ from file paths
