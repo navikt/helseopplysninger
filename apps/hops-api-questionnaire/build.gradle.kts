@@ -9,7 +9,7 @@ plugins {
 }
 
 application {
-    mainClass.set("api.questionnaire.AppKt") // Required by shadowJar
+    mainClass.set("questionnaire.AppKt") // Required by shadowJar
 }
 
 tasks {
