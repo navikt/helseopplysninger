@@ -1,0 +1,1266 @@
+{
+  "resourceType": "Questionnaire",
+  "id": "grunnstonad",
+  "url": "http://fhir.nav.no/Questionnaire/grunnstonad",
+  "title": "Grunnstønad",
+  "status": "draft",
+  "subjectType": [
+    "Patient"
+  ],
+  "item": [
+    {
+      "linkId": "patient-group",
+      "type": "group",
+      "text": "Pasients uttalelse",
+      "item": [
+        {
+          "linkId": "patient-name",
+          "type": "text",
+          "required": true,
+          "text": "Etternavn, fornavn"
+        },
+        {
+          "linkId": "patient-fnumber",
+          "type": "text",
+          "text": "Fødselsnummer"
+        },
+        {
+          "linkId": "patient-age",
+          "type": "text",
+          "required": true,
+          "text": "Alder"
+        },
+        {
+          "linkId": "grunnstonad-support-types",
+          "text": "Har pasienten grunn av sykdom, skade eller lyte ekstrautgifter til:",
+          "type": "choice",
+          "answerOption": [
+            {
+              "valueCoding": {
+                "code": "drift-av-tekniske-hjelpemidler",
+                "display": "Drift av tekniske hjelpemidler"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "transport",
+                "display": "Transport"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "forerhund",
+                "display": "Førerhund"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "fordyret-kosthold",
+                "display": "Fordyret kosthold"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "servicehund",
+                "display": "Servicehund"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "klesslitasje",
+                "display": "Klesslitasje"
+              }
+            }
+          ],
+          "required": true,
+          "repeats": true
+        }
+      ]
+    },
+    {
+      "linkId": "doctor-group",
+      "type": "group",
+      "text": "Legens uttalelse",
+      "item": [
+        {
+          "linkId": "diagnoses",
+          "type": "open-choice",
+          "text": "Hvilke(n) diagnose(r) har søkeren?",
+          "required": true,
+          "repeats": true
+        },
+        {
+          "linkId": "grunnstonad-duration",
+          "type": "boolean",
+          "text": "(2) Er tilstanden varig (som hovedregel 2-3 år eller mer)?",
+          "required": true
+        },
+        {
+          "linkId": "grunnstonad-duration-variation",
+          "text": "Kan det ventes endring på kort eller lengre sikt?",
+          "type": "boolean",
+          "required": true,
+          "item": [
+            {
+              "linkId": "grunnstonad-duration-variation-details",
+              "enableWhen": [
+                {
+                  "question": "grunnstonad-duration-variation",
+                  "operator": "=",
+                  "answerBoolean": true
+                }
+              ],
+              "type": "text",
+              "text": "Når og hvorfor/hvordan?"
+            }
+          ]
+        },
+        {
+          "linkId": "grunnstonad-assesment",
+          "type": "text",
+          "text": "I hvilken grad bekrefter undersøkelsen(e) søkerens utsagn om egen funksjonsevne og ekstrautgiftene? (1)"
+        },
+        {
+          "linkId": "grunnstonad-hide-from-patient",
+          "type": "boolean",
+          "text": "Er det noe i legeerklæringen som pasienten ikke bør få vite av medisinske grunner? (6)",
+          "item": [
+            {
+              "linkId": "grunnstonad-hide-from-patient-details",
+              "type": "text",
+              "text": "Oppgi hva pasienten ikke bør få vite:",
+              "enableWhen": [
+                {
+                  "question": "grunnstonad-hide-from-patient",
+                  "operator": "=",
+                  "answerBoolean": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "linkId": "transport-details",
+          "type": "choice",
+          "text": "Transport - vennligst velg mest relevant skjema:",
+          "enableWhen": [
+            {
+              "question": "grunnstonad-support-types",
+              "operator": "=",
+              "answerCoding": {
+                "code": "transport"
+              }
+            }
+          ],
+          "answerOption": [
+            {
+              "valueCoding": {
+                "code": "transport-general",
+                "display": "Transport / Drift av bil"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "transport-psykisk",
+                "display": "Transport / Drift av bil - psykisk lidelse"
+              }
+            }
+          ]
+        },
+        {
+          "linkId": "klesslitasje-details",
+          "type": "choice",
+          "text": "Klesslitasje - vennlig velg mest relevant skjema:",
+          "enableWhen": [
+            {
+              "question": "grunnstonad-support-types",
+              "operator": "=",
+              "answerCoding": {
+                "code": "klesslitasje"
+              }
+            }
+          ],
+          "answerOption": [
+            {
+              "valueCoding": {
+                "code": "klesslitasje-general",
+                "display": "Klesslitasje"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "klesslitasje-adhd",
+                "display": "Klesslitasje - ADHD diagnose"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "klesslitasje-hudlidelse",
+                "display": "Klesslitasje - hudlidelse"
+              }
+            }
+          ]
+        },
+        {
+          "linkId": "fordyret-kosthold-details",
+          "type": "choice",
+          "text": "Fordyret kosthold - vennlig velg mest relevant skjema:",
+          "enableWhen": [
+            {
+              "question": "grunnstonad-support-types",
+              "operator": "=",
+              "answerCoding": {
+                "code": "fordyret-kosthold"
+              }
+            }
+          ],
+          "answerOption": [
+            {
+              "valueCoding": {
+                "code": "fordyret-kosthold-general",
+                "display": "Fordyret kosthold"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "fordyret-kosthold-coliaki",
+                "display": "Fordyret kosthold - Cøliaki"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "fordyret-kosthold-hveteallergi",
+                "display": "Fordyret kosthold - Hveteallergi"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "fordyret-kosthold-hvete-glutenintoleranse",
+                "display": "Fordyret kosthold - Hvete-/glutenintoleranse"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "fordyret-kosthold-cystisk-fibrose",
+                "display": "Fordyret kosthold - Cystisk fibrose"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "fordyret-kosthold-medfodte-stoffskiftesykdommer",
+                "display": "Fordyret kosthold - Medfødte stoffskiftesykdommer"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "fordyret-kosthold-epilepsi-ketogen",
+                "display": "Fordyret kosthold - Epilepsi/ketogen diett"
+              }
+            }
+          ]
+        },
+        {
+          "linkId": "transport-general",
+          "type": "group",
+          "text": "Transport / Drift av bil",
+          "enableWhen": [
+            {
+              "question": "transport-details",
+              "operator": "=",
+              "answerCoding": {
+                "code": "transport-general"
+              }
+            }
+          ],
+          "item": [
+            {
+              "linkId": "1.1.2.3",
+              "type": "boolean",
+              "text": "Bruker er avskåret fra å benytte offentlig transport av medisinske grunner.",
+              "required": true
+            },
+            {
+              "linkId": "1.1.2.2",
+              "type": "choice",
+              "text": "Brukers forflytningsevne og funksjonsnivå. (4)",
+              "answerOption": [
+                {
+                  "valueCoding": {
+                    "code": "low",
+                    "display": "Lav"
+                  }
+                },
+                {
+                  "valueCoding": {
+                    "code": "high",
+                    "display": "Høy"
+                  }
+                }
+              ],
+              "required": true,
+              "repeats": false
+            },
+            {
+              "linkId": "1.1.2.5",
+              "type": "boolean",
+              "required": true,
+              "text": "Bruker er helt avhengig av drosje/egen bil til transport."
+            },
+            {
+              "linkId": "1.1.2.6",
+              "type": "text",
+              "text": "Hvilken behandling får bruker og hvilken effekt behandlingen har.",
+              "required": true
+            },
+            {
+              "linkId": "1.1.2.7",
+              "type": "boolean",
+              "required": true,
+              "text": "det kan ventes endring i funksjonen? (5)",
+              "item": [
+                {
+                  "linkId": "1.1.2.7-explain",
+                  "type": "string",
+                  "text": "redegjør nærmere.",
+                  "enableWhen": [
+                    {
+                      "question": "1.1.2.7",
+                      "operator": "=",
+                      "answerBoolean": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "linkId": "1.1.2.8",
+              "type": "quantity",
+              "required": true,
+              "text": "Hvor mange år det er forventet at funksjonen og transportbehovet vil vare. (5)"
+            },
+            {
+              "linkId": "1.1.2.9",
+              "type": "text",
+              "text": "Det er noe mer vi bør vite for å vurdere søknaden."
+            }
+          ]
+        },
+        {
+          "linkId": "transport-psykisk",
+          "type": "group",
+          "text": "Transport / Drift av bil - psykisk lidelse",
+          "enableWhen": [
+            {
+              "question": "transport-details",
+              "operator": "=",
+              "answerCoding": {
+                "code": "transport-psykisk"
+              }
+            }
+          ],
+          "item": [
+            {
+              "linkId": "transport-psykisk-1",
+              "type": "boolean",
+              "text": "Bruker er avskåret fra å benytte offentlig transport av medisinske grunner.",
+              "required": true
+            },
+            {
+              "linkId": "transport-psykisk-2",
+              "type": "choice",
+              "text": "Brukers forflytningsevne og funksjonsnivå. (4)",
+              "answerOption": [
+                {
+                  "valueCoding": {
+                    "code": "low",
+                    "display": "Lav"
+                  }
+                },
+                {
+                  "valueCoding": {
+                    "code": "high",
+                    "display": "Høy"
+                  }
+                }
+              ],
+              "required": true,
+              "repeats": false
+            },
+            {
+              "linkId": "transport-psykisk-terapi",
+              "type": "choice",
+              "text": "Bruker har gjennomført eksponeringsterapi i  bruk av offentlig transport i regi av spesialist i klinisk psykologi eller psykiater?",
+              "answerOption": [
+                {
+                  "valueCoding": {
+                    "code": "ja",
+                    "display": "Ja"
+                  }
+                },
+                {
+                  "valueCoding": {
+                    "code": "nei",
+                    "display": "Nei"
+                  }
+                }
+              ],
+              "item": [
+                {
+                  "linkId": "transport-psykisk-terapi-ja",
+                  "type": "date",
+                  "text": "Oppgi dato av epikrise",
+                  "enableWhen": [
+                    {
+                      "question": "transport-psykisk-terapi",
+                      "operator": "=",
+                      "answerCoding": {
+                        "code": "ja"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "linkId": "1.1.2.4.1-display",
+                  "type": "display",
+                  "text": "(7) Hvis det ikke er gjennomført eksponeringsterapi må en spesialist i klinisk psykologi eller psykiater fraråde dette. Du må sende oss denne dokumentasjonen. Hvis du ikke har denne dokumentasjonen - oppgi navnet på spesialisten eller psykiateren.",
+                  "enableWhen": [
+                    {
+                      "question": "transport-psykisk-terapi",
+                      "operator": "=",
+                      "answerCoding": {
+                        "code": "nei"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "linkId": "1.1.2.4.1.2",
+                  "type": "string",
+                  "text": "Oppgi navnet på spesialisten eller psykiateren.",
+                  "enableWhen": [
+                    {
+                      "question": "transport-psykisk-terapi",
+                      "operator": "=",
+                      "answerCoding": {
+                        "code": "nei"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "linkId": "1.1.2.4.1.3",
+                  "type": "date",
+                  "text": "Oppgi dato av epikrise",
+                  "enableWhen": [
+                    {
+                      "question": "transport-psykisk-terapi",
+                      "operator": "=",
+                      "answerCoding": {
+                        "code": "nei"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "linkId": "transport-psykisk-5",
+              "type": "boolean",
+              "required": true,
+              "text": "Bruker er helt avhengig av drosje/egen bil til transport."
+            },
+            {
+              "linkId": "transport-psykisk-6",
+              "type": "text",
+              "text": "Hvilken behandling får bruker og hvilken effekt behandlingen har.",
+              "required": true
+            },
+            {
+              "linkId": "transport-psykisk-7",
+              "type": "boolean",
+              "required": true,
+              "text": "det kan ventes endring i funksjonen? (5)",
+              "item": [
+                {
+                  "linkId": "1.1.2.7-explain",
+                  "type": "string",
+                  "text": "redegjør nærmere.",
+                  "enableWhen": [
+                    {
+                      "question": "1.1.2.7",
+                      "operator": "=",
+                      "answerBoolean": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "linkId": "transport-psykisk-8",
+              "type": "quantity",
+              "required": true,
+              "text": "Hvor mange år det er forventet at funksjonen og transportbehovet vil vare. (5)"
+            },
+            {
+              "linkId": "1.1.2.9",
+              "type": "text",
+              "text": "Det er noe mer vi bør vite for å vurdere søknaden."
+            }
+          ]
+        },
+        {
+          "linkId": "klesslitasje-general",
+          "type": "group",
+          "text": "Klesslitasje",
+          "enableWhen": [
+            {
+              "question": "klesslitasje-details",
+              "operator": "=",
+              "answerCoding": {
+                "code": "klesslitasje-general"
+              }
+            }
+          ],
+          "item": [
+            {
+              "linkId": "klesslitasje-general-1",
+              "type": "text",
+              "text": "Hvilke sykdommer bruker har som er aktuelle for denne søknaden"
+            },
+            {
+              "linkId": "klesslitasje-general-2",
+              "type": "text",
+              "text": "Spesifikasjon av brukers utfordringer som følge av diagnosen, for eksempel uro, utagering, konsentrasjonsvansker, impulsivitet, hyperaktivitet, søvnvansker, motoriske vansker og lignende."
+            },
+            {
+              "text": "Hvor alvorlig den medisinske tilstanden er.",
+              "type": "text",
+              "linkId": "klesslitasje-alvorlighet"
+            },
+            {
+              "text": "Hvilken behandling bruker får og hvilken effekt Behandlingen har",
+              "type": "text",
+              "linkId": "klesslitasje-behandling"
+            },
+            {
+              "text": "Hvor mange år det er forventet at tilstanden og klesslitasjen vil vare?",
+              "type": "text",
+              "linkId": "klesslitasje-general-duration"
+            },
+            {
+              "text": "Det kan ventes endring av tilstanden",
+              "type": "boolean",
+              "linkId": "klesslitasje-general-endringer",
+              "item": [
+                {
+                  "text": "Redegjør nærmere",
+                  "type": "text",
+                  "linkId": "klesslitasje-endringer-details",
+                  "enableWhen": [
+                    {
+                      "question": "klesslitasje-general-endringer",
+                      "operator": "=",
+                      "answerBoolean": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "text": "Er det noe mer vi bør vite for å vurdere søknaden?",
+              "type": "text",
+              "linkId": "klesslitasje-general-extra"
+            }
+          ]
+        },
+        {
+          "linkId": "klesslitasje-adhd",
+          "type": "group",
+          "text": "Klesslitasje - ADHD diagnose",
+          "enableWhen": [
+            {
+              "question": "klesslitasje-details",
+              "operator": "=",
+              "answerCoding": {
+                "code": "klesslitasje-adhd"
+              }
+            }
+          ],
+          "item": [
+            {
+              "linkId": "klesslitasje-adhd-1",
+              "type": "boolean",
+              "text": "Det er en forutsetning at det fremgår av de medisinske opplysningene at personen har en hyperaktiv adferd. Bekrefter du at personen har en hyperaktiv adferd."
+            }
+          ]
+        },
+        {
+          "linkId": "klesslitasje-hudlidelse",
+          "type": "group",
+          "text": "Klesslitasje - hudlidelse",
+          "enableWhen": [
+            {
+              "question": "klesslitasje-details",
+              "operator": "=",
+              "answerCoding": {
+                "code": "klesslitasje-hudlidelse"
+              }
+            }
+          ],
+          "item": [
+            {
+              "linkId": "klesslitasje-hudlidelse-1",
+              "type": "text",
+              "text": "Hvilke sykdommer bruker har som er aktuelle for denne søknaden"
+            },
+            {
+              "linkId": "klesslitasje-hudlidelse-karakterisering",
+              "type": "text",
+              "text": "Hvordan hudlidelsen karakterisere"
+            },
+            {
+              "linkId": "klesslitasje-hudlidelse-hvor",
+              "type": "text",
+              "text": "Hvor på kroppen den er lokalisert"
+            },
+            {
+              "linkId": "klesslitasje-hudlidelse-behandling",
+              "type": "text",
+              "text": "Hvordan den behandles"
+            },
+            {
+              "linkId": "klesslitasje-hudlidelse-sesong",
+              "type": "boolean",
+              "text": "Det er sesongvariasjoner?"
+            },
+            {
+              "linkId": "klesslitasje-hudlidelse-duration",
+              "type": "text",
+              "text": "Hvor mange år det er forventet at tilstanden og klesslitasjen vil vare?"
+            },
+            {
+              "text": "Det kan ventes endring av tilstanden",
+              "type": "boolean",
+              "linkId": "klesslitasje-hudlidelse-endringer",
+              "item": [
+                {
+                  "text": "Redegjør nærmere",
+                  "type": "text",
+                  "linkId": "klesslitasje-hudlidelse-endringer-details",
+                  "enableWhen": [
+                    {
+                      "question": "klesslitasje-hudlidelse-endringer",
+                      "operator": "=",
+                      "answerBoolean": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "text": "Er det noe mer vi bør vite for å vurdere søknaden?",
+              "type": "text",
+              "linkId": "klesslitasje-hudlidelse-extra"
+            }
+          ]
+        },
+        {
+          "linkId": "fordyret-kosthold-general",
+          "type": "group",
+          "text": "Fordyret kosthold",
+          "enableWhen": [
+            {
+              "question": "fordyret-kosthold-details",
+              "operator": "=",
+              "answerCoding": {
+                "code": "fordyret-kosthold-general"
+              }
+            }
+          ],
+          "item": [
+            {
+              "linkId": "fordyret-kosthold-general-sykdom",
+              "type": "text",
+              "text": "Påvist sykdom"
+            },
+            {
+              "linkId": "fordyret-kosthold-general-findings",
+              "type": "text",
+              "text": "Kliniske funn"
+            },
+            {
+              "linkId": "fordyret-kosthold-general-assesment-diet",
+              "text": "Sykdommen medfører behov for en spesialdiett?",
+              "type": "choice",
+              "answerOption": [
+                {
+                  "valueCoding": {
+                    "code": "ja",
+                    "display": "Ja"
+                  }
+                },
+                {
+                  "valueCoding": {
+                    "code": "nei",
+                    "display": "Nei"
+                  }
+                }
+              ]
+            },
+            {
+              "linkId": "fordyret-kosthold-general-diet-effectiveness",
+              "type": "choice",
+              "text": "Dietten faktisk avhjelper lidelsen?",
+              "answerOption": [
+                {
+                  "valueCoding": {
+                    "code": "ja",
+                    "display": "Ja"
+                  }
+                },
+                {
+                  "valueCoding": {
+                    "code": "nei",
+                    "display": "Nei"
+                  }
+                }
+              ]
+            },
+            {
+              "linkId": "fordyret-kosthold-general-diet-costs",
+              "type": "text",
+              "text": "Hvilke elementer i dietten er dyrere enn et normalt kosthold?"
+            },
+            {
+              "linkId": "fordyret-kosthold-general-diet-document",
+              "type": "choice",
+              "text": "Er dietten vitenskapelig dokumentert og alminnelig anerkjent i medisinsk praksis?",
+              "answerOption": [
+                {
+                  "valueCoding": {
+                    "code": "ja",
+                    "display": "Ja"
+                  }
+                },
+                {
+                  "valueCoding": {
+                    "code": "nei",
+                    "display": "Nei"
+                  }
+                }
+              ]
+            },
+            {
+              "linkId": "fordyret-kosthold-general-specialist",
+              "type": "choice",
+              "text": "Er diagnose og diett fastsatt av spesialist med allergologisk kompetanse?",
+              "answerOption": [
+                {
+                  "valueCoding": {
+                    "code": "ja",
+                    "display": "Ja"
+                  }
+                },
+                {
+                  "valueCoding": {
+                    "code": "nei",
+                    "display": "Nei"
+                  }
+                }
+              ]
+            },
+            {
+              "linkId": "fordyret-kosthold-general-followup",
+              "type": "choice",
+              "text": "Bruker følges opp av sykehus / klinisk ernæringsfysiolog?",
+              "answerOption": [
+                {
+                  "valueCoding": {
+                    "code": "ja",
+                    "display": "Ja"
+                  }
+                },
+                {
+                  "valueCoding": {
+                    "code": "nei",
+                    "display": "Nei"
+                  }
+                }
+              ]
+            },
+            {
+              "linkId": "fordyret-kosthold-general-findings",
+              "type": "choice",
+              "text": "Sykdommen medfører behov for en spesialdiett?",
+              "answerOption": [
+                {
+                  "valueCoding": {
+                    "code": "ja",
+                    "display": "Ja"
+                  }
+                },
+                {
+                  "valueCoding": {
+                    "code": "nei",
+                    "display": "Nei"
+                  }
+                }
+              ]
+            },
+            {
+              "text": "Hvor mange år det er forventet at tilstanden og behovet for diett vil vare?",
+              "type": "text",
+              "linkId": "fordyret-kosthold-general-duration"
+            },
+            {
+              "text": "Det kan ventes endring av tilstanden",
+              "type": "boolean",
+              "linkId": "fordyret-kosthold-general-endringer",
+              "item": [
+                {
+                  "text": "Redegjør nærmere",
+                  "type": "text",
+                  "linkId": "fordyret-kosthold-general-details",
+                  "enableWhen": [
+                    {
+                      "question": "fordyret-kosthold-general-endringer",
+                      "operator": "=",
+                      "answerBoolean": true
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "linkId": "fordyret-kosthold-coliaki",
+          "type": "group",
+          "text": "Fordyret kosthold - Cøliaki",
+          "enableWhen": [
+            {
+              "question": "fordyret-kosthold-details",
+              "operator": "=",
+              "answerCoding": {
+                "code": "fordyret-kosthold-coliaki"
+              }
+            }
+          ],
+          "item": [
+            {
+              "linkId": "fordyret-kosthold-coliaki-sykdom",
+              "type": "text",
+              "text": "Påvist sykdom"
+            },
+            {
+              "linkId": "fordyret-kosthold-coliaki-sykehistorie",
+              "type": "text",
+              "text": "Sykehistorie"
+            },
+            {
+              "linkId": "fordyret-kosthold-coliaki-findings",
+              "type": "text",
+              "text": "Kliniske funn"
+            },
+            {
+              "linkId": "fordyret-kosthold-coliaki-test",
+              "type": "text",
+              "text": "Resultater fra blodprøver",
+              "item": [
+                {
+                  "linkId": "fordyret-kosthold-coliaki-test-ref",
+                  "type": "text",
+                  "text": "Referanseverdi"
+                }
+              ]
+            },
+            {
+              "linkId": "fordyret-kosthold-coliaki-test-vevstyping",
+              "type": "text",
+              "text": "Resultater av vevstyping"
+            },
+            {
+              "linkId": "fordyret-kosthold-coliaki-test-biopsi",
+              "type": "text",
+              "text": "Biopsiresultater"
+            },
+            {
+              "linkId": "fordyret-kosthold-coliaki-reaction-test",
+              "type": "choice",
+              "text": "Har provokasjonsforsøk ble gjort?",
+              "answerOption": [
+                {
+                  "valueString": "Ja"
+                },
+                {
+                  "valueString": "Nei"
+                }
+              ],
+              "item": [
+                {
+                  "linkId": "fordyret-kosthold-coliaki-reaction-test-type",
+                  "type": "choice",
+                  "text": "Er det foretatt åpen eller blind provokasjon?",
+                  "answerOption": [
+                    {
+                      "valueString": "Åpen"
+                    },
+                    {
+                      "valueString": "Blind"
+                    }
+                  ],
+                  "enableWhen": [
+                    {
+                      "question": "fordyret-kosthold-coliaki-reaction-test",
+                      "operator": "=",
+                      "answerString": "Ja"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "linkId": "fordyret-kosthold-coliaki-specialist-question",
+              "type": "choice",
+              "text": "Er du spesialisten som har stilt diagnosen?",
+              "answerOption": [
+                {
+                  "valueString": "Ja"
+                },
+                {
+                  "valueString": "Nei"
+                }
+              ],
+              "item": [
+                {
+                  "linkId": "fordyret-kosthold-coliaki-specialist-name",
+                  "type": "text",
+                  "text": "Hvilken spesialist som har stilt diagnosen?",
+                  "enableWhen": [
+                    {
+                      "question": "fordyret-kosthold-coliaki-specialist-question",
+                      "operator": "=",
+                      "answerString": "Nei"
+                    }
+                  ]
+                },
+                {
+                  "linkId": "fordyret-kosthold-coliaki-specialist-addreess",
+                  "type": "text",
+                  "text": "Hvor spesialisten arbeider?",
+                  "enableWhen": [
+                    {
+                      "question": "fordyret-kosthold-coliaki-specialist-question",
+                      "operator": "=",
+                      "answerString": "Nei"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "linkId": "fordyret-kosthold-hveteallergi",
+          "type": "group",
+          "text": "Fordyret kosthold - Hveteallergi",
+          "enableWhen": [
+            {
+              "question": "fordyret-kosthold-details",
+              "operator": "=",
+              "answerCoding": {
+                "code": "fordyret-kosthold-hveteallergi"
+              }
+            }
+          ],
+          "item": [
+            {
+              "linkId": "fordyret-kosthold-hveteallergi-sykdom",
+              "type": "text",
+              "text": "Påvist sykdom"
+            },
+            {
+              "linkId": "fordyret-kosthold-hveteallergi-findings",
+              "type": "text",
+              "text": "Kliniske funn"
+            },
+            {
+              "linkId": "fordyret-kosthold-hveteallergi-test",
+              "type": "text",
+              "text": "Resultater fra blodprøver",
+              "item": [
+                {
+                  "linkId": "fordyret-kosthold-hveteallergi-test-ref",
+                  "type": "text",
+                  "text": "Referanseverdi"
+                }
+              ]
+            },
+            {
+              "linkId": "fordyret-kosthold-hveteallergi-reaction-test",
+              "type": "choice",
+              "text": "Har provokasjonsforsøk ble gjort?",
+              "answerOption": [
+                {
+                  "valueString": "Ja"
+                },
+                {
+                  "valueString": "Nei"
+                }
+              ],
+              "item": [
+                {
+                  "linkId": "fordyret-kosthold-hveteallergi-reaction-test-type",
+                  "type": "choice",
+                  "text": "Er det foretatt åpen eller blind provokasjon?",
+                  "answerOption": [
+                    {
+                      "valueString": "Åpen"
+                    },
+                    {
+                      "valueString": "Blind"
+                    }
+                  ],
+                  "enableWhen": [
+                    {
+                      "question": "fordyret-kosthold-hveteallergi-reaction-test",
+                      "operator": "=",
+                      "answerString": "Ja"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "linkId": "fordyret-kosthold-hvete-glutenintoleranse",
+          "type": "group",
+          "text": "Fordyret kosthold - Hvete-/glutenintoleranse",
+          "enableWhen": [
+            {
+              "question": "fordyret-kosthold-details",
+              "operator": "=",
+              "answerCoding": {
+                "code": "fordyret-kosthold-hvete-glutenintoleranse"
+              }
+            }
+          ],
+          "item": [
+            {
+              "linkId": "fordyret-kosthold-hvete-glutenintoleranse-sykdom",
+              "type": "text",
+              "text": "Påvist sykdom"
+            },
+            {
+              "linkId": "fordyret-kosthold-hvete-glutenintoleranse-findings",
+              "type": "text",
+              "text": "Kliniske funn"
+            },
+            {
+              "linkId": "fordyret-kosthold-hvete-glutenintoleranse-findings",
+              "type": "text",
+              "text": "Provokasjon i regi av spesialist"
+            },
+            {
+              "linkId": "fordyret-kosthold-hvete-glutenintoleranse-specialist-question",
+              "type": "choice",
+              "text": "Er du spesialisten som har stilt diagnosen?",
+              "answerOption": [
+                {
+                  "valueString": "Ja"
+                },
+                {
+                  "valueString": "Nei"
+                }
+              ],
+              "item": [
+                {
+                  "linkId": "fordyret-kosthold-hvete-glutenintoleranse-specialist-name",
+                  "type": "text",
+                  "text": "Hvilken spesialist som har stilt diagnosen?",
+                  "enableWhen": [
+                    {
+                      "question": "fordyret-kosthold-hvete-glutenintoleranse-specialist-question",
+                      "operator": "=",
+                      "answerString": "Nei"
+                    }
+                  ]
+                },
+                {
+                  "linkId": "fordyret-kosthold-hvete-glutenintoleranse-specialist-addreess",
+                  "type": "text",
+                  "text": "Hvor spesialisten arbeider?",
+                  "enableWhen": [
+                    {
+                      "question": "fordyret-kosthold-hvete-glutenintoleranse-specialist-question",
+                      "operator": "=",
+                      "answerString": "Nei"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "linkId": "fordyret-kosthold-cystisk-fibrose",
+          "type": "group",
+          "text": "Fordyret kosthold - Cystisk fibrose",
+          "enableWhen": [
+            {
+              "question": "fordyret-kosthold-details",
+              "operator": "=",
+              "answerCoding": {
+                "code": "fordyret-kosthold-cystisk-fibrose"
+              }
+            }
+          ],
+          "item": [
+            {
+              "linkId": "fordyret-kosthold-cystisk-fibrose-sykdom",
+              "type": "text",
+              "text": "Opplysninger om sykdommen"
+            },
+            {
+              "linkId": "fordyret-kosthold-cystisk-fibrose-affiserte-organer",
+              "type": "text",
+              "text": "Kan du spesifisere hvilke organer er affiserte?"
+            }
+          ]
+        },
+        {
+          "linkId": "fordyret-kosthold-medfodte-stoffskiftesykdommer",
+          "type": "group",
+          "text": "Fordyret kosthold - Medfødte stoffskiftesykdommer",
+          "enableWhen": [
+            {
+              "question": "fordyret-kosthold-details",
+              "operator": "=",
+              "answerCoding": {
+                "code": "fordyret-kosthold-medfodte-stoffskiftesykdommer"
+              }
+            }
+          ],
+          "item": [
+            {
+              "linkId": "fordyret-kosthold-medfodte-stoffskiftesykdommer-sykdome",
+              "type": "text",
+              "text": "Hvilke sykdommer bruker har som er aktuelle for denne søknaden"
+            },
+            {
+              "linkId": "fordyret-kosthold-medfodte-stoffskiftesykdommer-diet",
+              "text": "Bruker går på proteinredusert diett",
+              "type": "choice",
+              "answerOption": [
+                {
+                  "valueString": "Ja"
+                },
+                {
+                  "valueString": "Nei"
+                }
+              ]
+            },
+            {
+              "linkId": "fordyret-kosthold-medfodte-stoffskiftesykdommer-diet",
+              "text": "Bruker får ernæring via ernæringssonde",
+              "type": "choice",
+              "answerOption": [
+                {
+                  "valueString": "Ja"
+                },
+                {
+                  "valueString": "Nei"
+                }
+              ]
+            },
+            {
+              "linkId": "fordyret-kosthold-medfodte-stoffskiftesykdommer-followup",
+              "text": "Bruker følges opp av sykehus / klinisk ernæringsfysiolog?",
+              "type": "choice",
+              "answerOption": [
+                {
+                  "valueString": "Ja"
+                },
+                {
+                  "valueString": "Nei"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "linkId": "fordyret-kosthold-epilepsi-ketogen",
+          "type": "group",
+          "text": "Fordyret kosthold - Epilepsi/ketogen diett",
+          "enableWhen": [
+            {
+              "question": "fordyret-kosthold-details",
+              "operator": "=",
+              "answerCoding": {
+                "code": "fordyret-kosthold-epilepsi-ketogen"
+              }
+            }
+          ],
+          "item": [
+            {
+              "linkId": "fordyret-kosthold-epilepsi-ketogen-sykdom",
+              "type": "text",
+              "text": "Påvist sykdom"
+            },
+            {
+              "linkId": "fordyret-kosthold-epilepsi-ketogen-sykdom",
+              "text": "medikamentell behandling har vært grundig utprøvd uten tilstrekkelig effekt eller at medikamentell behandling ikke kan benyttes på grunn av bivirkninger",
+              "type": "text"
+            },
+            {
+              "linkId": "fordyret-kosthold-epilepsi-ketogen-diet",
+              "text": "Ketogen diett har gitt betydelig reduksjon av anfallsfrekvens?",
+              "type": "choice",
+              "answerOption": [
+                {
+                  "valueString": "Ja"
+                },
+                {
+                  "valueString": "Nei"
+                }
+              ]
+            },
+            {
+              "linkId": "fordyret-kosthold-epilepsi-ketogen-spesialist",
+              "text": "Utredning og behandlingsutprøving er gjennomført i spesialsykehus/-avdeling?",
+              "type": "choice",
+              "answerOption": [
+                {
+                  "valueString": "Ja"
+                },
+                {
+                  "valueString": "Nei"
+                }
+              ]
+            },
+            {
+              "linkId": "fordyret-kosthold-epilepsi-ketogen-followup",
+              "text": "Regelmessig kontroll eller oppfølging skjer ved hjelp av personell med spesialkompetanse?",
+              "type": "choice",
+              "answerOption": [
+                {
+                  "valueString": "Ja"
+                },
+                {
+                  "valueString": "Nei"
+                }
+              ]
+            },
+            {
+              "linkId": "fordyret-kosthold-epilepsi-ketogen-other",
+              "text": "Andre grunner til at ketogen diett er nødvendig?",
+              "type": "text"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "version": "1.0.0"
+}

@@ -11,11 +11,12 @@ import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.server.netty.NettyApplicationEngine
 import kotlinx.coroutines.CompletableDeferred
+import no.nav.helse.hops.test.utils.SocketUtil
 
 class Request(val call: ApplicationCall, val body: String)
 
 class DokarkivMock : AutoCloseable {
-    private val port = getRandomPort()
+    private val port = SocketUtil.getAvailablePort()
     val url = "http://localhost:$port"
     val receivedRequest = CompletableDeferred<Request>()
     private val server = createKtorServer(port).apply { start() }
