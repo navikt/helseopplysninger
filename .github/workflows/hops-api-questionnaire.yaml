@@ -50,7 +50,6 @@ jobs:
         env:
           CLUSTER: dev-gcp
           ENVIRONMENT: dev-gcp:${{ github.workflow }}
-          VARS: apps/${{ github.workflow }}/.nais/dev.json
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           RESOURCE: apps/${{ github.workflow }}/.nais/naiserator.yaml
 
@@ -63,6 +62,5 @@ jobs:
         env:
           CLUSTER: prod-gcp
           ENVIRONMENT: prod-gcp:${{ github.workflow }}
-          VARS: apps/${{ github.workflow }}/.nais/prod.json
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           RESOURCE: apps/${{ github.workflow }}/.nais/naiserator.yaml

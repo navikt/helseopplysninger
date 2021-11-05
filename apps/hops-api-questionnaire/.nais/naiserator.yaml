@@ -34,8 +34,6 @@ spec:
     max: 2
   ingresses:
     - https://hops-api-questionnaire.ekstern.dev.nav.no/event
-  kafka:
-    pool: nav-dev
   env:
     - name: LOG_APPENDER
       value: json
