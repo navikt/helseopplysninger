@@ -15,7 +15,7 @@ import questionnaire.store.QuestionnaireStore
 import java.net.URI
 
 fun Routing.questionnaire() {
-    route("/4.0") {
+    route("/4.0") { // todo: move api version to header instead(see fhir doc), where default is newest version
         get("/questionnaire/{id}") {
             val id = call.parameters["id"]!!
             val schema = QuestionnaireStore.get(id) ?: return@get respondNotFound()
