@@ -37,7 +37,7 @@ dependencies {
     implementation("org.apache.kafka:kafka-clients:2.8.1")
     runtimeOnly("ch.qos.logback:logback-classic:1.2.6")
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
-    runtimeOnly("org.webjars:swagger-ui:3.52.5")
+    runtimeOnly("org.webjars:swagger-ui:4.0.1")
     testImplementation(project(":libs:hops-common-test"))
     testImplementation(project(":libs:hops-common-kafka-test"))
     testImplementation("org.testcontainers:junit-jupiter:1.16.2")

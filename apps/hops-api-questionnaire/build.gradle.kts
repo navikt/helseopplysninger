@@ -39,7 +39,7 @@ dependencies {
     implementation("io.micrometer:micrometer-registry-prometheus:1.7.4")
     runtimeOnly("ch.qos.logback:logback-classic:1.2.6")
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
-    runtimeOnly("org.webjars:swagger-ui:3.52.1")
+    runtimeOnly("org.webjars:swagger-ui:4.0.1")
     testImplementation(project(":libs:hops-common-test"))
     testImplementation("com.sksamuel.hoplite:hoplite-yaml:1.4.11")
     testImplementation("io.kotest:kotest-assertions-core:4.6.3")
