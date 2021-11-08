@@ -39,6 +39,7 @@ jobs:
 
       - uses: docker/build-push-action@v2.7.0
         with:
+          context: apps/hops-terminology
           build-args: dataFolder=./data
           push: true
           tags: ${{ env.IMAGE }},ghcr.io/navikt/${{ github.workflow }}:latest
