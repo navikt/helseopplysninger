@@ -18,6 +18,7 @@ spring:
     properties:
       hibernate.format_sql: false
       hibernate.show_sql: false
+
 #      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
 #      hibernate.dialect: org.hibernate.dialect.h2dialect
   #      hibernate.hbm2ddl.auto: update
