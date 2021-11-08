@@ -106,6 +106,7 @@ hapi:
     search-coord-max-pool-size: 100
     search-coord-queue-capacity: 200
 
+
     #    logger:
     #      error_format: 'ERROR - ${requestVerb} ${requestUrl}'
     #      format: >-
