@@ -1,4 +1,4 @@
-name: hops-fileshare
+name: hops-terminology
 
 on:
   push:
