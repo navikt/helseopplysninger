@@ -12,7 +12,7 @@ spec:
   port: 8080
   team: helseopplysninger
   liveness:
-    path: /
+    path: /fhir/metadata
     initialDelay: 10
     timeout: 5
     periodSeconds: 5
