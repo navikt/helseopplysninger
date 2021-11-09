@@ -1,10 +1,45 @@
-# 🚑 helseopplysninger
+# 🚑 Helseopplysninger
 Backend for forwarding and storing of health-related data
 
-## 💊 tl;dr
-Basically an event store exposing a RestAPI with two endpoins for external application. 
-One for receiving a search result and one for adding a new message to the event store.
-For internal (inside NAV) it exposes two Kafka topics, one for writing and one reading FHIR messages.
+## 📁 Folder structure
+```yaml
+helseopplysninger
+├── .docker
+│   ├── builder             # Dockerfile used to create a cache-image for multistage builds
+│   ├── config              # Config files used by services in docker-compose
+│   ├── test                # Python script to publish fhir-messages on kafka, used for for local testing
+│   └── docker-compose.yml  # Setup a complete environment for local testing
+├── .github
+│   ├── ISSUE_TEMPLATE      # Templates used when creating issues on GitHub
+│   ├── workflows           # GitHub-action workflows used for CI/CD
+│   └── dependabot.yml      # Instructions regarding auto-updating for dependencies
+├── .scripts 
+│   ├── licence-to-sarif.js # Node-script to convert qodana-license-audit-report to sarif format
+│   └── run-e2e             # Bash script to run end-2-end tests
+├── apps                    # The various applications\microservices (gradle-projects)
+├── docs
+│   ├── adrs                # Architecture Decision Records
+│   ├── images              # Images used in documentation
+│   ├── pipeline            # CI/CD pipeline documentation
+│   ├── test                # Test strategy documentation
+│   └── _config.yml         # Github-Pages config
+├── kafka                   # NAIS templates for kafka topics
+├── libs                    # Common libraries (gradle-projects) used by the applications
+├── .dockerignore 
+├── .editorconfig           # IntelliJ IDEA code style settings
+├── .gitattributes
+├── .gitignore 
+├── CODEOWNERS 
+├── Dockerfile              # Multistage dockerfile used to create deployable docker-image. Used by all apps
+├── LICENSE.md              # MIT license
+├── README.md
+├── SECURITY.md             # Instructions regarding security practices
+├── build.gradle.kts
+├── gradle.properties
+├── gradlew
+├── gradlew.bat
+└── settings.gradle.kts
+```
 
 ## 👽 Technologies used
 * Kotlin
