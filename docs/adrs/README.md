@@ -22,3 +22,4 @@ ADRs are proposed in the form of a pull request, and they commonly follow this f
 ---
 ### ADRs:
 1. [Absolute URLs for attachments](001-absolute-urls-for-attachments.md)
+1. [PostgreSQL as event (FHIR message) storage](002-postgres-as-eventstore.md)
