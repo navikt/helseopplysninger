@@ -32,11 +32,11 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build database files
-        run: |
-          cd apps/hops-terminology
-          ./build.sh $(pwd)/data
-          sudo chmod -R 775 $(pwd)/data
+#      - name: Build database files
+#        run: |
+#          cd apps/hops-terminology
+#          ./build.sh $(pwd)/data
+#          sudo chmod -R 775 $(pwd)/data
 
       - uses: docker/build-push-action@v2.7.0
         with:
