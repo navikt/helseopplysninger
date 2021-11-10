@@ -35,6 +35,8 @@ spec:
   env:
     - name: LOG_APPENDER
       value: json
+    - name: SPRING_CONFIG_LOCATION
+      value: "file:///data/hapi/application.yaml"
   ingresses:
   {{#each ingresses as |url|}}
      - {{url}}
