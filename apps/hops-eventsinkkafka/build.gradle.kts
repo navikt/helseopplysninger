@@ -35,7 +35,7 @@ dependencies {
     runtimeOnly("ch.qos.logback:logback-classic:1.2.6")
     runtimeOnly("io.ktor:ktor-server-netty:1.6.5")
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
-    runtimeOnly("org.webjars:swagger-ui:3.52.5")
+    runtimeOnly("org.webjars:swagger-ui:4.1.0")
     testImplementation(project(":libs:hops-common-test"))
 }
 
