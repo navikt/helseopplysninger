@@ -1,6 +1,6 @@
 {
   "ingresses": [
     "https://hops-terminology.ekstern.dev.nav.no",
-    "https://hops-terminology.dev.intern.nav.no"
+    "https://hops-terminology.dev.nav.no"
   ]
 }
