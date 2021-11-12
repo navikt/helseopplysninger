@@ -7,16 +7,7 @@
     "index.html": "./index.html",
     "preview.html": "./preview.html",
     "versions/VERSION_ID/js/QD-vendors.js.LICENSE.txt": "./versions/VERSION_ID/js/QD-vendors.js.LICENSE.txt",
-    "versions/VERSION_ID/media/style.css": "./versions/VERSION_ID/media/JetBrainsMono-Regular.woff",
-    "versions/VERSION_ID/media/appcode.svg": "./versions/VERSION_ID/media/appcode.svg",
-    "versions/VERSION_ID/media/clion.svg": "./versions/VERSION_ID/media/clion.svg",
-    "versions/VERSION_ID/media/goland.svg": "./versions/VERSION_ID/media/goland.svg",
-    "versions/VERSION_ID/media/intellij-idea.svg": "./versions/VERSION_ID/media/intellij-idea.svg",
-    "versions/VERSION_ID/media/Line.module.css": "./versions/VERSION_ID/media/line.svg",
-    "versions/VERSION_ID/media/phpstorm.svg": "./versions/VERSION_ID/media/phpstorm.svg",
-    "versions/VERSION_ID/media/pycharm.svg": "./versions/VERSION_ID/media/pycharm.svg",
-    "versions/VERSION_ID/media/rider.svg": "./versions/VERSION_ID/media/rider.svg",
-    "versions/VERSION_ID/media/rubymine.svg": "./versions/VERSION_ID/media/rubymine.svg",
-    "versions/VERSION_ID/media/webstorm.svg": "./versions/VERSION_ID/media/webstorm.svg"
+    "versions/VERSION_ID/media/styles.css": "./versions/VERSION_ID/media/JetBrainsMono-Regular.woff",
+    "versions/VERSION_ID/media/CodeError.module.css": "./versions/VERSION_ID/media/line.svg"
   }
 }
