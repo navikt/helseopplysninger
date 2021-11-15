@@ -2,28 +2,30 @@
 
 [ADRs](./adrs)
 
-[Testing strategy](./test)
+[Testing strategy](./test/test-strategy.md)
 
-[Pipeline](./pipeline)
+[Pipeline - Dependabot](./pipeline/auto-merge-dependabot.md)
+
+[Pipeline - Licence Audit](./pipeline/licence-audit.md)
 
 ## Services
 
-[HOPS-EventStore](../apps/hops-eventstore)
+[HOPS-EventStore](https://github.com/navikt/helseopplysninger/tree/main/apps/hops-eventstore)
 
-[HOPS-FileShare](../apps/hops-fileshare)
+[HOPS-FileShare](https://github.com/navikt/helseopplysninger/tree/main/apps/hops-fileshare)
 
-[HOPS-Terminology](../apps/hops-terminology)
+[HOPS-Terminology](https://github.com/navikt/helseopplysninger/tree/main/apps/hops-terminology)
 
-[HOPS-EventSinkKafka](../apps/hops-eventsinkkafka)
+[HOPS-EventSinkKafka](https://github.com/navikt/helseopplysninger/tree/main/apps/hops-eventsinkkafka)
 
-[HOPS-EventReplayKafka](../apps/hops-eventreplaykafka)
+[HOPS-EventReplayKafka](https://github.com/navikt/helseopplysninger/tree/main/apps/hops-eventreplaykafka)
 
-[HOPS-Dialogmelding](../apps/hops-dialogmelding)
+[HOPS-Dialogmelding](https://github.com/navikt/helseopplysninger/tree/main/apps/hops-dialogmelding)
 
-[HOPS-Archive](../apps/hops-archive)
+[HOPS-Archive](https://github.com/navikt/helseopplysninger/tree/main/apps/hops-archive)
 
-[HOPS-API](../apps/hops-api)
+[HOPS-API](https://github.com/navikt/helseopplysninger/tree/main/apps/hops-api)
 
-[HOPS-API-Questionnaire](../apps/hops-api-questionnaire)
+[HOPS-API-Questionnaire](https://github.com/navikt/helseopplysninger/tree/main/apps/hops-api-questionnaire)
 
 
