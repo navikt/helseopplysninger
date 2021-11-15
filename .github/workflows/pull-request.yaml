@@ -180,9 +180,7 @@ jobs:
           ref: refs/pull/${{ github.event.number }}/merge
 
       - name: 🟡 Check auto-merge dependency whitelist
-        run: |
-          echo ${{ steps.dependabot-metadata.outputs.dependency-names }}
-          bash .scripts/whitelist-check ${{ steps.dependabot-metadata.outputs.dependency-names }}
+        run: bash .scripts/whitelist-check ${{ steps.metadata.outputs.dependency-names }}
 
       - name: 🟢 Will update
         run: echo "Will update version=${{ steps.metadata.outputs.update-type }}"

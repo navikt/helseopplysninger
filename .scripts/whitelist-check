@@ -1,50 +1,52 @@
 #!/bin/bash
 
-# USAGE
-# /bin/bash <this_file> 'white, listed, items' 'actual, items'
-
 # COLORS
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 NOCOLOR='\033[0m'
 
-read -r -d '' WHITELIST <<EOM
-  ch.qos.logback:logback-classic,
-  com.h2database:h2,
-  com.nimbusds:nimbus-jose-jwt,
-  io.ktor:ktor-auth,
-  io.ktor:ktor-client-auth,
-  io.ktor:ktor-client-cio,
-  io.ktor:ktor-client-core,
-  io.ktor:ktor-client-jackson,
-  io.ktor:ktor-client-java,
-  io.ktor:ktor-client-mock,
-  io.ktor:ktor-client-serialization,
-  io.ktor:ktor-jackson,
-  io.ktor:ktor-metrics-micrometer,
-  io.ktor:ktor-serialization,
-  io.ktor:ktor-server-netty,
-  io.ktor:ktor-server-test-host,
-  io.ktor:ktor-webjars,
-  io.micrometer:micrometer-registry-prometheus,
-  net.logstash.logback:logstash-logback-encoder,
-  org.apache.kafka:kafka-clients,
-  org.flywaydb:flyway-core,
-  org.jetbrains.exposed:exposed-java-time,
-  org.jetbrains.exposed:exposed-jdbc,
-  org.jetbrains.kotlinx:kotlinx-coroutines-jdk8,
-  org.jetbrains.kotlinx:kotlinx-datetime,
-  org.junit.jupiter:junit-jupiter,
-  org.postgresql:postgresql,
-  org.webjars:swagger-ui,
-EOM
+declare -a WHITELIST=(
+  ch.qos.logback:logback-classic
+  com.h2database:h2
+  com.nimbusds:nimbus-jose-jwt
+  io.ktor:ktor-auth
+  io.ktor:ktor-client-auth
+  io.ktor:ktor-client-cio
+  io.ktor:ktor-client-core
+  io.ktor:ktor-client-jackson
+  io.ktor:ktor-client-java
+  io.ktor:ktor-client-mock
+  io.ktor:ktor-client-serialization
+  io.ktor:ktor-jackson
+  io.ktor:ktor-metrics-micrometer
+  io.ktor:ktor-serialization
+  io.ktor:ktor-server-netty
+  io.ktor:ktor-server-test-host
+  io.ktor:ktor-webjars
+  io.micrometer:micrometer-registry-prometheus
+  net.logstash.logback:logstash-logback-encoder
+  org.apache.kafka:kafka-clients
+  org.flywaydb:flyway-core
+  org.jetbrains.exposed:exposed-java-time
+  org.jetbrains.exposed:exposed-jdbc
+  org.jetbrains.kotlinx:kotlinx-coroutines-jdk8
+  org.jetbrains.kotlinx:kotlinx-datetime
+  org.junit.jupiter:junit-jupiter
+  org.postgresql:postgresql
+  org.webjars:swagger-ui
+)
 
-# 2nd arg is a comma-separated string of dependencies to validate
+if [[ -z "$1" ]]; then
+  echo "Empty string is not whitelisted"
+  exit 1
+fi
+
+# comma-separated argument of dependencies to check
 IFS=',' read -ra DEPENDENCIES <<<"$1"
 
-# exit 1 if some depdendency was not whitelisted
 for dep in "${DEPENDENCIES[@]}"; do
-  if [[ "${WHITELIST[*]}" =~ $dep ]]; then
+  # primitive array.contains
+  if (printf '%s\n' "${WHITELIST[@]}" | grep -xq "$dep"); then
     echo -e "$GREEN WHITELISTED $NOCOLOR $dep"
   else
     echo -e "$RED BLOCKED $NOCOLOR $dep"
