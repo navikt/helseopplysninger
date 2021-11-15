@@ -1,7 +1,11 @@
 # EventReplayKafka
 The responsibility of this service is to pull FHIR messages from the hops-EventStore API and publish them on a Kafka-topic.
 
-Messages should be published in order and without duplicates; this is done by running the publishing loop on a single thread on a single instance. Every messages is published with a custom-header: `HOPS-Source-Offset`. The value of this header represents the offset within the query to hops-EventStore, **not** the topic offset, and is used by the EventReplayer to resume where it left off after a restart.
+Messages should be published in order and with minimal duplicates; this is done by running the publishing loop on a single thread on a single instance on a single partition. Due to how Kafka works we cannot 100% gurantee *no duplicates*, consumers should therefore always take this into consideration.
+
+Every messages is published with a custom-header: `HOPS-Source-Offset`. The value of this header represents the offset within the query to hops-EventStore, **not** the topic offset, and is used by the EventReplayer to resume where it left off after a restart. This could alternatively be stored in some other storage medium, but a custom header is used so we don't have to maintain another service.
+
+Being limited to a single producer should not be an issue with regard to performance and throughput as it would only introduce a delay, not downtime, during high volume. It is not expected that vertical-scaling of producers will be necessary, but it can be done by adding a shared state and orchestrating logic.
 
 Every message also includes a *Content-Type* header with value: `application/fhir+json; fhirVersion=4.0`, according to the [Mime Type Parameter](https://www.hl7.org/fhir/versioning.html#mt-version) in the spec.. This header is added in order to support future formats and versions on the same topic.
 
