@@ -26,7 +26,7 @@ dependencies {
     implementation("no.nav.security:token-client-core:1.3.9")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.5.2")
     testImplementation(project(":libs:hops-common-test"))
-    testImplementation("io.kotest:kotest-assertions-shared:4.6.3")
+    testImplementation("io.kotest:kotest-assertions-shared:4.6.2")
 }
 
 kotlin.sourceSets["main"].kotlin.srcDirs("main")
