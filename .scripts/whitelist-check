@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# USAGE
+# /bin/bash <this_file> 'white, listed, items' 'actual, items'
+
+# COLORS
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+NOCOLOR='\033[0m'
+
+# 1st arg is a comma-separated string of whitelisted dependencies
+IFS=',' read -ra WHITELIST <<< "$1"
+
+# 2nd arg is a comma-separated string of dependencies to validate
+IFS=',' read -ra DEPENDENCIES <<< "$2"
+
+# exit 1 if some depdendency was not whitelisted
+for dep in "${DEPENDENCIES[@]}"; do
+  if [[ "${WHITELIST[*]}" =~ $dep ]]; then
+    echo -e "$GREEN WHITELISTED $NOCOLOR $dep"
+  else
+    echo -e "$RED BLOCKED $NOCOLOR $dep"
+    exit 1
+  fi
+done
