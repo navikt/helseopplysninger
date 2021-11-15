@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory
 import java.util.UUID
 
 private val log = LoggerFactory.getLogger("test")
-private val header = RecordHeader("Content-Type", "application/fhir+json;fhirVersion=4.0".toByteArray())
+private val header = RecordHeader("Content-Type", "application/fhir+json; fhirVersion=4.0".toByteArray())
 
 class EmbeddedKafka(topic: String) : AutoCloseable {
     private val kafka = ThreadSafeKafkaEnvironment(topicNames = listOf(topic), autoStart = true)
