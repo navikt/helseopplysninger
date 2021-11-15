@@ -175,8 +175,7 @@ jobs:
         run: exit 1
 
       - name: 🟡 Check auto-merge dependency whitelist
-        shell: bash
-        run: .scripts/whitelist-check $WHITELIST ${{ steps.dependabot-metadata.outputs.dependency-names }}
+        run: bash .scripts/whitelist-check $WHITELIST ${{ steps.dependabot-metadata.outputs.dependency-names }}
         env:
           WHITELIST: |
             ch.qos.logback:logback-classic,
