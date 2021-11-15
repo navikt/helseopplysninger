@@ -38,7 +38,7 @@ dependencies {
     implementation("io.ktor:ktor-webjars:1.6.3")
     implementation("io.micrometer:micrometer-registry-prometheus:1.8.0")
     runtimeOnly("ch.qos.logback:logback-classic:1.2.7")
-    runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
+    runtimeOnly("net.logstash.logback:logstash-logback-encoder:7.0")
     runtimeOnly("org.webjars:swagger-ui:4.1.0")
     testImplementation(project(":libs:hops-common-test"))
     testImplementation("com.sksamuel.hoplite:hoplite-yaml:1.4.14")

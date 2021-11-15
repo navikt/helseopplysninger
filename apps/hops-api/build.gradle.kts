@@ -35,7 +35,7 @@ dependencies {
     implementation("no.nav.security:token-validation-ktor:1.3.9")
     implementation("io.github.microutils:kotlin-logging-jvm:2.0.11")
     runtimeOnly("ch.qos.logback:logback-classic:1.2.7")
-    runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
+    runtimeOnly("net.logstash.logback:logstash-logback-encoder:7.0")
     runtimeOnly("org.webjars:swagger-ui:4.1.0")
     testImplementation(project(":libs:hops-common-test"))
 }
