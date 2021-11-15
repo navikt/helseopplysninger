@@ -174,11 +174,10 @@ jobs:
         if: ${{ steps.metadata.outputs.update-type == 'version-update:semver-major' }}
         run: exit 1
 
-      - name: 🧳 Checkout scripts folder from merge commit SHA
+      - name: 🧳 Checkout merge commit SHA
         uses: actions/checkout@v2.4.0
         with:
           ref: refs/pull/${{ github.event.number }}/merge
-          path: .scripts
 
       - name: 🟡 Check auto-merge dependency whitelist
         run: bash .scripts/whitelist-check $WHITELIST ${{ steps.dependabot-metadata.outputs.dependency-names }}
