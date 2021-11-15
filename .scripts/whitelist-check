@@ -9,6 +9,7 @@ declare -a WHITELIST=(
   ch.qos.logback:logback-classic
   com.h2database:h2
   com.nimbusds:nimbus-jose-jwt
+  io.kotest:kotest-assertions-shared
   io.ktor:ktor-auth
   io.ktor:ktor-client-auth
   io.ktor:ktor-client-cio
@@ -24,6 +25,7 @@ declare -a WHITELIST=(
   io.ktor:ktor-server-test-host
   io.ktor:ktor-webjars
   io.micrometer:micrometer-registry-prometheus
+  jvm
   net.logstash.logback:logstash-logback-encoder
   org.apache.kafka:kafka-clients
   org.flywaydb:flyway-core
