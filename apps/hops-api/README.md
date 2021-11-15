@@ -4,7 +4,7 @@ The responsibility of this service is to provide an external API for the healthc
 Services within NAV will access messages on Kafka, but for external clients we want to provide a simple FHIR RESTful API, see [MessagingCore IG](https://navikt.github.io/fhir/igs/MessagingCore/).
 This service will also provide the appropriate auth integration (HelseId, maskinporten) and documentation.
 
-This service is currently accassing the hops-eventstore API directly, but it might be neccessary for it to have its own database in order to provide the expected capabilities and performance.
+This service is currently accessing the *hops-EventStore* API directly, but it might be neccessary for it to have its own database in order to provide the expected capabilities and performance.
 
 ## 🌈 Testing the API endpoints
 Goto; the swagger documentation below or the [openapi](.config/web/openapi.yaml) specification. 
