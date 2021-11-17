@@ -7,7 +7,7 @@ FHIR supports multiple levels of versioning and is continuously developed, so ne
 
 In context of this ADR we refer to 2 types of versioning.
 - The [FHIR specification version](https://www.hl7.org/fhir/versions.html#versions), notably **publication** and **major**, e.g. `4.2`. This version is important because e.g. the correct deserializer will have to be selected given the version.
-- The **Profile version**, specifically [the Business version of a StructureDefinition](https://www.hl7.org/fhir/profiling.html), this is comparable to versioning a data model. This version is tied to the domain and allows for different Domain Event schemas (FHIR Message profiles) to be developed and versioned independently from each other.
+- The **Profile version**, specifically [the Business version of a StructureDefinition](https://www.hl7.org/fhir/profiling.html), this is comparable to versioning a data model. This version is tied to the domain and allows for different Domain Event schemas (FHIR Message profiles) to be developed and versioned independently of each other.
 
 ### FHIR specification version
 Messages transmitted through the *Helseopplysninger* platform shall be immutable and stored for a long time. Both the format and version of the Message shall therefore be stored together with the message using the [Mime Type Parameter format](https://www.hl7.org/fhir/versioning.html#mt-version), e.g. `application/fhir+json; fhirVersion=4.0`. We therefore also have to design our APIs so that they can support both the current and future versions of the FHIR specification.
