@@ -25,6 +25,8 @@ Every client request that may result in version ambiguity must specify the fhirV
 Where editing the request headers is not possible we may consider specifying the version using the [_format](https://www.hl7.org/fhir/http.html#parameters) query parameter, e.g. `[base]/Bundle?_format=json;fhirVersion=4.0`, this is not part of the FHIR specification.
 
 ### Profile version
-All FHIR messages shall populate the `Meta.profile` with the canonical + version of the StructureDefinition it conforms to. A versioned profile for a FHIR message is akin to having a versioned **event schema** in EventSourcing. Versioning of profiles shall adhere to [Semantic versioning](https://semver.org/). 
+All FHIR messages shall populate the `Bundle.Meta.profile` with the canonical + version of the StructureDefinition it conforms to. A versioned profile for a FHIR message is akin to having a versioned **event schema** in EventSourcing. Versioning of profiles shall adhere to [Semantic versioning](https://semver.org/). 
+
+The format of the canonical shall be according to the [specification](https://www.hl7.org/fhir/references.html#canonical), example: `http://fhir.nav.no/StructureDefinition/my-test-event|1.2.1`. This is the preferred solution, [see zullip discussion](https://chat.fhir.org/#narrow/stream/179263-fhir-messages/topic/.E2.9C.94.20Versioned.20Messages).
 
 FHIR Messages in the EventStore shall be immutable and schema changes should **not** trigger migrations\mappings to new versions. If historical messages must be mapped to a new format\schema this shall rather be done using an [upcaster](https://docs.axoniq.io/reference-guide/axon-framework/events/event-versioning) before the upcasted message is made available on e.g. a Kafka topic.
