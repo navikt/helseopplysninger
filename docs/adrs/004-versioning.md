@@ -12,7 +12,7 @@ In context of this ADR we refer to 2 types of versioning.
 ### FHIR specification version
 Messages transmitted through the *Helseopplysninger* platform shall be immutable and stored for a long time. Both the format and version of the Message shall therefore be stored together with the message using the [Mime Type Parameter format](https://www.hl7.org/fhir/versioning.html#mt-version), e.g. `application/fhir+json; fhirVersion=4.0`. We therefore also have to design our APIs so that they can support both the current and future versions of the FHIR specification.
 
-One strategy of doing this for a RESTful API is to have the version as part of the URL, e.g. `[base]/4.0/Bundle` and `[base]/4.2/Bundle`. There are some disadvantages with this approach that makes it needlessly complex:
+One strategy of doing this for a RESTful API is to have the version as part of the URL, e.g. `[base]/4.0/Bundle`. There are some disadvantages with this approach that makes it needlessly complex:
 
 * Some endpoints that handles normative FHIR resources (e.g. CodeSystem) will not differ or shall at least be backward compatible. There is therefore no need to explicitly specify the version.
 * A client might know the id of a resource, but not the FHIR version. It should still be able to request the resource at `[base]/{resourceType}/{id}` and receive the resource instance, and a `Content-Type` header specifying the version.
