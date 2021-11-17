@@ -1,5 +1,7 @@
 # Versioning
 
+2021-11-17 - proposed
+
 ## Context
 FHIR supports multiple levels of versioning and is continuously developed, so new versions are expected to be released during the lifetime of *Helseopplysninger*.
 
