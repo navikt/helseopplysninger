@@ -1,0 +1,32 @@
+name: documentation
+
+on:
+    push:
+      branches: [ main ]
+      paths:
+        - 'apps/hops-api/README.md'
+        - 'apps/hops-api-questionnaire/README.md'
+        - 'apps/hops-archive/README.md'
+        - 'apps/hops-dialogmelding/README.md'
+        - 'apps/hops-eventreplaykafka/README.md'
+        - 'apps/hops-eventsinkkafka/README.md'
+        - 'apps/hops-eventstore/README.md'
+        - 'apps/hops-fileshare/README.md'
+        - 'apps/hops-terminology/README.md'
+        - 'apps/hops-test-e2e/README.md'
+        - 'docs/**'
+
+jobs:
+  transfer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Copy files
+        run: .github/workflows/scripts/documentation_move-readmes.sh
+      - name: 🚀 Deploy to GitHub-Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: generated
+          destination_dir: /
+          commit_message: '${{ env.IG }}: ${{ github.event.head_commit.message }}'
