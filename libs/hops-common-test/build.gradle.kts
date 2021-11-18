@@ -25,7 +25,7 @@ dependencies {
     api("io.ktor:ktor-jackson:1.6.5")
     api("io.ktor:ktor-server-netty:1.6.5")
     api("no.nav.security:token-validation-ktor:1.3.9")
-    api("io.mockk:mockk:1.12.0")
+    api("io.mockk:mockk:1.12.1")
     api("uk.org.webcompere:system-stubs-jupiter:1.2.0")
     api("org.junit.jupiter:junit-jupiter:5.8.1")
 }
