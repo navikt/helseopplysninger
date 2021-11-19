@@ -4,16 +4,7 @@ on:
     push:
       branches: [ main ]
       paths:
-        - 'apps/hops-api/README.md'
-        - 'apps/hops-api-questionnaire/README.md'
-        - 'apps/hops-archive/README.md'
-        - 'apps/hops-dialogmelding/README.md'
-        - 'apps/hops-eventreplaykafka/README.md'
-        - 'apps/hops-eventsinkkafka/README.md'
-        - 'apps/hops-eventstore/README.md'
-        - 'apps/hops-fileshare/README.md'
-        - 'apps/hops-terminology/README.md'
-        - 'apps/hops-test-e2e/README.md'
+        - 'apps/*/README.md'
         - 'docs/**'
 
 jobs:
