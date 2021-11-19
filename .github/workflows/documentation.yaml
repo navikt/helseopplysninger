@@ -1,0 +1,23 @@
+name: documentation
+
+on:
+    push:
+      branches: [ main ]
+      paths:
+        - 'apps/*/README.md'
+        - 'docs/**'
+
+jobs:
+  transfer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Copy files
+        run: .github/workflows/scripts/documentation_move-readmes.sh
+      - name: 🚀 Deploy to GitHub-Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: generated
+          destination_dir: /
+          commit_message: '${{ env.IG }}: ${{ github.event.head_commit.message }}'
