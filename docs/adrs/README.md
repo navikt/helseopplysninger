@@ -22,7 +22,7 @@ ADRs are proposed in the form of a pull request, and they commonly follow this f
 ---
 ### ADRs:
 1. [Absolute URLs for attachments](001-absolute-urls-for-attachments.md)
-2. [PostgreSQL as event (FHIR message) storage](002-postgres-as-eventstore.md)
-3. [Terminology Server](003-terminology-server.md)
-4. [Versioning](004-versioning.md)
-5. [NHN Interconnection](005-NHN-interconnection.md)
+1. [PostgreSQL as event (FHIR message) storage](002-postgres-as-eventstore.md)
+1. [Terminology Server](003-terminology-server.md)
+1. [Versioning](004-versioning.md)
+1. [NHN Interconnection](005-Helsenett-interconnection.md)
