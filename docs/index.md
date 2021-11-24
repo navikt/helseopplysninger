@@ -28,6 +28,3 @@ The following diagram show how the services interact with each other:
 
 The `hops-api` service is a thin layer that uses the `hops-eventstore` as a backend to serve and ingest resources. The `hops-eventstore` stores these FHIR messages as immutable events in a `Postgres` database. The `hops-eventreplaykafka` uses an API from the `hops-eventstore` that allows it to poll messages and post them in `Kafka` topic. These messages are then consumed by other downstream domain applications in NAV, and also by our own services as `hops-archive` which generates a human-readable version of Questionnaires and stores them in `Dokarkiv`, or the `hops-dialogmelding` which sends communication messages to healthcare workers using the `dialogmelding` service. An additional `Kafka` topic is used to receive messages form other NAV domain applications, these messages are then consumed by the `hops-eventsinkkafka` service that will use the same API and the `hops-api` to post messages to the `hops-eventstore`      
 
-
-
-
