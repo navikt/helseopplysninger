@@ -10,7 +10,7 @@
 
 ## Services overview
 
-- [hops-api](../apps/hops-api): This service is to provide an external API for the healthcare-sector. It is thin proxy responsible for authorizing and then forwarding the request to `hops-eventstore`.
+- [hops-api](apps/hops-api): This service is to provide an external API for the healthcare-sector. It is thin proxy responsible for authorizing and then forwarding the request to `hops-eventstore`.
 - [hops-terminology](../apps/hops-terminology): This service provides the functionality described by the [Terminology Service](https://www.hl7.org/fhir/terminology-service.html).
 - [hops-api-questionnaire](../apps/hops-api-questionnaire): The responsibility of this service is to pull [FHIR Questionnaire](https://www.hl7.org/fhir/questionnaire.html) resources from the [navikt/fhir-questionnaires](https://github.com/navikt/fhir-questionnaires) GitHub repository and make them available through a minimal (but valid) read-only [FHIR RESTful API](https://www.hl7.org/fhir/http.html).
 - [hops-fileshare](../apps/hops-fileshare): This service provides a simple API to upload and download files, it uses Google Cloud Storage to store the files.
