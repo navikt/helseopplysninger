@@ -28,7 +28,7 @@ tasks {
 dependencies {
     implementation(project(":libs:hops-common-fhir"))
     implementation(project(":libs:hops-common-ktor"))
-    implementation("ca.uhn.hapi.fhir:hapi-fhir-validation:5.5.3")
+    implementation("ca.uhn.hapi.fhir:hapi-fhir-validation:5.6.0")
     implementation("io.ktor:ktor-auth:1.6.5")
     implementation("io.ktor:ktor-metrics-micrometer:1.6.5")
     implementation("io.ktor:ktor-server-netty:1.6.5")
