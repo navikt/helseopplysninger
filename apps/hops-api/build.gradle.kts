@@ -33,7 +33,7 @@ dependencies {
     implementation("io.ktor:ktor-webjars:1.6.5")
     implementation("io.micrometer:micrometer-registry-prometheus:1.8.0")
     implementation("no.nav.security:token-validation-ktor:1.3.9")
-    implementation("io.github.microutils:kotlin-logging-jvm:2.0.11")
+    implementation("io.github.microutils:kotlin-logging-jvm:2.1.0")
     runtimeOnly("ch.qos.logback:logback-classic:1.2.7")
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
     runtimeOnly("org.webjars:swagger-ui:4.1.0")
