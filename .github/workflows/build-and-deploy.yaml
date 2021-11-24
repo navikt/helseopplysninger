@@ -1,0 +1,62 @@
+name: Build and Deploy
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'apps/**'
+      - 'libs/**'
+jobs:
+  build:
+    strategy:
+      fail-fast: false # apps without changes should fail
+      matrix:
+        app:
+          - hops-api
+          - hops-api-questionnaire
+          - hops-archive
+          - hops-dialogmelding
+          - hops-eventreplaykafka
+          - hops-eventsinkkafka
+          - hops-eventstore
+          - hops-fileshare
+          - hops-test-e2e
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📚 Checkout including history
+        uses: actions/checkout@v2.4.0
+        with:
+          fetch-depth: 2
+
+      - name: 📐 Compare latest commits️
+      - uses: tj-actions/changed-files@v11.7
+        id: changed-files
+        with:
+          files: |
+            apps/${{ matrix.app }}/*
+            libs/*
+
+      - name: 🔎 Continue on relevant file changes
+        if: steps.changed-files.outputs.any_changed == 'false' && steps.changed-files.outputs.any_deleted == 'false'
+        run: echo "No changes detected" && exit 1
+
+      - name: 🚧 Build app
+        uses: navikt/helseopplysninger/workflows/build.yaml@main
+        with:
+          app: ${{ matrix.app }}
+          image: ghcr.io/navikt/${{ matrix.app }}:${{ github.sha }}
+
+      - name: 🚀 Deploy to dev-gcp
+        uses: navikt/helseopplysninger/workflows/deploy.yaml@main
+        with:
+          app: ${{ matrix.app }}
+          cluster: dev-gcp
+
+      - name: 🧪 Run end-to-end tests
+        run: bash .scripts/run-e2e
+
+      - name: 🚀 Deploy to prod-gcp
+        uses: navikt/helseopplysninger/workflows/deploy.yaml@main
+        if: ${{ false }} && ${{ matrix.app != 'hops-test-e2e' }}
+        with:
+          app: ${{ matrix.app }}
+          cluster: prod-gcp
