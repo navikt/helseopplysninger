@@ -17,7 +17,7 @@ dependencies {
     implementation(project(":libs:hops-client-maskinport"))
     implementation(project(":libs:hops-common-kafka"))
     implementation(project(":libs:hops-common-ktor"))
-    implementation("io.github.microutils:kotlin-logging-jvm:2.0.11")
+    implementation("io.github.microutils:kotlin-logging-jvm:2.1.0")
     implementation("io.ktor:ktor-client-serialization:1.6.5")
     implementation("io.ktor:ktor-client-core:1.6.5")
     implementation("io.ktor:ktor-client-cio:1.6.5")
