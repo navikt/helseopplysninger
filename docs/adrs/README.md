@@ -25,3 +25,4 @@ ADRs are proposed in the form of a pull request, and they commonly follow this f
 1. [PostgreSQL as event (FHIR message) storage](002-postgres-as-eventstore.md)
 1. [Terminology Server](003-terminology-server.md)
 1. [Versioning](004-versioning.md)
+1. [NHN Interconnection](005-Helsenett-interconnection.md)
