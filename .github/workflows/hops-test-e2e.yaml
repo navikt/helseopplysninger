@@ -39,6 +39,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2.4.0
       - uses: nais/deploy/actions/deploy@master
+        if: ${{ false }}
         env:
           CLUSTER: dev-gcp
           ENVIRONMENT: dev-gcp:${{ github.workflow }}

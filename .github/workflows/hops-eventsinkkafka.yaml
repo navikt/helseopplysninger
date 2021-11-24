@@ -50,6 +50,7 @@ jobs:
       - uses: actions/checkout@v2.4.0
 
       - name: Deploy to Dev
+        if: ${{ false }}
         uses: nais/deploy/actions/deploy@master
         env:
           CLUSTER: dev-gcp
