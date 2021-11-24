@@ -38,7 +38,7 @@ dependencies {
     implementation("org.flywaydb:flyway-core:8.0.4")
     implementation("org.jetbrains.exposed:exposed-java-time:0.36.2")
     implementation("org.jetbrains.exposed:exposed-jdbc:0.36.2")
-    runtimeOnly("ca.uhn.hapi.fhir:hapi-fhir-validation-resources-r4:5.5.3")
+    runtimeOnly("ca.uhn.hapi.fhir:hapi-fhir-validation-resources-r4:5.6.0")
     runtimeOnly("ch.qos.logback:logback-classic:1.2.7")
     runtimeOnly("com.h2database:h2:1.4.200")
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
