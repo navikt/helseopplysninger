@@ -3,10 +3,12 @@ name: hops-test-e2e
 on:
   push:
     branches:
-      - 'apps/hops-test-external/**'
+      - main
       - 'e2e/**'
     paths:
       - 'apps/hops-test-e2e/**'
+      - 'libs/**'
+      - build.gradle.kts
   workflow_dispatch:
 
 env:
