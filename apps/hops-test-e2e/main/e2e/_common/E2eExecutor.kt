@@ -2,8 +2,8 @@ package e2e._common
 
 import kotlinx.serialization.Serializable
 import mu.KotlinLogging
-import java.util.concurrent.TimeUnit
 import kotlin.time.Duration
+import kotlin.time.DurationUnit
 import kotlin.time.ExperimentalTime
 import kotlin.time.measureTime
 import kotlin.time.measureTimedValue
@@ -19,7 +19,7 @@ internal class E2eExecutor {
         val duration = measureTime {
             allTests.forEach { test -> test.run(results) }
         }
-        return results.copy(totalDurationMs = duration.toString(TimeUnit.MILLISECONDS))
+        return results.copy(totalDurationMs = duration.toString(DurationUnit.MILLISECONDS))
     }
 
     fun add(tests: List<Test>) = allTests.addAll(tests)
@@ -53,7 +53,7 @@ data class Results(
         test {
             name = test.name
             description = test.description
-            durationMs = duration.toString(TimeUnit.MILLISECONDS)
+            durationMs = duration.toString(DurationUnit.MILLISECONDS)
             message = test.exception?.localizedMessage
         }
     }
