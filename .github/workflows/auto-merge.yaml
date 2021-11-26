@@ -54,3 +54,6 @@ jobs:
           GITHUB_TOKEN: ${{ steps.gen-token.outputs.token }}
           PR_BRANCH: ${{ github.event.workflow_run.head_branch }}
           GH_REPO: ${{ github.repository }}
+
+      - name: 🌍 Cache gradle dependencies
+        uses: navikt/helseopplysninger/workflows/docker-build-image.yaml@main

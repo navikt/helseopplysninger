@@ -4,6 +4,7 @@ on:
   schedule:
     - cron: '0 0 * * MON'
   workflow_dispatch:
+  workflow_call:
 jobs:
   build-docker-image:
     runs-on: ubuntu-latest

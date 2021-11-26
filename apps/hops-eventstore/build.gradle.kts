@@ -1,3 +1,4 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -12,6 +13,10 @@ application {
 }
 
 tasks {
+    named<ShadowJar>("shadowJar") {
+        // https://docs.gradle.org/7.2/dsl/org.gradle.api.tasks.bundling.Zip.html#org.gradle.api.tasks.bundling.Zip:zip64
+        isZip64 = true
+    }
     withType<KotlinCompile> {
         kotlinOptions.jvmTarget = "16"
     }
@@ -28,20 +33,20 @@ tasks {
 dependencies {
     implementation(project(":libs:hops-common-fhir"))
     implementation(project(":libs:hops-common-ktor"))
-    implementation("ca.uhn.hapi.fhir:hapi-fhir-validation:5.5.3")
+    implementation("ca.uhn.hapi.fhir:hapi-fhir-validation:5.6.0")
     implementation("io.ktor:ktor-auth:1.6.5")
     implementation("io.ktor:ktor-metrics-micrometer:1.6.5")
     implementation("io.ktor:ktor-server-netty:1.6.5")
     implementation("io.ktor:ktor-webjars:1.6.5")
     implementation("io.micrometer:micrometer-registry-prometheus:1.8.0")
     implementation("no.nav.security:token-validation-ktor:1.3.9")
-    implementation("org.flywaydb:flyway-core:8.0.4")
+    implementation("org.flywaydb:flyway-core:8.1.0")
     implementation("org.jetbrains.exposed:exposed-java-time:0.36.2")
     implementation("org.jetbrains.exposed:exposed-jdbc:0.36.2")
-    runtimeOnly("ca.uhn.hapi.fhir:hapi-fhir-validation-resources-r4:5.5.3")
+    runtimeOnly("ca.uhn.hapi.fhir:hapi-fhir-validation-resources-r4:5.6.0")
     runtimeOnly("ch.qos.logback:logback-classic:1.2.7")
     runtimeOnly("com.h2database:h2:1.4.200")
-    runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
+    runtimeOnly("net.logstash.logback:logstash-logback-encoder:7.0.1")
     runtimeOnly("org.postgresql:postgresql:42.3.1")
     runtimeOnly("org.webjars:swagger-ui:4.1.0")
     testImplementation(project(":libs:hops-common-test"))
