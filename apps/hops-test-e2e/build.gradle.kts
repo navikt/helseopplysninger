@@ -27,7 +27,7 @@ dependencies {
     implementation("io.micrometer:micrometer-registry-prometheus:1.8.0")
     implementation("org.apache.kafka:kafka-clients:2.8.1")
     runtimeOnly("ch.qos.logback:logback-classic:1.2.7")
-    runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
+    runtimeOnly("net.logstash.logback:logstash-logback-encoder:7.0.1")
     testImplementation(project(":libs:hops-common-test"))
     testImplementation(project(":libs:hops-common-kafka-test"))
 }
