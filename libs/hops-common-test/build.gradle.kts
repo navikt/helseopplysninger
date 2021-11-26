@@ -22,7 +22,7 @@ dependencies {
         // Transitive dependency net.java.dev.jna:jna-platform is GPL 1.0 licenced
         exclude("org.jetbrains.kotlinx", "kotlinx-coroutines-debug")
     }
-    api("io.ktor:ktor-jackson:1.6.5")
+    api("io.ktor:ktor-jackson:1.6.6")
     api("io.ktor:ktor-server-netty:1.6.5")
     api("no.nav.security:token-validation-ktor:1.3.9")
     api("io.mockk:mockk:1.12.1")
