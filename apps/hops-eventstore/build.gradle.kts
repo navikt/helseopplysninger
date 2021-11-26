@@ -1,3 +1,4 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -12,6 +13,10 @@ application {
 }
 
 tasks {
+    named<ShadowJar>("shadowJar") {
+        // https://docs.gradle.org/7.2/dsl/org.gradle.api.tasks.bundling.Zip.html#org.gradle.api.tasks.bundling.Zip:zip64
+        isZip64 = true
+    }
     withType<KotlinCompile> {
         kotlinOptions.jvmTarget = "16"
     }
