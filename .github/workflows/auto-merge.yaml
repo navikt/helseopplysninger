@@ -57,3 +57,5 @@ jobs:
 
       - name: 🌍 Cache gradle dependencies
         uses: navikt/helseopplysninger/workflows/docker-build-image.yaml@main
+        secrets:
+          token: ${{ secrets.GITHUB_TOKEN }}
