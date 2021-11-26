@@ -55,21 +55,5 @@ jobs:
           PR_BRANCH: ${{ github.event.workflow_run.head_branch }}
           GH_REPO: ${{ github.repository }}
 
-  cache-docker:
-    name: 🐋 Cache docker image
-    runs-on: ubuntu-latest
-    needs: [ dependabot-merge ]
-    steps:
-      - uses: actions/checkout@v2.4.0
-
-      - uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - uses: docker/build-push-action@v2.7.0
-        with:
-          file: .docker/builder/Dockerfile
-          push: true
-          tags: ghcr.io/navikt/hops-build:latest
+      - name: 🌍 Cache gradle dependencies
+        uses: navikt/helseopplysninger/workflows/docker-build-image.yaml@main
