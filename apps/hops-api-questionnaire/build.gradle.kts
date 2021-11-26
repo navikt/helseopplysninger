@@ -42,7 +42,7 @@ dependencies {
     runtimeOnly("org.webjars:swagger-ui:4.1.0")
     testImplementation(project(":libs:hops-common-test"))
     testImplementation("com.sksamuel.hoplite:hoplite-yaml:1.4.15")
-    testImplementation("io.kotest:kotest-assertions-core:4.6.3")
+    testImplementation("io.kotest:kotest-assertions-core:5.0.0")
     testImplementation("io.kotest:kotest-assertions-ktor:4.4.3")
 }
 
