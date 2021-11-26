@@ -46,7 +46,7 @@ dependencies {
     runtimeOnly("ca.uhn.hapi.fhir:hapi-fhir-validation-resources-r4:5.6.0")
     runtimeOnly("ch.qos.logback:logback-classic:1.2.7")
     runtimeOnly("com.h2database:h2:1.4.200")
-    runtimeOnly("net.logstash.logback:logstash-logback-encoder:6.6")
+    runtimeOnly("net.logstash.logback:logstash-logback-encoder:7.0.1")
     runtimeOnly("org.postgresql:postgresql:42.3.1")
     runtimeOnly("org.webjars:swagger-ui:4.1.0")
     testImplementation(project(":libs:hops-common-test"))
