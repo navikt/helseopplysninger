@@ -1,7 +1,7 @@
 [
   {
+    "prohibited": [],
     "key": "AGPL-1.0-only",
-    "prohibited": [],
     "allowed": [
       "AGPL-1.0-only",
       "AGPL-1.0-or-later",
@@ -47,8 +47,8 @@
     ]
   },
   {
+    "prohibited": [],
     "key": "AGPL-1.0-or-later",
-    "prohibited": [],
     "allowed": [
       "AGPL-1.0-only",
       "AGPL-1.0-or-later",
@@ -94,8 +94,8 @@
     ]
   },
   {
+    "prohibited": [],
     "key": "AGPL-3.0-only",
-    "prohibited": [],
     "allowed": [
       "AGPL-1.0-only",
       "AGPL-1.0-or-later",
@@ -141,8 +141,8 @@
     ]
   },
   {
+    "prohibited": [],
     "key": "AGPL-3.0-or-later",
-    "prohibited": [],
     "allowed": [
       "AGPL-1.0-only",
       "AGPL-1.0-or-later",
@@ -188,22 +188,22 @@
     ]
   },
   {
+    "prohibited": [
+      "AGPL-1.0-only",
+      "AGPL-1.0-or-later",
+      "AGPL-3.0-only",
+      "AGPL-3.0-or-later",
+      "GPL-1.0-only",
+      "GPL-1.0-or-later",
+      "GPL-2.0-only",
+      "GPL-2.0-or-later",
+      "GPL-3.0-only",
+      "GPL-3.0-or-later",
+      "MS-RL",
+      "ODbL-1.0",
+      "OSL-3.0"
+    ],
     "key": "Apache-2.0",
-    "prohibited": [
-      "AGPL-1.0-only",
-      "AGPL-1.0-or-later",
-      "AGPL-3.0-only",
-      "AGPL-3.0-or-later",
-      "GPL-1.0-only",
-      "GPL-1.0-or-later",
-      "GPL-2.0-only",
-      "GPL-2.0-or-later",
-      "GPL-3.0-only",
-      "GPL-3.0-or-later",
-      "MS-RL",
-      "ODbL-1.0",
-      "OSL-3.0"
-    ],
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -236,22 +236,22 @@
     ]
   },
   {
+    "prohibited": [
+      "AGPL-1.0-only",
+      "AGPL-1.0-or-later",
+      "AGPL-3.0-only",
+      "AGPL-3.0-or-later",
+      "GPL-1.0-only",
+      "GPL-1.0-or-later",
+      "GPL-2.0-only",
+      "GPL-2.0-or-later",
+      "GPL-3.0-only",
+      "GPL-3.0-or-later",
+      "MS-RL",
+      "ODbL-1.0",
+      "OSL-3.0"
+    ],
     "key": "BSD-2-Clause",
-    "prohibited": [
-      "AGPL-1.0-only",
-      "AGPL-1.0-or-later",
-      "AGPL-3.0-only",
-      "AGPL-3.0-or-later",
-      "GPL-1.0-only",
-      "GPL-1.0-or-later",
-      "GPL-2.0-only",
-      "GPL-2.0-or-later",
-      "GPL-3.0-only",
-      "GPL-3.0-or-later",
-      "MS-RL",
-      "ODbL-1.0",
-      "OSL-3.0"
-    ],
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -284,22 +284,22 @@
     ]
   },
   {
+    "prohibited": [
+      "AGPL-1.0-only",
+      "AGPL-1.0-or-later",
+      "AGPL-3.0-only",
+      "AGPL-3.0-or-later",
+      "GPL-1.0-only",
+      "GPL-1.0-or-later",
+      "GPL-2.0-only",
+      "GPL-2.0-or-later",
+      "GPL-3.0-only",
+      "GPL-3.0-or-later",
+      "MS-RL",
+      "ODbL-1.0",
+      "OSL-3.0"
+    ],
     "key": "BSD-3-Clause",
-    "prohibited": [
-      "AGPL-1.0-only",
-      "AGPL-1.0-or-later",
-      "AGPL-3.0-only",
-      "AGPL-3.0-or-later",
-      "GPL-1.0-only",
-      "GPL-1.0-or-later",
-      "GPL-2.0-only",
-      "GPL-2.0-or-later",
-      "GPL-3.0-only",
-      "GPL-3.0-or-later",
-      "MS-RL",
-      "ODbL-1.0",
-      "OSL-3.0"
-    ],
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -332,22 +332,22 @@
     ]
   },
   {
+    "prohibited": [
+      "AGPL-1.0-only",
+      "AGPL-1.0-or-later",
+      "AGPL-3.0-only",
+      "AGPL-3.0-or-later",
+      "GPL-1.0-only",
+      "GPL-1.0-or-later",
+      "GPL-2.0-only",
+      "GPL-2.0-or-later",
+      "GPL-3.0-only",
+      "GPL-3.0-or-later",
+      "MS-RL",
+      "ODbL-1.0",
+      "OSL-3.0"
+    ],
     "key": "BSD-3-Clause-Attribution",
-    "prohibited": [
-      "AGPL-1.0-only",
-      "AGPL-1.0-or-later",
-      "AGPL-3.0-only",
-      "AGPL-3.0-or-later",
-      "GPL-1.0-only",
-      "GPL-1.0-or-later",
-      "GPL-2.0-only",
-      "GPL-2.0-or-later",
-      "GPL-3.0-only",
-      "GPL-3.0-or-later",
-      "MS-RL",
-      "ODbL-1.0",
-      "OSL-3.0"
-    ],
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -380,22 +380,22 @@
     ]
   },
   {
+    "prohibited": [
+      "AGPL-1.0-only",
+      "AGPL-1.0-or-later",
+      "AGPL-3.0-only",
+      "AGPL-3.0-or-later",
+      "GPL-1.0-only",
+      "GPL-1.0-or-later",
+      "GPL-2.0-only",
+      "GPL-2.0-or-later",
+      "GPL-3.0-only",
+      "GPL-3.0-or-later",
+      "MS-RL",
+      "ODbL-1.0",
+      "OSL-3.0"
+    ],
     "key": "BSD-3-Clause-Clear",
-    "prohibited": [
-      "AGPL-1.0-only",
-      "AGPL-1.0-or-later",
-      "AGPL-3.0-only",
-      "AGPL-3.0-or-later",
-      "GPL-1.0-only",
-      "GPL-1.0-or-later",
-      "GPL-2.0-only",
-      "GPL-2.0-or-later",
-      "GPL-3.0-only",
-      "GPL-3.0-or-later",
-      "MS-RL",
-      "ODbL-1.0",
-      "OSL-3.0"
-    ],
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -428,22 +428,22 @@
     ]
   },
   {
+    "prohibited": [
+      "AGPL-1.0-only",
+      "AGPL-1.0-or-later",
+      "AGPL-3.0-only",
+      "AGPL-3.0-or-later",
+      "GPL-1.0-only",
+      "GPL-1.0-or-later",
+      "GPL-2.0-only",
+      "GPL-2.0-or-later",
+      "GPL-3.0-only",
+      "GPL-3.0-or-later",
+      "MS-RL",
+      "ODbL-1.0",
+      "OSL-3.0"
+    ],
     "key": "CC0-1.0",
-    "prohibited": [
-      "AGPL-1.0-only",
-      "AGPL-1.0-or-later",
-      "AGPL-3.0-only",
-      "AGPL-3.0-or-later",
-      "GPL-1.0-only",
-      "GPL-1.0-or-later",
-      "GPL-2.0-only",
-      "GPL-2.0-or-later",
-      "GPL-3.0-only",
-      "GPL-3.0-or-later",
-      "MS-RL",
-      "ODbL-1.0",
-      "OSL-3.0"
-    ],
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -476,14 +476,14 @@
     ]
   },
   {
+    "prohibited": [
+      "AGPL-1.0-only",
+      "AGPL-1.0-or-later",
+      "AGPL-3.0-only",
+      "AGPL-3.0-or-later",
+      "OSL-3.0"
+    ],
     "key": "EPL-1.0",
-    "prohibited": [
-      "AGPL-1.0-only",
-      "AGPL-1.0-or-later",
-      "AGPL-3.0-only",
-      "AGPL-3.0-or-later",
-      "OSL-3.0"
-    ],
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -524,14 +524,14 @@
     ]
   },
   {
+    "prohibited": [
+      "AGPL-1.0-only",
+      "AGPL-1.0-or-later",
+      "AGPL-3.0-only",
+      "AGPL-3.0-or-later",
+      "OSL-3.0"
+    ],
     "key": "GPL-1.0-only",
-    "prohibited": [
-      "AGPL-1.0-only",
-      "AGPL-1.0-or-later",
-      "AGPL-3.0-only",
-      "AGPL-3.0-or-later",
-      "OSL-3.0"
-    ],
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -572,14 +572,14 @@
     ]
   },
   {
+    "prohibited": [
+      "AGPL-1.0-only",
+      "AGPL-1.0-or-later",
+      "AGPL-3.0-only",
+      "AGPL-3.0-or-later",
+      "OSL-3.0"
+    ],
     "key": "GPL-1.0-or-later",
-    "prohibited": [
-      "AGPL-1.0-only",
-      "AGPL-1.0-or-later",
-      "AGPL-3.0-only",
-      "AGPL-3.0-or-later",
-      "OSL-3.0"
-    ],
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -620,14 +620,14 @@
     ]
   },
   {
+    "prohibited": [
+      "AGPL-1.0-only",
+      "AGPL-1.0-or-later",
+      "AGPL-3.0-only",
+      "AGPL-3.0-or-later",
+      "OSL-3.0"
+    ],
     "key": "GPL-2.0-only",
-    "prohibited": [
-      "AGPL-1.0-only",
-      "AGPL-1.0-or-later",
-      "AGPL-3.0-only",
-      "AGPL-3.0-or-later",
-      "OSL-3.0"
-    ],
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -668,14 +668,14 @@
     ]
   },
   {
+    "prohibited": [
+      "AGPL-1.0-only",
+      "AGPL-1.0-or-later",
+      "AGPL-3.0-only",
+      "AGPL-3.0-or-later",
+      "OSL-3.0"
+    ],
     "key": "GPL-2.0-or-later",
-    "prohibited": [
-      "AGPL-1.0-only",
-      "AGPL-1.0-or-later",
-      "AGPL-3.0-only",
-      "AGPL-3.0-or-later",
-      "OSL-3.0"
-    ],
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -716,14 +716,14 @@
     ]
   },
   {
+    "prohibited": [
+      "AGPL-1.0-only",
+      "AGPL-1.0-or-later",
+      "AGPL-3.0-only",
+      "AGPL-3.0-or-later",
+      "OSL-3.0"
+    ],
     "key": "GPL-3.0-only",
-    "prohibited": [
-      "AGPL-1.0-only",
-      "AGPL-1.0-or-later",
-      "AGPL-3.0-only",
-      "AGPL-3.0-or-later",
-      "OSL-3.0"
-    ],
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -764,14 +764,14 @@
     ]
   },
   {
+    "prohibited": [
+      "AGPL-1.0-only",
+      "AGPL-1.0-or-later",
+      "AGPL-3.0-only",
+      "AGPL-3.0-or-later",
+      "OSL-3.0"
+    ],
     "key": "GPL-3.0-or-later",
-    "prohibited": [
-      "AGPL-1.0-only",
-      "AGPL-1.0-or-later",
-      "AGPL-3.0-only",
-      "AGPL-3.0-or-later",
-      "OSL-3.0"
-    ],
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -812,22 +812,22 @@
     ]
   },
   {
+    "prohibited": [
+      "AGPL-1.0-only",
+      "AGPL-1.0-or-later",
+      "AGPL-3.0-only",
+      "AGPL-3.0-or-later",
+      "GPL-1.0-only",
+      "GPL-1.0-or-later",
+      "GPL-2.0-only",
+      "GPL-2.0-or-later",
+      "GPL-3.0-only",
+      "GPL-3.0-or-later",
+      "MS-RL",
+      "ODbL-1.0",
+      "OSL-3.0"
+    ],
     "key": "ISC",
-    "prohibited": [
-      "AGPL-1.0-only",
-      "AGPL-1.0-or-later",
-      "AGPL-3.0-only",
-      "AGPL-3.0-or-later",
-      "GPL-1.0-only",
-      "GPL-1.0-or-later",
-      "GPL-2.0-only",
-      "GPL-2.0-or-later",
-      "GPL-3.0-only",
-      "GPL-3.0-or-later",
-      "MS-RL",
-      "ODbL-1.0",
-      "OSL-3.0"
-    ],
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -860,14 +860,14 @@
     ]
   },
   {
+    "prohibited": [
+      "AGPL-1.0-only",
+      "AGPL-1.0-or-later",
+      "AGPL-3.0-only",
+      "AGPL-3.0-or-later",
+      "OSL-3.0"
+    ],
     "key": "LGPL-2.0-only",
-    "prohibited": [
-      "AGPL-1.0-only",
-      "AGPL-1.0-or-later",
-      "AGPL-3.0-only",
-      "AGPL-3.0-or-later",
-      "OSL-3.0"
-    ],
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -908,14 +908,14 @@
     ]
   },
   {
+    "prohibited": [
+      "AGPL-1.0-only",
+      "AGPL-1.0-or-later",
+      "AGPL-3.0-only",
+      "AGPL-3.0-or-later",
+      "OSL-3.0"
+    ],
     "key": "LGPL-2.0-or-later",
-    "prohibited": [
-      "AGPL-1.0-only",
-      "AGPL-1.0-or-later",
-      "AGPL-3.0-only",
-      "AGPL-3.0-or-later",
-      "OSL-3.0"
-    ],
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -956,14 +956,14 @@
     ]
   },
   {
+    "prohibited": [
+      "AGPL-1.0-only",
+      "AGPL-1.0-or-later",
+      "AGPL-3.0-only",
+      "AGPL-3.0-or-later",
+      "OSL-3.0"
+    ],
     "key": "LGPL-2.1-only",
-    "prohibited": [
-      "AGPL-1.0-only",
-      "AGPL-1.0-or-later",
-      "AGPL-3.0-only",
-      "AGPL-3.0-or-later",
-      "OSL-3.0"
-    ],
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -1004,14 +1004,14 @@
     ]
   },
   {
+    "prohibited": [
+      "AGPL-1.0-only",
+      "AGPL-1.0-or-later",
+      "AGPL-3.0-only",
+      "AGPL-3.0-or-later",
+      "OSL-3.0"
+    ],
     "key": "LGPL-2.1-or-later",
-    "prohibited": [
-      "AGPL-1.0-only",
-      "AGPL-1.0-or-later",
-      "AGPL-3.0-only",
-      "AGPL-3.0-or-later",
-      "OSL-3.0"
-    ],
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -1052,14 +1052,14 @@
     ]
   },
   {
+    "prohibited": [
+      "AGPL-1.0-only",
+      "AGPL-1.0-or-later",
+      "AGPL-3.0-only",
+      "AGPL-3.0-or-later",
+      "OSL-3.0"
+    ],
     "key": "LGPL-3.0-only",
-    "prohibited": [
-      "AGPL-1.0-only",
-      "AGPL-1.0-or-later",
-      "AGPL-3.0-only",
-      "AGPL-3.0-or-later",
-      "OSL-3.0"
-    ],
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -1100,14 +1100,14 @@
     ]
   },
   {
+    "prohibited": [
+      "AGPL-1.0-only",
+      "AGPL-1.0-or-later",
+      "AGPL-3.0-only",
+      "AGPL-3.0-or-later",
+      "OSL-3.0"
+    ],
     "key": "LGPL-3.0-or-later",
-    "prohibited": [
-      "AGPL-1.0-only",
-      "AGPL-1.0-or-later",
-      "AGPL-3.0-only",
-      "AGPL-3.0-or-later",
-      "OSL-3.0"
-    ],
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -1148,22 +1148,22 @@
     ]
   },
   {
+    "prohibited": [
+      "AGPL-1.0-only",
+      "AGPL-1.0-or-later",
+      "AGPL-3.0-only",
+      "AGPL-3.0-or-later",
+      "GPL-1.0-only",
+      "GPL-1.0-or-later",
+      "GPL-2.0-only",
+      "GPL-2.0-or-later",
+      "GPL-3.0-only",
+      "GPL-3.0-or-later",
+      "MS-RL",
+      "ODbL-1.0",
+      "OSL-3.0"
+    ],
     "key": "MIT",
-    "prohibited": [
-      "AGPL-1.0-only",
-      "AGPL-1.0-or-later",
-      "AGPL-3.0-only",
-      "AGPL-3.0-or-later",
-      "GPL-1.0-only",
-      "GPL-1.0-or-later",
-      "GPL-2.0-only",
-      "GPL-2.0-or-later",
-      "GPL-3.0-only",
-      "GPL-3.0-or-later",
-      "MS-RL",
-      "ODbL-1.0",
-      "OSL-3.0"
-    ],
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -1196,14 +1196,14 @@
     ]
   },
   {
+    "prohibited": [
+      "AGPL-1.0-only",
+      "AGPL-1.0-or-later",
+      "AGPL-3.0-only",
+      "AGPL-3.0-or-later",
+      "OSL-3.0"
+    ],
     "key": "MPL-1.0",
-    "prohibited": [
-      "AGPL-1.0-only",
-      "AGPL-1.0-or-later",
-      "AGPL-3.0-only",
-      "AGPL-3.0-or-later",
-      "OSL-3.0"
-    ],
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -1244,14 +1244,14 @@
     ]
   },
   {
+    "prohibited": [
+      "AGPL-1.0-only",
+      "AGPL-1.0-or-later",
+      "AGPL-3.0-only",
+      "AGPL-3.0-or-later",
+      "OSL-3.0"
+    ],
     "key": "MPL-1.1",
-    "prohibited": [
-      "AGPL-1.0-only",
-      "AGPL-1.0-or-later",
-      "AGPL-3.0-only",
-      "AGPL-3.0-or-later",
-      "OSL-3.0"
-    ],
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -1292,14 +1292,14 @@
     ]
   },
   {
+    "prohibited": [
+      "AGPL-1.0-only",
+      "AGPL-1.0-or-later",
+      "AGPL-3.0-only",
+      "AGPL-3.0-or-later",
+      "OSL-3.0"
+    ],
     "key": "MPL-2.0",
-    "prohibited": [
-      "AGPL-1.0-only",
-      "AGPL-1.0-or-later",
-      "AGPL-3.0-only",
-      "AGPL-3.0-or-later",
-      "OSL-3.0"
-    ],
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -1340,14 +1340,14 @@
     ]
   },
   {
+    "prohibited": [
+      "AGPL-1.0-only",
+      "AGPL-1.0-or-later",
+      "AGPL-3.0-only",
+      "AGPL-3.0-or-later",
+      "OSL-3.0"
+    ],
     "key": "MS-RL",
-    "prohibited": [
-      "AGPL-1.0-only",
-      "AGPL-1.0-or-later",
-      "AGPL-3.0-only",
-      "AGPL-3.0-or-later",
-      "OSL-3.0"
-    ],
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -1388,14 +1388,14 @@
     ]
   },
   {
+    "prohibited": [
+      "AGPL-1.0-only",
+      "AGPL-1.0-or-later",
+      "AGPL-3.0-only",
+      "AGPL-3.0-or-later",
+      "OSL-3.0"
+    ],
     "key": "ODbL-1.0",
-    "prohibited": [
-      "AGPL-1.0-only",
-      "AGPL-1.0-or-later",
-      "AGPL-3.0-only",
-      "AGPL-3.0-or-later",
-      "OSL-3.0"
-    ],
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -1436,8 +1436,8 @@
     ]
   },
   {
-    "key": "OSL-3.0",
     "prohibited": [],
+    "key": "OSL-3.0",
     "allowed": [
       "AGPL-1.0-only",
       "AGPL-1.0-or-later",
@@ -1483,22 +1483,22 @@
     ]
   },
   {
+    "prohibited": [
+      "AGPL-1.0-only",
+      "AGPL-1.0-or-later",
+      "AGPL-3.0-only",
+      "AGPL-3.0-or-later",
+      "GPL-1.0-only",
+      "GPL-1.0-or-later",
+      "GPL-2.0-only",
+      "GPL-2.0-or-later",
+      "GPL-3.0-only",
+      "GPL-3.0-or-later",
+      "MS-RL",
+      "ODbL-1.0",
+      "OSL-3.0"
+    ],
     "key": "PDDL-1.0",
-    "prohibited": [
-      "AGPL-1.0-only",
-      "AGPL-1.0-or-later",
-      "AGPL-3.0-only",
-      "AGPL-3.0-or-later",
-      "GPL-1.0-only",
-      "GPL-1.0-or-later",
-      "GPL-2.0-only",
-      "GPL-2.0-or-later",
-      "GPL-3.0-only",
-      "GPL-3.0-or-later",
-      "MS-RL",
-      "ODbL-1.0",
-      "OSL-3.0"
-    ],
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -1531,22 +1531,22 @@
     ]
   },
   {
+    "prohibited": [
+      "AGPL-1.0-only",
+      "AGPL-1.0-or-later",
+      "AGPL-3.0-only",
+      "AGPL-3.0-or-later",
+      "GPL-1.0-only",
+      "GPL-1.0-or-later",
+      "GPL-2.0-only",
+      "GPL-2.0-or-later",
+      "GPL-3.0-only",
+      "GPL-3.0-or-later",
+      "MS-RL",
+      "ODbL-1.0",
+      "OSL-3.0"
+    ],
     "key": "Python-2.0",
-    "prohibited": [
-      "AGPL-1.0-only",
-      "AGPL-1.0-or-later",
-      "AGPL-3.0-only",
-      "AGPL-3.0-or-later",
-      "GPL-1.0-only",
-      "GPL-1.0-or-later",
-      "GPL-2.0-only",
-      "GPL-2.0-or-later",
-      "GPL-3.0-only",
-      "GPL-3.0-or-later",
-      "MS-RL",
-      "ODbL-1.0",
-      "OSL-3.0"
-    ],
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -1579,22 +1579,22 @@
     ]
   },
   {
+    "prohibited": [
+      "AGPL-1.0-only",
+      "AGPL-1.0-or-later",
+      "AGPL-3.0-only",
+      "AGPL-3.0-or-later",
+      "GPL-1.0-only",
+      "GPL-1.0-or-later",
+      "GPL-2.0-only",
+      "GPL-2.0-or-later",
+      "GPL-3.0-only",
+      "GPL-3.0-or-later",
+      "MS-RL",
+      "ODbL-1.0",
+      "OSL-3.0"
+    ],
     "key": "SAX-PD",
-    "prohibited": [
-      "AGPL-1.0-only",
-      "AGPL-1.0-or-later",
-      "AGPL-3.0-only",
-      "AGPL-3.0-or-later",
-      "GPL-1.0-only",
-      "GPL-1.0-or-later",
-      "GPL-2.0-only",
-      "GPL-2.0-or-later",
-      "GPL-3.0-only",
-      "GPL-3.0-or-later",
-      "MS-RL",
-      "ODbL-1.0",
-      "OSL-3.0"
-    ],
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -1627,22 +1627,22 @@
     ]
   },
   {
+    "prohibited": [
+      "AGPL-1.0-only",
+      "AGPL-1.0-or-later",
+      "AGPL-3.0-only",
+      "AGPL-3.0-or-later",
+      "GPL-1.0-only",
+      "GPL-1.0-or-later",
+      "GPL-2.0-only",
+      "GPL-2.0-or-later",
+      "GPL-3.0-only",
+      "GPL-3.0-or-later",
+      "MS-RL",
+      "ODbL-1.0",
+      "OSL-3.0"
+    ],
     "key": "Unlicense",
-    "prohibited": [
-      "AGPL-1.0-only",
-      "AGPL-1.0-or-later",
-      "AGPL-3.0-only",
-      "AGPL-3.0-or-later",
-      "GPL-1.0-only",
-      "GPL-1.0-or-later",
-      "GPL-2.0-only",
-      "GPL-2.0-or-later",
-      "GPL-3.0-only",
-      "GPL-3.0-or-later",
-      "MS-RL",
-      "ODbL-1.0",
-      "OSL-3.0"
-    ],
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -1675,22 +1675,22 @@
     ]
   },
   {
+    "prohibited": [
+      "AGPL-1.0-only",
+      "AGPL-1.0-or-later",
+      "AGPL-3.0-only",
+      "AGPL-3.0-or-later",
+      "GPL-1.0-only",
+      "GPL-1.0-or-later",
+      "GPL-2.0-only",
+      "GPL-2.0-or-later",
+      "GPL-3.0-only",
+      "GPL-3.0-or-later",
+      "MS-RL",
+      "ODbL-1.0",
+      "OSL-3.0"
+    ],
     "key": "ZPL-1.0",
-    "prohibited": [
-      "AGPL-1.0-only",
-      "AGPL-1.0-or-later",
-      "AGPL-3.0-only",
-      "AGPL-3.0-or-later",
-      "GPL-1.0-only",
-      "GPL-1.0-or-later",
-      "GPL-2.0-only",
-      "GPL-2.0-or-later",
-      "GPL-3.0-only",
-      "GPL-3.0-or-later",
-      "MS-RL",
-      "ODbL-1.0",
-      "OSL-3.0"
-    ],
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -1723,22 +1723,22 @@
     ]
   },
   {
+    "prohibited": [
+      "AGPL-1.0-only",
+      "AGPL-1.0-or-later",
+      "AGPL-3.0-only",
+      "AGPL-3.0-or-later",
+      "GPL-1.0-only",
+      "GPL-1.0-or-later",
+      "GPL-2.0-only",
+      "GPL-2.0-or-later",
+      "GPL-3.0-only",
+      "GPL-3.0-or-later",
+      "MS-RL",
+      "ODbL-1.0",
+      "OSL-3.0"
+    ],
     "key": "ZPL-2.0",
-    "prohibited": [
-      "AGPL-1.0-only",
-      "AGPL-1.0-or-later",
-      "AGPL-3.0-only",
-      "AGPL-3.0-or-later",
-      "GPL-1.0-only",
-      "GPL-1.0-or-later",
-      "GPL-2.0-only",
-      "GPL-2.0-or-later",
-      "GPL-3.0-only",
-      "GPL-3.0-or-later",
-      "MS-RL",
-      "ODbL-1.0",
-      "OSL-3.0"
-    ],
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -1771,22 +1771,22 @@
     ]
   },
   {
+    "prohibited": [
+      "AGPL-1.0-only",
+      "AGPL-1.0-or-later",
+      "AGPL-3.0-only",
+      "AGPL-3.0-or-later",
+      "GPL-1.0-only",
+      "GPL-1.0-or-later",
+      "GPL-2.0-only",
+      "GPL-2.0-or-later",
+      "GPL-3.0-only",
+      "GPL-3.0-or-later",
+      "MS-RL",
+      "ODbL-1.0",
+      "OSL-3.0"
+    ],
     "key": "ZPL-2.1",
-    "prohibited": [
-      "AGPL-1.0-only",
-      "AGPL-1.0-or-later",
-      "AGPL-3.0-only",
-      "AGPL-3.0-or-later",
-      "GPL-1.0-only",
-      "GPL-1.0-or-later",
-      "GPL-2.0-only",
-      "GPL-2.0-or-later",
-      "GPL-3.0-only",
-      "GPL-3.0-or-later",
-      "MS-RL",
-      "ODbL-1.0",
-      "OSL-3.0"
-    ],
     "allowed": [
       "Apache-2.0",
       "0BSD",
@@ -1819,7 +1819,6 @@
     ]
   },
   {
-    "key": "PROPRIETARY-LICENSE",
     "prohibited": [
       "AGPL-1.0-only",
       "AGPL-1.0-or-later",
@@ -1840,6 +1839,7 @@
       "LPPL-1.3c",
       "CECILL-2.1"
     ],
+    "key": "PROPRIETARY-LICENSE",
     "allowed": [
       "Apache-2.0",
       "0BSD",
