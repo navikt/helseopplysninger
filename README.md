@@ -1,7 +1,7 @@
 # 🚑 Helseopplysninger
 Backend for forwarding and storing of health-related data
 
-# 🔗 Associated repositories
+## 🔗 Associated repositories
 - [navikt/helseopplysninger-frontend](https://github.com/navikt/helseopplysninger-frontend): Monorepo for React Front-end applications.
 - [navikt/fhir](https://github.com/navikt/fhir): Monorepo for FHIR Implementation Guides (IG).
 - [navikt/fhir-questionnaires](https://github.com/navikt/fhir-questionnaires): Monorepo for FHIR Questionnaire resources.
