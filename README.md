@@ -1,6 +1,12 @@
 # 🚑 Helseopplysninger
 Backend for forwarding and storing of health-related data
 
+# 🔗 Associated repositories
+- [navikt/helseopplysninger-frontend](https://github.com/navikt/helseopplysninger-frontend): Monorepo for React Front-end applications.
+- [navikt/fhir](https://github.com/navikt/fhir): Monorepo for FHIR Implementation Guides (IG).
+- [navikt/fhir-questionnaires](https://github.com/navikt/fhir-questionnaires): Monorepo for FHIR Questionnaire resources.
+- [navikt/fhir-validator-junit-engine](https://github.com/navikt/fhir-validator-junit-engine): Test framework for testing FHIR Conformance Resources (profiles).
+
 ## 📁 Folder structure
 ```yaml
 helseopplysninger
