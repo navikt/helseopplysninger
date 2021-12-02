@@ -1,0 +1,23 @@
+name: Deploy App
+on:
+  workflow_call:
+    inputs:
+      cluster:
+        type: string
+        required: false
+        default: 'dev-gcp'
+      app:
+        type: string
+        required: true
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v2.4.0
+      - uses: nais/deploy/actions/deploy@master
+        env:
+          CLUSTER: ${{ inputs.cluster }}
+          ENVIRONMENT: ${{ inputs.cluster }}:${{ inputs.app }}
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          RESOURCE: apps/${{ inputs.app }}/.nais/naiserator.yaml
