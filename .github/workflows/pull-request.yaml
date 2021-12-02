@@ -199,3 +199,25 @@ jobs:
             org.junit.jupiter:junit-jupiter
             org.postgresql:postgresql
             org.webjars:swagger-ui
+
+      - uses: actions/checkout@v2.4.0
+        with:
+          ref: refs/pull/${{ github.event.number }}
+
+      - uses: snyk/actions/setup@master
+
+      - uses: actions/setup-java@v2
+        with:
+          java-version: 16
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Snyk test every changed build.gradle.kts
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        run: |
+          for f in $(git diff --name-only); do
+            if [[ "$f" = *build.gradle.kts ]]; then
+              snyk test --file="$f";
+            fi
+          done
