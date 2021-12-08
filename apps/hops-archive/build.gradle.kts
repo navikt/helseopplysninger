@@ -30,7 +30,7 @@ dependencies {
     implementation(project(":libs:hops-common-ktor"))
     implementation(project(":libs:hops-common-kafka"))
     implementation("io.ktor:ktor-metrics-micrometer:1.6.5")
-    implementation("io.ktor:ktor-webjars:1.6.5")
+    implementation("io.ktor:ktor-webjars:1.6.7")
     implementation("io.ktor:ktor-server-netty:1.6.5")
     implementation("io.micrometer:micrometer-registry-prometheus:1.8.0")
     implementation("org.apache.kafka:kafka-clients:2.8.1")
