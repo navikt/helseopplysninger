@@ -1,6 +1,8 @@
 # 🚑 Helseopplysninger
 Backend for forwarding and storing of health-related data
 
+**NOTE: Dependabot and workflows have been disabled by renaming the .github/dependabot.yml and .github/workflows directory.**
+
 ## 🔗 Associated repositories
 - [navikt/helseopplysninger-frontend](https://github.com/navikt/helseopplysninger-frontend): Monorepo for React Front-end applications.
 - [navikt/fhir](https://github.com/navikt/fhir): Monorepo for FHIR Implementation Guides (IG).
